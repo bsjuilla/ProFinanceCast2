@@ -1,0 +1,174 @@
+/* =========================================================================
+   nav.css - top navigation (marketing) + app sidebar
+   ========================================================================= */
+
+/* ---- TOP NAV --------------------------------------------------------- */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-nav);
+  background: var(--nav-bg);
+  border-bottom: 1px solid var(--nav-rule);
+  backdrop-filter: saturate(120%);
+}
+.nav__inner {
+  display: flex;
+  align-items: center;
+  gap: var(--s-8);
+  min-height: 64px;
+  width: 100%;
+  max-width: var(--content-app);
+  margin: 0 auto;
+  padding-inline: var(--gutter);
+}
+.nav__brand {
+  flex: 0 0 auto;
+}
+.nav__brand a { display: inline-flex; align-items: center; gap: var(--s-2); }
+.nav__brand a:hover { color: var(--ink); }
+.nav__brand .wordmark { color: var(--ink); }
+
+.nav__links {
+  display: flex;
+  align-items: center;
+  gap: var(--s-6);
+  margin-left: var(--s-4);
+  flex: 1;
+}
+.nav__link {
+  position: relative;
+  font-size: var(--fs-14);
+  font-weight: var(--fw-medium);
+  color: var(--ink-80);
+  padding: var(--s-2) 0;
+  transition: color var(--t-fast) var(--ease-out-quart);
+}
+.nav__link:hover { color: var(--ink); }
+.nav__link[aria-current="page"],
+.nav__link.is-active {
+  color: var(--ink);
+}
+.nav__link[aria-current="page"]::after,
+.nav__link.is-active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 1px;
+  background: var(--c-gold);
+}
+
+.nav__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  flex: 0 0 auto;
+}
+
+/* Mobile: collapse links behind a sheet trigger */
+.nav__toggle {
+  display: none;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-sharp);
+}
+.nav__toggle svg { width: 18px; height: 18px; }
+
+@media (max-width: 880px) {
+  .nav__links { display: none; }
+  .nav__toggle { display: inline-flex; }
+  .nav__actions .btn--ghost { display: none; }
+}
+
+/* ---- APP SIDEBAR ----------------------------------------------------- */
+.sidebar {
+  width: 240px;
+  flex: 0 0 240px;
+  height: 100dvh;
+  position: sticky;
+  top: 0;
+  padding: var(--s-6) var(--s-4);
+  background: var(--surface-deep, var(--canvas-deep));
+  border-right: 1px solid var(--rule);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+  overflow-y: auto;
+}
+.sidebar__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding-inline: var(--s-2);
+  margin-bottom: var(--s-4);
+}
+.sidebar__group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+}
+.sidebar__group__label {
+  font-size: var(--fs-12);
+  font-weight: var(--fw-medium);
+  color: var(--ink-50);
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+  padding: var(--s-2) var(--s-2);
+}
+.sidebar__link {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  padding: 8px var(--s-3);
+  color: var(--ink-80);
+  font-size: var(--fs-14);
+  font-weight: var(--fw-regular);
+  border-radius: var(--r-sharp);
+  transition:
+    background var(--t-fast) var(--ease-out-quart),
+    color var(--t-fast) var(--ease-out-quart);
+}
+.sidebar__link:hover {
+  color: var(--ink);
+  background: var(--ink-04);
+}
+.sidebar__link[aria-current="page"],
+.sidebar__link.is-active {
+  color: var(--ink);
+  background: var(--ink-08);
+  box-shadow: inset 2px 0 0 var(--c-gold);
+}
+.sidebar__footer {
+  margin-top: auto;
+  padding: var(--s-3) var(--s-2);
+  font-size: var(--fs-12);
+  color: var(--ink-50);
+  border-top: 1px solid var(--rule);
+}
+
+@media (max-width: 880px) {
+  .sidebar {
+    position: fixed;
+    inset: 0 auto 0 -240px;
+    transition: left var(--t-medium) var(--ease-out-quart);
+    z-index: var(--z-overlay);
+  }
+  .sidebar.is-open { left: 0; }
+}
+
+/* ---- APP SHELL ------------------------------------------------------- */
+.app-shell {
+  display: flex;
+  align-items: stretch;
+  min-height: 100dvh;
+}
+.app-main {
+  flex: 1;
+  min-width: 0;
+  padding: var(--s-8) var(--gutter) var(--s-16);
+}

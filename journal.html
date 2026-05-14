@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Journal &mdash; ProFinanceCast</title>
+  <meta name="description" content="A finance journal. Free-form notes paired with the household&rsquo;s net-worth snapshot at the moment of writing.">
+  <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/tokens.css">
+  <link rel="stylesheet" href="/static/css/theme-ivory.css">
+  <link rel="stylesheet" href="/static/css/theme-emerald.css">
+  <link rel="stylesheet" href="/static/css/base.css">
+  <link rel="stylesheet" href="/static/css/components.css">
+  <link rel="stylesheet" href="/static/css/nav.css">
+  <link rel="stylesheet" href="/static/css/footer.css">
+  <link rel="stylesheet" href="/static/css/charts.css">
+  <link rel="stylesheet" href="/static/css/app.css">
+  <link rel="stylesheet" href="/static/css/journal.css">
+</head>
+<body data-theme="emerald">
+  <a class="skip-link" href="#main">Skip to the journal</a>
+
+  <div data-include="header"></div>
+  <div data-include="banner"></div>
+
+  <div class="app-shell">
+    <div data-include="sidebar"></div>
+
+    <main class="app-main" id="main">
+
+      <!-- 1 · PAGE HEAD -->
+      <header class="page-head" data-reveal>
+        <div class="page-head__body">
+          <p class="eyebrow page-head__eyebrow">
+            <span>Journal</span>
+            <span class="page-head__sep" aria-hidden="true">&middot;</span>
+            <span class="mono">11 May 2026</span>
+          </p>
+          <h1 class="display display--md page-head__title">A decade in your own words.</h1>
+          <p class="page-head__lede">Each entry is paired with the net-worth figure of the day it was written. Years from now, the numbers will tell you where the decisions lived.</p>
+        </div>
+        <div class="page-head__actions">
+          <span class="badge badge--gold">Pro feature</span>
+        </div>
+      </header>
+
+      <!-- 2 · PRO-ONLY PAYWALL STRIPE (composition only; demo mode)
+           Per paywall-upgrade-cro: show value first, ask second. Stripe
+           sits above the composer, declares the gate plainly, offers an
+           escape hatch with the dashboard. -->
+      <section class="journal-paywall" role="note" aria-labelledby="journal-paywall-h2" data-reveal>
+        <div class="journal-paywall__body">
+          <p class="eyebrow">Pro feature &middot; demo composition</p>
+          <h2 class="journal-paywall__title" id="journal-paywall-h2"><em>Writing</em> stays with Pro.</h2>
+          <p class="journal-paywall__copy">Reading the journal is open. New entries save with a Pro subscription &mdash; the snapshot pairing is the expensive part, and we treat it as such.</p>
+        </div>
+        <div class="journal-paywall__actions">
+          <a href="/billing.html" class="btn btn--primary btn--sm">See plans &rarr;</a>
+          <a href="/dashboard.html" class="btn--link">Back to dashboard</a>
+        </div>
+      </section>
+
+      <!-- 3 · COMPOSER (visible, disabled — illustrates the paywall) -->
+      <section class="journal-composer" aria-labelledby="composer-h2" data-reveal>
+        <header class="journal-composer__head">
+          <div>
+            <p class="eyebrow">Write</p>
+            <h2 class="journal-composer__title" id="composer-h2">A note for your future self.</h2>
+          </div>
+          <p class="journal-composer__snapshot" aria-label="Snapshot pairing">
+            <span class="journal-composer__snapshot-label">Pairs with</span>
+            <span class="journal-composer__snapshot-value mono">$87,420</span>
+            <span class="journal-composer__snapshot-foot">net worth, today</span>
+          </p>
+        </header>
+        <form class="journal-composer__form" autocomplete="off" novalidate aria-disabled="true">
+          <label for="journal-input" class="sr-only">Write a journal entry</label>
+          <textarea
+            id="journal-input"
+            class="journal-composer__input"
+            rows="4"
+            placeholder="What happened this month? A move, a raise, a stretch &mdash; whatever you want to remember."
+            disabled
+          ></textarea>
+          <div class="journal-composer__meta">
+            <span class="journal-composer__hint">Entries are private. Pair with the day&rsquo;s net worth automatically.</span>
+            <button type="button" class="btn btn--primary btn--sm" disabled aria-disabled="true">
+              Save entry
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- 4 · ENTRIES — reverse chronological -->
+      <section class="journal" aria-labelledby="entries-h2" data-reveal>
+        <header class="journal__head">
+          <div>
+            <p class="eyebrow">Six past entries</p>
+            <h2 class="journal__title" id="entries-h2">The decade so far.</h2>
+          </div>
+          <p class="journal__meta mono">May 2026 &mdash; back to Jul 2025</p>
+        </header>
+
+        <ol class="journal__list" role="list">
+
+          <!-- Entry · May 2026 (today) -->
+          <li class="journal-entry" data-reveal>
+            <header class="journal-entry__head">
+              <p class="journal-entry__date">
+                <span class="journal-entry__month">May 2026</span>
+                <span class="journal-entry__sep" aria-hidden="true">&middot;</span>
+                <span class="journal-entry__day mono">11</span>
+              </p>
+              <p class="journal-entry__snapshot">
+                <span class="journal-entry__snapshot-label">Net worth this day</span>
+                <span class="journal-entry__snapshot-value mono">$87,420</span>
+              </p>
+            </header>
+            <div class="journal-entry__body">
+              <h3 class="journal-entry__h">The forecasting house, finally on paper.</h3>
+              <p>Spent the week pricing what a real plan would have cost back when none of this was written down. The answer keeps coming back to the same figure: more than the credit card balance, less than the student loan. The forecast curve sits where it&rsquo;s supposed to sit. The work now is staying out of its way.</p>
+              <p>Filed the next quarterly review for August. Bumped the retirement contribution by <span class="mono">1%</span>. Held everything else.</p>
+            </div>
+          </li>
+
+          <!-- Entry · March 2026 -->
+          <li class="journal-entry" data-reveal>
+            <header class="journal-entry__head">
+              <p class="journal-entry__date">
+                <span class="journal-entry__month">March 2026</span>
+                <span class="journal-entry__sep" aria-hidden="true">&middot;</span>
+                <span class="journal-entry__day mono">28</span>
+              </p>
+              <p class="journal-entry__snapshot">
+                <span class="journal-entry__snapshot-label">Net worth this day</span>
+                <span class="journal-entry__snapshot-value mono">$83,710</span>
+              </p>
+            </header>
+            <div class="journal-entry__body">
+              <h3 class="journal-entry__h">Tax season closed without a surprise.</h3>
+              <p>Refund came in at <span class="mono">$1,840</span>. Half went to the credit card; the rest is sitting in the buffer until April rent clears. The credit card is now under <span class="mono">$3,500</span>, which is the smallest balance it has been since I started tracking. Avalanche path is on schedule.</p>
+              <p>Reading <em>The Psychology of Money</em> for the second time. The chapter on tails is the one that keeps me out of trouble.</p>
+            </div>
+          </li>
+
+          <!-- Entry · December 2025 -->
+          <li class="journal-entry" data-reveal>
+            <header class="journal-entry__head">
+              <p class="journal-entry__date">
+                <span class="journal-entry__month">December 2025</span>
+                <span class="journal-entry__sep" aria-hidden="true">&middot;</span>
+                <span class="journal-entry__day mono">31</span>
+              </p>
+              <p class="journal-entry__snapshot">
+                <span class="journal-entry__snapshot-label">Net worth this day</span>
+                <span class="journal-entry__snapshot-value mono">$78,930</span>
+              </p>
+            </header>
+            <div class="journal-entry__body">
+              <h3 class="journal-entry__h">Year-end. Steady, mostly.</h3>
+              <p>Net worth ended <span class="mono">$11,180</span> above the prior year. Most of that came from the retirement match and the freelance work I picked up in the autumn. December cost more than I planned &mdash; <span class="mono">$320</span> over the usual run-rate &mdash; but I knew it would and the buffer absorbed it without flinching.</p>
+              <p>One resolution: stop tracking the daily figure. Once a month is enough. The volatility on a 30-day view is mostly noise.</p>
+            </div>
+          </li>
+
+          <!-- Entry · August 2025 (per brief: car sale, $87k crossing — adapted to the canonical figures) -->
+          <li class="journal-entry" data-reveal>
+            <header class="journal-entry__head">
+              <p class="journal-entry__date">
+                <span class="journal-entry__month">August 2025</span>
+                <span class="journal-entry__sep" aria-hidden="true">&middot;</span>
+                <span class="journal-entry__day mono">14</span>
+              </p>
+              <p class="journal-entry__snapshot">
+                <span class="journal-entry__snapshot-label">Net worth this day</span>
+                <span class="journal-entry__snapshot-value mono">$71,260</span>
+              </p>
+            </header>
+            <div class="journal-entry__body">
+              <h3 class="journal-entry__h">Sold the old car. Added $4,200 to liquid.</h3>
+              <p>Listed it on a Wednesday, sold it the following Sunday. The buyer didn&rsquo;t haggle, which I think means I priced it low &mdash; but I was happy to be done. The <span class="mono">$4,200</span> went straight to the emergency fund and pushed the buffer past four months of expenses for the first time.</p>
+              <p>The household runs fine on one car. We always thought it would; this is the proof.</p>
+            </div>
+          </li>
+
+          <!-- Entry · November 2024 -->
+          <li class="journal-entry" data-reveal>
+            <header class="journal-entry__head">
+              <p class="journal-entry__date">
+                <span class="journal-entry__month">November 2024</span>
+                <span class="journal-entry__sep" aria-hidden="true">&middot;</span>
+                <span class="journal-entry__day mono">02</span>
+              </p>
+              <p class="journal-entry__snapshot">
+                <span class="journal-entry__snapshot-label">Net worth this day</span>
+                <span class="journal-entry__snapshot-value mono">$63,440</span>
+              </p>
+            </header>
+            <div class="journal-entry__body">
+              <h3 class="journal-entry__h">The raise landed. Already spoken for.</h3>
+              <p>The annual review went well. New gross is <span class="mono">$95,000</span>; the increase is about <span class="mono">$420/mo</span> after tax. Half is going to retirement (auto-bumped the contribution percent the same day), the other half is going to the credit card until it&rsquo;s gone. I am writing this down so I don&rsquo;t quietly absorb it into the run-rate over the next three months.</p>
+              <p>Lifestyle creep is a real thing. Pre-committing the money before it lands is the only trick I know that works.</p>
+            </div>
+          </li>
+
+          <!-- Entry · July 2025 -->
+          <li class="journal-entry" data-reveal>
+            <header class="journal-entry__head">
+              <p class="journal-entry__date">
+                <span class="journal-entry__month">July 2025</span>
+                <span class="journal-entry__sep" aria-hidden="true">&middot;</span>
+                <span class="journal-entry__day mono">09</span>
+              </p>
+              <p class="journal-entry__snapshot">
+                <span class="journal-entry__snapshot-label">Net worth this day</span>
+                <span class="journal-entry__snapshot-value mono">$67,050</span>
+              </p>
+            </header>
+            <div class="journal-entry__body">
+              <h3 class="journal-entry__h">Started the journal.</h3>
+              <p>First entry. The thinking is simple: I keep making the same money decisions in the same months of the year, and I never remember why I made them. A paragraph a month, paired with the figure, should be enough to fix that.</p>
+              <p>Beginning balances, for the record: credit card <span class="mono">$4,910</span> at <span class="mono">24.9%</span>, student loan <span class="mono">$6,180</span> at <span class="mono">6.1%</span>, liquid <span class="mono">$18,400</span>, retirement <span class="mono">$54,830</span>.</p>
+            </div>
+          </li>
+
+        </ol>
+
+        <footer class="journal__foot">
+          <p class="journal__foot-line">
+            <span class="journal__foot-label">Read-only in demo</span>
+            <span aria-hidden="true">&middot;</span>
+            <span>Six entries shown; in production the archive scrolls back as far as you&rsquo;ve written.</span>
+          </p>
+        </footer>
+      </section>
+
+    </main>
+  </div>
+
+  <div data-include="footer"></div>
+
+  <script src="/static/js/partials.js"></script>
+  <script src="/static/js/demo-data.js"></script>
+  <script src="/static/js/charts.js"></script>
+  <script src="/static/js/reveal.js"></script>
+</body>
+</html>

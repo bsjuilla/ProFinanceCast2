@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Help &mdash; ProFinanceCast</title>
+  <meta name="description" content="Plain-prose answers to the questions we get most about ProFinanceCast: getting started, forecast methodology, account &amp; billing, and privacy &amp; data.">
+  <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/tokens.css">
+  <link rel="stylesheet" href="/static/css/theme-ivory.css">
+  <link rel="stylesheet" href="/static/css/theme-emerald.css">
+  <link rel="stylesheet" href="/static/css/base.css">
+  <link rel="stylesheet" href="/static/css/components.css">
+  <link rel="stylesheet" href="/static/css/nav.css">
+  <link rel="stylesheet" href="/static/css/footer.css">
+  <style>
+    /* ── Help page local composition. All values from tokens. ───────── */
+
+    /* Page head — eyebrow / Cormorant italic H1 / italic lede / short gold rule */
+    .page-head {
+      padding-block: var(--s-16) var(--s-8);
+      border-bottom: 0;
+    }
+    .page-head__title {
+      font-family: var(--f-display);
+      font-style: italic;
+      font-weight: var(--fw-medium);
+      font-size: clamp(var(--fs-40), 6vw, var(--fs-72));
+      line-height: var(--lh-tight);
+      letter-spacing: var(--ls-tight);
+      color: var(--ink);
+      margin: 0 0 var(--s-4);
+      max-width: 18ch;
+    }
+    .page-head__lede {
+      font-family: var(--f-display);
+      font-style: italic;
+      font-weight: var(--fw-regular);
+      font-size: clamp(var(--fs-20), 2vw, var(--fs-24));
+      line-height: var(--lh-snug);
+      color: var(--ink-80);
+      max-width: 52ch;
+      margin: 0 0 var(--s-6);
+    }
+    .page-head__rule {
+      height: 1px;
+      width: 96px;
+      background: var(--c-gold);
+      margin: 0;
+      border: 0;
+    }
+
+    /* Help search (visual only, non-functional) */
+    .help-search {
+      padding-block: var(--s-4) var(--s-8);
+    }
+    .help-search .field { max-width: 560px; }
+    .help-search .field__hint { color: var(--ink-50); }
+
+    /* Quick categories — 4 anchor cards in a row */
+    .help-categories {
+      padding-block: var(--s-2) var(--s-12);
+      border-bottom: 1px solid var(--rule);
+    }
+    .categories-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: var(--s-3);
+    }
+    @media (max-width: 880px) {
+      .categories-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 520px) {
+      .categories-grid { grid-template-columns: minmax(0, 1fr); }
+    }
+    .category-card {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-2);
+      padding: var(--s-5);
+      background: transparent;
+      border: 1px solid var(--rule);
+      border-radius: var(--r-card);
+      color: var(--ink);
+      transition:
+        border-color var(--t-fast) var(--ease-out-quart),
+        transform var(--t-fast) var(--ease-out-quart),
+        box-shadow var(--t-fast) var(--ease-out-quart);
+    }
+    .category-card:hover {
+      border-color: var(--c-gold);
+      transform: translateY(-2px);
+      box-shadow: 0 0 0 1px var(--c-gold);
+    }
+    .category-card .eyebrow { margin: 0; color: var(--ink-65); }
+    .category-card__title {
+      font-family: var(--f-display);
+      font-style: italic;
+      font-weight: var(--fw-medium);
+      font-size: var(--fs-20);
+      line-height: var(--lh-snug);
+      color: var(--ink);
+      margin: 0;
+    }
+    .category-card__arrow {
+      font-family: var(--f-body);
+      font-size: var(--fs-13);
+      color: var(--c-gold-deep);
+      margin-top: auto;
+      padding-top: var(--s-3);
+    }
+
+    /* FAQ sections */
+    .faq-section {
+      padding-block: var(--s-12);
+      border-top: 1px solid var(--rule);
+    }
+    .faq-section:first-of-type { border-top: 0; }
+    .faq-section__head {
+      margin-bottom: var(--s-6);
+    }
+    .faq-section__head .eyebrow { margin-bottom: var(--s-3); }
+    .faq-h2 {
+      font-family: var(--f-display);
+      font-style: italic;
+      font-weight: var(--fw-medium);
+      font-size: clamp(var(--fs-28), 3.5vw, var(--fs-40));
+      line-height: var(--lh-snug);
+      letter-spacing: var(--ls-tight);
+      color: var(--ink);
+      margin: 0;
+    }
+
+    /* Definition-list FAQ pattern */
+    .faq-dl {
+      margin: 0;
+      padding: 0;
+      border-top: 1px solid var(--rule);
+    }
+    .faq-dl > dt {
+      font-family: var(--f-display);
+      font-style: italic;
+      font-weight: var(--fw-medium);
+      font-size: var(--fs-20);
+      line-height: var(--lh-snug);
+      color: var(--ink);
+      margin: 0;
+      padding: var(--s-6) 0 var(--s-3);
+    }
+    .faq-dl > dd {
+      margin: 0;
+      padding: 0 0 var(--s-6);
+      font-family: var(--f-body);
+      font-size: var(--fs-16);
+      line-height: var(--lh-loose);
+      color: var(--ink-80);
+      border-bottom: 1px solid var(--rule);
+      max-width: 65ch;
+    }
+    .faq-dl > dd:last-of-type { border-bottom: 0; }
+    .faq-dl a {
+      color: var(--c-gold-deep);
+      border-bottom: 1px solid var(--rule);
+    }
+    .faq-dl a:hover {
+      color: var(--ink);
+      border-bottom-color: var(--c-gold);
+    }
+    .faq-dl strong { font-weight: var(--fw-semi); color: var(--ink); }
+
+    /* Closing strip — "Didn't find what you needed" */
+    .help-closing {
+      padding-block: var(--s-16);
+      border-top: 1px solid var(--rule);
+      text-align: left;
+    }
+    .help-closing .eyebrow { margin-bottom: var(--s-3); }
+    .help-closing__title {
+      font-family: var(--f-display);
+      font-style: italic;
+      font-weight: var(--fw-medium);
+      font-size: clamp(var(--fs-24), 3vw, var(--fs-32));
+      line-height: var(--lh-snug);
+      color: var(--ink);
+      margin: 0 0 var(--s-4);
+      max-width: 30ch;
+    }
+    .help-closing__link {
+      font-family: var(--f-body);
+      font-size: var(--fs-15);
+      font-weight: var(--fw-medium);
+      color: var(--c-gold-deep);
+      border-bottom: 1px solid var(--rule);
+      padding-bottom: 2px;
+      transition: color var(--t-fast) var(--ease-out-quart),
+                  border-color var(--t-fast) var(--ease-out-quart);
+    }
+    .help-closing__link:hover {
+      color: var(--ink);
+      border-bottom-color: var(--c-gold);
+    }
+  </style>
+
+  <!-- JSON-LD: FAQPage schema (RULING-aligned; verbatim copy from page) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Do I need to connect a bank account?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. ProFinanceCast does not integrate with banks, aggregators, or financial institutions of any kind. The forecast is built from four numbers you type in: monthly income, monthly expenses, current debts, and current savings. That refusal to ask for credentials is deliberate; it is the position the product was designed around."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How accurate is the forecast?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The forecast is a deterministic projection, not a prediction. It compounds the numbers you enter against published assumptions (income growth, expense inflation, retirement returns, debt APRs) over a 120-month horizon. Change an input and the output redraws. Every assumption is documented at /about#methodology, and every revision is dated in the methodology changelog."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Where is my data stored?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "In your browser. The numbers you enter are held in local storage on the device you are using and are not transmitted to our servers. If you clear your browser data, the forecast is cleared with it. If you sign in to a paid account, only the metadata required to operate the subscription (email, plan, payment token) leaves the browser; the financial numbers do not."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I export my data?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, at any time, in either CSV or JSON. Export is a single click in settings and is not gated by tier. The export contains the full 120-month forecast, the inputs that produced it, and the assumptions in force at the moment of export."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What does Pro include?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Pro adds the scenarios view (carry two forecasts side-by-side), the salary calculator with multi-country tax tables, the report card, and Sage, the AI planner that answers questions in plain English from your numbers. Pro is $9 per month; everything in Free remains in Pro."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I cancel Pro?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "There is a single link in settings. Click it once; the cancellation is confirmed immediately, with no retention flow, no are-you-sure prompt, and no requirement to write us. You retain access until the end of the period you paid for. No proration is taken back."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why don't you support bank aggregation?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Two reasons, both deliberate. First, asking a visitor for the credentials to their financial institution is a serious thing to ask, and a forecasting tool does not strictly need them: four typed numbers are enough to project the next ten years. Second, the integration layer (Plaid, Yodlee, MX) creates a vendor dependency we are unwilling to take on."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body data-theme="ivory">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div data-include="header"></div>
+
+  <main id="main">
+
+    <!-- ── 1 · PAGE HEAD ──────────────────────────────────────────────── -->
+    <section class="page-head" aria-labelledby="help-h1" data-reveal>
+      <div class="container container--narrow">
+        <p class="eyebrow">Help</p>
+        <h1 id="help-h1" class="page-head__title">Help and answers.</h1>
+        <p class="page-head__lede">Plain-prose answers to the questions we get most. If you don&rsquo;t see yours, write to us &mdash; we read every message.</p>
+        <hr class="page-head__rule" aria-hidden="true">
+      </div>
+    </section>
+
+    <!-- ── 2 · SEARCH (visual only, non-functional) ───────────────────── -->
+    <section class="help-search" aria-labelledby="help-search-label" data-reveal>
+      <div class="container container--narrow">
+        <form class="field" role="search" aria-label="Search the help center" onsubmit="event.preventDefault();">
+          <label id="help-search-label" class="field__label" for="help-search-input">Search the help center</label>
+          <input
+            id="help-search-input"
+            class="field__control"
+            type="search"
+            placeholder="Try &lsquo;export my data&rsquo; or &lsquo;cancel Pro&rsquo;"
+            autocomplete="off">
+          <p class="field__hint">Type a question or a keyword. Browse the categories below if you&rsquo;d rather scan.</p>
+        </form>
+      </div>
+    </section>
+
+    <!-- ── 3 · QUICK CATEGORIES ───────────────────────────────────────── -->
+    <section class="help-categories" aria-label="Help categories" data-reveal>
+      <div class="container container--narrow">
+        <div class="categories-grid">
+          <a href="#getting-started" class="category-card">
+            <p class="eyebrow">01</p>
+            <h2 class="category-card__title">Getting started</h2>
+            <span class="category-card__arrow">Read &rarr;</span>
+          </a>
+          <a href="#methodology" class="category-card">
+            <p class="eyebrow">02</p>
+            <h2 class="category-card__title">Forecast methodology</h2>
+            <span class="category-card__arrow">Read &rarr;</span>
+          </a>
+          <a href="#billing" class="category-card">
+            <p class="eyebrow">03</p>
+            <h2 class="category-card__title">Account &amp; billing</h2>
+            <span class="category-card__arrow">Read &rarr;</span>
+          </a>
+          <a href="#privacy" class="category-card">
+            <p class="eyebrow">04</p>
+            <h2 class="category-card__title">Privacy &amp; data</h2>
+            <span class="category-card__arrow">Read &rarr;</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 4A · FAQ · GETTING STARTED ─────────────────────────────────── -->
+    <section id="getting-started" class="faq-section" aria-labelledby="getting-started-h2" data-reveal>
+      <div class="container container--narrow">
+        <header class="faq-section__head">
+          <p class="eyebrow">Section 01</p>
+          <h2 id="getting-started-h2" class="faq-h2">Getting started.</h2>
+        </header>
+
+        <dl class="faq-dl">
+          <dt><em>Do I need to connect a bank account?</em></dt>
+          <dd>No. ProFinanceCast does not integrate with banks, aggregators, or financial institutions of any kind. The forecast is built from four numbers you type in &mdash; monthly income, monthly expenses, current debts, and current savings. That refusal to ask for credentials is deliberate; it is the position the product was designed around.</dd>
+
+          <dt><em>How accurate is the forecast?</em></dt>
+          <dd>The forecast is a deterministic projection, not a prediction. It compounds the numbers you enter against published assumptions &mdash; income growth, expense inflation, retirement returns, debt APRs &mdash; over a <span class="mono">120-month</span> horizon. Change an input and the output redraws. Every assumption is documented at <a href="/about.html#methodology">/about#methodology</a>, and every revision is dated in the methodology changelog.</dd>
+
+          <dt><em>What countries do you support for take-home pay?</em></dt>
+          <dd>United States (federal and state) and the United Kingdom (England &amp; Wales, Scotland, and Northern Ireland) at present. Additional countries are on the roadmap and will be added as we publish their tax tables under the same methodology discipline as the existing ones.</dd>
+        </dl>
+      </div>
+    </section>
+
+    <!-- ── 4B · FAQ · FORECAST METHODOLOGY ────────────────────────────── -->
+    <section id="methodology" class="faq-section" aria-labelledby="methodology-h2" data-reveal>
+      <div class="container container--narrow">
+        <header class="faq-section__head">
+          <p class="eyebrow">Section 02</p>
+          <h2 id="methodology-h2" class="faq-h2">Forecast methodology.</h2>
+        </header>
+
+        <dl class="faq-dl">
+          <dt><em>Is the tax calculation tax advice?</em></dt>
+          <dd>No. The take-home calculation is an estimate built from published tax brackets and standard deductions. It is not personalised, not certified, and not a substitute for a qualified accountant. We publish the tables we use and the year they apply to so the figure can be checked.</dd>
+
+          <dt><em>Why don&rsquo;t you support bank aggregation?</em></dt>
+          <dd>Two reasons, both deliberate. First, asking a visitor for the credentials to their financial institution is a serious thing to ask, and a forecasting tool does not strictly need them &mdash; four typed numbers are enough to project the next ten years. Second, the integration layer (Plaid, Yodlee, MX) creates a vendor dependency we are unwilling to take on. We&rsquo;d rather ship a smaller, sharper tool than a larger, more entangled one.</dd>
+
+          <dt><em>How accurate is the forecast?</em></dt>
+          <dd>See <a href="#getting-started">Getting started</a> above. In short: the forecast is deterministic, the assumptions are published, and the changelog records every revision with a date.</dd>
+        </dl>
+      </div>
+    </section>
+
+    <!-- ── 4C · FAQ · ACCOUNT &amp; BILLING ───────────────────────────────── -->
+    <section id="billing" class="faq-section" aria-labelledby="billing-h2" data-reveal>
+      <div class="container container--narrow">
+        <header class="faq-section__head">
+          <p class="eyebrow">Section 03</p>
+          <h2 id="billing-h2" class="faq-h2">Account &amp; billing.</h2>
+        </header>
+
+        <dl class="faq-dl">
+          <dt><em>What does Pro include?</em></dt>
+          <dd>Pro adds the scenarios view (carry two forecasts side-by-side), the salary calculator with multi-country tax tables, the report card, and Sage &mdash; the AI planner that answers questions in plain English from your numbers. Pro is <strong class="mono">$9/month</strong>; everything in Free remains in Pro.</dd>
+
+          <dt><em>What&rsquo;s the Founders Lifetime plan?</em></dt>
+          <dd>A one-time payment of <strong class="mono">$149</strong> that grants permanent access to every Pro feature, including future modules, with no recurring charge. The plan is capped at 500 seats; once those are filled it closes.</dd>
+
+          <dt><em>How do I cancel Pro?</em></dt>
+          <dd>There is a single link in settings. Click it once; the cancellation is confirmed immediately, with no retention flow, no &ldquo;are you sure,&rdquo; and no requirement to write us. You retain access until the end of the period you paid for. No proration is taken back.</dd>
+
+          <dt><em>Do you offer refunds?</em></dt>
+          <dd>Yes. Within 14 days of any charge, write to us and we will refund it in full, no questions asked. Outside the 14 days we will still listen, but the policy is the 14-day window.</dd>
+        </dl>
+      </div>
+    </section>
+
+    <!-- ── 4D · FAQ · PRIVACY &amp; DATA ──────────────────────────────────── -->
+    <section id="privacy" class="faq-section" aria-labelledby="privacy-h2" data-reveal>
+      <div class="container container--narrow">
+        <header class="faq-section__head">
+          <p class="eyebrow">Section 04</p>
+          <h2 id="privacy-h2" class="faq-h2">Privacy &amp; data.</h2>
+        </header>
+
+        <dl class="faq-dl">
+          <dt><em>Where is my data stored?</em></dt>
+          <dd>In your browser. The numbers you enter are held in local storage on the device you are using and are not transmitted to our servers. If you clear your browser data, the forecast is cleared with it. If you sign in to a paid account, only the metadata required to operate the subscription (email, plan, payment token) leaves the browser; the financial numbers do not.</dd>
+
+          <dt><em>Can I export my data?</em></dt>
+          <dd>Yes, at any time, in either CSV or JSON. Export is a single click in settings and is not gated by tier. The export contains the full <span class="mono">120-month</span> forecast, the inputs that produced it, and the assumptions in force at the moment of export.</dd>
+
+          <dt><em>How do I contact support?</em></dt>
+          <dd>By email. The address and a short form live at <a href="/contact.html">/contact</a>. We read every message and reply in plain prose, usually within one working day. There is no chatbot in front of the inbox.</dd>
+        </dl>
+      </div>
+    </section>
+
+    <!-- ── 5 · CLOSING STRIP ──────────────────────────────────────────── -->
+    <section class="help-closing" aria-label="Contact prompt" data-reveal>
+      <div class="container container--narrow">
+        <p class="eyebrow">Still looking</p>
+        <h2 class="help-closing__title">Didn&rsquo;t find what you needed?</h2>
+        <a href="/contact.html" class="help-closing__link">Write to us &rarr;</a>
+      </div>
+    </section>
+
+  </main>
+
+  <div data-include="footer"></div>
+
+  <script src="/static/js/partials.js"></script>
+  <script src="/static/js/reveal.js"></script>
+</body>
+</html>

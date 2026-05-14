@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>About &mdash; ProFinanceCast</title>
+  <meta name="description" content="A boutique forecasting house. Based in Europe. Independent. Why we built a 10-year personal-finance forecast without bank logins, ads, or aggregators.">
+  <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/tokens.css">
+  <link rel="stylesheet" href="/static/css/theme-ivory.css">
+  <link rel="stylesheet" href="/static/css/theme-emerald.css">
+  <link rel="stylesheet" href="/static/css/base.css">
+  <link rel="stylesheet" href="/static/css/components.css">
+  <link rel="stylesheet" href="/static/css/nav.css">
+  <link rel="stylesheet" href="/static/css/footer.css">
+  <style>
+    /* ── About page local composition. All values from tokens. ──────── */
+
+    /* Page head — eyebrow / Cormorant italic H1 / italic lede / short gold rule */
+    .page-head {
+      padding-block: var(--s-16) var(--s-8);
+      border-bottom: 0;
+    }
+    .page-head__title {
+      font-family: var(--f-display);
+      font-style: italic;
+      font-weight: var(--fw-medium);
+      font-size: clamp(var(--fs-40), 6vw, var(--fs-72));
+      line-height: var(--lh-tight);
+      letter-spacing: var(--ls-tight);
+      color: var(--ink);
+      margin: 0 0 var(--s-4);
+      max-width: 18ch;
+    }
+    .page-head__lede {
+      font-family: var(--f-display);
+      font-style: italic;
+      font-weight: var(--fw-regular);
+      font-size: clamp(var(--fs-20), 2vw, var(--fs-24));
+      line-height: var(--lh-snug);
+      color: var(--ink-80);
+      max-width: 52ch;
+      margin: 0 0 var(--s-6);
+    }
+    .page-head__rule {
+      height: 1px;
+      width: 96px;
+      background: var(--c-gold);
+      margin: 0;
+      border: 0;
+    }
+
+    /* Section — hairline separated, generous breathing. */
+    .about-section {
+      padding-block: var(--s-12);
+      border-top: 1px solid var(--rule);
+    }
+    .about-section:first-of-type { border-top: 0; padding-top: var(--s-8); }
+    .about-section .eyebrow { margin-bottom: var(--s-3); }
+    .about-h2 {
+      font-family: var(--f-display);
+      font-style: italic;
+      font-weight: var(--fw-medium);
+      font-size: clamp(var(--fs-28), 3.5vw, var(--fs-40));
+      line-height: var(--lh-snug);
+      letter-spacing: var(--ls-tight);
+      color: var(--ink);
+      margin: 0 0 var(--s-6);
+    }
+    .about-section p {
+      font-size: var(--fs-18);
+      line-height: var(--lh-loose);
+      color: var(--ink-80);
+      margin: 0 0 var(--s-4);
+      max-width: 65ch;
+    }
+    .about-section p:last-child { margin-bottom: 0; }
+
+    /* "What we refuse to do" — hairline-separated row list */
+    .refuse-list {
+      list-style: none;
+      padding: 0;
+      margin: var(--s-6) 0 0;
+    }
+    .refuse-item {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: var(--s-8);
+      padding-block: var(--s-6);
+      border-top: 1px solid var(--rule);
+    }
+    .refuse-item:last-child { border-bottom: 1px solid var(--rule); }
+    .refuse-title {
+      font-family: var(--f-display);
+      font-style: italic;
+      font-weight: var(--fw-medium);
+      font-size: var(--fs-24);
+      line-height: var(--lh-snug);
+      color: var(--ink);
+      margin: 0;
+    }
+    .refuse-body {
+      font-size: var(--fs-16);
+      line-height: var(--lh-loose);
+      color: var(--ink-80);
+      margin: 0;
+      max-width: 60ch;
+    }
+    @media (max-width: 720px) {
+      .refuse-item { grid-template-columns: 1fr; gap: var(--s-3); }
+    }
+
+    /* Methodology assumptions panel (uses .panel--flat token rules) */
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--rule);
+      border-radius: var(--r-card);
+      padding: var(--s-6);
+    }
+    .panel--flat {
+      background: transparent;
+      padding-inline: 0;
+    }
+    .assumptions {
+      margin-top: var(--s-8);
+    }
+    .assumptions__label {
+      font-family: var(--f-body);
+      font-size: var(--fs-12);
+      font-weight: var(--fw-medium);
+      letter-spacing: var(--ls-eyebrow);
+      text-transform: uppercase;
+      color: var(--ink-65);
+      margin: 0 0 var(--s-4);
+    }
+    .assumptions__list {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      column-gap: var(--s-6);
+      row-gap: var(--s-3);
+      margin: 0;
+      max-width: none;
+    }
+    .assumptions__list dt {
+      font-size: var(--fs-15);
+      color: var(--ink);
+      border-bottom: 1px dotted var(--rule);
+      padding-bottom: var(--s-2);
+      max-width: none;
+    }
+    .assumptions__list dd {
+      font-family: var(--f-mono);
+      font-variant-numeric: tabular-nums;
+      font-size: var(--fs-15);
+      color: var(--ink);
+      margin: 0;
+      text-align: right;
+      border-bottom: 1px dotted var(--rule);
+      padding-bottom: var(--s-2);
+    }
+    .assumptions__list > *:nth-last-child(-n+2) { border-bottom: 0; padding-bottom: 0; }
+
+    /* Methodology changelog table */
+    .changelog-table {
+      width: 100%;
+      font-size: var(--fs-14);
+      margin-top: var(--s-4);
+      border-top: 1px solid var(--rule);
+    }
+    .changelog-table th,
+    .changelog-table td {
+      text-align: left;
+      padding: var(--s-3) var(--s-3);
+      border-bottom: 1px solid var(--rule);
+      vertical-align: top;
+      color: var(--ink-80);
+    }
+    .changelog-table th {
+      font-size: var(--fs-12);
+      font-weight: var(--fw-medium);
+      color: var(--ink-65);
+      letter-spacing: var(--ls-eyebrow);
+      text-transform: uppercase;
+    }
+    .changelog-table th:first-child,
+    .changelog-table td:first-child { padding-left: 0; width: 140px; }
+    .changelog-table th:last-child,
+    .changelog-table td:last-child { padding-right: 0; }
+    .changelog-table td.mono { color: var(--ink); }
+
+    /* "What's next" link */
+    .next-link {
+      display: inline-flex;
+      align-items: baseline;
+      gap: var(--s-2);
+      margin-top: var(--s-4);
+      font-family: var(--f-body);
+      font-size: var(--fs-15);
+      font-weight: var(--fw-medium);
+      color: var(--c-gold-deep);
+      border-bottom: 1px solid var(--rule);
+      padding-bottom: 2px;
+      transition: color var(--t-fast) var(--ease-out-quart),
+                  border-color var(--t-fast) var(--ease-out-quart);
+    }
+    .next-link:hover {
+      color: var(--ink);
+      border-bottom-color: var(--c-gold);
+    }
+
+    /* Closing strip — R10 byline (long /about variant) */
+    .closing-strip {
+      padding-block: var(--s-16);
+      border-top: 1px solid var(--rule);
+      text-align: center;
+    }
+    .closing-strip__byline {
+      font-family: var(--f-display);
+      font-style: italic;
+      font-weight: var(--fw-medium);
+      font-size: clamp(var(--fs-24), 3vw, var(--fs-32));
+      line-height: var(--lh-snug);
+      color: var(--ink);
+      margin: 0 auto var(--s-4);
+      max-width: 46ch;
+    }
+    .closing-strip__link {
+      font-family: var(--f-body);
+      font-size: var(--fs-14);
+      font-weight: var(--fw-medium);
+      letter-spacing: 0.01em;
+      color: var(--c-gold-deep);
+      border-bottom: 1px solid var(--rule);
+      padding-bottom: 2px;
+      transition: color var(--t-fast) var(--ease-out-quart),
+                  border-color var(--t-fast) var(--ease-out-quart);
+    }
+    .closing-strip__link:hover {
+      color: var(--ink);
+      border-bottom-color: var(--c-gold);
+    }
+  </style>
+</head>
+<body data-theme="ivory">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div data-include="header"></div>
+
+  <main id="main">
+
+    <!-- ── 1 · PAGE HEAD ──────────────────────────────────────────────── -->
+    <section class="page-head" aria-labelledby="about-h1" data-reveal>
+      <div class="container container--narrow">
+        <p class="eyebrow">About</p>
+        <h1 id="about-h1" class="page-head__title">Why we built a forecasting house.</h1>
+        <p class="page-head__lede">We don&rsquo;t aggregate your bank accounts. We don&rsquo;t sell ads. We don&rsquo;t sell you. We project the next decade from four numbers.</p>
+        <hr class="page-head__rule" aria-hidden="true">
+      </div>
+    </section>
+
+    <!-- ── 2 · OUR POSITION ───────────────────────────────────────────── -->
+    <section class="about-section" aria-labelledby="position-h2" data-reveal>
+      <div class="container container--narrow">
+        <p class="eyebrow">Section 01</p>
+        <h2 id="position-h2" class="about-h2">Our position.</h2>
+        <p>ProFinanceCast is a boutique forecasting house, based in Europe, independent. We are not a bank, not a broker, not an aggregator, and not venture-backed. We have no investors to answer to, no integrations to defend, and no advertisers in the margins.</p>
+        <p>That posture is the product. Personal-finance software, as it stands, asks you to surrender your bank credentials to a third party so it can categorise transactions you already understand. We took a different route: type four numbers, and we project the next ten years from them. The math is published, the assumptions are dated, and the data stays in the browser you opened.</p>
+        <p>We write for an audience that prefers a quarterly letter to a notification. The register is plain, the figures are tabular, the palette is three. We&rsquo;d rather show our work than win the argument.</p>
+      </div>
+    </section>
+
+    <!-- ── 3 · WHAT WE REFUSE TO DO ───────────────────────────────────── -->
+    <section class="about-section" aria-labelledby="refuse-h2" data-reveal>
+      <div class="container container--narrow">
+        <p class="eyebrow">Section 02</p>
+        <h2 id="refuse-h2" class="about-h2">What we refuse to do.</h2>
+        <p>The shape of a product is decided as much by what it omits as by what it ships. Four omissions, made deliberately, before the first line of code.</p>
+
+        <ul class="refuse-list">
+          <li class="refuse-item">
+            <h3 class="refuse-title"><em>Bank login.</em></h3>
+            <p class="refuse-body">We will not ask for credentials to a financial institution, ever. No Plaid, no Yodlee, no MX. The forecast takes four numbers and projects from there; the integration layer is the visitor&rsquo;s memory.</p>
+          </li>
+          <li class="refuse-item">
+            <h3 class="refuse-title"><em>Selling your data.</em></h3>
+            <p class="refuse-body">Numbers entered into ProFinanceCast are computed in your browser. We do not warehouse, enrich, profile, or resell them. The business model is a subscription and a one-time licence &mdash; nothing else.</p>
+          </li>
+          <li class="refuse-item">
+            <h3 class="refuse-title"><em>Manufactured urgency.</em></h3>
+            <p class="refuse-body">No countdown timers, no exit-intent popups, no &ldquo;three people are looking at this plan.&rdquo; If the work is good, the pace can stay quiet.</p>
+          </li>
+          <li class="refuse-item">
+            <h3 class="refuse-title"><em>Paid ads.</em></h3>
+            <p class="refuse-body">We do not buy keywords, retarget visitors, or run growth-loop creative against you. The site is read in full or it is not read; either is acceptable.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ── 4 · HOW WE FORECAST ────────────────────────────────────────── -->
+    <section class="about-section" aria-labelledby="methodology-h2" data-reveal>
+      <a id="methodology"></a>
+      <div class="container container--narrow">
+        <p class="eyebrow">Section 03</p>
+        <h2 id="methodology-h2" class="about-h2">How we forecast.</h2>
+        <p>The forecast is a deterministic projection, not a prediction. From four inputs &mdash; monthly income, monthly expenses, current debts, and current savings &mdash; we build a 120-month ledger that advances one month at a time. Income compounds at an assumed annual growth rate; expenses inflate at a separate rate; debts accrue interest at their stated APR and amortise against any allocated payment; savings compound at the long-run retirement rate.</p>
+        <p>Each month is computed from the previous month&rsquo;s closing balance. Allocations follow a priority rule: minimum debt payments first, then the visitor&rsquo;s chosen strategy (avalanche, snowball, or a custom mix), then retirement contributions, then liquid savings. Tax is applied to gross income via a country-specific table before any allocation runs. The output is a month-by-month series, which the charts draw and the tables summarise.</p>
+        <p>Nothing in the model is calibrated to a particular outcome. Change a single input and the entire 120-month ledger redraws. Where we make an assumption &mdash; growth rate, inflation, retirement compounding &mdash; the figure is published below and revised in the changelog when we revise it. We&rsquo;d rather be wrong in public than right in private.</p>
+
+        <aside class="panel panel--flat assumptions" aria-label="Forecast assumptions">
+          <p class="assumptions__label">Current assumptions</p>
+          <dl class="assumptions__list">
+            <dt>Income growth rate (annual)</dt>
+            <dd class="mono">3.0%</dd>
+            <dt>Retirement compounding rate (annual)</dt>
+            <dd class="mono">6.0%</dd>
+            <dt>Expense inflation rate (annual)</dt>
+            <dd class="mono">2.5%</dd>
+            <dt>Debt allocation strategy</dt>
+            <dd>Avalanche (default)</dd>
+            <dt>Forecast horizon</dt>
+            <dd class="mono">120 months</dd>
+          </dl>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ── 5 · METHODOLOGY CHANGELOG ──────────────────────────────────── -->
+    <section class="about-section" aria-labelledby="changelog-h2" data-reveal>
+      <div class="container container--narrow">
+        <p class="eyebrow">Section 04</p>
+        <h2 id="changelog-h2" class="about-h2">Methodology changelog.</h2>
+        <p>Every revision to the model is logged with a date and a one-line description. Older entries are kept; nothing is silently overwritten.</p>
+
+        <table class="changelog-table" aria-label="Methodology changelog">
+          <thead>
+            <tr>
+              <th scope="col">Date</th>
+              <th scope="col">Revision</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="mono">2026-05-01</td>
+              <td>Revised retirement compounding assumption to 3.0% real / 6.0% nominal from 6.5%, reflecting a flatter long-run equity outlook.</td>
+            </tr>
+            <tr>
+              <td class="mono">2026-04-15</td>
+              <td>Added UK income tax model (Scotland, England &amp; Wales, Northern Ireland bands separately).</td>
+            </tr>
+            <tr>
+              <td class="mono">2026-03-02</td>
+              <td>Switched debt amortisation from end-of-month to start-of-month accrual to match standard bank statements.</td>
+            </tr>
+            <tr>
+              <td class="mono">2026-02-10</td>
+              <td>Initial publication of the 120-month deterministic forecast model.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ── 6 · WHAT'S NEXT ────────────────────────────────────────────── -->
+    <section class="about-section" aria-labelledby="next-h2" data-reveal>
+      <div class="container container--narrow">
+        <p class="eyebrow">Section 05</p>
+        <h2 id="next-h2" class="about-h2">What&rsquo;s next.</h2>
+        <p>The model is a foundation, not a destination. Next on the bench: a scenario-stacking view that lets you carry two forecasts side-by-side, a property-and-mortgage module, additional country tax tables, and a longer-horizon retirement projection. We publish a public roadmap so visitors can see what we have committed to and what we have deferred, with rationale on each.</p>
+        <a href="/roadmap.html" class="next-link">See the roadmap &rarr;</a>
+      </div>
+    </section>
+
+    <!-- ── 7 · CLOSING STRIP — R10 byline (long /about variant) ───────── -->
+    <section class="closing-strip" aria-label="Brand byline" data-reveal>
+      <div class="container container--narrow">
+        <p class="closing-strip__byline">A boutique forecasting house. Based in Europe. Independent &mdash; no investors, no integrations, no bank logins.</p>
+        <a href="/blog/" class="closing-strip__link">Read the journal &rarr;</a>
+      </div>
+    </section>
+
+  </main>
+
+  <div data-include="footer"></div>
+
+  <script src="/static/js/partials.js"></script>
+  <script src="/static/js/reveal.js"></script>
+</body>
+</html>

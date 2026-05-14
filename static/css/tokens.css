@@ -1,0 +1,220 @@
+/* =========================================================================
+   tokens.css — ProFinanceCast2 design-system primitives
+   Three-layer architecture: primitive -> semantic -> component.
+   PRIMITIVE values live here. SEMANTIC canvas/ink/surface/rule mappings
+   live in theme-ivory.css and theme-emerald.css. COMPONENT tokens below
+   read the semantic layer, so a theme swap is a remap, not a rewrite.
+   Locked palette: emerald-black, ivory, champagne gold ONLY for UI chrome.
+   Terracotta and bright-emerald are data-encoding for charts only.
+   ========================================================================= */
+
+:root {
+  /* ---- PRIMITIVE: brand palette ----------------------------------------
+     Three colors only. Do not introduce a fourth.                          */
+  --c-emerald-black: #0B1410;   /* sovereign-terminal canvas */
+  --c-ivory:         #F4EFE5;   /* editorial canvas */
+  --c-gold:          #D4AF6A;   /* champagne gold - single accent */
+
+  /* PRIMITIVE: tonal variants of the locked three.
+     Generated, not invented; used for surfaces, rules, hover lifts.        */
+  --c-emerald-12: #0E1814;       /* +1 lift on emerald (cards on app surfaces) */
+  --c-emerald-16: #122019;       /* +2 lift (hover, popovers) */
+  --c-emerald-08: #07100C;       /* -1 sink (wells, sidebar) */
+
+  --c-ivory-soft:  #EBE5D7;      /* sunken ivory (wells, code) */
+  --c-ivory-hi:    #FAF6EC;      /* raised ivory (top of cards) */
+
+  --c-gold-soft:   #C9A35E;      /* gold pressed / muted */
+  --c-gold-deep:   #A0823F;      /* gold on ivory link state */
+
+  /* PRIMITIVE: ink ramps. Emerald ink for ivory, ivory ink for emerald.
+     Opacity tints come from the brand colors; no neutral grays from
+     outside the palette enter the system.                                  */
+  --c-ink-emerald-100: #0B1410;
+  --c-ink-emerald-80:  rgba(11, 20, 16, 0.80);
+  --c-ink-emerald-65:  rgba(11, 20, 16, 0.65);
+  --c-ink-emerald-50:  rgba(11, 20, 16, 0.50);
+  --c-ink-emerald-30:  rgba(11, 20, 16, 0.30);
+  --c-ink-emerald-15:  rgba(11, 20, 16, 0.15);
+  --c-ink-emerald-08:  rgba(11, 20, 16, 0.08);
+  --c-ink-emerald-04:  rgba(11, 20, 16, 0.04);
+
+  --c-ink-ivory-100:   #F4EFE5;
+  --c-ink-ivory-80:    rgba(244, 239, 229, 0.80);
+  --c-ink-ivory-70:    rgba(244, 239, 229, 0.70);
+  --c-ink-ivory-60:    rgba(244, 239, 229, 0.60);
+  --c-ink-ivory-50:    rgba(244, 239, 229, 0.50);
+  --c-ink-ivory-30:    rgba(244, 239, 229, 0.30);
+  --c-ink-ivory-15:    rgba(244, 239, 229, 0.15);
+  --c-ink-ivory-08:    rgba(244, 239, 229, 0.08);
+  --c-ink-ivory-04:    rgba(244, 239, 229, 0.04);
+
+  /* PRIMITIVE: data-encoding only. NEVER UI chrome.
+     Used inside <svg> chart marks; cannot appear in buttons/cards/badges.  */
+  --c-data-positive: #2BB67D;    /* bright emerald - gains, income */
+  --c-data-negative: #E66E5C;    /* terracotta - losses, expenses */
+
+  /* ---- PRIMITIVE: typography -----------------------------------------
+     Three families. No additions. Cormorant for display only (italic),
+     Inter for everything text, JetBrains Mono for figures.                 */
+  --f-display:  'Cormorant Garamond', 'Cormorant', Garamond, 'Times New Roman', serif;
+  --f-body:     'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --f-mono:     'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* Type scale - modular. Weight & color drive hierarchy more than size.   */
+  --fs-12:  0.75rem;
+  --fs-13:  0.8125rem;
+  --fs-14:  0.875rem;
+  --fs-15:  0.9375rem;
+  --fs-16:  1rem;
+  --fs-18:  1.125rem;
+  --fs-20:  1.25rem;
+  --fs-24:  1.5rem;
+  --fs-28:  1.75rem;
+  --fs-32:  2rem;
+  --fs-40:  2.5rem;
+  --fs-56:  3.5rem;
+  --fs-72:  4.5rem;
+
+  /* Weights kept narrow: Inter 300/400/500/600 + Cormorant italic 500/600. */
+  --fw-light:   300;
+  --fw-regular: 400;
+  --fw-medium:  500;
+  --fw-semi:    600;
+
+  /* Line-height - body is generous, display is tight.                      */
+  --lh-tight: 1.10;
+  --lh-snug:  1.25;
+  --lh-base:  1.55;
+  --lh-loose: 1.70;
+
+  /* Letter-spacing - used sparingly. Eyebrow gets the only real tracking.  */
+  --ls-eyebrow:  0.12em;
+  --ls-tight:   -0.01em;
+  --ls-base:     0em;
+
+  /* ---- PRIMITIVE: spacing --------------------------------------------
+     8pt grid + 4px micro step. No ad-hoc values in components.             */
+  --s-0:  0;
+  --s-1:  4px;
+  --s-2:  8px;
+  --s-3:  12px;
+  --s-4:  16px;
+  --s-6:  24px;
+  --s-8:  32px;
+  --s-12: 48px;
+  --s-16: 64px;
+  --s-24: 96px;
+  --s-32: 128px;
+  --s-48: 192px;
+
+  /* ---- PRIMITIVE: radius --------------------------------------------- */
+  --r-sharp: 4px;
+  --r-card:  12px;
+  --r-hero:  20px;
+  --r-pill:  999px;
+
+  /* ---- PRIMITIVE: elevation -----------------------------------------
+     One hairline + two interactive. No Material 5-step ladder.             */
+  --e-hairline: 0 0 0 1px rgba(11, 20, 16, 0.08);
+  --e-lift-1:   0 1px 2px rgba(11, 20, 16, 0.06), 0 2px 8px rgba(11, 20, 16, 0.04);
+  --e-lift-2:   0 2px 4px rgba(11, 20, 16, 0.08), 0 8px 24px rgba(11, 20, 16, 0.08);
+
+  /* ---- PRIMITIVE: motion ---------------------------------------------
+     Four durations only.                                                   */
+  --t-fast:    120ms;
+  --t-medium:  240ms;
+  --t-base:    480ms;
+  --t-stately: 1600ms;
+
+  /* Four easings - quartic out is the default; no bounce, no elastic.      */
+  --ease-out-quart:   cubic-bezier(0.165, 0.84, 0.44, 1);
+  --ease-out-expo:    cubic-bezier(0.19, 1, 0.22, 1);
+  --ease-in-out-soft: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-linear:      linear;
+
+  /* ---- PRIMITIVE: layout --------------------------------------------- */
+  --content-narrow: 720px;
+  --content-base:   1080px;
+  --content-wide:   1280px;
+  --content-app:    1440px;
+  --gutter:         clamp(20px, 4vw, 48px);
+
+  /* ---- PRIMITIVE: z-index -------------------------------------------- */
+  --z-base:    0;
+  --z-raised:  1;
+  --z-nav:    10;
+  --z-overlay: 50;
+  --z-modal:  100;
+  --z-toast:  200;
+}
+
+/* =========================================================================
+   COMPONENT tokens - read the SEMANTIC layer (set by theme files).
+   These are defined here so both themes share the same component contract.
+   ========================================================================= */
+:root {
+  /* Button - primary (gold pill, emerald ink) */
+  --btn-primary-bg:        var(--c-gold);
+  --btn-primary-bg-hover:  var(--c-gold-soft);
+  --btn-primary-ink:       var(--c-emerald-black);
+  --btn-primary-radius:    var(--r-card);
+
+  /* Button - ghost (reads canvas) */
+  --btn-ghost-bg:          transparent;
+  --btn-ghost-ink:         var(--ink);
+  --btn-ghost-rule:        var(--rule);
+
+  /* Field */
+  --field-bg:              var(--surface);
+  --field-ink:             var(--ink);
+  --field-rule:            var(--rule);
+  --field-rule-focus:      var(--c-gold);
+  --field-radius:          var(--r-sharp);
+
+  /* Card */
+  --card-bg:               var(--surface);
+  --card-rule:             var(--rule);
+  --card-radius:           var(--r-card);
+  --card-elevation:        var(--e-hairline);
+  --card-elevation-hover:  var(--e-lift-1);
+
+  /* Badge */
+  --badge-bg:              var(--ink-08);
+  --badge-ink:             var(--ink-80);
+  --badge-radius:          var(--r-pill);
+
+  /* Banner (demo-data) */
+  --banner-bg:             var(--canvas);
+  --banner-ink:            var(--ink);
+  --banner-rule:           var(--c-gold);
+
+  /* Table */
+  --table-rule:            var(--rule);
+  --table-row-hover:       var(--ink-04);
+
+  /* Nav */
+  --nav-bg:                var(--canvas);
+  --nav-ink:               var(--ink);
+  --nav-rule:              var(--rule);
+  --nav-active:            var(--c-gold);
+}
+
+/* =========================================================================
+   Reduced motion - global. Every animated property short-circuits to
+   final state. Honors the brief's accessibility constraint.
+   ========================================================================= */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --t-fast:    0ms;
+    --t-medium:  0ms;
+    --t-base:    0ms;
+    --t-stately: 0ms;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.001ms;
+    animation-iteration-count: 1;
+    transition-duration: 0.001ms;
+    scroll-behavior: auto;
+  }
+}

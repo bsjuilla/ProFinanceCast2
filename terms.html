@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Terms of service &mdash; ProFinanceCast</title>
+  <meta name="description" content="The terms under which you use ProFinanceCast. Plain language, fair limits, honest disclaimers, no surprises.">
+  <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/tokens.css">
+  <link rel="stylesheet" href="/static/css/theme-ivory.css">
+  <link rel="stylesheet" href="/static/css/theme-emerald.css">
+  <link rel="stylesheet" href="/static/css/base.css">
+  <link rel="stylesheet" href="/static/css/components.css">
+  <link rel="stylesheet" href="/static/css/nav.css">
+  <link rel="stylesheet" href="/static/css/footer.css">
+  <style>
+    /* ---------------------------------------------------------------
+       Legal page layout. Composed from locked tokens only.
+       Three regions per docs-page skill:
+         - inline-start sticky TOC (collapses below 960px)
+         - article body, container-prose constrained to ~65ch
+         - hairline-only chrome; no cards on legal copy
+       --------------------------------------------------------------- */
+
+    .legal-head {
+      padding-block: var(--s-16) var(--s-8);
+    }
+    .legal-head__eyebrow { margin-bottom: var(--s-3); }
+    .legal-head__title {
+      font-family: var(--f-display);
+      font-style: italic;
+      font-weight: var(--fw-medium);
+      font-size: clamp(var(--fs-40), 6vw, var(--fs-72));
+      line-height: var(--lh-tight);
+      letter-spacing: var(--ls-tight);
+      color: var(--ink);
+      margin: 0 0 var(--s-4);
+    }
+    .legal-head__lede {
+      font-size: var(--fs-13);
+      letter-spacing: var(--ls-eyebrow);
+      text-transform: uppercase;
+      color: var(--ink-65);
+      margin: 0 0 var(--s-6);
+    }
+    .legal-head__lede .mono {
+      font-size: var(--fs-13);
+      letter-spacing: 0;
+      text-transform: none;
+      color: var(--ink-80);
+    }
+    .legal-head__rule {
+      display: block;
+      height: 1px;
+      width: 96px;
+      background: var(--c-gold);
+      border: 0;
+      margin: 0;
+    }
+
+    /* Plain-prose summary paragraph that sits BEFORE the formal sections. */
+    .legal-summary {
+      padding-block: var(--s-8) var(--s-12);
+      border-bottom: 1px solid var(--rule);
+    }
+    .legal-summary p {
+      font-family: var(--f-display);
+      font-style: italic;
+      font-weight: var(--fw-medium);
+      font-size: var(--fs-24);
+      line-height: var(--lh-snug);
+      letter-spacing: var(--ls-tight);
+      color: var(--ink);
+      max-width: 56ch;
+      margin: 0;
+    }
+
+    /* Three-column grid: TOC | article | (negative space). */
+    .legal-body {
+      padding-block: var(--s-12) var(--s-24);
+    }
+    .container-prose {
+      width: 100%;
+      max-width: var(--content-wide);
+      margin: 0 auto;
+      padding-inline: var(--gutter);
+      display: grid;
+      grid-template-columns: 220px minmax(0, 1fr);
+      gap: var(--s-16);
+    }
+    @media (max-width: 960px) {
+      .container-prose {
+        grid-template-columns: minmax(0, 1fr);
+        gap: var(--s-8);
+      }
+      .legal-toc { display: none; }
+    }
+
+    .legal-toc {
+      position: sticky;
+      top: var(--s-8);
+      align-self: start;
+      padding-inline-start: 0;
+    }
+    .legal-toc__label {
+      font-family: var(--f-body);
+      font-size: var(--fs-12);
+      font-weight: var(--fw-medium);
+      letter-spacing: var(--ls-eyebrow);
+      text-transform: uppercase;
+      color: var(--ink-65);
+      margin: 0 0 var(--s-4);
+    }
+    .legal-toc ol {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      counter-reset: toc;
+    }
+    .legal-toc li {
+      counter-increment: toc;
+      border-top: 1px solid var(--rule);
+    }
+    .legal-toc li:last-child { border-bottom: 1px solid var(--rule); }
+    .legal-toc a {
+      display: flex;
+      align-items: baseline;
+      gap: var(--s-3);
+      padding: var(--s-2) 0;
+      font-size: var(--fs-14);
+      color: var(--ink-80);
+      border-bottom: 0;
+      line-height: var(--lh-snug);
+      transition: color var(--t-fast) var(--ease-out-quart);
+    }
+    .legal-toc a::before {
+      content: counter(toc, decimal-leading-zero);
+      font-family: var(--f-mono);
+      font-variant-numeric: tabular-nums;
+      font-size: var(--fs-12);
+      color: var(--ink-50);
+      flex: 0 0 auto;
+      letter-spacing: 0;
+    }
+    .legal-toc a:hover { color: var(--ink); }
+    .legal-toc a.is-active { color: var(--ink); }
+    .legal-toc a.is-active::before { color: var(--c-gold-deep); }
+
+    /* Article column. */
+    .legal-article {
+      max-width: 65ch;
+    }
+    .legal-article > section + section {
+      margin-top: var(--s-12);
+      padding-top: var(--s-12);
+      border-top: 1px solid var(--rule);
+    }
+    .legal-article h2 {
+      font-family: var(--f-display);
+      font-style: italic;
+      font-weight: var(--fw-medium);
+      font-size: var(--fs-32);
+      line-height: var(--lh-snug);
+      letter-spacing: var(--ls-tight);
+      color: var(--ink);
+      margin: 0 0 var(--s-4);
+      scroll-margin-top: var(--s-12);
+    }
+    .legal-article h3 {
+      font-family: var(--f-body);
+      font-weight: var(--fw-semi);
+      font-size: var(--fs-16);
+      line-height: var(--lh-snug);
+      letter-spacing: 0;
+      color: var(--ink);
+      margin: var(--s-8) 0 var(--s-2);
+    }
+    .legal-article p {
+      font-size: var(--fs-16);
+      line-height: var(--lh-loose);
+      color: var(--ink-80);
+      max-width: 65ch;
+      margin: 0 0 var(--s-4);
+    }
+    .legal-article p:last-child { margin-bottom: 0; }
+    .legal-article a {
+      color: var(--link);
+      border-bottom: 1px solid var(--rule);
+    }
+    .legal-article a:hover {
+      color: var(--ink);
+      border-bottom-color: var(--c-gold);
+    }
+    .legal-article strong {
+      color: var(--ink);
+      font-weight: var(--fw-semi);
+    }
+    .legal-article .mono { color: var(--ink); }
+
+    /* Hairline list. */
+    .legal-list {
+      list-style: none;
+      margin: var(--s-6) 0 var(--s-4);
+      padding: 0;
+      border-top: 1px solid var(--rule);
+    }
+    .legal-list li {
+      border-bottom: 1px solid var(--rule);
+      padding-block: var(--s-4);
+      font-size: var(--fs-16);
+      line-height: var(--lh-loose);
+      color: var(--ink-80);
+    }
+    .legal-list li strong {
+      display: block;
+      margin-bottom: var(--s-1);
+      color: var(--ink);
+      font-weight: var(--fw-semi);
+    }
+
+    /* "Not advice" callout - bold, single-line, gold hairline above and below.
+       No card chrome; pure typographic emphasis with rules. */
+    .legal-callout {
+      margin: var(--s-6) 0;
+      padding-block: var(--s-6);
+      border-top: 1px solid var(--c-gold);
+      border-bottom: 1px solid var(--c-gold);
+    }
+    .legal-callout p {
+      font-family: var(--f-display);
+      font-style: italic;
+      font-weight: var(--fw-semi);
+      font-size: var(--fs-24);
+      line-height: var(--lh-snug);
+      letter-spacing: var(--ls-tight);
+      color: var(--ink);
+      max-width: 56ch;
+      margin: 0;
+    }
+
+    /* Page-end mark. */
+    .legal-foot {
+      padding-block: var(--s-12) var(--s-16);
+      border-top: 1px solid var(--rule);
+      text-align: center;
+    }
+    .legal-foot p {
+      font-size: var(--fs-12);
+      letter-spacing: var(--ls-eyebrow);
+      text-transform: uppercase;
+      color: var(--ink-50);
+      margin: 0;
+    }
+    .legal-foot .mono {
+      font-size: var(--fs-12);
+      letter-spacing: 0;
+      text-transform: none;
+      color: var(--ink-65);
+    }
+  </style>
+</head>
+<body data-theme="ivory">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div data-include="header"></div>
+
+  <main id="main">
+
+    <!-- 1. Page head ------------------------------------------------ -->
+    <section class="legal-head" aria-labelledby="terms-title" data-reveal>
+      <div class="container container--wide">
+        <p class="eyebrow legal-head__eyebrow">Terms of service</p>
+        <h1 id="terms-title" class="legal-head__title">Terms of service.</h1>
+        <p class="legal-head__lede">Last updated <span class="mono">2026-05-11</span></p>
+        <hr class="legal-head__rule" aria-hidden="true">
+      </div>
+    </section>
+
+    <!-- 2. Plain-prose summary BEFORE the formal sections ----------- -->
+    <section class="legal-summary" data-reveal>
+      <div class="container container--wide">
+        <p>Most terms-of-service pages are written to be unreadable. This one is not. The promises are short, the limits are stated in plain language, and the obligations run in both directions.</p>
+      </div>
+    </section>
+
+    <!-- 3. Body: TOC + article -------------------------------------- -->
+    <section class="legal-body" aria-label="Terms detail">
+      <div class="container-prose">
+
+        <!-- Inline-start sticky TOC -->
+        <nav class="legal-toc" aria-label="On this page" data-reveal>
+          <p class="legal-toc__label">On this page</p>
+          <ol>
+            <li><a href="#who-we-are">Who we are</a></li>
+            <li><a href="#what-this-is">What this service does</a></li>
+            <li><a href="#what-you-can-do">What you can do with it</a></li>
+            <li><a href="#what-you-cant-do">What you can&rsquo;t do</a></li>
+            <li><a href="#billing">Subscriptions and billing</a></li>
+            <li><a href="#data-ownership">Data ownership</a></li>
+            <li><a href="#disclaimers">Disclaimers</a></li>
+            <li><a href="#liability">Limitation of liability</a></li>
+            <li><a href="#termination">Termination</a></li>
+            <li><a href="#governing-law">Governing law &amp; disputes</a></li>
+            <li><a href="#changes">Changes to these terms</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ol>
+        </nav>
+
+        <!-- Article body -->
+        <article class="legal-article" data-reveal>
+
+          <section id="who-we-are">
+            <h2>Who we are.</h2>
+            <p>ProFinanceCast is a boutique forecasting house. Based in Europe. Independent. The service is operated by the entity that owns the brand under that name; full company details are available on request.</p>
+            <p>Throughout these terms, &ldquo;we&rdquo; and &ldquo;ProFinanceCast&rdquo; refer to that entity. &ldquo;You&rdquo; refers to the person using the service, on a free plan or a paid subscription.</p>
+          </section>
+
+          <section id="what-this-is">
+            <h2>What this service does.</h2>
+            <p>ProFinanceCast is a personal-finance forecasting tool. You type a small number of summary figures, the tool projects a ten-year forecast, and you can model scenarios against it. That is the entire product surface. It helps to be clear about what the service is <em>not</em>.</p>
+            <ul class="legal-list">
+              <li><strong>Not a bank.</strong> We hold no deposits, issue no cards, and process no payments on your behalf.</li>
+              <li><strong>Not a broker.</strong> We do not buy, sell, or hold securities for you.</li>
+              <li><strong>Not an investment adviser.</strong> We do not give personalised investment advice or manage assets.</li>
+              <li><strong>Not an aggregator.</strong> We do not connect to your bank, read your transactions, or hold your credentials.</li>
+            </ul>
+          </section>
+
+          <section id="what-you-can-do">
+            <h2>What you can do with it.</h2>
+            <p>You may use the service for your own personal-finance forecasting and planning, and for the household you support. You may export your numbers at any time in a machine-readable format, cancel at any time, and share screenshots and summaries publicly; the outputs are yours.</p>
+            <p>Use inside a small self-employed practice or single-person consultancy for your own cash-flow planning is fine. For larger team or organisation use, contact us so we can scope a workspace plan that fits.</p>
+          </section>
+
+          <section id="what-you-cant-do">
+            <h2>What you can&rsquo;t do.</h2>
+            <p>A short list of things that will get an account suspended.</p>
+            <ul class="legal-list">
+              <li><strong>Don&rsquo;t resell the service.</strong> No white-labelling, repackaging, or exposing the outputs through a paid API of your own without a written agreement.</li>
+              <li><strong>Don&rsquo;t scrape it.</strong> Automated extraction beyond ordinary single-user browsing is not permitted. We rate-limit and we notice.</li>
+              <li><strong>Don&rsquo;t reverse-engineer the forecast.</strong> The mathematics is documented in plain prose; do not copy it into a competing product.</li>
+              <li><strong>Don&rsquo;t abuse the AI advisor.</strong> No malicious, defamatory, harassing, or illegal content; no impersonating a regulated adviser; no attempts to extract another party&rsquo;s private data.</li>
+              <li><strong>Don&rsquo;t share an account.</strong> One subscription, one household. Running multiple separate users through one seat is grounds for cancellation.</li>
+            </ul>
+          </section>
+
+          <section id="billing">
+            <h2>Subscriptions and billing.</h2>
+            <p>Paid plans are billed monthly or annually in advance. Prices are listed on the pricing page in the currency shown at checkout; local taxes are added where applicable.</p>
+            <p>You may cancel at any time from inside the account. Cancellation takes effect at the end of the period you have already paid for; we do not pro-rate refunds for partial months. Annual plans are refundable within <span class="mono">14</span> days of purchase if you have made no material use of the service.</p>
+            <p>If a payment fails, we retry on a sensible schedule and send reminders. If it continues to fail, the account moves to read-only and is downgraded to the free tier rather than deleted.</p>
+          </section>
+
+          <section id="data-ownership">
+            <h2>Data ownership.</h2>
+            <p>Your data is yours. The numbers you enter, the scenarios you build, and the forecasts you generate belong to you. We do not claim ownership of any of it, and we do not license it to ourselves for any purpose beyond running the service you signed up for.</p>
+            <p>We do not train machine-learning models on your data. We do not sell your data to brokers. We do not provide it to advertisers. The privacy policy describes the small set of operational records we hold and the rolling windows on which they are deleted.</p>
+          </section>
+
+          <section id="disclaimers">
+            <h2>Disclaimers.</h2>
+            <div class="legal-callout">
+              <p>Not financial, tax, legal, or investment advice.</p>
+            </div>
+            <p>ProFinanceCast is a forecasting tool, not an adviser. The forecasts it produces are projections built from the numbers you supply and the methodology we document. They are useful for planning; they are not a recommendation to take, hold, or sell any position, and they are not a substitute for advice from a qualified professional.</p>
+            <p>The service is provided &ldquo;as is&rdquo; and &ldquo;as available&rdquo;. We try hard to keep it accurate, but make no warranty that it will be free of error or uninterrupted. If a forecast looks wrong, treat it as a prompt to check your inputs and our methodology; please tell us so we can fix it.</p>
+          </section>
+
+          <section id="liability">
+            <h2>Limitation of liability.</h2>
+            <p>To the maximum extent permitted by law, our aggregate liability for any claim arising out of or relating to your use of the service is capped at the fees you have paid to us in the <span class="mono">12</span> months immediately before the event giving rise to the claim. On a free plan, the cap is zero.</p>
+            <p>In plainer language: if the service makes a mistake that costs you money, the most you can recover from us is what you paid us in the prior year. We are not liable for indirect or consequential losses. Nothing here excludes liability that the law does not permit us to exclude, such as for fraud or personal injury caused by our negligence.</p>
+          </section>
+
+          <section id="termination">
+            <h2>Termination.</h2>
+            <p>You may close your account at any time, from inside the product. We will export your data on request, then delete the account and associated records on the schedule set out in the privacy policy.</p>
+            <p>We may suspend or terminate an account if the rules in &ldquo;What you can&rsquo;t do&rdquo; are broken, if a payment remains unpaid after reasonable reminders, or if we are required to do so by law. Where we can give notice and a chance to fix the problem, we will.</p>
+          </section>
+
+          <section id="governing-law">
+            <h2>Governing law &amp; disputes.</h2>
+            <p>These terms are governed by the law of the European jurisdiction in which the operating entity is established. Where you contract with us as a consumer, you keep the protections that mandatory consumer law in your country of residence provides; nothing here takes those away.</p>
+            <p>If a dispute arises, please contact us first; most issues resolve by email. If a formal dispute is unavoidable, for EU consumers the courts of your country of residence are available; for business users the courts of the operating entity&rsquo;s seat are the default. We will not insist on an exotic jurisdiction to make pursuing a claim impractical.</p>
+          </section>
+
+          <section id="changes">
+            <h2>Changes to these terms.</h2>
+            <p>If we change anything material, we will email every active account at least <span class="mono">14</span> days before the change takes effect, log the revision in the public changelog, and (where the change is unfavourable to you) give you a window in which to cancel without penalty. Cosmetic edits are made without notice but remain visible in the changelog history.</p>
+          </section>
+
+          <section id="contact">
+            <h2>Contact.</h2>
+            <p>For anything related to these terms, write to <a href="mailto:hello@profinancecast.com">hello@profinancecast.com</a>. For privacy matters, use <a href="mailto:privacy@profinancecast.com">privacy@profinancecast.com</a>. A postal address is available on request.</p>
+          </section>
+
+        </article>
+      </div>
+    </section>
+
+    <!-- 4. Page-end mark ------------------------------------------- -->
+    <section class="legal-foot">
+      <div class="container container--wide">
+        <p>End of terms of service &middot; <span class="mono">2026-05-11</span></p>
+      </div>
+    </section>
+
+  </main>
+
+  <div data-include="footer"></div>
+
+  <script src="/static/js/partials.js"></script>
+  <script src="/static/js/reveal.js"></script>
+  <script>
+    /* TOC active-link highlight as the user scrolls through H2 anchors. */
+    (function () {
+      var links = document.querySelectorAll('.legal-toc a[href^="#"]');
+      if (!links.length || !('IntersectionObserver' in window)) return;
+      var byId = {};
+      links.forEach(function (a) {
+        var id = a.getAttribute('href').slice(1);
+        byId[id] = a;
+      });
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          var a = byId[e.target.id];
+          if (!a) return;
+          if (e.isIntersecting) {
+            links.forEach(function (x) { x.classList.remove('is-active'); });
+            a.classList.add('is-active');
+          }
+        });
+      }, { rootMargin: '-30% 0px -60% 0px', threshold: 0 });
+      Object.keys(byId).forEach(function (id) {
+        var node = document.getElementById(id);
+        if (node) io.observe(node);
+      });
+    }());
+  </script>
+</body>
+</html>

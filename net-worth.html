@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Net worth &mdash; ProFinanceCast</title>
+  <meta name="description" content="A 120-month forecast of household net worth. Assets and debts month-by-month, compounded.">
+  <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/tokens.css">
+  <link rel="stylesheet" href="/static/css/theme-ivory.css">
+  <link rel="stylesheet" href="/static/css/theme-emerald.css">
+  <link rel="stylesheet" href="/static/css/base.css">
+  <link rel="stylesheet" href="/static/css/components.css">
+  <link rel="stylesheet" href="/static/css/nav.css">
+  <link rel="stylesheet" href="/static/css/footer.css">
+  <link rel="stylesheet" href="/static/css/charts.css">
+  <link rel="stylesheet" href="/static/css/app.css">
+</head>
+<body data-theme="emerald">
+  <a class="skip-link" href="#main">Skip to net-worth view</a>
+
+  <div data-include="header"></div>
+  <div data-include="banner"></div>
+
+  <div class="app-shell">
+    <div data-include="sidebar"></div>
+
+    <main class="app-main" id="main">
+
+      <!-- 1 · PAGE HEAD -->
+      <header class="page-head" data-reveal>
+        <div class="page-head__body">
+          <p class="eyebrow page-head__eyebrow">
+            <span>Net worth</span>
+            <span class="page-head__sep" aria-hidden="true">&middot;</span>
+            <span class="mono">11 May 2026</span>
+          </p>
+          <h1 class="display display--md page-head__title">Where the next decade lands.</h1>
+          <p class="page-head__lede">120 months of compounding, assets and debts month-by-month.</p>
+        </div>
+        <div class="page-head__actions">
+          <a href="/settings.html" class="btn btn--ghost btn--sm">Edit assumptions</a>
+        </div>
+      </header>
+
+      <!-- 2 · KPI STRIP -->
+      <section class="kpi-strip" aria-label="Net-worth headline figures" data-reveal>
+
+        <div class="kpi-cell">
+          <p class="kpi-cell__label">Today</p>
+          <p class="kpi-cell__value mono">$87,420</p>
+          <p class="kpi-cell__foot mono">
+            <span class="kpi-cell__delta kpi-cell__delta--up">+$2,310</span>
+            <span class="kpi-cell__foot-sub">this month</span>
+          </p>
+        </div>
+
+        <div class="kpi-cell">
+          <p class="kpi-cell__label">One year</p>
+          <p class="kpi-cell__value mono">$117,400</p>
+          <p class="kpi-cell__foot">
+            <span class="kpi-cell__foot-sub">May 2027 &middot; projected</span>
+          </p>
+        </div>
+
+        <div class="kpi-cell">
+          <p class="kpi-cell__label">Five years</p>
+          <p class="kpi-cell__value mono">$232,800</p>
+          <p class="kpi-cell__foot">
+            <span class="kpi-cell__foot-sub">May 2031 &middot; projected</span>
+          </p>
+        </div>
+
+        <div class="kpi-cell">
+          <p class="kpi-cell__label">Ten years</p>
+          <p class="kpi-cell__value mono">$412,000</p>
+          <p class="kpi-cell__foot">
+            <span class="kpi-cell__foot-sub">May 2036 &middot; endpoint</span>
+          </p>
+        </div>
+
+      </section>
+
+      <!-- 3 · MAIN FORECAST -->
+      <section class="panel" aria-labelledby="forecast-h2" data-reveal>
+        <header class="panel__head">
+          <div>
+            <p class="eyebrow">May 2026 &rarr; May 2036</p>
+            <h2 class="panel__title" id="forecast-h2">Net worth &mdash; May 2026 &rarr; May 2036</h2>
+          </div>
+          <p class="panel__meta mono">120 months &middot; $87,420 &rarr; $412,000</p>
+        </header>
+        <div class="panel__canvas">
+          <div class="chart" data-chart="line" data-chart-opts='{"source":"netWorthSeries","label":"120-month net worth forecast"}'></div>
+        </div>
+        <footer class="panel__foot">
+          <div class="panel__stat">
+            <p class="panel__stat-label">Starting</p>
+            <p class="panel__stat-value mono">$87,420</p>
+          </div>
+          <div class="panel__stat">
+            <p class="panel__stat-label">Ending</p>
+            <p class="panel__stat-value mono">$412,000</p>
+          </div>
+          <div class="panel__stat">
+            <p class="panel__stat-label">CAGR</p>
+            <p class="panel__stat-value mono">16.8%</p>
+          </div>
+        </footer>
+      </section>
+
+      <!-- 4 · COMPOSITION (assets vs debts) -->
+      <section class="grid grid--2 row" aria-label="Composition today">
+
+        <article class="panel" aria-labelledby="assets-h2" data-reveal>
+          <header class="panel__head">
+            <div>
+              <p class="eyebrow">Today &middot; positive</p>
+              <h2 class="panel__title" id="assets-h2">What you own</h2>
+            </div>
+            <p class="panel__meta mono">$96,000</p>
+          </header>
+
+          <ul class="pro-tile__list" role="list">
+            <li class="pro-tile__row">
+              <span class="pro-tile__row-label">Liquid assets</span>
+              <div class="chart" data-chart="hbar" data-chart-opts='{"value":24800,"max":96000,"label":"Liquid assets share"}'></div>
+              <span class="pro-tile__row-value mono">$24,800</span>
+            </li>
+            <li class="pro-tile__row">
+              <span class="pro-tile__row-label">Retirement</span>
+              <div class="chart" data-chart="hbar" data-chart-opts='{"value":71200,"max":96000,"label":"Retirement assets share"}'></div>
+              <span class="pro-tile__row-value mono">$71,200</span>
+            </li>
+          </ul>
+
+          <footer class="panel__foot panel__foot--compact">
+            <div class="panel__stat">
+              <p class="panel__stat-label">Liquid</p>
+              <p class="panel__stat-value mono">25.8%</p>
+            </div>
+            <div class="panel__stat">
+              <p class="panel__stat-label">Retirement</p>
+              <p class="panel__stat-value mono">74.2%</p>
+            </div>
+            <div class="panel__stat">
+              <p class="panel__stat-label">Total</p>
+              <p class="panel__stat-value mono">$96,000</p>
+            </div>
+          </footer>
+        </article>
+
+        <article class="panel" aria-labelledby="debts-h2" data-reveal>
+          <header class="panel__head">
+            <div>
+              <p class="eyebrow">Today &middot; negative</p>
+              <h2 class="panel__title" id="debts-h2">What you owe</h2>
+            </div>
+            <p class="panel__meta mono">&minus;$8,580</p>
+          </header>
+
+          <div class="panel__canvas panel__canvas--waterfall">
+            <div class="chart" data-chart="waterfall" data-chart-opts='{"label":"Outstanding debt by balance"}'></div>
+          </div>
+
+          <footer class="panel__foot panel__foot--compact">
+            <div class="panel__stat">
+              <p class="panel__stat-label">Credit card</p>
+              <p class="panel__stat-value mono">$3,200</p>
+            </div>
+            <div class="panel__stat">
+              <p class="panel__stat-label">Student loan</p>
+              <p class="panel__stat-value mono">$5,380</p>
+            </div>
+            <div class="panel__stat">
+              <p class="panel__stat-label">Of assets</p>
+              <p class="panel__stat-value mono">8.9%</p>
+            </div>
+          </footer>
+        </article>
+
+      </section>
+
+      <!-- 5 · ANNUAL SUMMARY TABLE (10 rows) -->
+      <section class="panel panel--flat row" aria-labelledby="annual-h2" data-reveal>
+        <header class="panel__head">
+          <div>
+            <p class="eyebrow">Year by year</p>
+            <h2 class="panel__title" id="annual-h2">A decade, in twelve-month steps</h2>
+          </div>
+          <p class="panel__meta mono">10 rows &middot; year-end values</p>
+        </header>
+
+        <div class="panel__table">
+          <table class="table activity">
+            <thead>
+              <tr>
+                <th scope="col" class="activity__col-when">Year</th>
+                <th scope="col">Net worth</th>
+                <th scope="col">Assets</th>
+                <th scope="col">Debts</th>
+                <th scope="col" class="activity__col-amount">YoY change</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="mono activity__when">May 2027</td>
+                <td class="mono">$117,400</td>
+                <td class="mono">$124,200</td>
+                <td class="mono">&minus;$6,800</td>
+                <td class="mono activity__amount activity__amount--pos">+$29,980</td>
+              </tr>
+              <tr>
+                <td class="mono activity__when">May 2028</td>
+                <td class="mono">$144,800</td>
+                <td class="mono">$148,100</td>
+                <td class="mono">&minus;$3,300</td>
+                <td class="mono activity__amount activity__amount--pos">+$27,400</td>
+              </tr>
+              <tr>
+                <td class="mono activity__when">May 2029</td>
+                <td class="mono">$173,600</td>
+                <td class="mono">$173,600</td>
+                <td class="mono">$0</td>
+                <td class="mono activity__amount activity__amount--pos">+$28,800</td>
+              </tr>
+              <tr>
+                <td class="mono activity__when">May 2030</td>
+                <td class="mono">$202,100</td>
+                <td class="mono">$202,100</td>
+                <td class="mono">$0</td>
+                <td class="mono activity__amount activity__amount--pos">+$28,500</td>
+              </tr>
+              <tr>
+                <td class="mono activity__when">May 2031</td>
+                <td class="mono">$232,800</td>
+                <td class="mono">$232,800</td>
+                <td class="mono">$0</td>
+                <td class="mono activity__amount activity__amount--pos">+$30,700</td>
+              </tr>
+              <tr>
+                <td class="mono activity__when">May 2032</td>
+                <td class="mono">$266,400</td>
+                <td class="mono">$266,400</td>
+                <td class="mono">$0</td>
+                <td class="mono activity__amount activity__amount--pos">+$33,600</td>
+              </tr>
+              <tr>
+                <td class="mono activity__when">May 2033</td>
+                <td class="mono">$303,800</td>
+                <td class="mono">$303,800</td>
+                <td class="mono">$0</td>
+                <td class="mono activity__amount activity__amount--pos">+$37,400</td>
+              </tr>
+              <tr>
+                <td class="mono activity__when">May 2034</td>
+                <td class="mono">$343,500</td>
+                <td class="mono">$343,500</td>
+                <td class="mono">$0</td>
+                <td class="mono activity__amount activity__amount--pos">+$39,700</td>
+              </tr>
+              <tr>
+                <td class="mono activity__when">May 2035</td>
+                <td class="mono">$381,700</td>
+                <td class="mono">$381,700</td>
+                <td class="mono">$0</td>
+                <td class="mono activity__amount activity__amount--pos">+$38,200</td>
+              </tr>
+              <tr>
+                <td class="mono activity__when">May 2036</td>
+                <td class="mono">$412,000</td>
+                <td class="mono">$412,000</td>
+                <td class="mono">$0</td>
+                <td class="mono activity__amount activity__amount--pos">+$30,300</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 6 · ASSUMPTIONS FOOTER -->
+      <section class="panel panel--flat row" aria-labelledby="assumptions-h2" data-reveal>
+        <header class="panel__head">
+          <div>
+            <p class="eyebrow">What this assumes</p>
+            <h2 class="panel__title" id="assumptions-h2">Five inputs, plain language.</h2>
+          </div>
+          <a href="/about.html#methodology" class="btn--link">Methodology &rarr;</a>
+        </header>
+
+        <div class="prose prose--narrow">
+          <p>The forecast above is a deterministic projection, not a guarantee. Five assumptions shape the curve.</p>
+
+          <ol>
+            <li><strong>Income growth.</strong> Gross income rises <span class="mono">3.0%</span> per year, slightly above long-run wage inflation in the household's market.</li>
+            <li><strong>Retirement return.</strong> Tax-advantaged accounts compound at <span class="mono">7.0%</span> nominal, a conservative read on a sixty-forty allocation after fees.</li>
+            <li><strong>Inflation.</strong> Personal expenses rise <span class="mono">2.5%</span> per year, ahead of headline CPI to account for housing and healthcare drift.</li>
+            <li><strong>Debt payoff.</strong> Existing balances are retired on the avalanche schedule; freed cash redirects to retirement on month <span class="mono">15</span>.</li>
+            <li><strong>Savings rate.</strong> The household saves and invests <span class="mono">30%</span> of monthly surplus through the projection window.</li>
+          </ol>
+
+          <p>Change any assumption on the <a href="/settings.html">settings page</a> and every figure recomputes. The full methodology, including how compounding is applied month-by-month, is documented on the <a href="/about.html#methodology">about page</a>.</p>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <div data-include="footer"></div>
+
+  <script src="/static/js/partials.js"></script>
+  <script src="/static/js/demo-data.js"></script>
+  <script src="/static/js/charts.js"></script>
+  <script src="/static/js/reveal.js"></script>
+</body>
+</html>

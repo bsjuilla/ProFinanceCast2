@@ -1,0 +1,90 @@
+/* =========================================================================
+   footer.css - sitewide footer with locked link inventory (RULING-01 R8)
+   Product / Company / Resources / Trust + byline bottom strip.
+   ========================================================================= */
+
+.footer {
+  margin-top: var(--s-24);
+  border-top: 1px solid var(--rule);
+  padding-block: var(--s-12) var(--s-6);
+  background: var(--canvas);
+  color: var(--ink-80);
+}
+.footer__inner {
+  width: 100%;
+  max-width: var(--content-app);
+  margin: 0 auto;
+  padding-inline: var(--gutter);
+}
+.footer__cols {
+  display: grid;
+  grid-template-columns: 1.4fr repeat(4, minmax(0, 1fr));
+  gap: var(--s-8);
+  align-items: start;
+}
+.footer__brand {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  max-width: 28ch;
+}
+.footer__brand .wordmark { color: var(--ink); }
+.footer__brand p {
+  font-size: var(--fs-13);
+  color: var(--ink-65);
+  line-height: var(--lh-base);
+}
+.footer__col__head {
+  font-family: var(--f-body);
+  font-size: var(--fs-12);
+  font-weight: var(--fw-medium);
+  color: var(--ink);
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+  margin-bottom: var(--s-3);
+}
+.footer__col ul {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+.footer__col a {
+  font-size: var(--fs-13);
+  color: var(--ink-65);
+  transition: color var(--t-fast) var(--ease-out-quart);
+}
+.footer__col a:hover { color: var(--ink); }
+
+.footer__bottom {
+  margin-top: var(--s-12);
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--rule);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-4);
+  font-size: var(--fs-12);
+  color: var(--byline-ink);
+}
+.footer__byline {
+  /* Per RULING R10 - locked, never animated, never expanded. */
+  font-size: var(--fs-13);
+  color: var(--byline-ink);
+}
+.footer__copy {
+  font-size: var(--fs-12);
+  color: var(--byline-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 880px) {
+  .footer__cols {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .footer__brand { grid-column: 1 / -1; }
+  .footer__bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--s-2);
+  }
+}

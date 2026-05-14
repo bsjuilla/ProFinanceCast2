@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Take-home Pay &mdash; ProFinanceCast</title>
+  <meta name="description" content="Take-home pay calculator using 2026 brackets. US federal, state, FICA or UK income tax and National Insurance. Estimates for planning; runs in your browser.">
+  <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/tokens.css">
+  <link rel="stylesheet" href="/static/css/theme-ivory.css">
+  <link rel="stylesheet" href="/static/css/theme-emerald.css">
+  <link rel="stylesheet" href="/static/css/base.css">
+  <link rel="stylesheet" href="/static/css/components.css">
+  <link rel="stylesheet" href="/static/css/nav.css">
+  <link rel="stylesheet" href="/static/css/footer.css">
+  <link rel="stylesheet" href="/static/css/charts.css">
+  <link rel="stylesheet" href="/static/css/tools.css">
+  <link rel="stylesheet" href="/static/css/tools-app.css">
+</head>
+<body data-theme="ivory">
+  <a class="skip-link" href="#calc">Skip to calculator</a>
+
+  <div data-include="header"></div>
+
+  <main id="calc">
+
+    <!-- ── PAGE HEAD ───────────────────────────────────────────────── -->
+    <section class="page-head" data-reveal>
+      <div class="container">
+        <p class="eyebrow">The tools &middot; Tax</p>
+        <h1 class="page-head__title display display--lg"><em>What you actually take home.</em></h1>
+        <hr class="rule rule--gold rule--short" aria-hidden="true">
+        <div class="page-head__aside">
+          <p class="lede page-head__lede">Federal + state + FICA in the US, or income tax + NI in the UK. 2026 brackets.</p>
+          <button type="button" class="tool-clear-link" data-tax-clear>Clear and use your own numbers</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CALCULATOR ──────────────────────────────────────────────── -->
+    <section aria-label="Take-home pay calculator">
+      <div class="container">
+        <form class="tool-grid" id="tax-form" onsubmit="event.preventDefault();" autocomplete="off">
+
+          <!-- LEFT: form ─────────────────────────────────────────── -->
+          <div class="tool-panel tool-panel--form">
+
+            <div class="tool-section">
+              <h2 class="tool-section__title">Country</h2>
+              <div class="segmented" role="radiogroup" aria-label="Country">
+                <input type="radio" id="country-us" name="country" value="US" checked>
+                <label for="country-us">United States</label>
+                <input type="radio" id="country-uk" name="country" value="UK">
+                <label for="country-uk">United Kingdom</label>
+              </div>
+            </div>
+
+            <div class="tool-section" data-tax-us>
+              <h2 class="tool-section__title">State</h2>
+              <div class="field">
+                <label class="field__label" for="tax-state">State of residence</label>
+                <select class="field__control" id="tax-state">
+                  <option value="CA" selected>California</option>
+                  <option value="NY">New York</option>
+                  <option value="TX">Texas (no state income tax)</option>
+                  <option value="FL">Florida (no state income tax)</option>
+                  <option value="WA">Washington (no state income tax)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="tool-section">
+              <h2 class="tool-section__title">Income</h2>
+              <div class="field">
+                <label class="field__label" for="tax-gross">Gross annual salary</label>
+                <div class="field__group">
+                  <span class="field__group__prefix" data-tax-currency>$</span>
+                  <input class="field__control field__control--mono mono" id="tax-gross" type="number" value="95000" min="0" step="1000" inputmode="decimal">
+                </div>
+              </div>
+            </div>
+
+            <div class="tool-section" data-tax-us>
+              <h2 class="tool-section__title">Filing</h2>
+              <div class="field">
+                <label class="field__label" for="tax-filing">Filing status</label>
+                <select class="field__control" id="tax-filing">
+                  <option value="single" selected>Single</option>
+                  <option value="married">Married filing jointly</option>
+                  <option value="head">Head of household</option>
+                </select>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- RIGHT: result ──────────────────────────────────────── -->
+          <aside class="tool-panel tool-panel--result" aria-live="polite">
+            <p class="tool-result__eyebrow">Net take-home</p>
+            <p class="tool-result__headline mono"><span data-tax-headline>$5,847</span></p>
+            <p class="tool-result__sub" data-tax-sub>
+              per month &middot; <span class="mono" data-tax-net-annual>$70,164/yr</span> net &middot; effective rate <span class="mono" data-tax-effective>26.1%</span>
+            </p>
+
+            <div class="tool-stats">
+              <div class="tool-stat">
+                <p class="tool-stat__label">Effective rate</p>
+                <p class="tool-stat__value mono" data-tax-stat-effective>26.1%</p>
+              </div>
+              <div class="tool-stat">
+                <p class="tool-stat__label">Marginal bracket</p>
+                <p class="tool-stat__value mono" data-tax-stat-marginal>22%</p>
+              </div>
+              <div class="tool-stat">
+                <p class="tool-stat__label">Monthly net</p>
+                <p class="tool-stat__value mono" data-tax-stat-monthly>$5,847</p>
+              </div>
+            </div>
+
+            <div class="tool-donut-wrap">
+              <div class="chart tool-donut-chart" id="tax-donut" data-reveal aria-label="Tax composition donut"></div>
+              <div class="tool-donut-legend" data-tax-legend>
+                <div class="legend-row">
+                  <span class="legend-swatch legend-swatch--gold"></span>
+                  <span class="legend-row__label">Take-home</span>
+                  <span class="legend-row__val mono" data-tax-leg-net>$70,164</span>
+                </div>
+                <div class="legend-row">
+                  <span class="legend-swatch legend-swatch--ink"></span>
+                  <span class="legend-row__label" data-tax-leg-federal-label>Federal</span>
+                  <span class="legend-row__val mono" data-tax-leg-federal>$12,847</span>
+                </div>
+                <div class="legend-row" data-tax-leg="state">
+                  <span class="legend-swatch legend-swatch--ink-soft"></span>
+                  <span class="legend-row__label" data-tax-leg-state-label>State (CA)</span>
+                  <span class="legend-row__val mono" data-tax-leg-state>$4,302</span>
+                </div>
+                <div class="legend-row" data-tax-leg="fica">
+                  <span class="legend-swatch legend-swatch--gold-deep"></span>
+                  <span class="legend-row__label" data-tax-leg-fica-label>Social Security + Medicare</span>
+                  <span class="legend-row__val mono" data-tax-leg-fica>$7,268</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="tool-breakdown">
+              <h3 class="tool-breakdown__title">Breakdown</h3>
+              <table class="table table--figures">
+                <tbody data-tax-breakdown>
+                  <tr data-tax-row="federal">
+                    <td data-tax-row-federal-label>Federal income</td>
+                    <td class="mono" data-tax-row-federal>$12,847</td>
+                  </tr>
+                  <tr data-tax-row="state">
+                    <td data-tax-row-state-label>State income (CA)</td>
+                    <td class="mono" data-tax-row-state>$4,302</td>
+                  </tr>
+                  <tr data-tax-row="ss">
+                    <td data-tax-row-ss-label>Social Security</td>
+                    <td class="mono" data-tax-row-ss>$5,890</td>
+                  </tr>
+                  <tr data-tax-row="med">
+                    <td>Medicare</td>
+                    <td class="mono" data-tax-row-med>$1,378</td>
+                  </tr>
+                  <tr class="tool-breakdown__total">
+                    <td>Net take-home</td>
+                    <td class="mono" data-tax-row-net>$70,164</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <hr class="rule rule--illustrative">
+            <p class="tool-result__illustrative">Illustrative example. The figure shown above the form is a fixed editorial example chosen to demonstrate the tool's output shape. The interactive calculator below recomputes from whatever inputs you enter and shows the real take-home for your numbers.</p>
+          </aside>
+
+        </form>
+      </div>
+    </section>
+
+    <!-- ── METHODOLOGY FOOTNOTE ───────────────────────────────────── -->
+    <section class="tool-explainer" data-reveal>
+      <div class="container">
+        <hr class="rule">
+        <div class="tool-explainer__grid">
+          <div>
+            <h3 class="display display--md"><em>What is included.</em></h3>
+            <p>US: federal income tax against the 2026 projected brackets, state income tax for the five supported states, plus FICA (Social Security at 6.2% up to the $176,100 wage base, Medicare at 1.45%, plus the 0.9% additional-Medicare threshold). The standard deduction is applied automatically. UK: income tax against the rUK 2026 bands with personal-allowance taper above &pound;100k, and employee Class 1 NI at 8% / 2%.</p>
+          </div>
+          <div>
+            <h3 class="display display--md"><em>What is left out.</em></h3>
+            <p>Pre-tax 401(k) and HSA contributions, employer benefits, local city taxes, and Scotland's separate income-tax bands. These can shift take-home by a few percentage points; for a precise figure, see <a href="/about.html#methodology" class="tool-text-link">the methodology</a>.</p>
+          </div>
+        </div>
+        <p class="tool-footnote">Brackets are 2026 projected. Estimates for planning, not tax advice.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <div data-include="footer"></div>
+
+  <script src="/static/js/partials.js"></script>
+  <script src="/static/js/demo-data.js"></script>
+  <script src="/static/js/calc-tax.js"></script>
+  <script src="/static/js/tool-tax.js"></script>
+  <script src="/static/js/reveal.js"></script>
+</body>
+</html>

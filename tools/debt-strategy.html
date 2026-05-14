@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Debt Strategy &mdash; ProFinanceCast</title>
+  <meta name="description" content="Avalanche vs Snowball debt payoff simulator. Compare the two strategies to the month and the dollar. No login, no tracking; everything runs in your browser.">
+  <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/tokens.css">
+  <link rel="stylesheet" href="/static/css/theme-ivory.css">
+  <link rel="stylesheet" href="/static/css/theme-emerald.css">
+  <link rel="stylesheet" href="/static/css/base.css">
+  <link rel="stylesheet" href="/static/css/components.css">
+  <link rel="stylesheet" href="/static/css/nav.css">
+  <link rel="stylesheet" href="/static/css/footer.css">
+  <link rel="stylesheet" href="/static/css/charts.css">
+  <link rel="stylesheet" href="/static/css/tools.css">
+  <link rel="stylesheet" href="/static/css/tools-app.css">
+</head>
+<body data-theme="ivory">
+  <a class="skip-link" href="#calc">Skip to calculator</a>
+
+  <div data-include="header"></div>
+
+  <main id="calc">
+
+    <!-- ── PAGE HEAD ───────────────────────────────────────────────── -->
+    <section class="page-head" data-reveal>
+      <div class="container">
+        <p class="eyebrow">The tools &middot; Debt</p>
+        <h1 class="page-head__title display display--lg"><em>Avalanche or Snowball &mdash; to the month.</em></h1>
+        <hr class="rule rule--gold rule--short" aria-hidden="true">
+        <div class="page-head__aside">
+          <p class="lede page-head__lede">Add your balances, see which order pays off first, and watch both payoff curves run side by side.</p>
+          <button type="button" class="tool-clear-link" data-debt-clear>Clear and use your own numbers</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CALCULATOR ──────────────────────────────────────────────── -->
+    <section aria-label="Debt payoff simulator">
+      <div class="container">
+        <form class="tool-grid" id="debt-form" onsubmit="event.preventDefault();" autocomplete="off">
+
+          <!-- LEFT: form ─────────────────────────────────────────── -->
+          <div class="tool-panel tool-panel--form">
+
+            <div class="tool-section">
+              <h2 class="tool-section__title">Your debts</h2>
+              <div class="debt-rows" id="debt-rows">
+
+                <div class="debt-row" data-debt-row>
+                  <div class="field debt-row__name">
+                    <label class="field__label">Name</label>
+                    <input class="field__control" type="text" value="Credit card" data-debt-input="name" autocomplete="off">
+                  </div>
+                  <div class="field debt-row__balance">
+                    <label class="field__label">Balance</label>
+                    <div class="field__group">
+                      <span class="field__group__prefix">$</span>
+                      <input class="field__control field__control--mono mono" type="number" value="3200" min="0" step="1" inputmode="decimal" data-debt-input="balance">
+                    </div>
+                  </div>
+                  <div class="field debt-row__apr">
+                    <label class="field__label">APR</label>
+                    <div class="field__group">
+                      <input class="field__control field__control--mono mono" type="number" value="24.9" min="0" step="0.1" inputmode="decimal" data-debt-input="apr">
+                      <span class="field__group__suffix">%</span>
+                    </div>
+                  </div>
+                  <div class="field debt-row__min">
+                    <label class="field__label">Min payment</label>
+                    <div class="field__group">
+                      <span class="field__group__prefix">$</span>
+                      <input class="field__control field__control--mono mono" type="number" value="80" min="0" step="1" inputmode="decimal" data-debt-input="min">
+                    </div>
+                  </div>
+                  <div class="debt-row__remove">
+                    <button type="button" class="debt-row__remove-btn" aria-label="Remove debt" data-debt-remove>&times;</button>
+                  </div>
+                </div>
+
+                <div class="debt-row" data-debt-row>
+                  <div class="field debt-row__name">
+                    <label class="field__label">Name</label>
+                    <input class="field__control" type="text" value="Student loan" data-debt-input="name" autocomplete="off">
+                  </div>
+                  <div class="field debt-row__balance">
+                    <label class="field__label">Balance</label>
+                    <div class="field__group">
+                      <span class="field__group__prefix">$</span>
+                      <input class="field__control field__control--mono mono" type="number" value="5380" min="0" step="1" inputmode="decimal" data-debt-input="balance">
+                    </div>
+                  </div>
+                  <div class="field debt-row__apr">
+                    <label class="field__label">APR</label>
+                    <div class="field__group">
+                      <input class="field__control field__control--mono mono" type="number" value="6.1" min="0" step="0.1" inputmode="decimal" data-debt-input="apr">
+                      <span class="field__group__suffix">%</span>
+                    </div>
+                  </div>
+                  <div class="field debt-row__min">
+                    <label class="field__label">Min payment</label>
+                    <div class="field__group">
+                      <span class="field__group__prefix">$</span>
+                      <input class="field__control field__control--mono mono" type="number" value="60" min="0" step="1" inputmode="decimal" data-debt-input="min">
+                    </div>
+                  </div>
+                  <div class="debt-row__remove">
+                    <button type="button" class="debt-row__remove-btn" aria-label="Remove debt" data-debt-remove>&times;</button>
+                  </div>
+                </div>
+
+              </div>
+              <div class="debt-add-wrap">
+                <button type="button" class="tool-text-link" data-debt-add>+ Add another debt</button>
+              </div>
+            </div>
+
+            <div class="tool-section">
+              <h2 class="tool-section__title">Extra payment</h2>
+              <div class="field">
+                <label class="field__label" for="debt-extra">Extra monthly payment</label>
+                <div class="field__group">
+                  <span class="field__group__prefix">$</span>
+                  <input class="field__control field__control--mono mono" id="debt-extra" type="number" value="270" min="0" step="10" inputmode="decimal">
+                </div>
+                <p class="field__hint">Applied to the priority debt each month, after every minimum is paid.</p>
+              </div>
+            </div>
+
+            <div class="tool-section">
+              <h2 class="tool-section__title">Strategy</h2>
+              <div class="segmented" role="radiogroup" aria-label="Payoff strategy">
+                <input type="radio" id="strat-avalanche" name="strategy" value="avalanche" checked>
+                <label for="strat-avalanche">Avalanche</label>
+                <input type="radio" id="strat-snowball" name="strategy" value="snowball">
+                <label for="strat-snowball">Snowball</label>
+              </div>
+              <p class="field__hint">Avalanche targets the highest APR first. Snowball targets the smallest balance first.</p>
+            </div>
+
+          </div>
+
+          <!-- RIGHT: result ──────────────────────────────────────── -->
+          <aside class="tool-panel tool-panel--result" aria-live="polite">
+            <p class="tool-result__eyebrow">Debt-free in</p>
+            <p class="tool-result__headline mono"><span data-debt-headline>Month 14</span></p>
+            <p class="tool-result__sub" data-debt-sub>
+              Avalanche saves <span class="mono" data-debt-savings>$487</span> in interest vs snowball.
+            </p>
+
+            <div class="tool-stats">
+              <div class="tool-stat">
+                <p class="tool-stat__label">Months</p>
+                <p class="tool-stat__value mono" data-debt-months>14</p>
+              </div>
+              <div class="tool-stat">
+                <p class="tool-stat__label">Total interest</p>
+                <p class="tool-stat__value mono" data-debt-interest-total>$612</p>
+              </div>
+              <div class="tool-stat">
+                <p class="tool-stat__label">Vs alternative</p>
+                <p class="tool-stat__value mono" data-debt-delta>+$487 saved</p>
+              </div>
+            </div>
+
+            <div class="tool-chart-wrap">
+              <div class="tool-chart-wrap__head">
+                <p class="tool-chart-wrap__title">Combined balance, month by month</p>
+                <span class="tool-chart-wrap__legend">
+                  <span class="legend-swatch legend-swatch--solid"></span> Avalanche
+                  <span class="legend-swatch legend-swatch--dashed"></span> Snowball
+                </span>
+              </div>
+              <div class="chart tool-chart" id="debt-chart" data-reveal aria-label="Payoff curve chart"></div>
+            </div>
+
+            <div class="tool-breakdown">
+              <h3 class="tool-breakdown__title">Debt-by-debt</h3>
+              <table class="table table--figures">
+                <thead>
+                  <tr>
+                    <th>Debt</th>
+                    <th>Balance</th>
+                    <th>APR</th>
+                    <th>Payoff</th>
+                  </tr>
+                </thead>
+                <tbody data-debt-breakdown>
+                  <tr>
+                    <td>Credit card</td>
+                    <td class="mono">$3,200</td>
+                    <td class="mono">24.9%</td>
+                    <td class="mono">Mo 11</td>
+                  </tr>
+                  <tr>
+                    <td>Student loan</td>
+                    <td class="mono">$5,380</td>
+                    <td class="mono">6.1%</td>
+                    <td class="mono">Mo 14</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <hr class="rule rule--illustrative">
+            <p class="tool-result__illustrative">Illustrative example. The figures shown above the form are a fixed editorial example chosen to demonstrate the tool's output shape. The interactive calculator below recomputes from whatever inputs you enter and shows the real avalanche-vs-snowball outcome for your numbers.</p>
+          </aside>
+
+        </form>
+      </div>
+    </section>
+
+    <!-- ── EXPLAINER ───────────────────────────────────────────────── -->
+    <section class="tool-explainer" data-reveal>
+      <div class="container">
+        <hr class="rule">
+        <div class="tool-explainer__grid">
+          <div>
+            <h3 class="display display--md"><em>Avalanche.</em></h3>
+            <p>Pay every minimum, every month. Send any extra dollars to the debt with the highest APR first &mdash; that is the one accumulating interest fastest, so killing it saves the most. When it clears, its freed-up minimum rolls onto the next-highest-APR debt. Mathematically optimal; emotionally slower if the highest-rate debt is also the largest.</p>
+          </div>
+          <div>
+            <h3 class="display display--md"><em>Snowball.</em></h3>
+            <p>Pay every minimum, every month. Send any extra to the debt with the smallest balance first, regardless of APR. You clear an entire debt sooner, which reads as progress, and the freed-up minimum rolls onto the next-smallest. Costs slightly more in interest most of the time; wins more often on adherence.</p>
+            <p><a href="/blog/debt-avalanche.html" class="tool-text-link">Read the full comparison &rarr;</a></p>
+          </div>
+        </div>
+        <p class="tool-footnote">Estimates for planning. APRs are applied monthly at APR/12 with no fees or balance-transfer offers modelled.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <div data-include="footer"></div>
+
+  <script src="/static/js/partials.js"></script>
+  <script src="/static/js/demo-data.js"></script>
+  <script src="/static/js/calc-debt.js"></script>
+  <script src="/static/js/tool-debt.js"></script>
+  <script src="/static/js/reveal.js"></script>
+</body>
+</html>

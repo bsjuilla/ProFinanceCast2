@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Recurring &mdash; ProFinanceCast</title>
+  <meta name="description" content="The monthly ledger. Recurring income on one side, recurring expenses on the other. Every row, every due date, every category.">
+  <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/tokens.css">
+  <link rel="stylesheet" href="/static/css/theme-ivory.css">
+  <link rel="stylesheet" href="/static/css/theme-emerald.css">
+  <link rel="stylesheet" href="/static/css/base.css">
+  <link rel="stylesheet" href="/static/css/components.css">
+  <link rel="stylesheet" href="/static/css/nav.css">
+  <link rel="stylesheet" href="/static/css/footer.css">
+  <link rel="stylesheet" href="/static/css/charts.css">
+  <link rel="stylesheet" href="/static/css/app.css">
+  <link rel="stylesheet" href="/static/css/recurring.css">
+</head>
+<body data-theme="emerald">
+  <a class="skip-link" href="#main">Skip to recurring ledger</a>
+
+  <div data-include="header"></div>
+  <div data-include="banner"></div>
+
+  <div class="app-shell">
+    <div data-include="sidebar"></div>
+
+    <main class="app-main" id="main">
+
+      <!-- 1 · PAGE HEAD -->
+      <header class="page-head" data-reveal>
+        <div class="page-head__body">
+          <p class="eyebrow page-head__eyebrow">
+            <span>Recurring radar</span>
+            <span class="page-head__sep" aria-hidden="true">&middot;</span>
+            <span class="mono">May 2026</span>
+          </p>
+          <h1 class="display display--md page-head__title">Everything that repeats.</h1>
+          <p class="page-head__lede">Income on the left rail, expenses on the right. The figures that don&rsquo;t need a decision &mdash; until one of them does.</p>
+        </div>
+        <div class="page-head__actions">
+          <a href="/settings.html" class="btn btn--ghost btn--sm">Edit cadence</a>
+        </div>
+      </header>
+
+      <!-- 2 · MONTHLY SURPLUS SUMMARY -->
+      <section class="recurring-summary" aria-label="Monthly recurring summary" data-reveal>
+        <div class="recurring-summary__cell">
+          <p class="recurring-summary__label">Recurring income</p>
+          <p class="recurring-summary__value mono">+$8,020</p>
+          <p class="recurring-summary__foot">Two streams &middot; one salary, one freelance average</p>
+        </div>
+        <div class="recurring-summary__cell">
+          <p class="recurring-summary__label">Recurring expenses</p>
+          <p class="recurring-summary__value mono">&minus;$5,180</p>
+          <p class="recurring-summary__foot">Twelve rows &middot; housing, utilities, lifestyle</p>
+        </div>
+        <div class="recurring-summary__cell recurring-summary__cell--accent">
+          <p class="recurring-summary__label">Net before discretionary</p>
+          <p class="recurring-summary__value mono">+$2,840</p>
+          <p class="recurring-summary__foot">Before food out, travel, and the unplanned</p>
+        </div>
+      </section>
+
+      <!-- 3 · TABS  (Income · Expenses) -->
+      <section class="recurring" aria-labelledby="ledger-h2" data-reveal>
+        <header class="recurring__head">
+          <div>
+            <p class="eyebrow">Ledger</p>
+            <h2 class="recurring__title" id="ledger-h2">Two columns, ranked by amount.</h2>
+          </div>
+        </header>
+
+        <div class="recurring-tabs" role="tablist" aria-label="Recurring ledger">
+          <button
+            type="button"
+            class="recurring-tab is-active"
+            role="tab"
+            id="tab-income"
+            aria-selected="true"
+            aria-controls="panel-income"
+            data-rec-tab="income"
+          >
+            <span class="recurring-tab__label">Income</span>
+            <span class="recurring-tab__sub mono">+$8,020 / mo</span>
+          </button>
+          <button
+            type="button"
+            class="recurring-tab"
+            role="tab"
+            id="tab-expenses"
+            aria-selected="false"
+            aria-controls="panel-expenses"
+            tabindex="-1"
+            data-rec-tab="expenses"
+          >
+            <span class="recurring-tab__label">Expenses</span>
+            <span class="recurring-tab__sub mono">&minus;$5,180 / mo</span>
+          </button>
+        </div>
+
+        <!-- 3a · INCOME PANEL ----------------------------------------- -->
+        <div
+          class="recurring-panel"
+          role="tabpanel"
+          id="panel-income"
+          aria-labelledby="tab-income"
+        >
+          <div class="recurring-strip recurring-strip--income">
+            <div class="recurring-strip__stat">
+              <p class="recurring-strip__label">Streams</p>
+              <p class="recurring-strip__value mono">2</p>
+            </div>
+            <div class="recurring-strip__stat">
+              <p class="recurring-strip__label">Monthly total</p>
+              <p class="recurring-strip__value mono">+$8,020</p>
+            </div>
+            <div class="recurring-strip__stat">
+              <p class="recurring-strip__label">Next inflow</p>
+              <p class="recurring-strip__value mono">25 May 2026</p>
+            </div>
+          </div>
+
+          <ul class="recurring-list" role="list">
+            <li class="recurring-row recurring-row--income">
+              <div class="recurring-row__cell recurring-row__cell--name">
+                <p class="recurring-row__title">Salary</p>
+                <p class="recurring-row__sub">Day-job &middot; net pay after withholding</p>
+              </div>
+              <div class="recurring-row__cell recurring-row__cell--amount">
+                <p class="recurring-row__amount mono">+$7,400</p>
+              </div>
+              <div class="recurring-row__cell recurring-row__cell--cadence">
+                <p class="recurring-row__cadence">Monthly</p>
+                <p class="recurring-row__when mono">25 May 2026</p>
+              </div>
+              <div class="recurring-row__cell recurring-row__cell--chip">
+                <span class="recurring-chip recurring-chip--income">Salary</span>
+              </div>
+            </li>
+
+            <li class="recurring-row recurring-row--income">
+              <div class="recurring-row__cell recurring-row__cell--name">
+                <p class="recurring-row__title">Freelance</p>
+                <p class="recurring-row__sub">Twelve-month moving average</p>
+              </div>
+              <div class="recurring-row__cell recurring-row__cell--amount">
+                <p class="recurring-row__amount mono">+$620</p>
+              </div>
+              <div class="recurring-row__cell recurring-row__cell--cadence">
+                <p class="recurring-row__cadence">Monthly avg</p>
+                <p class="recurring-row__when mono">Variable</p>
+              </div>
+              <div class="recurring-row__cell recurring-row__cell--chip">
+                <span class="recurring-chip recurring-chip--income">Freelance</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- 3b · EXPENSES PANEL --------------------------------------- -->
+        <div
+          class="recurring-panel is-hidden"
+          role="tabpanel"
+          id="panel-expenses"
+          aria-labelledby="tab-expenses"
+          hidden
+        >
+          <div class="recurring-strip recurring-strip--expenses">
+            <div class="recurring-strip__stat">
+              <p class="recurring-strip__label">Rows</p>
+              <p class="recurring-strip__value mono">12</p>
+            </div>
+            <div class="recurring-strip__stat">
+              <p class="recurring-strip__label">Monthly total</p>
+              <p class="recurring-strip__value mono">&minus;$5,180</p>
+            </div>
+            <div class="recurring-strip__stat">
+              <p class="recurring-strip__label">Next due</p>
+              <p class="recurring-strip__value mono">15 May 2026</p>
+            </div>
+          </div>
+
+          <ul class="recurring-list" role="list">
+
+            <li class="recurring-row">
+              <div class="recurring-row__cell recurring-row__cell--name">
+                <p class="recurring-row__title">Rent</p>
+                <p class="recurring-row__sub">One-bedroom, lease renews in November</p>
+              </div>
+              <div class="recurring-row__cell recurring-row__cell--amount">
+                <p class="recurring-row__amount mono">&minus;$1,800</p>
+              </div>
+              <div class="recurring-row__cell recurring-row__cell--cadence">
+                <p class="recurring-row__cadence">Monthly</p>
+                <p class="recurring-row__when mono">01 Jun 2026</p>
+              </div>
+              <div class="recurring-row__cell recurring-row__cell--chip">
+                <span class="recurring-chip recurring-chip--housing">Housing</span>
+              </div>
+            </li>
+
+            <li class="recurring-row">
+              <div class="recurring-row__cell recurring-row__cell--name">
+                <p class="recurring-row__title">Groceries</p>
+                <p class="recurring-row__sub">Average across the year, household of one</p>
+              </div>
+              <div class="recurring-row__cell recurring-row__cell--amount">
+                <p class="recurring-row__amount mono">&minus;$640</p>
+              </div>
+              <div class="recurring-row__cell recurring-row__cell--cadence">
+                <p class="recurring-row__cadence">Monthly</p>
+                <p class="recurring-row__when mono">Rolling</p>
+              </div>
+              <div class="recurring-row__cell recurring-row__cell--chip">
+                <span class="recurring-chip recurring-chip--food">Food</span>
+              </div>
+            </li>
+
+            <li class="recurring-row">
+              <div class="recurring-row__cell recurring-row__cell--name">
+                <p class="recurring-row__title">Health insurance</p>
+                <p class="recurring-row__sub">Employer plan, employee share</p>
+              </div>
+              <div class="recurring-row__cell recurring-row__cell--amount">
+                <p class="recurring-row__amount mono">&minus;$380</p>
+              </div>
+              <div class="recurring-row__cell recurring-row__cell--cadence">
+                <p class="recurring-row__cadence">Monthly</p>
+                <p class="recurring-row__when mono">25 May 2026</p>
+              </div>
+              <div class="recurring-row__cell recurring-row__cell--chip">
+                <span class="recurring-chip recurring-chip--insurance">Insurance</span>
+              </div>
+            </li>
+
+            <li class="recurring-row">
+              <div class="recurring-row__cell recurring-row__cell--name">
+                <p class="recurring-row__title">Utilities</p>
+                <p class="recurring-row__sub">Electric, gas, water &middot; rolled into one line</p>
+              </div>
+              <div class="recurring-row__cell recurring-row__cell--amount">
+                <p class="recurring-row__amount mono">&minus;$220</p>
+              </div>
+              <div class="recurring-row__cell recurring-row__cell--cadence">
+                <p class="recurring-row__cadence">Monthly</p>
+                <p class="recurring-row__when mono">15 May 2026</p>
+              </div>
+              <div class="recurring-row__cell recurring-row__cell--chip">
+                <span class="recurring-chip recurring-chip--utilities">Utilities</span>
+              </div>
+            </li>
+
+            <li class="recurring-row">
+              <div class="recurring-row__cell recurring-row__cell--name">
+                <p class="recurring-row__title">Transit</p>
+                <p class="recurring-row__sub">Monthly pass &middot; no car</p>
+              </div>
+              <div class="recurring-row__cell recurring-row__cell--amount">
+                <p class="recurring-row__amount mono">&minus;$140</p>
+              </div>
+              <div class="recurring-row__cell recurring-row__cell--cadence">
+                <p class="recurring-row__cadence">Monthly</p>
+                <p class="recurring-row__when mono">01 Jun 2026</p>
+              </div>
+              <div class="recurring-row__cell recurring-row__cell--chip">
+                <span class="recurring-chip recurring-chip--transit">Transit</span>
+              </div>
+            </li>
+
+            <li class="recurring-row">
+              <div class="recurring-row__cell recurring-row__cell--name">
+                <p class="recurring-row__title">Subscriptions</p>
+                <p class="recurring-row__sub">Music, streaming, two productivity tools, one news</p>
+              </div>
+              <div class="recurring-row__cell recurring-row__cell--amount">
+                <p class="recurring-row__amount mono">&minus;$147</p>
+              </div>
+              <div class="recurring-row__cell recurring-row__cell--cadence">
+                <p class="recurring-row__cadence">Monthly</p>
+                <p class="recurring-row__when mono">12 May 2026</p>
+              </div>
+              <div class="recurring-row__cell recurring-row__cell--chip">
+                <span class="recurring-chip recurring-chip--leisure">Subscriptions</span>
+              </div>
+            </li>
+
+            <li class="recurring-row">
+              <div class="recurring-row__cell recurring-row__cell--name">
+                <p class="recurring-row__title">Internet</p>
+                <p class="recurring-row__sub">Home broadband &middot; gigabit fiber</p>
+              </div>
+              <div class="recurring-row__cell recurring-row__cell--amount">
+                <p class="recurring-row__amount mono">&minus;$72</p>
+              </div>
+              <div class="recurring-row__cell recurring-row__cell--cadence">
+                <p class="recurring-row__cadence">Monthly</p>
+                <p class="recurring-row__when mono">18 May 2026</p>
+              </div>
+              <div class="recurring-row__cell recurring-row__cell--chip">
+                <span class="recurring-chip recurring-chip--utilities">Utilities</span>
+              </div>
+            </li>
+
+            <li class="recurring-row">
+              <div class="recurring-row__cell recurring-row__cell--name">
+                <p class="recurring-row__title">Phone</p>
+                <p class="recurring-row__sub">Single line, unlimited domestic</p>
+              </div>
+              <div class="recurring-row__cell recurring-row__cell--amount">
+                <p class="recurring-row__amount mono">&minus;$45</p>
+              </div>
+              <div class="recurring-row__cell recurring-row__cell--cadence">
+                <p class="recurring-row__cadence">Monthly</p>
+                <p class="recurring-row__when mono">22 May 2026</p>
+              </div>
+              <div class="recurring-row__cell recurring-row__cell--chip">
+                <span class="recurring-chip recurring-chip--utilities">Utilities</span>
+              </div>
+            </li>
+
+            <li class="recurring-row">
+              <div class="recurring-row__cell recurring-row__cell--name">
+                <p class="recurring-row__title">Gym membership</p>
+                <p class="recurring-row__sub">Local studio, month-to-month</p>
+              </div>
+              <div class="recurring-row__cell recurring-row__cell--amount">
+                <p class="recurring-row__amount mono">&minus;$38</p>
+              </div>
+              <div class="recurring-row__cell recurring-row__cell--cadence">
+                <p class="recurring-row__cadence">Monthly</p>
+                <p class="recurring-row__when mono">28 May 2026</p>
+              </div>
+              <div class="recurring-row__cell recurring-row__cell--chip">
+                <span class="recurring-chip recurring-chip--wellness">Wellness</span>
+              </div>
+            </li>
+
+            <li class="recurring-row">
+              <div class="recurring-row__cell recurring-row__cell--name">
+                <p class="recurring-row__title">Renters insurance</p>
+                <p class="recurring-row__sub">Annual policy, billed each May</p>
+              </div>
+              <div class="recurring-row__cell recurring-row__cell--amount">
+                <p class="recurring-row__amount mono">&minus;$28</p>
+              </div>
+              <div class="recurring-row__cell recurring-row__cell--cadence">
+                <p class="recurring-row__cadence">Annual / 12</p>
+                <p class="recurring-row__when mono">15 May 2026</p>
+              </div>
+              <div class="recurring-row__cell recurring-row__cell--chip">
+                <span class="recurring-chip recurring-chip--insurance">Insurance</span>
+              </div>
+            </li>
+
+            <li class="recurring-row">
+              <div class="recurring-row__cell recurring-row__cell--name">
+                <p class="recurring-row__title">Cloud storage</p>
+                <p class="recurring-row__sub">2 TB plan &middot; photos and backups</p>
+              </div>
+              <div class="recurring-row__cell recurring-row__cell--amount">
+                <p class="recurring-row__amount mono">&minus;$10</p>
+              </div>
+              <div class="recurring-row__cell recurring-row__cell--cadence">
+                <p class="recurring-row__cadence">Monthly</p>
+                <p class="recurring-row__when mono">06 Jun 2026</p>
+              </div>
+              <div class="recurring-row__cell recurring-row__cell--chip">
+                <span class="recurring-chip recurring-chip--leisure">Subscriptions</span>
+              </div>
+            </li>
+
+            <li class="recurring-row">
+              <div class="recurring-row__cell recurring-row__cell--name">
+                <p class="recurring-row__title">Charitable giving</p>
+                <p class="recurring-row__sub">One recipient, set in November</p>
+              </div>
+              <div class="recurring-row__cell recurring-row__cell--amount">
+                <p class="recurring-row__amount mono">&minus;$1,660 / yr</p>
+              </div>
+              <div class="recurring-row__cell recurring-row__cell--cadence">
+                <p class="recurring-row__cadence">Annual</p>
+                <p class="recurring-row__when mono">15 Nov 2026</p>
+              </div>
+              <div class="recurring-row__cell recurring-row__cell--chip">
+                <span class="recurring-chip recurring-chip--giving">Giving</span>
+              </div>
+            </li>
+
+          </ul>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <div data-include="footer"></div>
+
+  <script src="/static/js/partials.js"></script>
+  <script src="/static/js/demo-data.js"></script>
+  <script src="/static/js/charts.js"></script>
+  <script src="/static/js/reveal.js"></script>
+  <script>
+    /* Tab switcher: Income / Expenses. Single source of truth for active
+       state is aria-selected; classes follow. Honors keyboard ARIA pattern. */
+    (function () {
+      'use strict';
+      var tabs   = Array.prototype.slice.call(document.querySelectorAll('[data-rec-tab]'));
+      var panels = {
+        income:   document.getElementById('panel-income'),
+        expenses: document.getElementById('panel-expenses')
+      };
+      if (!tabs.length) return;
+
+      function activate(key) {
+        tabs.forEach(function (t) {
+          var on = t.getAttribute('data-rec-tab') === key;
+          t.setAttribute('aria-selected', String(on));
+          t.tabIndex = on ? 0 : -1;
+          t.classList.toggle('is-active', on);
+        });
+        Object.keys(panels).forEach(function (k) {
+          var p = panels[k];
+          if (!p) return;
+          var on = k === key;
+          p.classList.toggle('is-hidden', !on);
+          if (on) p.removeAttribute('hidden');
+          else p.setAttribute('hidden', '');
+        });
+      }
+      tabs.forEach(function (t, i) {
+        t.addEventListener('click', function () {
+          activate(t.getAttribute('data-rec-tab'));
+          t.focus();
+        });
+        t.addEventListener('keydown', function (e) {
+          if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+          e.preventDefault();
+          var dir = e.key === 'ArrowRight' ? 1 : -1;
+          var next = tabs[(i + dir + tabs.length) % tabs.length];
+          activate(next.getAttribute('data-rec-tab'));
+          next.focus();
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

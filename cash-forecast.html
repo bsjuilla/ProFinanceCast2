@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Cash forecast &mdash; ProFinanceCast</title>
+  <meta name="description" content="Twelve months of income, expenses, and surplus. A monthly cadence of cash and where it ends up.">
+  <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/tokens.css">
+  <link rel="stylesheet" href="/static/css/theme-ivory.css">
+  <link rel="stylesheet" href="/static/css/theme-emerald.css">
+  <link rel="stylesheet" href="/static/css/base.css">
+  <link rel="stylesheet" href="/static/css/components.css">
+  <link rel="stylesheet" href="/static/css/nav.css">
+  <link rel="stylesheet" href="/static/css/footer.css">
+  <link rel="stylesheet" href="/static/css/charts.css">
+  <link rel="stylesheet" href="/static/css/app.css">
+</head>
+<body data-theme="emerald">
+  <a class="skip-link" href="#main">Skip to cash forecast</a>
+
+  <div data-include="header"></div>
+  <div data-include="banner"></div>
+
+  <div class="app-shell">
+    <div data-include="sidebar"></div>
+
+    <main class="app-main" id="main">
+
+      <!-- 1 · PAGE HEAD -->
+      <header class="page-head" data-reveal>
+        <div class="page-head__body">
+          <p class="eyebrow page-head__eyebrow">
+            <span>Cash forecast</span>
+            <span class="page-head__sep" aria-hidden="true">&middot;</span>
+            <span class="mono">11 May 2026</span>
+          </p>
+          <h1 class="display display--md page-head__title">Income, expenses, surplus.</h1>
+          <p class="page-head__lede">12 months ahead.</p>
+        </div>
+        <div class="page-head__actions">
+          <a href="/recurring.html" class="btn btn--ghost btn--sm">Edit recurring</a>
+        </div>
+      </header>
+
+      <!-- 2 · KPI STRIP -->
+      <section class="kpi-strip" aria-label="Cash flow headline figures" data-reveal>
+
+        <div class="kpi-cell">
+          <p class="kpi-cell__label">Monthly income</p>
+          <p class="kpi-cell__value mono">$7,400</p>
+          <p class="kpi-cell__foot">
+            <span class="kpi-cell__foot-sub">Salary + freelance</span>
+          </p>
+        </div>
+
+        <div class="kpi-cell">
+          <p class="kpi-cell__label">Monthly expenses</p>
+          <p class="kpi-cell__value mono">$5,180</p>
+          <p class="kpi-cell__foot">
+            <span class="kpi-cell__foot-sub">8 recurring categories</span>
+          </p>
+        </div>
+
+        <div class="kpi-cell">
+          <p class="kpi-cell__label">Monthly surplus</p>
+          <p class="kpi-cell__value mono">$2,220</p>
+          <p class="kpi-cell__foot mono">
+            <span class="kpi-cell__delta kpi-cell__delta--up">30.0%</span>
+            <span class="kpi-cell__foot-sub">of income</span>
+          </p>
+        </div>
+
+        <div class="kpi-cell">
+          <p class="kpi-cell__label">12-month surplus</p>
+          <p class="kpi-cell__value mono">$26,640</p>
+          <p class="kpi-cell__foot">
+            <span class="kpi-cell__foot-sub">Through Apr 2027</span>
+          </p>
+        </div>
+
+      </section>
+
+      <!-- 3 · CASH FLOW BARS -->
+      <section class="panel" aria-labelledby="bars-h2" data-reveal>
+        <header class="panel__head">
+          <div>
+            <p class="eyebrow">May 2026 &rarr; Apr 2027 &middot; this month highlighted</p>
+            <h2 class="panel__title" id="bars-h2">Income and expenses, month by month</h2>
+          </div>
+          <p class="panel__meta mono">12 months &middot; $7,400 vs $5,180 avg</p>
+        </header>
+        <div class="panel__canvas">
+          <div class="chart" data-chart="bars" data-chart-opts='{"source":"cashFlow12m","label":"Monthly income and expenses for the next twelve months"}'></div>
+        </div>
+        <footer class="panel__foot">
+          <div class="panel__stat">
+            <p class="panel__stat-label">This month</p>
+            <p class="panel__stat-value mono">+$2,160</p>
+          </div>
+          <div class="panel__stat">
+            <p class="panel__stat-label">Tightest month</p>
+            <p class="panel__stat-value mono">Dec &middot; +$1,900</p>
+          </div>
+          <div class="panel__stat">
+            <p class="panel__stat-label">Easiest month</p>
+            <p class="panel__stat-value mono">Aug &middot; +$2,340</p>
+          </div>
+        </footer>
+      </section>
+
+      <!-- 4 · TWO COLUMN BREAKDOWN -->
+      <section class="grid grid--2 row" aria-label="Income and expense breakdown">
+
+        <article class="panel panel--flat" aria-labelledby="income-h2" data-reveal>
+          <header class="panel__head">
+            <div>
+              <p class="eyebrow">Where money comes from</p>
+              <h2 class="panel__title" id="income-h2">Income breakdown</h2>
+            </div>
+            <p class="panel__meta mono">2 sources</p>
+          </header>
+
+          <div class="panel__table">
+            <table class="table activity">
+              <thead>
+                <tr>
+                  <th scope="col">Source</th>
+                  <th scope="col">Cadence</th>
+                  <th scope="col" class="activity__col-amount">Monthly</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Salary</td>
+                  <td><span class="activity__chip">Bi-monthly</span></td>
+                  <td class="mono activity__amount activity__amount--pos">+$6,800</td>
+                </tr>
+                <tr>
+                  <td>Freelance</td>
+                  <td><span class="activity__chip">Variable</span></td>
+                  <td class="mono activity__amount activity__amount--pos">+$600</td>
+                </tr>
+                <tr>
+                  <td><strong>Total</strong></td>
+                  <td></td>
+                  <td class="mono activity__amount activity__amount--pos"><strong>+$7,400</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <article class="panel panel--flat" aria-labelledby="expenses-h2" data-reveal>
+          <header class="panel__head">
+            <div>
+              <p class="eyebrow">Where money goes</p>
+              <h2 class="panel__title" id="expenses-h2">Expense breakdown</h2>
+            </div>
+            <p class="panel__meta mono">8 categories</p>
+          </header>
+
+          <div class="panel__table">
+            <table class="table activity">
+              <thead>
+                <tr>
+                  <th scope="col">Category</th>
+                  <th scope="col">Cadence</th>
+                  <th scope="col" class="activity__col-amount">Monthly</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Rent</td>
+                  <td><span class="activity__chip">Monthly</span></td>
+                  <td class="mono activity__amount">&minus;$1,850</td>
+                </tr>
+                <tr>
+                  <td>Groceries</td>
+                  <td><span class="activity__chip">Monthly</span></td>
+                  <td class="mono activity__amount">&minus;$640</td>
+                </tr>
+                <tr>
+                  <td>Health insurance</td>
+                  <td><span class="activity__chip">Monthly</span></td>
+                  <td class="mono activity__amount">&minus;$380</td>
+                </tr>
+                <tr>
+                  <td>Utilities</td>
+                  <td><span class="activity__chip">Monthly</span></td>
+                  <td class="mono activity__amount">&minus;$185</td>
+                </tr>
+                <tr>
+                  <td>Internet</td>
+                  <td><span class="activity__chip">Monthly</span></td>
+                  <td class="mono activity__amount">&minus;$72</td>
+                </tr>
+                <tr>
+                  <td>Streaming</td>
+                  <td><span class="activity__chip">Monthly</span></td>
+                  <td class="mono activity__amount">&minus;$54</td>
+                </tr>
+                <tr>
+                  <td>Phone</td>
+                  <td><span class="activity__chip">Monthly</span></td>
+                  <td class="mono activity__amount">&minus;$45</td>
+                </tr>
+                <tr>
+                  <td>Gym membership</td>
+                  <td><span class="activity__chip">Monthly</span></td>
+                  <td class="mono activity__amount">&minus;$38</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+      </section>
+
+      <!-- 5 · CUMULATIVE SURPLUS AREA -->
+      <section class="panel row" aria-labelledby="cumulative-h2" data-reveal>
+        <header class="panel__head">
+          <div>
+            <p class="eyebrow">Cumulative surplus &middot; 12 months</p>
+            <h2 class="panel__title" id="cumulative-h2">What stacks up by April 2027</h2>
+          </div>
+          <p class="panel__meta mono">$0 &rarr; $26,640</p>
+        </header>
+        <div class="panel__canvas">
+          <div class="chart" data-chart="area" data-chart-opts='{
+            "values":[2160, 4400, 6500, 8780, 10920, 13060, 15040, 17170, 19310, 21540, 23730, 26640],
+            "xLabels":["May","Jun","Jul","Aug","Sep","Oct","Nov","Dec","Jan","Feb","Mar","Apr"],
+            "label":"Cumulative monthly surplus over the next twelve months"
+          }'></div>
+        </div>
+        <footer class="panel__foot">
+          <div class="panel__stat">
+            <p class="panel__stat-label">After 3 months</p>
+            <p class="panel__stat-value mono">$6,500</p>
+          </div>
+          <div class="panel__stat">
+            <p class="panel__stat-label">After 6 months</p>
+            <p class="panel__stat-value mono">$13,060</p>
+          </div>
+          <div class="panel__stat">
+            <p class="panel__stat-label">After 12 months</p>
+            <p class="panel__stat-value mono">$26,640</p>
+          </div>
+        </footer>
+      </section>
+
+      <!-- 6 · ASSUMPTIONS PROSE -->
+      <section class="panel panel--flat row" aria-labelledby="assumptions-h2" data-reveal>
+        <header class="panel__head">
+          <div>
+            <p class="eyebrow">What this assumes</p>
+            <h2 class="panel__title" id="assumptions-h2">Three inputs, plainly stated.</h2>
+          </div>
+          <a href="/about.html#methodology" class="btn--link">Methodology &rarr;</a>
+        </header>
+
+        <div class="prose prose--narrow">
+          <p>The twelve-month cash forecast is built from your recurring transactions plus three modest assumptions.</p>
+
+          <ol>
+            <li><strong>Inflation on expenses.</strong> Expense categories rise <span class="mono">2.5%</span> annualised; the bars above already include a mild seasonal pattern (utilities tick up in winter, groceries dip in summer).</li>
+            <li><strong>Flat income.</strong> Salary and freelance income hold steady through the window; raises and new contracts are not modelled here. Use <a href="/scenarios.html">scenarios</a> to test them.</li>
+            <li><strong>No one-off events.</strong> Bonuses, tax refunds, large purchases, and emergency outlays are excluded. The forecast describes the household's underlying rhythm, not its surface weather.</li>
+          </ol>
+
+          <p>Full methodology, including how the seasonal pattern is generated and where rounding occurs, is documented on the <a href="/about.html#methodology">about page</a>.</p>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <div data-include="footer"></div>
+
+  <script src="/static/js/partials.js"></script>
+  <script src="/static/js/demo-data.js"></script>
+  <script src="/static/js/charts.js"></script>
+  <script src="/static/js/reveal.js"></script>
+</body>
+</html>

@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Privacy policy &mdash; ProFinanceCast</title>
+  <meta name="description" content="What ProFinanceCast collects, what it does not, and where the numbers live. Plain prose, short policy, no surveillance paperwork.">
+  <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/tokens.css">
+  <link rel="stylesheet" href="/static/css/theme-ivory.css">
+  <link rel="stylesheet" href="/static/css/theme-emerald.css">
+  <link rel="stylesheet" href="/static/css/base.css">
+  <link rel="stylesheet" href="/static/css/components.css">
+  <link rel="stylesheet" href="/static/css/nav.css">
+  <link rel="stylesheet" href="/static/css/footer.css">
+  <style>
+    /* ---------------------------------------------------------------
+       Legal page layout. Composed from locked tokens only.
+       Three regions per docs-page skill:
+         - inline-start sticky TOC (collapses below 960px)
+         - article body, container-prose constrained to ~65ch
+         - hairline-only chrome; no cards on legal copy
+       --------------------------------------------------------------- */
+
+    .legal-head {
+      padding-block: var(--s-16) var(--s-8);
+    }
+    .legal-head__eyebrow { margin-bottom: var(--s-3); }
+    .legal-head__title {
+      font-family: var(--f-display);
+      font-style: italic;
+      font-weight: var(--fw-medium);
+      font-size: clamp(var(--fs-40), 6vw, var(--fs-72));
+      line-height: var(--lh-tight);
+      letter-spacing: var(--ls-tight);
+      color: var(--ink);
+      margin: 0 0 var(--s-4);
+    }
+    .legal-head__lede {
+      font-size: var(--fs-13);
+      letter-spacing: var(--ls-eyebrow);
+      text-transform: uppercase;
+      color: var(--ink-65);
+      margin: 0 0 var(--s-6);
+    }
+    .legal-head__lede .mono {
+      font-size: var(--fs-13);
+      letter-spacing: 0;
+      text-transform: none;
+      color: var(--ink-80);
+    }
+    .legal-head__rule {
+      display: block;
+      height: 1px;
+      width: 96px;
+      background: var(--c-gold);
+      border: 0;
+      margin: 0;
+    }
+
+    /* Plain-prose summary paragraph that sits BEFORE the formal sections. */
+    .legal-summary {
+      padding-block: var(--s-8) var(--s-12);
+      border-bottom: 1px solid var(--rule);
+    }
+    .legal-summary p {
+      font-family: var(--f-display);
+      font-style: italic;
+      font-weight: var(--fw-medium);
+      font-size: var(--fs-24);
+      line-height: var(--lh-snug);
+      letter-spacing: var(--ls-tight);
+      color: var(--ink);
+      max-width: 52ch;
+      margin: 0;
+    }
+
+    /* Three-column grid: TOC | article | (negative space).
+       Below 960px the TOC drops out and the article takes the full column. */
+    .legal-body {
+      padding-block: var(--s-12) var(--s-24);
+    }
+    .container-prose {
+      width: 100%;
+      max-width: var(--content-wide);
+      margin: 0 auto;
+      padding-inline: var(--gutter);
+      display: grid;
+      grid-template-columns: 220px minmax(0, 1fr);
+      gap: var(--s-16);
+    }
+    @media (max-width: 960px) {
+      .container-prose {
+        grid-template-columns: minmax(0, 1fr);
+        gap: var(--s-8);
+      }
+      .legal-toc { display: none; }
+    }
+
+    .legal-toc {
+      position: sticky;
+      top: var(--s-8);
+      align-self: start;
+      padding-inline-start: 0;
+    }
+    .legal-toc__label {
+      font-family: var(--f-body);
+      font-size: var(--fs-12);
+      font-weight: var(--fw-medium);
+      letter-spacing: var(--ls-eyebrow);
+      text-transform: uppercase;
+      color: var(--ink-65);
+      margin: 0 0 var(--s-4);
+    }
+    .legal-toc ol {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      counter-reset: toc;
+    }
+    .legal-toc li {
+      counter-increment: toc;
+      border-top: 1px solid var(--rule);
+    }
+    .legal-toc li:last-child { border-bottom: 1px solid var(--rule); }
+    .legal-toc a {
+      display: flex;
+      align-items: baseline;
+      gap: var(--s-3);
+      padding: var(--s-2) 0;
+      font-size: var(--fs-14);
+      color: var(--ink-80);
+      border-bottom: 0;
+      line-height: var(--lh-snug);
+      transition: color var(--t-fast) var(--ease-out-quart);
+    }
+    .legal-toc a::before {
+      content: counter(toc, decimal-leading-zero);
+      font-family: var(--f-mono);
+      font-variant-numeric: tabular-nums;
+      font-size: var(--fs-12);
+      color: var(--ink-50);
+      flex: 0 0 auto;
+      letter-spacing: 0;
+    }
+    .legal-toc a:hover { color: var(--ink); }
+    .legal-toc a.is-active {
+      color: var(--ink);
+    }
+    .legal-toc a.is-active::before { color: var(--c-gold-deep); }
+
+    /* Article column. Plain prose, hairline rules between H2 sections. */
+    .legal-article {
+      max-width: 65ch;
+    }
+    .legal-article > section + section {
+      margin-top: var(--s-12);
+      padding-top: var(--s-12);
+      border-top: 1px solid var(--rule);
+    }
+    .legal-article h2 {
+      font-family: var(--f-display);
+      font-style: italic;
+      font-weight: var(--fw-medium);
+      font-size: var(--fs-32);
+      line-height: var(--lh-snug);
+      letter-spacing: var(--ls-tight);
+      color: var(--ink);
+      margin: 0 0 var(--s-4);
+      scroll-margin-top: var(--s-12);
+    }
+    .legal-article h3 {
+      font-family: var(--f-body);
+      font-weight: var(--fw-semi);
+      font-size: var(--fs-16);
+      line-height: var(--lh-snug);
+      letter-spacing: 0;
+      color: var(--ink);
+      margin: var(--s-8) 0 var(--s-2);
+    }
+    .legal-article p {
+      font-size: var(--fs-16);
+      line-height: var(--lh-loose);
+      color: var(--ink-80);
+      max-width: 65ch;
+      margin: 0 0 var(--s-4);
+    }
+    .legal-article p:last-child { margin-bottom: 0; }
+    .legal-article a {
+      color: var(--link);
+      border-bottom: 1px solid var(--rule);
+    }
+    .legal-article a:hover {
+      color: var(--ink);
+      border-bottom-color: var(--c-gold);
+    }
+    .legal-article strong {
+      color: var(--ink);
+      font-weight: var(--fw-semi);
+    }
+    .legal-article .mono {
+      color: var(--ink);
+    }
+
+    /* Hairline list - one item per row, separated by a 1px rule. */
+    .legal-list {
+      list-style: none;
+      margin: var(--s-6) 0 var(--s-4);
+      padding: 0;
+      border-top: 1px solid var(--rule);
+    }
+    .legal-list li {
+      border-bottom: 1px solid var(--rule);
+      padding-block: var(--s-4);
+      font-size: var(--fs-16);
+      line-height: var(--lh-loose);
+      color: var(--ink-80);
+    }
+    .legal-list li strong {
+      display: block;
+      margin-bottom: var(--s-1);
+      color: var(--ink);
+      font-weight: var(--fw-semi);
+    }
+
+    /* Right-aligned rights list (export, delete, correct, complain). */
+    .legal-rights {
+      list-style: none;
+      margin: var(--s-4) 0;
+      padding: 0;
+    }
+    .legal-rights li {
+      padding-block: var(--s-2);
+      font-size: var(--fs-16);
+      line-height: var(--lh-loose);
+      color: var(--ink-80);
+    }
+    .legal-rights li strong {
+      color: var(--ink);
+      font-weight: var(--fw-semi);
+    }
+
+    /* Retention table. Composed from .table but no card chrome. */
+    .legal-table {
+      width: 100%;
+      margin: var(--s-6) 0 var(--s-4);
+      font-size: var(--fs-14);
+    }
+    .legal-table th,
+    .legal-table td {
+      text-align: left;
+      padding: var(--s-3) 0;
+      border-bottom: 1px solid var(--rule);
+      vertical-align: baseline;
+    }
+    .legal-table thead th {
+      font-size: var(--fs-12);
+      font-weight: var(--fw-medium);
+      color: var(--ink-65);
+      letter-spacing: var(--ls-eyebrow);
+      text-transform: uppercase;
+      border-top: 1px solid var(--rule);
+    }
+    .legal-table td.figure {
+      font-family: var(--f-mono);
+      font-variant-numeric: tabular-nums;
+      color: var(--ink);
+      text-align: right;
+      white-space: nowrap;
+      letter-spacing: 0;
+    }
+    .legal-table th + th { text-align: right; }
+
+    /* Page-end mark. */
+    .legal-foot {
+      padding-block: var(--s-12) var(--s-16);
+      border-top: 1px solid var(--rule);
+      text-align: center;
+    }
+    .legal-foot p {
+      font-size: var(--fs-12);
+      letter-spacing: var(--ls-eyebrow);
+      text-transform: uppercase;
+      color: var(--ink-50);
+      margin: 0;
+    }
+    .legal-foot .mono {
+      font-size: var(--fs-12);
+      letter-spacing: 0;
+      text-transform: none;
+      color: var(--ink-65);
+    }
+  </style>
+</head>
+<body data-theme="ivory">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div data-include="header"></div>
+
+  <main id="main">
+
+    <!-- 1. Page head ------------------------------------------------ -->
+    <section class="legal-head" aria-labelledby="privacy-title" data-reveal>
+      <div class="container container--wide">
+        <p class="eyebrow legal-head__eyebrow">Privacy policy</p>
+        <h1 id="privacy-title" class="legal-head__title">Privacy policy.</h1>
+        <p class="legal-head__lede">Last updated <span class="mono">2026-05-11</span></p>
+        <hr class="legal-head__rule" aria-hidden="true">
+      </div>
+    </section>
+
+    <!-- 2. Plain-prose summary BEFORE the formal sections ----------- -->
+    <section class="legal-summary" data-reveal>
+      <div class="container container--wide">
+        <p>Most of what people call a &ldquo;privacy policy&rdquo; is paperwork describing how a company surveils its users. We aim to make this policy short because we collect very little. The rest of this page is the detail, in plain prose.</p>
+      </div>
+    </section>
+
+    <!-- 3. Body: TOC + article -------------------------------------- -->
+    <section class="legal-body" aria-label="Policy detail">
+      <div class="container-prose">
+
+        <!-- Inline-start sticky TOC -->
+        <nav class="legal-toc" aria-label="On this page" data-reveal>
+          <p class="legal-toc__label">On this page</p>
+          <ol>
+            <li><a href="#what-we-dont-collect">What we don&rsquo;t collect</a></li>
+            <li><a href="#what-we-do-collect">What we do collect</a></li>
+            <li><a href="#where-data-lives">Where data lives</a></li>
+            <li><a href="#cookies">Cookies &amp; tracking</a></li>
+            <li><a href="#your-rights">Your rights</a></li>
+            <li><a href="#retention">Data retention</a></li>
+            <li><a href="#changes">Changes to this policy</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ol>
+        </nav>
+
+        <!-- Article body -->
+        <article class="legal-article" data-reveal>
+
+          <section id="what-we-dont-collect">
+            <h2>What we don&rsquo;t collect.</h2>
+            <p>The shortest list is the most important one. ProFinanceCast does not collect, request, store, or transmit any of the following.</p>
+            <ul class="legal-list">
+              <li><strong>Bank credentials.</strong> No usernames, no passwords, no OAuth handshakes to your bank. We do not integrate with Plaid, Yodlee, MX, or any aggregator. There is nothing for an attacker to steal because we never asked.</li>
+              <li><strong>Transaction history.</strong> We do not read, import, categorise, enrich, or warehouse the line items on your statements. The forecast runs from a handful of summary numbers you type. The underlying detail stays with you.</li>
+              <li><strong>National identifiers.</strong> We never request a social-security number, tax reference, or national-ID. Subscription billing runs on your card&rsquo;s tokenised identifier and nothing more.</li>
+              <li><strong>Precise location.</strong> Server logs record a coarse country code for fraud triage. Precise city, postcode, GPS, or ISP-level location is discarded at the edge.</li>
+              <li><strong>Behavioural profiles for advertising.</strong> We run no ad pixels, no retargeting tags, no third-party trackers. There is no advertising business behind ProFinanceCast that would benefit from profiling you.</li>
+            </ul>
+          </section>
+
+          <section id="what-we-do-collect">
+            <h2>What we do collect.</h2>
+            <p>To run a subscription product we need a small amount of operational data. Each category is listed below in isolation so you can see exactly what is held against your account.</p>
+
+            <h3>Account data.</h3>
+            <p>Your email address and a salted, hashed password. The email is used for sign-in, billing receipts, and security alerts. We never see your password in plain text; even we cannot read it back.</p>
+
+            <h3>Subscription data.</h3>
+            <p>Your current plan, billing period start and end dates, and the tokenised payment identifier returned by our payment provider. No card number, no CVV, no bank routing detail ever reaches our servers.</p>
+
+            <h3>Tool inputs (browser-local).</h3>
+            <p>The numbers you type into the forecasting tools, the debt strategist, and the take-home pay calculator are stored in your browser&rsquo;s local storage. They are not transmitted to us. If you clear your browser data, the inputs are gone, and we have no copy to restore.</p>
+
+            <h3>AI advisor messages.</h3>
+            <p>If you use the advisor on a paid plan, your prompts and the generated replies are processed transiently to produce a response. Messages are retained for <span class="mono">30</span> days for abuse review and then deleted. They are never used to train models, ours or anyone else&rsquo;s.</p>
+
+            <h3>Server logs (15-day rolling, IP-scrubbed).</h3>
+            <p>Standard HTTP request logs (timestamp, path, response code, coarse country) are kept on a rolling <span class="mono">15</span>-day window. IP addresses are truncated at the edge before they are written, so logs cannot be re-identified to an individual visitor after that scrub.</p>
+          </section>
+
+          <section id="where-data-lives">
+            <h2>Where data lives.</h2>
+            <p>The forecast itself lives in your browser. Account and subscription records live in a single encrypted database hosted on EU-resident infrastructure where applicable. Data is encrypted at rest, and TLS 1.3 is the floor on every connection.</p>
+            <p>We use one third-party processor: the payment provider that handles your card. We use no analytics processor, no email-marketing processor, no customer-data-platform, and no behavioural-tracking vendor. If that ever changes, we will list the processor here before it goes live.</p>
+          </section>
+
+          <section id="cookies">
+            <h2>Cookies &amp; tracking.</h2>
+            <p>One cookie. It is a session cookie that keeps you signed in. It expires when you sign out or after a period of inactivity. We do not set analytics cookies, ad cookies, or cross-site identifiers. We do not fingerprint your device. There is no cookie banner because there is nothing to consent to beyond the one cookie that makes sign-in work.</p>
+          </section>
+
+          <section id="your-rights">
+            <h2>Your rights.</h2>
+            <p>Wherever you live, the following are available on request.</p>
+            <ul class="legal-rights">
+              <li><strong>Export.</strong> A machine-readable copy of every record we hold against your account.</li>
+              <li><strong>Delete.</strong> Permanent removal of your account and associated data, subject only to the retention obligations below.</li>
+              <li><strong>Correct.</strong> Fix any record that is wrong: email, billing detail, plan history.</li>
+              <li><strong>Complain.</strong> If you believe we have mishandled your data, you may lodge a complaint with the data-protection supervisory authority in the jurisdiction where you live. We would rather hear from you first, but we will not stand in your way.</li>
+            </ul>
+            <p>Reach us at <a href="mailto:privacy@profinancecast.com">privacy@profinancecast.com</a>. We respond within <span class="mono">30</span> days; usually much sooner.</p>
+          </section>
+
+          <section id="retention">
+            <h2>Data retention.</h2>
+            <p>We keep data only as long as we need it. The schedule below is the operating rule.</p>
+            <table class="legal-table" aria-label="Data retention schedule">
+              <thead>
+                <tr>
+                  <th scope="col">Category</th>
+                  <th scope="col">Retained</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Account record</td>
+                  <td class="figure">Until you delete it</td>
+                </tr>
+                <tr>
+                  <td>Subscription &amp; billing records</td>
+                  <td class="figure">7 years</td>
+                </tr>
+                <tr>
+                  <td>AI advisor messages</td>
+                  <td class="figure">30 days</td>
+                </tr>
+                <tr>
+                  <td>Server logs</td>
+                  <td class="figure">15 days</td>
+                </tr>
+              </tbody>
+            </table>
+            <p>The seven-year window on billing records reflects the statutory accounting-record obligations a subscription business is subject to. Everything else is shorter because there is no operational reason to hold it longer.</p>
+          </section>
+
+          <section id="changes">
+            <h2>Changes to this policy.</h2>
+            <p>If we change anything material, we will email every active account at least <span class="mono">14</span> days before the change takes effect, and log the revision in the public changelog. Cosmetic edits (typos, clearer wording with no change in meaning) are made without notice but remain visible in the changelog history.</p>
+          </section>
+
+          <section id="contact">
+            <h2>Contact.</h2>
+            <p>Email <a href="mailto:privacy@profinancecast.com">privacy@profinancecast.com</a> for anything privacy-related. A postal address is available on request: we are a small operation in Europe and prefer not to publish a fixed address on a public web page, but we will provide one to any person or supervisory authority that asks.</p>
+          </section>
+
+        </article>
+      </div>
+    </section>
+
+    <!-- 4. Page-end mark ------------------------------------------- -->
+    <section class="legal-foot">
+      <div class="container container--wide">
+        <p>End of privacy policy &middot; <span class="mono">2026-05-11</span></p>
+      </div>
+    </section>
+
+  </main>
+
+  <div data-include="footer"></div>
+
+  <script src="/static/js/partials.js"></script>
+  <script src="/static/js/reveal.js"></script>
+  <script>
+    /* TOC active-link highlight as the user scrolls through H2 anchors. */
+    (function () {
+      var links = document.querySelectorAll('.legal-toc a[href^="#"]');
+      if (!links.length || !('IntersectionObserver' in window)) return;
+      var byId = {};
+      links.forEach(function (a) {
+        var id = a.getAttribute('href').slice(1);
+        byId[id] = a;
+      });
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          var a = byId[e.target.id];
+          if (!a) return;
+          if (e.isIntersecting) {
+            links.forEach(function (x) { x.classList.remove('is-active'); });
+            a.classList.add('is-active');
+          }
+        });
+      }, { rootMargin: '-30% 0px -60% 0px', threshold: 0 });
+      Object.keys(byId).forEach(function (id) {
+        var node = document.getElementById(id);
+        if (node) io.observe(node);
+      });
+    }());
+  </script>
+</body>
+</html>

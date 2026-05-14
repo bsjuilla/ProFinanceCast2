@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Dashboard &mdash; ProFinanceCast</title>
+  <meta name="description" content="Your forecasting dashboard. Net worth, ten-year forecast, debt path, and goals at a glance.">
+  <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/tokens.css">
+  <link rel="stylesheet" href="/static/css/theme-ivory.css">
+  <link rel="stylesheet" href="/static/css/theme-emerald.css">
+  <link rel="stylesheet" href="/static/css/base.css">
+  <link rel="stylesheet" href="/static/css/components.css">
+  <link rel="stylesheet" href="/static/css/nav.css">
+  <link rel="stylesheet" href="/static/css/footer.css">
+  <link rel="stylesheet" href="/static/css/charts.css">
+  <link rel="stylesheet" href="/static/css/app.css">
+</head>
+<body data-theme="emerald">
+  <a class="skip-link" href="#main">Skip to dashboard</a>
+
+  <div data-include="header"></div>
+  <div data-include="banner"></div>
+
+  <div class="app-shell">
+    <div data-include="sidebar"></div>
+
+    <main class="app-main" id="main">
+
+      <!-- ─────────────────────────────────────────────────────────────
+           1 · PAGE HEAD  (eyebrow · display H1 · sublede · action)
+           ───────────────────────────────────────────────────────────── -->
+      <header class="page-head" data-reveal>
+        <div class="page-head__body">
+          <p class="eyebrow page-head__eyebrow">
+            <span>Overview</span>
+            <span class="page-head__sep" aria-hidden="true">&middot;</span>
+            <span class="mono">11 May 2026</span>
+          </p>
+          <h1 class="display display--md page-head__title">Good afternoon.</h1>
+          <p class="page-head__lede">Here&rsquo;s where your decade is heading.</p>
+        </div>
+        <div class="page-head__actions">
+          <a href="/settings.html" class="btn btn--ghost btn--sm">Edit assumptions</a>
+        </div>
+      </header>
+
+      <!-- ─────────────────────────────────────────────────────────────
+           2 · KPI STRIP  (4 cells, hairline dividers, mono figures)
+           ───────────────────────────────────────────────────────────── -->
+      <section class="kpi-strip" aria-label="Headline metrics" data-reveal>
+
+        <div class="kpi-cell">
+          <p class="kpi-cell__label">Net worth</p>
+          <p class="kpi-cell__value mono">$87,420</p>
+          <p class="kpi-cell__foot mono">
+            <span class="kpi-cell__delta kpi-cell__delta--up">+$2,310</span>
+            <span class="kpi-cell__foot-sub">this month</span>
+          </p>
+        </div>
+
+        <div class="kpi-cell">
+          <p class="kpi-cell__label">10-year forecast</p>
+          <p class="kpi-cell__value mono">$412,000</p>
+          <p class="kpi-cell__foot mono">
+            <span class="kpi-cell__foot-sub">Pace of</span>
+            <span>$32,460&thinsp;/&thinsp;yr</span>
+          </p>
+        </div>
+
+        <div class="kpi-cell">
+          <p class="kpi-cell__label">Debt-free in</p>
+          <p class="kpi-cell__value mono">Month 14</p>
+          <p class="kpi-cell__foot">
+            <span class="kpi-cell__foot-sub">Two debts, avalanche path</span>
+          </p>
+        </div>
+
+        <div class="kpi-cell kpi-cell--chart">
+          <p class="kpi-cell__label">Health score</p>
+          <div class="kpi-cell__radial">
+            <div class="chart" data-chart="radial" data-chart-opts='{"value":72,"max":100,"label":"Health"}'></div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ─────────────────────────────────────────────────────────────
+           3 · FORECAST PANEL  (10-year net worth line, 340h)
+           ───────────────────────────────────────────────────────────── -->
+      <section class="panel" aria-labelledby="forecast-h2" data-reveal>
+        <header class="panel__head">
+          <div>
+            <p class="eyebrow">May 2026 &rarr; May 2036</p>
+            <h2 class="panel__title" id="forecast-h2">10-year net worth forecast</h2>
+          </div>
+          <p class="panel__meta mono">$87,420 &rarr; $412,000</p>
+        </header>
+        <div class="panel__canvas">
+          <div class="chart" data-chart="line" data-chart-opts='{"source":"netWorthSeries","label":"Ten-year net worth forecast"}'></div>
+        </div>
+        <footer class="panel__foot">
+          <div class="panel__stat">
+            <p class="panel__stat-label">Starting</p>
+            <p class="panel__stat-value mono">$87,420</p>
+          </div>
+          <div class="panel__stat">
+            <p class="panel__stat-label">Ending</p>
+            <p class="panel__stat-value mono">$412,000</p>
+          </div>
+          <div class="panel__stat">
+            <p class="panel__stat-label">CAGR</p>
+            <p class="panel__stat-value mono">16.8%</p>
+          </div>
+        </footer>
+      </section>
+
+      <!-- ─────────────────────────────────────────────────────────────
+           4 · TWO-COLUMN  (cash flow bars · debt waterfall)
+           ───────────────────────────────────────────────────────────── -->
+      <section class="grid grid--2 row" aria-label="Cash flow and debt">
+
+        <article class="panel" aria-labelledby="cashflow-h2" data-reveal>
+          <header class="panel__head">
+            <div>
+              <p class="eyebrow">Next 12 months</p>
+              <h2 class="panel__title" id="cashflow-h2">Cash flow &mdash; next 12 months</h2>
+            </div>
+            <p class="panel__meta mono">Monthly surplus</p>
+          </header>
+          <div class="panel__canvas">
+            <div class="chart" data-chart="bars" data-chart-opts='{
+              "values":[
+                {"value":2220,"label":"May"},
+                {"value":2310,"label":"Jun"},
+                {"value":1980,"label":"Jul"},
+                {"value":2400,"label":"Aug"},
+                {"value":2150,"label":"Sep"},
+                {"value":2220,"label":"Oct"},
+                {"value":2080,"label":"Nov"},
+                {"value":2350,"label":"Dec"},
+                {"value":2420,"label":"Jan"},
+                {"value":2180,"label":"Feb"},
+                {"value":2270,"label":"Mar"},
+                {"value":2310,"label":"Apr"}
+              ],
+              "label":"Monthly cash-flow surplus over next 12 months"
+            }'></div>
+          </div>
+          <footer class="panel__foot panel__foot--compact">
+            <div class="panel__stat">
+              <p class="panel__stat-label">Avg surplus</p>
+              <p class="panel__stat-value mono">$2,241</p>
+            </div>
+            <div class="panel__stat">
+              <p class="panel__stat-label">Low</p>
+              <p class="panel__stat-value mono">$1,980</p>
+            </div>
+            <div class="panel__stat">
+              <p class="panel__stat-label">High</p>
+              <p class="panel__stat-value mono">$2,420</p>
+            </div>
+          </footer>
+        </article>
+
+        <article class="panel" aria-labelledby="debt-h2" data-reveal>
+          <header class="panel__head">
+            <div>
+              <p class="eyebrow">Two open balances</p>
+              <h2 class="panel__title" id="debt-h2">Debt payoff</h2>
+            </div>
+            <p class="panel__meta mono">Avalanche &middot; M14</p>
+          </header>
+          <div class="panel__canvas panel__canvas--waterfall">
+            <div class="chart" data-chart="waterfall" data-chart-opts='{"label":"Outstanding debt by balance"}'></div>
+          </div>
+          <footer class="panel__foot panel__foot--compact">
+            <div class="panel__stat">
+              <p class="panel__stat-label">Credit card</p>
+              <p class="panel__stat-value mono">24.9%</p>
+            </div>
+            <div class="panel__stat">
+              <p class="panel__stat-label">Student loan</p>
+              <p class="panel__stat-value mono">6.1%</p>
+            </div>
+            <div class="panel__stat">
+              <p class="panel__stat-label">Monthly</p>
+              <p class="panel__stat-value mono">$410</p>
+            </div>
+          </footer>
+        </article>
+
+      </section>
+
+      <!-- ─────────────────────────────────────────────────────────────
+           5 · GOAL RAIL  (3 horizontal progress rows)
+           ───────────────────────────────────────────────────────────── -->
+      <section class="panel goals" aria-labelledby="goals-h2" data-reveal>
+        <header class="panel__head">
+          <div>
+            <p class="eyebrow">3 active</p>
+            <h2 class="panel__title" id="goals-h2">Goals on track</h2>
+          </div>
+          <a href="/goals.html" class="btn--link">View goals &rarr;</a>
+        </header>
+
+        <ul class="goals__list" role="list">
+
+          <li class="goals__row">
+            <div class="goals__row-head">
+              <p class="goals__row-name">Emergency fund (6 months)</p>
+              <p class="goals__row-figure mono">$24,800&thinsp;/&thinsp;$31,080</p>
+            </div>
+            <div class="goals__row-bar">
+              <div class="chart" data-chart="hbar" data-chart-opts='{"value":24800,"max":31080,"label":"Emergency fund progress"}'></div>
+            </div>
+            <p class="goals__row-meta">
+              <span class="mono">79.8%</span>
+              <span class="goals__row-meta-sep" aria-hidden="true">&middot;</span>
+              <span>ETA 9 months</span>
+            </p>
+          </li>
+
+          <li class="goals__row">
+            <div class="goals__row-head">
+              <p class="goals__row-name">House down payment</p>
+              <p class="goals__row-figure mono">$12,400&thinsp;/&thinsp;$60,000</p>
+            </div>
+            <div class="goals__row-bar">
+              <div class="chart" data-chart="hbar" data-chart-opts='{"value":12400,"max":60000,"label":"Down payment progress"}'></div>
+            </div>
+            <p class="goals__row-meta">
+              <span class="mono">20.7%</span>
+              <span class="goals__row-meta-sep" aria-hidden="true">&middot;</span>
+              <span>ETA 42 months</span>
+            </p>
+          </li>
+
+          <li class="goals__row">
+            <div class="goals__row-head">
+              <p class="goals__row-name">Sabbatical fund (3 months)</p>
+              <p class="goals__row-figure mono">$3,200&thinsp;/&thinsp;$15,540</p>
+            </div>
+            <div class="goals__row-bar">
+              <div class="chart" data-chart="hbar" data-chart-opts='{"value":3200,"max":15540,"label":"Sabbatical fund progress"}'></div>
+            </div>
+            <p class="goals__row-meta">
+              <span class="mono">20.6%</span>
+              <span class="goals__row-meta-sep" aria-hidden="true">&middot;</span>
+              <span>ETA 28 months</span>
+            </p>
+          </li>
+
+        </ul>
+      </section>
+
+      <!-- ─────────────────────────────────────────────────────────────
+           6 · RECENT ACTIVITY  (5-row compact table)
+           ───────────────────────────────────────────────────────────── -->
+      <section class="panel panel--flat" aria-labelledby="activity-h2" data-reveal>
+        <header class="panel__head">
+          <div>
+            <p class="eyebrow">Recent activity</p>
+            <h2 class="panel__title" id="activity-h2">Last five entries</h2>
+          </div>
+          <a href="/history.html" class="btn--link">Full history &rarr;</a>
+        </header>
+
+        <div class="panel__table">
+          <table class="table activity">
+            <thead>
+              <tr>
+                <th scope="col" class="activity__col-when">When</th>
+                <th scope="col" class="activity__col-type">Type</th>
+                <th scope="col" class="activity__col-note">Note</th>
+                <th scope="col" class="activity__col-amount">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="mono activity__when">2026-05-09</td>
+                <td><span class="activity__chip">Income</span></td>
+                <td>Salary</td>
+                <td class="mono activity__amount activity__amount--pos">+$3,700</td>
+              </tr>
+              <tr>
+                <td class="mono activity__when">2026-05-07</td>
+                <td><span class="activity__chip">Expense</span></td>
+                <td>Grocery run</td>
+                <td class="mono activity__amount">&minus;$148</td>
+              </tr>
+              <tr>
+                <td class="mono activity__when">2026-05-06</td>
+                <td><span class="activity__chip activity__chip--debt">Debt</span></td>
+                <td>Credit card payment</td>
+                <td class="mono activity__amount">&minus;$350</td>
+              </tr>
+              <tr>
+                <td class="mono activity__when">2026-05-05</td>
+                <td><span class="activity__chip">Expense</span></td>
+                <td>Utilities (April)</td>
+                <td class="mono activity__amount">&minus;$185</td>
+              </tr>
+              <tr>
+                <td class="mono activity__when">2026-05-03</td>
+                <td><span class="activity__chip">Expense</span></td>
+                <td>Restaurant</td>
+                <td class="mono activity__amount">&minus;$52</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ─────────────────────────────────────────────────────────────
+           7 · LOCKED PRO TILES  (Scenarios + Report card)
+           ───────────────────────────────────────────────────────────── -->
+      <section class="grid grid--2 row" aria-label="Pro features">
+
+        <article class="panel pro-tile locked" aria-labelledby="pro-scenarios-h2">
+          <div class="locked__content">
+            <header class="panel__head">
+              <div>
+                <p class="eyebrow">Scenarios</p>
+                <h2 class="panel__title" id="pro-scenarios-h2">Model life changes</h2>
+              </div>
+              <span class="badge badge--pro">Pro</span>
+            </header>
+
+            <ul class="pro-tile__list" role="list">
+              <li class="pro-tile__row">
+                <span class="pro-tile__row-label">Baseline</span>
+                <div class="chart" data-chart="sparkline" data-chart-opts='{"values":[87,118,152,189,228,270,314,360,408,412],"label":"Baseline forecast"}'></div>
+                <span class="pro-tile__row-value mono">$412k</span>
+              </li>
+              <li class="pro-tile__row">
+                <span class="pro-tile__row-label">Salary +12% in 2027</span>
+                <div class="chart" data-chart="sparkline" data-chart-opts='{"values":[87,122,161,206,253,304,358,415,471,478],"label":"With raise"}'></div>
+                <span class="pro-tile__row-value mono">$478k</span>
+              </li>
+              <li class="pro-tile__row">
+                <span class="pro-tile__row-label">Move to lower-cost city</span>
+                <div class="chart" data-chart="sparkline" data-chart-opts='{"values":[87,124,167,213,262,316,374,434,494,503],"label":"After move"}'></div>
+                <span class="pro-tile__row-value mono">$503k</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="locked__veil">
+            <p class="locked__title">Three scenarios. One forecast you trust.</p>
+            <p class="locked__hint">Compare the next decade under different decisions, side by side.</p>
+            <a href="/billing.html" class="btn btn--primary btn--sm">Unlock with Pro &rarr;</a>
+          </div>
+        </article>
+
+        <article class="panel pro-tile locked" aria-labelledby="pro-report-h2">
+          <div class="locked__content">
+            <header class="panel__head">
+              <div>
+                <p class="eyebrow">Report card</p>
+                <h2 class="panel__title" id="pro-report-h2">Quarterly letter</h2>
+              </div>
+              <span class="badge badge--pro">Pro</span>
+            </header>
+
+            <blockquote class="pro-tile__quote">
+              This quarter, the household added <span class="mono">$6,930</span> to net worth, finished paying the credit-card line, and lifted the emergency reserve to 4.8 months of runway. The retirement account is on a six-percent track and the forecast endpoint moved up by <span class="mono">$11,200</span>.
+            </blockquote>
+            <p class="pro-tile__quote-meta">
+              <span class="eyebrow">Q2 2026</span>
+              <span aria-hidden="true">&middot;</span>
+              <span class="eyebrow">Forecast desk</span>
+            </p>
+          </div>
+
+          <div class="locked__veil">
+            <p class="locked__title">A short letter every quarter.</p>
+            <p class="locked__hint">What changed, what to watch, what to do next.</p>
+            <a href="/billing.html" class="btn btn--primary btn--sm">Unlock with Pro &rarr;</a>
+          </div>
+        </article>
+
+      </section>
+
+    </main>
+  </div>
+
+  <div data-include="footer"></div>
+
+  <script src="/static/js/partials.js"></script>
+  <script src="/static/js/demo-data.js"></script>
+  <script src="/static/js/charts.js"></script>
+  <script src="/static/js/reveal.js"></script>
+</body>
+</html>

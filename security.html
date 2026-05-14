@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Security &mdash; ProFinanceCast</title>
+  <meta name="description" content="Security at ProFinanceCast. We store no bank data, the demo handles no secrets, and responsible-disclosure reaches us at a documented address.">
+  <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/tokens.css">
+  <link rel="stylesheet" href="/static/css/theme-ivory.css">
+  <link rel="stylesheet" href="/static/css/theme-emerald.css">
+  <link rel="stylesheet" href="/static/css/base.css">
+  <link rel="stylesheet" href="/static/css/components.css">
+  <link rel="stylesheet" href="/static/css/nav.css">
+  <link rel="stylesheet" href="/static/css/footer.css">
+  <link rel="stylesheet" href="/static/css/placeholder.css">
+</head>
+<body data-theme="ivory">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div data-include="header"></div>
+
+  <main id="main">
+
+    <!-- 1 · PAGE HEAD ─────────────────────────────────────────────────── -->
+    <section class="placeholder-head" aria-labelledby="security-h1" data-reveal>
+      <div class="container container--narrow">
+        <p class="eyebrow">Security</p>
+        <h1 id="security-h1" class="placeholder-head__title">Security at ProFinanceCast.</h1>
+        <p class="placeholder-head__lede">Plain prose about what we hold, what we don&rsquo;t, and how to reach us if something is wrong.</p>
+        <hr class="placeholder-head__rule" aria-hidden="true">
+      </div>
+    </section>
+
+    <!-- 2 · BODY · BANK DATA ──────────────────────────────────────────── -->
+    <section class="placeholder-body" aria-labelledby="security-bank" data-reveal>
+      <div class="container container--narrow">
+        <p class="eyebrow">Section 01</p>
+        <h2 id="security-bank">No bank data, ever.</h2>
+        <p>The strongest security posture is one where the sensitive data never enters the system. ProFinanceCast does not connect to banks, does not integrate with aggregators, and does not request usernames or passwords for any financial institution. There is no Plaid, no Yodlee, no MX, no OAuth handshake to your bank. The forecast runs from four numbers you type; that is the whole input layer.</p>
+        <p>Because we never asked, there is nothing for an attacker to take from us in this category. The promise is structural, not aspirational.</p>
+      </div>
+    </section>
+
+    <!-- 3 · BODY · DEMO SECRETS ───────────────────────────────────────── -->
+    <section class="placeholder-body" aria-labelledby="security-demo" data-reveal>
+      <div class="container container--narrow">
+        <p class="eyebrow">Section 02</p>
+        <h2 id="security-demo">The demo handles no secrets.</h2>
+        <p>This site is currently a public demo. Authentication, billing, and the AI advisor are UI only; nothing you type into a form is sent anywhere or stored against an account. If you enter figures into the forecasting tools, those figures live in your browser&rsquo;s local storage and are not transmitted to us.</p>
+        <p>As a matter of habit, don&rsquo;t paste real passwords, card numbers, or national identifiers into any demo form &mdash; not ours, not anyone&rsquo;s. When the production product launches, account credentials will be salted-and-hashed at rest, TLS 1.3 will be the floor on every connection, and the only third-party processor in the path will be the payment provider.</p>
+      </div>
+    </section>
+
+    <!-- 4 · BODY · RESPONSIBLE DISCLOSURE ─────────────────────────────── -->
+    <section class="placeholder-body" aria-labelledby="security-disclosure" data-reveal>
+      <div class="container container--narrow">
+        <p class="eyebrow">Section 03</p>
+        <h2 id="security-disclosure">Responsible disclosure.</h2>
+        <p>If you believe you have found a vulnerability, please write to the security inbox before disclosing publicly. Give us a clear description, the steps to reproduce, and the impact you see; we will acknowledge receipt within two working days and aim to resolve or mitigate within thirty.</p>
+        <p>During the demo period the disclosure address is published as a placeholder &mdash; we will replace it with the live inbox before the production launch. We do not run a paid bug bounty, but we do credit researchers in the changelog when they consent to be named.</p>
+      </div>
+    </section>
+
+    <!-- 5 · FOOT ──────────────────────────────────────────────────────── -->
+    <section class="placeholder-foot" aria-label="Related" data-reveal>
+      <div class="container container--narrow">
+        <p class="eyebrow">Read instead</p>
+        <div class="placeholder-foot__links">
+          <a href="/privacy.html" class="placeholder-foot__link">Privacy policy &rarr;</a>
+          <a href="/index.html" class="placeholder-foot__link">Back to home &rarr;</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <div data-include="footer"></div>
+
+  <script src="/static/js/partials.js"></script>
+  <script src="/static/js/reveal.js"></script>
+</body>
+</html>

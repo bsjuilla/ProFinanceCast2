@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Open your forecast &mdash; ProFinanceCast</title>
+  <meta name="description" content="Three short steps. Income, expenses, one debt and one goal. Your forecast updates as you type. Nothing leaves your browser.">
+  <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/static/css/tokens.css">
+  <link rel="stylesheet" href="/static/css/theme-ivory.css">
+  <link rel="stylesheet" href="/static/css/theme-emerald.css">
+  <link rel="stylesheet" href="/static/css/base.css">
+  <link rel="stylesheet" href="/static/css/components.css">
+  <link rel="stylesheet" href="/static/css/nav.css">
+  <link rel="stylesheet" href="/static/css/footer.css">
+  <link rel="stylesheet" href="/static/css/auth.css">
+</head>
+<body data-theme="emerald">
+
+  <a class="skip-link" href="#main">Skip to onboarding</a>
+
+  <div data-include="header"></div>
+  <div data-include="banner"></div>
+
+  <main id="main">
+    <div class="wizard-shell">
+
+      <!-- ===== TOP STRIP - context + escape hatch ===== -->
+      <div class="wizard-top">
+        <span class="wizard-top__label">New forecast</span>
+        <a class="wizard-skip" href="/dashboard.html" data-href="dashboard.html">
+          Skip the wizard &rarr;
+        </a>
+      </div>
+
+      <!-- ===== STEP 1 - INCOME ===== -->
+      <section class="wizard-step is-active"
+               data-step="1"
+               aria-labelledby="step1-h1"
+               data-reveal>
+
+        <p class="wizard-step__eyebrow">Opening your forecast &middot; Step 1 of 3</p>
+        <h1 id="step1-h1" class="wizard-step__h1">
+          <em>Let&rsquo;s start with what you bring in.</em>
+        </h1>
+        <p class="wizard-step__lede">
+          Just a rough monthly figure. You can adjust later.
+        </p>
+
+        <div class="wizard-step__card">
+          <form class="wizard-step__stack"
+                aria-label="Income"
+                onsubmit="event.preventDefault(); return false;">
+
+            <div class="field">
+              <label class="field__label" for="income-monthly">Monthly income (after tax)</label>
+              <div class="field__group">
+                <span class="field__group__prefix" id="income-prefix" data-prefix>$</span>
+                <input class="field__control auth-fig"
+                       id="income-monthly"
+                       name="income-monthly"
+                       type="text"
+                       inputmode="numeric"
+                       autocomplete="off"
+                       placeholder="7,400"
+                       aria-describedby="income-prefix">
+              </div>
+            </div>
+
+            <div class="wizard-step__row">
+
+              <div class="field">
+                <label class="field__label" for="income-source">Source</label>
+                <select class="field__control" id="income-source" name="income-source">
+                  <option>Salary</option>
+                  <option>Self-employed</option>
+                  <option>Mixed</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label class="field__label" for="income-currency">Currency</label>
+                <select class="field__control"
+                        id="income-currency"
+                        name="income-currency"
+                        data-currency>
+                  <option value="USD">US dollars ($)</option>
+                  <option value="GBP">British pounds (&pound;)</option>
+                </select>
+              </div>
+
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- ===== STEP 2 - EXPENSES ===== -->
+      <section class="wizard-step"
+               data-step="2"
+               aria-labelledby="step2-h1">
+
+        <p class="wizard-step__eyebrow">Opening your forecast &middot; Step 2 of 3</p>
+        <h1 id="step2-h1" class="wizard-step__h1">
+          <em>Now what goes out.</em>
+        </h1>
+        <p class="wizard-step__lede">
+          A monthly total and a rough split. The categories don&rsquo;t have to be exact.
+        </p>
+
+        <div class="wizard-step__card">
+          <form class="wizard-step__stack"
+                aria-label="Expenses"
+                onsubmit="event.preventDefault(); return false;">
+
+            <div class="field">
+              <label class="field__label" for="expenses-monthly">Monthly expenses (total)</label>
+              <div class="field__group">
+                <span class="field__group__prefix" data-prefix>$</span>
+                <input class="field__control auth-fig"
+                       id="expenses-monthly"
+                       name="expenses-monthly"
+                       type="text"
+                       inputmode="numeric"
+                       autocomplete="off"
+                       placeholder="5,180">
+              </div>
+            </div>
+
+            <div class="wizard-step__subgroup">
+              <p class="wizard-step__subgroup-title">By category</p>
+              <div class="wizard-step__categories">
+
+                <div class="field">
+                  <label class="field__label" for="cat-housing">Housing</label>
+                  <div class="field__group">
+                    <span class="field__group__prefix" data-prefix>$</span>
+                    <input class="field__control auth-fig" id="cat-housing" type="text" inputmode="numeric" placeholder="1,950">
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label class="field__label" for="cat-food">Food &amp; groceries</label>
+                  <div class="field__group">
+                    <span class="field__group__prefix" data-prefix>$</span>
+                    <input class="field__control auth-fig" id="cat-food" type="text" inputmode="numeric" placeholder="780">
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label class="field__label" for="cat-transport">Transport</label>
+                  <div class="field__group">
+                    <span class="field__group__prefix" data-prefix>$</span>
+                    <input class="field__control auth-fig" id="cat-transport" type="text" inputmode="numeric" placeholder="420">
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label class="field__label" for="cat-other">Everything else</label>
+                  <div class="field__group">
+                    <span class="field__group__prefix" data-prefix>$</span>
+                    <input class="field__control auth-fig" id="cat-other" type="text" inputmode="numeric" placeholder="2,030">
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </form>
+        </div>
+      </section>
+
+      <!-- ===== STEP 3 - DEBTS + GOALS ===== -->
+      <section class="wizard-step"
+               data-step="3"
+               aria-labelledby="step3-h1">
+
+        <p class="wizard-step__eyebrow">Opening your forecast &middot; Step 3 of 3</p>
+        <h1 id="step3-h1" class="wizard-step__h1">
+          <em>Two more things and you&rsquo;re forecasting.</em>
+        </h1>
+        <p class="wizard-step__lede">
+          One debt, one goal. Add more from the dashboard later.
+        </p>
+
+        <div class="wizard-step__card">
+          <form class="wizard-step__stack"
+                aria-label="Debt and goal"
+                onsubmit="event.preventDefault(); return false;">
+
+            <div class="wizard-step__subgroup" style="margin-top:0;padding-top:0;border-top:0;">
+              <p class="wizard-step__subgroup-title">A debt</p>
+              <div class="wizard-step__mini-row">
+
+                <div class="field">
+                  <label class="field__label" for="debt-name">Name</label>
+                  <input class="field__control" id="debt-name" type="text" placeholder="Credit card" autocomplete="off">
+                </div>
+
+                <div class="field">
+                  <label class="field__label" for="debt-balance">Balance</label>
+                  <div class="field__group">
+                    <span class="field__group__prefix" data-prefix>$</span>
+                    <input class="field__control auth-fig" id="debt-balance" type="text" inputmode="numeric" placeholder="3,200">
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label class="field__label" for="debt-apr">APR</label>
+                  <div class="field__group">
+                    <input class="field__control auth-fig" id="debt-apr" type="text" inputmode="decimal" placeholder="24.9">
+                    <span class="field__group__suffix">%</span>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="wizard-step__subgroup">
+              <p class="wizard-step__subgroup-title">A goal</p>
+              <div class="wizard-step__mini-row">
+
+                <div class="field">
+                  <label class="field__label" for="goal-name">Name</label>
+                  <input class="field__control" id="goal-name" type="text" placeholder="Emergency fund" autocomplete="off">
+                </div>
+
+                <div class="field">
+                  <label class="field__label" for="goal-target">Target</label>
+                  <div class="field__group">
+                    <span class="field__group__prefix" data-prefix>$</span>
+                    <input class="field__control auth-fig" id="goal-target" type="text" inputmode="numeric" placeholder="31,080">
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label class="field__label" for="goal-by">By</label>
+                  <input class="field__control" id="goal-by" type="text" placeholder="Dec 2026" autocomplete="off">
+                </div>
+
+              </div>
+            </div>
+
+          </form>
+        </div>
+      </section>
+
+      <!-- ===== PROGRESS DOTS + ACTIONS (shared across steps) ===== -->
+      <div class="wizard-progress"
+           role="progressbar"
+           aria-valuemin="1"
+           aria-valuemax="3"
+           aria-valuenow="1"
+           aria-label="Wizard progress, step 1 of 3"
+           id="wizard-progress">
+        <span class="wizard-progress__dot is-active" data-dot="1" aria-hidden="true"></span>
+        <span class="wizard-progress__rule" aria-hidden="true"></span>
+        <span class="wizard-progress__dot" data-dot="2" aria-hidden="true"></span>
+        <span class="wizard-progress__rule" aria-hidden="true"></span>
+        <span class="wizard-progress__dot" data-dot="3" aria-hidden="true"></span>
+      </div>
+
+      <div class="wizard-actions">
+        <button type="button" class="btn btn--ghost" id="wizard-back" disabled>
+          &larr; Back
+        </button>
+        <button type="button" class="btn btn--primary" id="wizard-next">
+          Continue &rarr;
+        </button>
+      </div>
+
+    </div>
+  </main>
+
+  <div data-include="footer"></div>
+
+  <script src="/static/js/partials.js"></script>
+  <script src="/static/js/reveal.js"></script>
+
+  <script>
+    /* ----------------------------------------------------------
+       Wizard navigation: pure UI swap. Nothing submits, nothing
+       is persisted. Last step's "Continue" sends the visitor to
+       the dashboard (the dashboard already shows demo data per
+       RULING-01 Q4 so the seam is clean).
+       ---------------------------------------------------------- */
+    (function () {
+      var steps = document.querySelectorAll('.wizard-step');
+      var dots  = document.querySelectorAll('.wizard-progress__dot');
+      var prog  = document.getElementById('wizard-progress');
+      var back  = document.getElementById('wizard-back');
+      var next  = document.getElementById('wizard-next');
+      var idx   = 1;
+      var max   = steps.length;
+
+      function render() {
+        steps.forEach(function (s) {
+          s.classList.toggle('is-active', parseInt(s.dataset.step, 10) === idx);
+        });
+        dots.forEach(function (d) {
+          d.classList.toggle('is-active', parseInt(d.dataset.dot, 10) <= idx);
+        });
+        back.disabled = (idx === 1);
+        next.textContent = (idx === max) ? 'Open the dashboard →' : 'Continue →';
+        if (prog) {
+          prog.setAttribute('aria-valuenow', String(idx));
+          prog.setAttribute('aria-label', 'Wizard progress, step ' + idx + ' of ' + max);
+        }
+        /* Focus the first input of the freshly-visible step
+           so keyboard / screen-reader users land in the form.
+           Skip on the first paint (already focused-or-elsewhere). */
+        var active = document.querySelector('.wizard-step.is-active');
+        if (active && document.activeElement === document.body) {
+          var first = active.querySelector('input, select');
+          if (first) first.focus({ preventScroll: true });
+        }
+      }
+
+      back.addEventListener('click', function () {
+        if (idx > 1) { idx -= 1; render(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+      });
+
+      next.addEventListener('click', function () {
+        if (idx < max) {
+          idx += 1;
+          render();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+          window.location.href = '/dashboard.html';
+        }
+      });
+
+      /* Currency prefix swap. The Step-1 select drives every
+         dollar prefix on every step. Pound or dollar - the same
+         two symbols. No third currency in this preview.        */
+      var currency = document.querySelector('[data-currency]');
+      if (currency) {
+        currency.addEventListener('change', function () {
+          var sym = currency.value === 'GBP' ? '£' : '$';
+          document.querySelectorAll('[data-prefix]').forEach(function (p) {
+            p.textContent = sym;
+          });
+        });
+      }
+    }());
+  </script>
+
+</body>
+</html>

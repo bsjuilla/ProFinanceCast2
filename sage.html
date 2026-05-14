@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Sage &mdash; ProFinanceCast</title>
+  <meta name="description" content="Ask the forecasting desk. Sage answers from the household's numbers, in plain language.">
+  <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/tokens.css">
+  <link rel="stylesheet" href="/static/css/theme-ivory.css">
+  <link rel="stylesheet" href="/static/css/theme-emerald.css">
+  <link rel="stylesheet" href="/static/css/base.css">
+  <link rel="stylesheet" href="/static/css/components.css">
+  <link rel="stylesheet" href="/static/css/nav.css">
+  <link rel="stylesheet" href="/static/css/footer.css">
+  <link rel="stylesheet" href="/static/css/charts.css">
+  <link rel="stylesheet" href="/static/css/app.css">
+  <link rel="stylesheet" href="/static/css/sage.css">
+</head>
+<body data-theme="emerald">
+  <a class="skip-link" href="#main">Skip to chat</a>
+
+  <div data-include="header"></div>
+  <div data-include="banner"></div>
+
+  <div class="app-shell">
+    <div data-include="sidebar"></div>
+
+    <main class="app-main" id="main">
+
+      <!-- 1 · PAGE HEAD -->
+      <header class="page-head" data-reveal>
+        <div class="page-head__body">
+          <p class="eyebrow page-head__eyebrow">
+            <span>Sage</span>
+            <span class="page-head__sep" aria-hidden="true">&middot;</span>
+            <span>The forecasting desk, on call</span>
+          </p>
+          <h1 class="display display--md page-head__title">Ask the desk a question.</h1>
+          <p class="page-head__lede">A second pair of eyes on the household&rsquo;s numbers, written back as plain prose.</p>
+        </div>
+        <div class="page-head__actions">
+          <span class="badge badge--gold">Pro feature</span>
+        </div>
+      </header>
+
+      <!-- 2 · DEMO-MODE STRIPE (per RULING-01 Q5) -->
+      <section class="sage-stripe" role="note" aria-label="Sage demo notice" data-reveal>
+        <span class="sage-stripe__dot" aria-hidden="true"></span>
+        <span class="sage-stripe__label">Demo mode</span>
+        <span class="sage-stripe__sep" aria-hidden="true">&middot;</span>
+        <span class="sage-stripe__copy">Sage is unavailable in this preview. One scripted reply is shown to illustrate the format.</span>
+      </section>
+
+      <!-- 3 · CHAT SURFACE -->
+      <section class="sage" aria-label="Conversation with Sage" data-reveal>
+
+        <!-- Conversation column -->
+        <div class="sage__thread" id="sage-thread" role="log" aria-live="polite" aria-atomic="false">
+
+          <!-- 3a · Opening preface from the desk -->
+          <article class="sage-msg sage-msg--sage" aria-label="Sage, opening">
+            <div class="sage-msg__avatar" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.25">
+                <circle cx="12" cy="12" r="9"></circle>
+                <path d="M7 13c1.6 1.5 3.2 2.2 5 2.2s3.4-.7 5-2.2"></path>
+                <path d="M9 9.5h.01M15 9.5h.01"></path>
+              </svg>
+            </div>
+            <div class="sage-msg__body">
+              <p class="sage-msg__name">Sage</p>
+              <div class="sage-msg__prose">
+                <p>Good afternoon. I&rsquo;ve loaded the example household &mdash; net worth <span class="mono">$87,420</span>, two open balances totalling <span class="mono">$8,580</span>, monthly surplus around <span class="mono">$2,220</span>.</p>
+                <p>Ask anything &mdash; debt path, runway, retirement pacing, the ten-year endpoint. I&rsquo;ll answer in a paragraph, then pull out the figures worth keeping.</p>
+              </div>
+              <p class="sage-msg__time mono" aria-label="14:02">14:02</p>
+            </div>
+          </article>
+
+          <!-- 3b · Prompt suggestions (declarative; visual only in demo) -->
+          <div class="sage-suggestions" role="group" aria-label="Suggested questions">
+            <p class="sage-suggestions__label">Try one of these</p>
+            <ul class="sage-suggestions__list" role="list">
+              <li><button class="sage-chip" type="button" data-sage-prompt="What is the fastest path to debt-free for this household?">What is the fastest path to debt-free?</button></li>
+              <li><button class="sage-chip" type="button" data-sage-prompt="How many months of expenses does the liquid buffer cover?">How many months does the buffer cover?</button></li>
+              <li><button class="sage-chip" type="button" data-sage-prompt="What does the credit card cost us over the ten-year forecast?">What does the credit card cost over a decade?</button></li>
+              <li><button class="sage-chip" type="button" data-sage-prompt="Where should the freed cash go after the debt is cleared?">Where should freed cash go after the debt clears?</button></li>
+            </ul>
+          </div>
+
+        </div>
+
+        <!-- 4 · COMPOSER (input + send) -->
+        <form class="sage-composer" id="sage-composer" autocomplete="off" novalidate>
+          <label for="sage-input" class="sr-only">Ask Sage a question</label>
+          <div class="sage-composer__field">
+            <textarea
+              id="sage-input"
+              name="message"
+              class="sage-composer__input"
+              rows="1"
+              maxlength="600"
+              placeholder="Write a question. Press &#8594; to send."
+              aria-describedby="sage-composer-hint"
+            ></textarea>
+            <div class="sage-composer__meta" id="sage-composer-hint">
+              <span class="sage-composer__hint">Sage answers from this household&rsquo;s figures. Single message in demo mode.</span>
+              <span class="sage-composer__count mono" aria-live="off">
+                <span data-sage-count>0</span><span aria-hidden="true">&thinsp;/&thinsp;</span><span>600</span>
+              </span>
+            </div>
+          </div>
+          <button type="submit" class="btn btn--primary sage-composer__send" id="sage-send" aria-label="Send to Sage">
+            <span class="sage-composer__send-label">Send</span>
+            <span class="sage-composer__send-glyph" aria-hidden="true">&rarr;</span>
+          </button>
+        </form>
+
+      </section>
+
+      <!-- 5 · DESK NOTE (post-conversation context) -->
+      <section class="panel panel--flat row" aria-labelledby="desk-note-h2" data-reveal>
+        <header class="panel__head">
+          <div>
+            <p class="eyebrow">From the desk</p>
+            <h2 class="panel__title" id="desk-note-h2">How Sage reads your numbers.</h2>
+          </div>
+          <a href="/about.html#methodology" class="btn--link">Methodology &rarr;</a>
+        </header>
+        <div class="prose prose--narrow">
+          <p>Sage takes the same monthly figures the dashboard shows &mdash; income, expenses, balances, rates &mdash; and walks them forward under the assumptions you&rsquo;ve set. Nothing is improvised; every claim ties back to a number you can trace.</p>
+          <p>Responses are written in three movements: a one-paragraph answer, two or three observations worth keeping, and a single closing line. That shape is deliberate. It mirrors how a human advisor would brief you over coffee.</p>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <div data-include="footer"></div>
+
+  <!-- Sage scripted-reply (RULING-01 Q5, verbatim) lives in a template node so it is not parsed as live content. -->
+  <template id="sage-reply-template">
+    <article class="sage-msg sage-msg--sage sage-msg--enter" aria-label="Sage reply">
+      <div class="sage-msg__avatar" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.25">
+          <circle cx="12" cy="12" r="9"></circle>
+          <path d="M7 13c1.6 1.5 3.2 2.2 5 2.2s3.4-.7 5-2.2"></path>
+          <path d="M9 9.5h.01M15 9.5h.01"></path>
+        </svg>
+      </div>
+      <div class="sage-msg__body">
+        <p class="sage-msg__name">Sage</p>
+        <div class="sage-msg__prose">
+          <p>Based on the example household, your fastest debt-free path is the <strong>avalanche</strong> method &mdash; pay the credit card balance first because the <span class="mono">24.9%</span> APR dwarfs the <span class="mono">6.1%</span> student loan. At your current <span class="mono">$410/mo</span> allocated to debt, you reach zero balance in month <span class="mono">14</span>.</p>
+          <p class="sage-msg__lede">Three observations:</p>
+          <ul class="sage-msg__list" role="list">
+            <li>Redirect the <span class="mono">$410/mo</span> into your retirement account once debt is cleared &mdash; that decision adds roughly <span class="mono">$51,000</span> to your 10-year forecast.</li>
+            <li>Your <span class="mono">$24,800</span> liquid buffer covers <span class="mono">4.8</span> months of expenses; you can hold here.</li>
+            <li>The credit card APR is the single largest drag on your forecast. Consider a <span class="mono">0%</span> balance transfer if available.</li>
+          </ul>
+          <aside class="sage-callout" role="note" aria-label="Headline figure">
+            <p class="sage-callout__label">10-year forecast lift, if redirected</p>
+            <p class="sage-callout__value mono">+$51,000</p>
+            <p class="sage-callout__foot">From the avalanche payoff being repointed to retirement on month <span class="mono">15</span>.</p>
+          </aside>
+          <p class="sage-msg__footnote"><em>Demo response. In production, Sage answers from your actual numbers.</em></p>
+        </div>
+        <p class="sage-msg__time mono"><span data-sage-time></span></p>
+      </div>
+    </article>
+  </template>
+
+  <template id="sage-typing-template">
+    <article class="sage-msg sage-msg--sage sage-msg--typing" aria-label="Sage is composing a reply">
+      <div class="sage-msg__avatar" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.25">
+          <circle cx="12" cy="12" r="9"></circle>
+          <path d="M7 13c1.6 1.5 3.2 2.2 5 2.2s3.4-.7 5-2.2"></path>
+          <path d="M9 9.5h.01M15 9.5h.01"></path>
+        </svg>
+      </div>
+      <div class="sage-msg__body">
+        <p class="sage-msg__name">Sage</p>
+        <p class="sage-typing" aria-live="polite">
+          <span class="sage-typing__dot"></span>
+          <span class="sage-typing__dot"></span>
+          <span class="sage-typing__dot"></span>
+          <span class="sr-only">Sage is composing a reply.</span>
+        </p>
+      </div>
+    </article>
+  </template>
+
+  <script src="/static/js/partials.js"></script>
+  <script src="/static/js/demo-data.js"></script>
+  <script src="/static/js/charts.js"></script>
+  <script src="/static/js/reveal.js"></script>
+  <script>
+    /* Sage demo behaviour: single scripted reply, 1200ms typing indicator,
+       input disabled after first send. Honors prefers-reduced-motion via the
+       global short-circuit in tokens.css (transitions collapse). */
+    (function () {
+      'use strict';
+      var form  = document.getElementById('sage-composer');
+      var input = document.getElementById('sage-input');
+      var send  = document.getElementById('sage-send');
+      var thread = document.getElementById('sage-thread');
+      var counter = document.querySelector('[data-sage-count]');
+      var replyTmpl  = document.getElementById('sage-reply-template');
+      var typingTmpl = document.getElementById('sage-typing-template');
+      if (!form || !input || !send || !thread) return;
+
+      function fmtTime() {
+        var d = new Date();
+        var h = String(d.getHours()).padStart(2, '0');
+        var m = String(d.getMinutes()).padStart(2, '0');
+        return h + ':' + m;
+      }
+      function autosize() {
+        input.style.height = 'auto';
+        input.style.height = Math.min(input.scrollHeight, 220) + 'px';
+      }
+      function setCount() {
+        if (counter) counter.textContent = String(input.value.length);
+      }
+      function setDisabled(state) {
+        input.disabled = state;
+        send.disabled = state;
+        send.setAttribute('aria-disabled', String(state));
+        if (state) {
+          input.setAttribute('placeholder', 'Demo conversation complete. Refresh to try a different question.');
+          input.value = '';
+          setCount();
+        }
+      }
+      // Prompt chips populate the input but do not auto-send.
+      document.querySelectorAll('[data-sage-prompt]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          if (input.disabled) return;
+          input.value = btn.getAttribute('data-sage-prompt') || '';
+          autosize();
+          setCount();
+          input.focus();
+        });
+      });
+
+      input.addEventListener('input', function () {
+        autosize();
+        setCount();
+      });
+      // Submit on plain Enter; allow Shift+Enter for newlines.
+      input.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          form.requestSubmit();
+        }
+      });
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var text = (input.value || '').trim();
+        if (!text || input.disabled) return;
+
+        // 1 · Render the user's message immediately.
+        var userMsg = document.createElement('article');
+        userMsg.className = 'sage-msg sage-msg--user sage-msg--enter';
+        userMsg.setAttribute('aria-label', 'You');
+        userMsg.innerHTML =
+          '<div class="sage-msg__body">' +
+            '<p class="sage-msg__name">You</p>' +
+            '<div class="sage-msg__prose"><p></p></div>' +
+            '<p class="sage-msg__time mono">' + fmtTime() + '</p>' +
+          '</div>';
+        userMsg.querySelector('.sage-msg__prose p').textContent = text;
+        thread.appendChild(userMsg);
+        thread.scrollTop = thread.scrollHeight;
+
+        // 2 · Lock the composer (prevents a second send producing the same canned reply).
+        setDisabled(true);
+
+        // 3 · Insert the typing indicator.
+        var typingNode = typingTmpl.content.firstElementChild.cloneNode(true);
+        thread.appendChild(typingNode);
+        thread.scrollTop = thread.scrollHeight;
+
+        // 4 · After 1200ms (Q5), swap in the verbatim scripted reply.
+        window.setTimeout(function () {
+          typingNode.remove();
+          var reply = replyTmpl.content.firstElementChild.cloneNode(true);
+          var t = reply.querySelector('[data-sage-time]');
+          if (t) t.textContent = fmtTime();
+          thread.appendChild(reply);
+          thread.scrollTop = thread.scrollHeight;
+        }, 1200);
+      });
+
+      // Initial autosize on load (no-op when empty).
+      autosize();
+    })();
+  </script>
+</body>
+</html>

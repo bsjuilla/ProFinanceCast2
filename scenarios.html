@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Scenarios &mdash; ProFinanceCast</title>
+  <meta name="description" content="Model the decisions you have not made yet. A bonus, a raise, a house purchase, side by side.">
+  <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/tokens.css">
+  <link rel="stylesheet" href="/static/css/theme-ivory.css">
+  <link rel="stylesheet" href="/static/css/theme-emerald.css">
+  <link rel="stylesheet" href="/static/css/base.css">
+  <link rel="stylesheet" href="/static/css/components.css">
+  <link rel="stylesheet" href="/static/css/nav.css">
+  <link rel="stylesheet" href="/static/css/footer.css">
+  <link rel="stylesheet" href="/static/css/charts.css">
+  <link rel="stylesheet" href="/static/css/app.css">
+  <style>
+    /* Scenarios-only: multi-line chart styling.
+       Three series share a single SVG: baseline (gold solid),
+       alt-1 (ivory dashed), alt-2 (positive-data dashed).
+       Hairline axes match the rest of the chart system. */
+    .multi-line-chart { width: 100%; height: auto; display: block; }
+    .multi-line-chart .axis-line { stroke: var(--rule); stroke-width: 1; fill: none; }
+    .multi-line-chart .tick { font-family: var(--f-mono); font-size: 11px; fill: var(--ink-65); }
+    .multi-line-chart .tick--y { text-anchor: end; }
+    .multi-line-chart .tick--x { text-anchor: middle; }
+    .multi-line-chart .ml-line { fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+    .multi-line-chart .ml-line--baseline { stroke: var(--c-gold); }
+    .multi-line-chart .ml-line--alt1     { stroke: var(--ink); stroke-dasharray: 6 4; opacity: 0.85; }
+    .multi-line-chart .ml-line--alt2     { stroke: var(--c-data-positive); stroke-dasharray: 2 4; opacity: 0.9; }
+    .multi-line-chart .ml-endpoint { stroke: none; }
+    .multi-line-chart .ml-endpoint--baseline { fill: var(--c-gold); }
+    .multi-line-chart .ml-endpoint--alt1     { fill: var(--ink); }
+    .multi-line-chart .ml-endpoint--alt2     { fill: var(--c-data-positive); }
+    .multi-line-chart .ml-endlabel {
+      font-family: var(--f-mono);
+      font-size: 11px;
+      fill: var(--ink);
+      text-anchor: start;
+    }
+
+    /* Legend for the multi-line chart */
+    .ml-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-6);
+      padding-top: var(--s-3);
+    }
+    .ml-legend__item {
+      display: inline-flex;
+      align-items: baseline;
+      gap: var(--s-2);
+      font-size: var(--fs-13);
+      color: var(--ink-80);
+    }
+    .ml-legend__swatch {
+      display: inline-block;
+      width: 18px;
+      height: 2px;
+      vertical-align: middle;
+      transform: translateY(-3px);
+    }
+    .ml-legend__swatch--baseline { background: var(--c-gold); }
+    .ml-legend__swatch--alt1 {
+      background: none;
+      border-top: 2px dashed var(--ink);
+      height: 0;
+    }
+    .ml-legend__swatch--alt2 {
+      background: none;
+      border-top: 2px dotted var(--c-data-positive);
+      height: 0;
+    }
+    .ml-legend__name { color: var(--ink); }
+    .ml-legend__figure {
+      font-family: var(--f-mono);
+      font-variant-numeric: tabular-nums;
+      color: var(--ink-65);
+    }
+
+    /* Saved scenario cards (3 in a row) */
+    .saved-list {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--s-4);
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    @media (max-width: 900px) {
+      .saved-list { grid-template-columns: 1fr; }
+    }
+    .saved-card {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-3);
+      padding: var(--s-4) var(--s-4) var(--s-4);
+      border: 1px solid var(--rule);
+      border-radius: var(--r-card);
+      background: var(--surface);
+    }
+    .saved-card__eyebrow {
+      font-family: var(--f-body);
+      font-size: var(--fs-12);
+      font-weight: var(--fw-medium);
+      letter-spacing: var(--ls-eyebrow);
+      text-transform: uppercase;
+      color: var(--ink-65);
+      margin: 0;
+    }
+    .saved-card__name {
+      font-family: var(--f-display);
+      font-style: italic;
+      font-weight: var(--fw-medium);
+      font-size: var(--fs-20);
+      line-height: var(--lh-snug);
+      color: var(--ink);
+      margin: 0;
+    }
+    .saved-card__figure {
+      font-family: var(--f-mono);
+      font-variant-numeric: tabular-nums;
+      font-size: var(--fs-18);
+      font-weight: var(--fw-medium);
+      color: var(--ink);
+      margin: 0;
+      padding-top: var(--s-2);
+      border-top: 1px solid var(--rule);
+    }
+    .saved-card__meta {
+      font-size: var(--fs-13);
+      color: var(--ink-65);
+      margin: 0;
+    }
+
+    /* Bottom locked overlay — covers the bottom half of the page below
+       the scenario controls. Uses .locked-overlay (separate from .locked).
+       Sticky-fixed at the foot of the page over a stretch of content. */
+    .scenarios-stage {
+      position: relative;
+    }
+    .locked-overlay {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 55%;
+      min-height: 360px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: var(--s-3);
+      text-align: center;
+      padding: var(--s-12) var(--s-6);
+      background:
+        linear-gradient(
+          to bottom,
+          rgba(11, 20, 16, 0.0) 0%,
+          rgba(11, 20, 16, 0.65) 30%,
+          rgba(11, 20, 16, 0.92) 100%
+        );
+      backdrop-filter: blur(3px);
+      pointer-events: auto;
+    }
+    .locked-overlay__eyebrow {
+      font-family: var(--f-body);
+      font-size: var(--fs-12);
+      font-weight: var(--fw-medium);
+      letter-spacing: var(--ls-eyebrow);
+      text-transform: uppercase;
+      color: var(--c-gold);
+      margin: 0;
+    }
+    .locked-overlay__title {
+      font-family: var(--f-display);
+      font-style: italic;
+      font-weight: var(--fw-semi);
+      font-size: clamp(28px, 3.6vw, 40px);
+      line-height: var(--lh-tight);
+      color: var(--ink);
+      margin: 0;
+      max-width: 28ch;
+    }
+    .locked-overlay__hint {
+      font-size: var(--fs-15);
+      color: var(--ink-80);
+      max-width: 44ch;
+      margin: 0;
+    }
+    .locked-overlay__actions {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--s-4);
+      padding-top: var(--s-3);
+    }
+    .locked-overlay__price {
+      font-size: var(--fs-13);
+      color: var(--ink-65);
+    }
+    .locked-overlay__price .mono { color: var(--ink); }
+  </style>
+</head>
+<body data-theme="emerald">
+  <a class="skip-link" href="#main">Skip to scenarios</a>
+
+  <div data-include="header"></div>
+  <div data-include="banner"></div>
+
+  <div class="app-shell">
+    <div data-include="sidebar"></div>
+
+    <main class="app-main" id="main">
+
+      <!-- 1 · PAGE HEAD -->
+      <header class="page-head" data-reveal>
+        <div class="page-head__body">
+          <p class="eyebrow page-head__eyebrow">
+            <span>Scenarios</span>
+            <span class="page-head__sep" aria-hidden="true">&middot;</span>
+            <span class="mono">Pro</span>
+          </p>
+          <h1 class="display display--md page-head__title">Model the decisions you haven&rsquo;t made yet.</h1>
+          <p class="page-head__lede">Bonus in 2027. Salary raise. House purchase. See the decade-end shift, side by side.</p>
+        </div>
+        <div class="page-head__actions">
+          <a href="/billing.html" class="btn btn--primary btn--sm">Unlock with Pro &rarr;</a>
+        </div>
+      </header>
+
+      <!-- 2 · SCENARIO COMPARISON CHART (hand-rolled inline SVG, 3 lines) -->
+      <section class="panel" aria-labelledby="compare-h2" data-reveal>
+        <header class="panel__head">
+          <div>
+            <p class="eyebrow">May 2026 &rarr; May 2036 &middot; three lines</p>
+            <h2 class="panel__title" id="compare-h2">Net worth, three futures</h2>
+          </div>
+          <p class="panel__meta mono">120 months &middot; baseline + 2 variants</p>
+        </header>
+
+        <div class="panel__canvas">
+          <!--
+            Inline 3-line SVG. Coordinates computed once for ten anchor points
+            (years 0..10). Vertical scale: $0 (y=300) -> $530,000 (y=24).
+            Horizontal: x=64 (year 0) -> x=752 (year 10), stride ~68.8.
+          -->
+          <svg class="multi-line-chart" viewBox="0 0 800 320" role="img" aria-label="Comparison of three ten-year net-worth scenarios: baseline ending at $412,000, a $15,000 bonus in 2027 ending at $448,000, and a 12% salary raise in 2027 ending at $493,000.">
+
+            <!-- baseline rule -->
+            <line class="axis-line" x1="64" y1="300" x2="752" y2="300"></line>
+
+            <!-- y-axis ticks -->
+            <text class="tick tick--y" x="56" y="304">$0</text>
+            <text class="tick tick--y" x="56" y="234">$132k</text>
+            <text class="tick tick--y" x="56" y="166">$265k</text>
+            <text class="tick tick--y" x="56" y="98">$397k</text>
+            <text class="tick tick--y" x="56" y="30">$530k</text>
+
+            <!-- x-axis ticks (every 2 years) -->
+            <text class="tick tick--x" x="64"  y="318">2026</text>
+            <text class="tick tick--x" x="201.6" y="318">2028</text>
+            <text class="tick tick--x" x="339.2" y="318">2030</text>
+            <text class="tick tick--x" x="476.8" y="318">2032</text>
+            <text class="tick tick--x" x="614.4" y="318">2034</text>
+            <text class="tick tick--x" x="752" y="318">2036</text>
+
+            <!-- BASELINE  ($87.4k -> $412k)
+                 y values: 254, 239, 225, 210, 195, 180, 162, 142, 122, 100, 86 -->
+            <path class="ml-line ml-line--baseline"
+                  d="M64 254 L132.8 239 L201.6 225 L270.4 210 L339.2 195 L408 180 L476.8 162 L545.6 142 L614.4 122 L683.2 100 L752 86"></path>
+
+            <!-- ALT1: BONUS +$15k in 2027 ($87.4k -> $448k)
+                 the +$15k lands in 2027, lifts the curve relative to baseline -->
+            <path class="ml-line ml-line--alt1"
+                  d="M64 254 L132.8 235 L201.6 218 L270.4 200 L339.2 183 L408 165 L476.8 144 L545.6 121 L614.4 98 L683.2 75 L752 60"></path>
+
+            <!-- ALT2: SALARY +12% in 2027 ($87.4k -> $493k)
+                 raise compounds over decade, sharpest divergence late -->
+            <path class="ml-line ml-line--alt2"
+                  d="M64 254 L132.8 233 L201.6 213 L270.4 192 L339.2 170 L408 148 L476.8 122 L545.6 96 L614.4 70 L683.2 46 L752 26"></path>
+
+            <!-- Endpoint dots -->
+            <circle class="ml-endpoint ml-endpoint--baseline" cx="752" cy="86" r="3.5"></circle>
+            <circle class="ml-endpoint ml-endpoint--alt1"     cx="752" cy="60" r="3.5"></circle>
+            <circle class="ml-endpoint ml-endpoint--alt2"     cx="752" cy="26" r="3.5"></circle>
+          </svg>
+
+          <!-- legend -->
+          <div class="ml-legend" aria-hidden="false">
+            <span class="ml-legend__item">
+              <span class="ml-legend__swatch ml-legend__swatch--baseline" aria-hidden="true"></span>
+              <span class="ml-legend__name">Baseline</span>
+              <span class="ml-legend__figure mono">$412,000</span>
+            </span>
+            <span class="ml-legend__item">
+              <span class="ml-legend__swatch ml-legend__swatch--alt1" aria-hidden="true"></span>
+              <span class="ml-legend__name">Bonus +$15k in 2027</span>
+              <span class="ml-legend__figure mono">$448,000</span>
+            </span>
+            <span class="ml-legend__item">
+              <span class="ml-legend__swatch ml-legend__swatch--alt2" aria-hidden="true"></span>
+              <span class="ml-legend__name">Salary +12% in 2027</span>
+              <span class="ml-legend__figure mono">$493,000</span>
+            </span>
+          </div>
+        </div>
+
+        <footer class="panel__foot">
+          <div class="panel__stat">
+            <p class="panel__stat-label">Baseline endpoint</p>
+            <p class="panel__stat-value mono">$412,000</p>
+          </div>
+          <div class="panel__stat">
+            <p class="panel__stat-label">Best case</p>
+            <p class="panel__stat-value mono">$493,000</p>
+          </div>
+          <div class="panel__stat">
+            <p class="panel__stat-label">Spread</p>
+            <p class="panel__stat-value mono">$81,000</p>
+          </div>
+        </footer>
+      </section>
+
+      <!--
+        Everything below this point sits inside the scenarios-stage and is
+        gated by the .locked-overlay at the bottom. The content is visible
+        but reduced in legibility; the CTA is the only interactive element.
+      -->
+      <div class="scenarios-stage row">
+
+        <!-- 3 · SCENARIO COMPARISON TABLE -->
+        <section class="panel panel--flat" aria-labelledby="table-h2" data-reveal>
+          <header class="panel__head">
+            <div>
+              <p class="eyebrow">Three scenarios &middot; key outcomes</p>
+              <h2 class="panel__title" id="table-h2">What each path changes</h2>
+            </div>
+            <p class="panel__meta mono">3 rows &middot; vs baseline</p>
+          </header>
+
+          <div class="panel__table">
+            <table class="table activity">
+              <thead>
+                <tr>
+                  <th scope="col">Scenario</th>
+                  <th scope="col">Endpoint NW</th>
+                  <th scope="col">Debt-free month</th>
+                  <th scope="col" class="activity__col-amount">Surplus delta</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Baseline</td>
+                  <td class="mono">$412,000</td>
+                  <td class="mono">Month 14</td>
+                  <td class="mono activity__amount">&mdash;</td>
+                </tr>
+                <tr>
+                  <td>Bonus +$15k in 2027</td>
+                  <td class="mono">$448,000</td>
+                  <td class="mono">Month 11</td>
+                  <td class="mono activity__amount activity__amount--pos">+$36,000</td>
+                </tr>
+                <tr>
+                  <td>Salary +12% in 2027</td>
+                  <td class="mono">$493,000</td>
+                  <td class="mono">Month 12</td>
+                  <td class="mono activity__amount activity__amount--pos">+$81,000</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- 4 · SAVED SCENARIOS LIST (3 cards) -->
+        <section class="panel panel--flat row" aria-labelledby="saved-h2" data-reveal>
+          <header class="panel__head">
+            <div>
+              <p class="eyebrow">Saved &middot; 3 of unlimited</p>
+              <h2 class="panel__title" id="saved-h2">Scenarios you keep coming back to</h2>
+            </div>
+            <p class="panel__meta mono">Last updated 09 May 2026</p>
+          </header>
+
+          <ul class="saved-list" role="list">
+
+            <li class="saved-card">
+              <p class="saved-card__eyebrow">Saved 28 Apr 2026</p>
+              <p class="saved-card__name">Sabbatical, 6 months in 2029</p>
+              <p class="saved-card__meta">Take six months off, no income, draw on the sabbatical fund. Resume work at the same salary.</p>
+              <p class="saved-card__figure">$374,000 &middot; endpoint</p>
+            </li>
+
+            <li class="saved-card">
+              <p class="saved-card__eyebrow">Saved 04 May 2026</p>
+              <p class="saved-card__name">House down payment in 2031</p>
+              <p class="saved-card__meta">Deploy $60,000 to a down payment. Mortgage adds $1,840/mo. Forecast re-runs with new expense.</p>
+              <p class="saved-card__figure">$298,000 &middot; endpoint</p>
+            </li>
+
+            <li class="saved-card">
+              <p class="saved-card__eyebrow">Saved 07 May 2026</p>
+              <p class="saved-card__name">Aggressive retirement, +5%/mo</p>
+              <p class="saved-card__meta">Redirect the next freed-debt payment plus an extra five percent of income into retirement starting now.</p>
+              <p class="saved-card__figure">$541,000 &middot; endpoint</p>
+            </li>
+
+          </ul>
+        </section>
+
+        <!-- 5 · LOCKED OVERLAY (covers bottom of scenarios-stage) -->
+        <div class="locked-overlay" role="region" aria-label="Pro feature locked">
+          <p class="locked-overlay__eyebrow">Pro feature</p>
+          <p class="locked-overlay__title">Unlock Scenarios with Pro &rarr;</p>
+          <p class="locked-overlay__hint">Build unlimited scenarios from your numbers, save them, and compare endpoints side by side. The free preview shows three sample paths; Pro lets you author your own.</p>
+          <div class="locked-overlay__actions">
+            <a href="/billing.html" class="btn btn--primary">Unlock with Pro &rarr;</a>
+            <span class="locked-overlay__price">
+              From <span class="mono">$9</span> a month
+            </span>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+
+  <div data-include="footer"></div>
+
+  <script src="/static/js/partials.js"></script>
+  <script src="/static/js/demo-data.js"></script>
+  <script src="/static/js/charts.js"></script>
+  <script src="/static/js/reveal.js"></script>
+</body>
+</html>

@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Goals &mdash; ProFinanceCast</title>
+  <meta name="description" content="Personal financial goals tracker. Active, on-track, and achieved goals with target dates, monthly allocation, and a single source of priority truth.">
+  <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/tokens.css">
+  <link rel="stylesheet" href="/static/css/theme-ivory.css">
+  <link rel="stylesheet" href="/static/css/theme-emerald.css">
+  <link rel="stylesheet" href="/static/css/base.css">
+  <link rel="stylesheet" href="/static/css/components.css">
+  <link rel="stylesheet" href="/static/css/nav.css">
+  <link rel="stylesheet" href="/static/css/footer.css">
+  <link rel="stylesheet" href="/static/css/charts.css">
+  <link rel="stylesheet" href="/static/css/app.css">
+  <link rel="stylesheet" href="/static/css/goals.css">
+</head>
+<body data-theme="emerald">
+  <a class="skip-link" href="#main">Skip to goals</a>
+
+  <div data-include="header"></div>
+  <div data-include="banner"></div>
+
+  <div class="app-shell">
+    <div data-include="sidebar"></div>
+
+    <main class="app-main" id="main">
+
+      <!-- ─────────────────────────────────────────────────────────────
+           1 · PAGE HEAD
+           ───────────────────────────────────────────────────────────── -->
+      <header class="page-head" data-reveal>
+        <div class="page-head__body">
+          <p class="eyebrow page-head__eyebrow">
+            <span>Goals</span>
+            <span class="page-head__sep" aria-hidden="true">&middot;</span>
+            <span class="mono">14 May 2026</span>
+          </p>
+          <h1 class="display display--md page-head__title">What the household is saving for.</h1>
+          <p class="page-head__lede">Six commitments. Each with a target figure, a target date, and a single monthly allocation that connects them to the forecast.</p>
+        </div>
+        <div class="page-head__actions">
+          <a href="/settings.html" class="btn btn--ghost btn--sm">Edit assumptions</a>
+          <button type="button" class="btn btn--primary btn--sm">+ Add a goal</button>
+        </div>
+      </header>
+
+      <!-- ─────────────────────────────────────────────────────────────
+           2 · KPI STRIP  (board-level totals)
+           ───────────────────────────────────────────────────────────── -->
+      <section class="kpi-strip" aria-label="Goals board totals" data-reveal>
+
+        <div class="kpi-cell">
+          <p class="kpi-cell__label">Open goals</p>
+          <p class="kpi-cell__value mono">5</p>
+          <p class="kpi-cell__foot">
+            <span class="kpi-cell__foot-sub">3 active, 2 on track</span>
+          </p>
+        </div>
+
+        <div class="kpi-cell">
+          <p class="kpi-cell__label">Combined target</p>
+          <p class="kpi-cell__value mono">$226,620</p>
+          <p class="kpi-cell__foot">
+            <span class="kpi-cell__foot-sub">Across all open goals</span>
+          </p>
+        </div>
+
+        <div class="kpi-cell">
+          <p class="kpi-cell__label">Saved to date</p>
+          <p class="kpi-cell__value mono">$48,980</p>
+          <p class="kpi-cell__foot mono">
+            <span class="kpi-cell__delta kpi-cell__delta--up">+$1,840</span>
+            <span class="kpi-cell__foot-sub">this month</span>
+          </p>
+        </div>
+
+        <div class="kpi-cell">
+          <p class="kpi-cell__label">Monthly allocation</p>
+          <p class="kpi-cell__value mono">$1,840</p>
+          <p class="kpi-cell__foot">
+            <span class="kpi-cell__foot-sub">From a $2,220 surplus</span>
+          </p>
+        </div>
+
+      </section>
+
+      <!-- ─────────────────────────────────────────────────────────────
+           3 · CADENCE STRIP (skill: team-okrs — small at-a-glance row)
+           ───────────────────────────────────────────────────────────── -->
+      <section class="cadence row" aria-label="Rhythm" data-reveal>
+        <div class="cadence__cell">
+          <p class="cadence__cell__label">Next hit</p>
+          <p class="cadence__cell__value">Month 14</p>
+        </div>
+        <div class="cadence__cell">
+          <p class="cadence__cell__label">Cleared this quarter</p>
+          <p class="cadence__cell__value">1</p>
+        </div>
+        <div class="cadence__cell">
+          <p class="cadence__cell__label">At risk</p>
+          <p class="cadence__cell__value">0</p>
+        </div>
+        <div class="cadence__cell">
+          <p class="cadence__cell__label">Avg time to target</p>
+          <p class="cadence__cell__value">23 mo</p>
+        </div>
+      </section>
+
+      <!-- ─────────────────────────────────────────────────────────────
+           4 · KANBAN BOARD — three lanes, hairline gold rule under each
+           Lane composition follows kanban-board skill: column head with
+           title and count, then a stack of cards. Card content follows
+           team-okrs: title, target-vs-actual figure, single progress bar,
+           cadence meta. No drag in v1 — affordance only.
+           ───────────────────────────────────────────────────────────── -->
+      <section class="kanban row" aria-label="Goals by status" data-reveal>
+
+        <!-- ── LANE: Active ─────────────────────────────────────── -->
+        <article class="lane" aria-labelledby="lane-active">
+          <header class="lane__head">
+            <h2 class="lane__title" id="lane-active">Active</h2>
+            <span class="lane__count mono">3</span>
+          </header>
+          <div class="lane__cards">
+
+            <!-- Goal: House deposit -->
+            <article class="goal" aria-labelledby="goal-house">
+              <p class="goal__eyebrow">
+                <span class="mono">P1</span>
+                <span class="goal__eyebrow-sep" aria-hidden="true">&middot;</span>
+                <span>Target Aug 2028</span>
+              </p>
+              <h3 class="goal__title" id="goal-house">House deposit.</h3>
+              <div class="goal__bar">
+                <div class="chart" data-chart="hbar" data-chart-opts='{"value":12400,"max":80000,"label":"House deposit progress"}'></div>
+              </div>
+              <p class="goal__figures">
+                <span class="goal__current">$12,400<span class="goal__current-of">&thinsp;/&thinsp;$80,000</span></span>
+                <span class="goal__pct">15.5%</span>
+              </p>
+              <p class="goal__meta">
+                <span><span class="mono">$540</span>&thinsp;/&thinsp;mo</span>
+                <span>27 months remaining</span>
+              </p>
+            </article>
+
+            <!-- Goal: Sabbatical fund -->
+            <article class="goal" aria-labelledby="goal-sabb">
+              <p class="goal__eyebrow">
+                <span class="mono">P2</span>
+                <span class="goal__eyebrow-sep" aria-hidden="true">&middot;</span>
+                <span>Target Sep 2028</span>
+              </p>
+              <h3 class="goal__title" id="goal-sabb">Sabbatical fund &mdash; three months off.</h3>
+              <div class="goal__bar">
+                <div class="chart" data-chart="hbar" data-chart-opts='{"value":3200,"max":15540,"label":"Sabbatical fund progress"}'></div>
+              </div>
+              <p class="goal__figures">
+                <span class="goal__current">$3,200<span class="goal__current-of">&thinsp;/&thinsp;$15,540</span></span>
+                <span class="goal__pct">20.6%</span>
+              </p>
+              <p class="goal__meta">
+                <span><span class="mono">$230</span>&thinsp;/&thinsp;mo</span>
+                <span>28 months remaining</span>
+              </p>
+            </article>
+
+            <!-- Goal: New car (replacement) -->
+            <article class="goal" aria-labelledby="goal-car">
+              <p class="goal__eyebrow">
+                <span class="mono">P3</span>
+                <span class="goal__eyebrow-sep" aria-hidden="true">&middot;</span>
+                <span>Target Mar 2029</span>
+              </p>
+              <h3 class="goal__title" id="goal-car">Used car &mdash; replacement.</h3>
+              <div class="goal__bar">
+                <div class="chart" data-chart="hbar" data-chart-opts='{"value":1450,"max":18000,"label":"Car replacement fund progress"}'></div>
+              </div>
+              <p class="goal__figures">
+                <span class="goal__current">$1,450<span class="goal__current-of">&thinsp;/&thinsp;$18,000</span></span>
+                <span class="goal__pct">8.1%</span>
+              </p>
+              <p class="goal__meta">
+                <span><span class="mono">$180</span>&thinsp;/&thinsp;mo</span>
+                <span>34 months remaining</span>
+              </p>
+            </article>
+
+            <button type="button" class="goal-add" aria-label="Add a goal to the active lane">+ Add a goal</button>
+          </div>
+        </article>
+
+        <!-- ── LANE: On Track ──────────────────────────────────── -->
+        <article class="lane" aria-labelledby="lane-ontrack">
+          <header class="lane__head">
+            <h2 class="lane__title" id="lane-ontrack">On track</h2>
+            <span class="lane__count mono">2</span>
+          </header>
+          <div class="lane__cards">
+
+            <!-- Goal: Emergency fund (6 months) -->
+            <article class="goal goal--ontrack" aria-labelledby="goal-emerg">
+              <p class="goal__eyebrow">
+                <span class="mono">P1</span>
+                <span class="goal__eyebrow-sep" aria-hidden="true">&middot;</span>
+                <span>Target Dec 2026</span>
+              </p>
+              <h3 class="goal__title" id="goal-emerg">Emergency fund &mdash; six months of runway.</h3>
+              <div class="goal__bar">
+                <div class="chart" data-chart="hbar" data-chart-opts='{"value":24800,"max":25000,"label":"Emergency fund progress"}'></div>
+              </div>
+              <p class="goal__figures">
+                <span class="goal__current">$24,800<span class="goal__current-of">&thinsp;/&thinsp;$25,000</span></span>
+                <span class="goal__pct">99.2%</span>
+              </p>
+              <p class="goal__meta">
+                <span><span class="mono">$700</span>&thinsp;/&thinsp;mo</span>
+                <span>On pace, 1 month to target</span>
+              </p>
+            </article>
+
+            <!-- Goal: Debt-free by month 14 -->
+            <article class="goal goal--ontrack" aria-labelledby="goal-debt">
+              <p class="goal__eyebrow">
+                <span>Milestone</span>
+                <span class="goal__eyebrow-sep" aria-hidden="true">&middot;</span>
+                <span>Target Jul 2027</span>
+              </p>
+              <h3 class="goal__title" id="goal-debt">Debt-free by month 14.</h3>
+              <div class="goal__bar">
+                <div class="chart" data-chart="hbar" data-chart-opts='{"value":5980,"max":8580,"label":"Debt cleared progress"}'></div>
+              </div>
+              <p class="goal__figures">
+                <span class="goal__current">$5,980<span class="goal__current-of">&thinsp;cleared&thinsp;/&thinsp;$8,580</span></span>
+                <span class="goal__pct">69.7%</span>
+              </p>
+              <p class="goal__meta">
+                <span><span class="mono">$410</span>&thinsp;/&thinsp;mo</span>
+                <span>Avalanche path, 9 months left</span>
+              </p>
+            </article>
+
+          </div>
+        </article>
+
+        <!-- ── LANE: Achieved ──────────────────────────────────── -->
+        <article class="lane" aria-labelledby="lane-achieved">
+          <header class="lane__head">
+            <h2 class="lane__title" id="lane-achieved">Achieved</h2>
+            <span class="lane__count mono">1</span>
+          </header>
+          <div class="lane__cards">
+
+            <!-- Goal: Tax-loss harvesting -->
+            <article class="goal goal--achieved" aria-labelledby="goal-rothira">
+              <p class="goal__eyebrow">
+                <span>Closed</span>
+                <span class="goal__eyebrow-sep" aria-hidden="true">&middot;</span>
+                <span>Hit Apr 2026</span>
+              </p>
+              <h3 class="goal__title" id="goal-rothira">Roth IRA &mdash; 2025 annual contribution.</h3>
+              <div class="goal__bar">
+                <div class="chart" data-chart="hbar" data-chart-opts='{"value":7000,"max":7000,"label":"Roth IRA contribution complete"}'></div>
+              </div>
+              <p class="goal__figures">
+                <span class="goal__current">$7,000<span class="goal__current-of">&thinsp;/&thinsp;$7,000</span></span>
+                <span class="goal__check mono">&check; 100%</span>
+              </p>
+              <p class="goal__meta">
+                <span><span class="mono">$583</span>&thinsp;/&thinsp;mo</span>
+                <span>Maxed for 2025</span>
+              </p>
+            </article>
+
+          </div>
+        </article>
+
+      </section>
+
+      <!-- ─────────────────────────────────────────────────────────────
+           5 · ALLOCATION RAIL (where the $1,840/mo goes — single panel)
+           Reuses .goals__row pattern from app.css so the editorial rhythm
+           on the dashboard reads identically here.
+           ───────────────────────────────────────────────────────────── -->
+      <section class="panel row" aria-labelledby="alloc-h2" data-reveal>
+        <header class="panel__head">
+          <div>
+            <p class="eyebrow">Surplus flow</p>
+            <h2 class="panel__title" id="alloc-h2">Where this month&rsquo;s $1,840 is going</h2>
+          </div>
+          <p class="panel__meta mono">$1,840&thinsp;/&thinsp;mo allocated</p>
+        </header>
+
+        <ul class="goals__list" role="list">
+
+          <li class="goals__row">
+            <div class="goals__row-head">
+              <p class="goals__row-name">Emergency fund</p>
+              <p class="goals__row-figure mono">$700&thinsp;/&thinsp;mo</p>
+            </div>
+            <div class="goals__row-bar">
+              <div class="chart" data-chart="hbar" data-chart-opts='{"value":700,"max":1840,"label":"Emergency fund share"}'></div>
+            </div>
+            <p class="goals__row-meta">
+              <span class="mono">38%</span>
+              <span class="goals__row-meta-sep" aria-hidden="true">&middot;</span>
+              <span>Priority 1</span>
+            </p>
+          </li>
+
+          <li class="goals__row">
+            <div class="goals__row-head">
+              <p class="goals__row-name">House deposit</p>
+              <p class="goals__row-figure mono">$540&thinsp;/&thinsp;mo</p>
+            </div>
+            <div class="goals__row-bar">
+              <div class="chart" data-chart="hbar" data-chart-opts='{"value":540,"max":1840,"label":"House deposit share"}'></div>
+            </div>
+            <p class="goals__row-meta">
+              <span class="mono">29%</span>
+              <span class="goals__row-meta-sep" aria-hidden="true">&middot;</span>
+              <span>Priority 2</span>
+            </p>
+          </li>
+
+          <li class="goals__row">
+            <div class="goals__row-head">
+              <p class="goals__row-name">Debt principal (avalanche)</p>
+              <p class="goals__row-figure mono">$410&thinsp;/&thinsp;mo</p>
+            </div>
+            <div class="goals__row-bar">
+              <div class="chart" data-chart="hbar" data-chart-opts='{"value":410,"max":1840,"label":"Debt principal share"}'></div>
+            </div>
+            <p class="goals__row-meta">
+              <span class="mono">22%</span>
+              <span class="goals__row-meta-sep" aria-hidden="true">&middot;</span>
+              <span>Avalanche, CC first</span>
+            </p>
+          </li>
+
+          <li class="goals__row">
+            <div class="goals__row-head">
+              <p class="goals__row-name">Sabbatical fund</p>
+              <p class="goals__row-figure mono">$230&thinsp;/&thinsp;mo</p>
+            </div>
+            <div class="goals__row-bar">
+              <div class="chart" data-chart="hbar" data-chart-opts='{"value":230,"max":1840,"label":"Sabbatical share"}'></div>
+            </div>
+            <p class="goals__row-meta">
+              <span class="mono">12%</span>
+              <span class="goals__row-meta-sep" aria-hidden="true">&middot;</span>
+              <span>Priority 4</span>
+            </p>
+          </li>
+
+          <li class="goals__row">
+            <div class="goals__row-head">
+              <p class="goals__row-name">Used car (replacement)</p>
+              <p class="goals__row-figure mono">$180&thinsp;/&thinsp;mo</p>
+            </div>
+            <div class="goals__row-bar">
+              <div class="chart" data-chart="hbar" data-chart-opts='{"value":180,"max":1840,"label":"Car replacement share"}'></div>
+            </div>
+            <p class="goals__row-meta">
+              <span class="mono">10%</span>
+              <span class="goals__row-meta-sep" aria-hidden="true">&middot;</span>
+              <span>Priority 5</span>
+            </p>
+          </li>
+
+        </ul>
+
+        <footer class="panel__foot panel__foot--compact">
+          <div class="panel__stat">
+            <p class="panel__stat-label">Allocated</p>
+            <p class="panel__stat-value mono">$1,840</p>
+          </div>
+          <div class="panel__stat">
+            <p class="panel__stat-label">Surplus</p>
+            <p class="panel__stat-value mono">$2,220</p>
+          </div>
+          <div class="panel__stat">
+            <p class="panel__stat-label">Unassigned</p>
+            <p class="panel__stat-value mono">$380</p>
+          </div>
+        </footer>
+      </section>
+
+    </main>
+  </div>
+
+  <div data-include="footer"></div>
+
+  <script src="/static/js/partials.js"></script>
+  <script src="/static/js/demo-data.js"></script>
+  <script src="/static/js/charts.js"></script>
+  <script src="/static/js/reveal.js"></script>
+</body>
+</html>

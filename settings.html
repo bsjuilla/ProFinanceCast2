@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Settings &mdash; ProFinanceCast</title>
+  <meta name="description" content="Account, preferences, notifications, and data controls for your ProFinanceCast household.">
+  <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/tokens.css">
+  <link rel="stylesheet" href="/static/css/theme-ivory.css">
+  <link rel="stylesheet" href="/static/css/theme-emerald.css">
+  <link rel="stylesheet" href="/static/css/base.css">
+  <link rel="stylesheet" href="/static/css/components.css">
+  <link rel="stylesheet" href="/static/css/nav.css">
+  <link rel="stylesheet" href="/static/css/footer.css">
+  <link rel="stylesheet" href="/static/css/charts.css">
+  <link rel="stylesheet" href="/static/css/app.css">
+  <link rel="stylesheet" href="/static/css/settings.css">
+</head>
+<body data-theme="emerald">
+  <a class="skip-link" href="#main">Skip to settings</a>
+
+  <div data-include="header"></div>
+  <div data-include="banner"></div>
+
+  <div class="app-shell">
+    <div data-include="sidebar"></div>
+
+    <main class="app-main" id="main">
+
+      <!-- 1 · PAGE HEAD ───────────────────────────────────────────────── -->
+      <header class="page-head" data-reveal>
+        <div class="page-head__body">
+          <p class="eyebrow page-head__eyebrow">
+            <span>Settings</span>
+            <span class="page-head__sep" aria-hidden="true">&middot;</span>
+            <span class="mono">11 May 2026</span>
+          </p>
+          <h1 class="display display--md page-head__title">Account and preferences.</h1>
+          <p class="page-head__lede">Five sections. Edit what you need, keep what you do not.</p>
+        </div>
+        <div class="page-head__actions">
+          <a href="/dashboard.html" class="btn btn--ghost btn--sm">Back to dashboard</a>
+        </div>
+      </header>
+
+      <!-- 2 · SETTINGS LAYOUT (in-page nav + pane) ────────────────────── -->
+      <div class="settings-layout" data-reveal>
+
+        <!-- A · In-page navigation ───────────────────────────────────── -->
+        <nav class="settings-nav" aria-label="Settings sections">
+          <p class="settings-nav__label">On this page</p>
+          <a class="settings-nav__link" href="#account">Account</a>
+          <a class="settings-nav__link" href="#preferences">Preferences</a>
+          <a class="settings-nav__link" href="#notifications">Notifications</a>
+          <a class="settings-nav__link" href="#connected">Connected services</a>
+          <a class="settings-nav__link settings-nav__link--danger" href="#danger">Danger zone</a>
+        </nav>
+
+        <!-- B · Settings pane ──────────────────────────────────────── -->
+        <form class="settings-pane" id="settings-form" novalidate>
+
+          <!-- Account ──────────────────────────────────────────────── -->
+          <section class="settings-section" id="account" aria-labelledby="account-h2">
+            <header class="settings-section__head">
+              <p class="settings-section__eyebrow">Section one</p>
+              <h2 class="settings-section__title" id="account-h2">Account.</h2>
+              <p class="settings-section__lede">How we address you and where the monthly letter lands.</p>
+            </header>
+
+            <div class="settings-field">
+              <div class="settings-field__head">
+                <label class="settings-field__label" for="account-name">Name</label>
+                <p class="settings-field__hint">Used on the report card. Just a first name is fine.</p>
+              </div>
+              <input class="field__control" type="text" id="account-name" name="name" value="Alex Morgan" autocomplete="name">
+            </div>
+
+            <div class="settings-field">
+              <div class="settings-field__head">
+                <label class="settings-field__label" for="account-email">Email</label>
+                <p class="settings-field__hint">Quarterly letter and goal milestones are sent here.</p>
+              </div>
+              <input class="field__control" type="email" id="account-email" name="email" value="alex@household.example" autocomplete="email">
+            </div>
+
+            <div class="settings-field">
+              <div class="settings-field__head">
+                <label class="settings-field__label" for="account-household">Household label</label>
+                <p class="settings-field__hint">A short name used in exports and headers.</p>
+              </div>
+              <input class="field__control" type="text" id="account-household" name="household" value="Example household">
+            </div>
+          </section>
+
+          <!-- Preferences ──────────────────────────────────────────── -->
+          <section class="settings-section" id="preferences" aria-labelledby="preferences-h2">
+            <header class="settings-section__head">
+              <p class="settings-section__eyebrow">Section two</p>
+              <h2 class="settings-section__title" id="preferences-h2">Preferences.</h2>
+              <p class="settings-section__lede">Look, currency, and the calendar your reporting follows.</p>
+            </header>
+
+            <div class="settings-field">
+              <div class="settings-field__head">
+                <p class="settings-field__label" id="theme-label">Default theme</p>
+                <p class="settings-field__hint">Editorial ivory for the marketing surface, sovereign emerald for the app.</p>
+              </div>
+              <div class="segmented" role="radiogroup" aria-labelledby="theme-label">
+                <input type="radio" id="theme-ivory" name="theme" value="ivory">
+                <label for="theme-ivory">Ivory</label>
+                <input type="radio" id="theme-emerald" name="theme" value="emerald" checked>
+                <label for="theme-emerald">Emerald</label>
+              </div>
+            </div>
+
+            <div class="settings-row-2">
+              <div class="settings-field">
+                <div class="settings-field__head">
+                  <label class="settings-field__label" for="pref-currency">Default currency</label>
+                </div>
+                <select class="field__control" id="pref-currency" name="currency">
+                  <option value="USD" selected>USD &mdash; US dollar</option>
+                  <option value="EUR">EUR &mdash; Euro</option>
+                  <option value="GBP">GBP &mdash; Pound sterling</option>
+                  <option value="CAD">CAD &mdash; Canadian dollar</option>
+                  <option value="AUD">AUD &mdash; Australian dollar</option>
+                  <option value="CHF">CHF &mdash; Swiss franc</option>
+                </select>
+              </div>
+
+              <div class="settings-field">
+                <div class="settings-field__head">
+                  <label class="settings-field__label" for="pref-fiscal">Fiscal-year start</label>
+                </div>
+                <select class="field__control" id="pref-fiscal" name="fiscalStart">
+                  <option value="01" selected>January</option>
+                  <option value="04">April</option>
+                  <option value="07">July</option>
+                  <option value="10">October</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="settings-field">
+              <div class="settings-field__head">
+                <label class="settings-field__label" for="pref-density">Display density</label>
+                <p class="settings-field__hint">Tabular density for charts and tables.</p>
+              </div>
+              <select class="field__control" id="pref-density" name="density">
+                <option value="comfortable" selected>Comfortable</option>
+                <option value="compact">Compact</option>
+              </select>
+            </div>
+          </section>
+
+          <!-- Notifications ────────────────────────────────────────── -->
+          <section class="settings-section" id="notifications" aria-labelledby="notifications-h2">
+            <header class="settings-section__head">
+              <p class="settings-section__eyebrow">Section three</p>
+              <h2 class="settings-section__title" id="notifications-h2">Notifications.</h2>
+              <p class="settings-section__lede">Five things the system can tell you, by email. Off by default for anything you did not opt into.</p>
+            </header>
+
+            <div class="toggle-list" role="group" aria-labelledby="notifications-h2">
+              <div class="toggle-row">
+                <div class="toggle-row__copy">
+                  <p class="toggle-row__name">Monthly report</p>
+                  <p class="toggle-row__hint">A one-page summary on the first of every month.</p>
+                </div>
+                <label class="toggle">
+                  <input type="checkbox" name="notify-monthly" checked>
+                  <span class="toggle__track" aria-hidden="true"></span>
+                  <span class="toggle__thumb" aria-hidden="true"></span>
+                  <span class="sr-only">Monthly report</span>
+                </label>
+              </div>
+
+              <div class="toggle-row">
+                <div class="toggle-row__copy">
+                  <p class="toggle-row__name">Quarterly report card</p>
+                  <p class="toggle-row__hint">The private-bank letter, four times a year.</p>
+                </div>
+                <label class="toggle">
+                  <input type="checkbox" name="notify-quarterly" checked>
+                  <span class="toggle__track" aria-hidden="true"></span>
+                  <span class="toggle__thumb" aria-hidden="true"></span>
+                  <span class="sr-only">Quarterly report card</span>
+                </label>
+              </div>
+
+              <div class="toggle-row">
+                <div class="toggle-row__copy">
+                  <p class="toggle-row__name">Goal milestones</p>
+                  <p class="toggle-row__hint">When a goal hits 25, 50, 75, or 100 percent.</p>
+                </div>
+                <label class="toggle">
+                  <input type="checkbox" name="notify-goals" checked>
+                  <span class="toggle__track" aria-hidden="true"></span>
+                  <span class="toggle__thumb" aria-hidden="true"></span>
+                  <span class="sr-only">Goal milestones</span>
+                </label>
+              </div>
+
+              <div class="toggle-row">
+                <div class="toggle-row__copy">
+                  <p class="toggle-row__name">Debt-free reached</p>
+                  <p class="toggle-row__hint">A single note when the last balance clears.</p>
+                </div>
+                <label class="toggle">
+                  <input type="checkbox" name="notify-debt-free" checked>
+                  <span class="toggle__track" aria-hidden="true"></span>
+                  <span class="toggle__thumb" aria-hidden="true"></span>
+                  <span class="sr-only">Debt-free reached</span>
+                </label>
+              </div>
+
+              <div class="toggle-row">
+                <div class="toggle-row__copy">
+                  <p class="toggle-row__name">Forecast deviations</p>
+                  <p class="toggle-row__hint">When actuals drift more than five percent from plan.</p>
+                </div>
+                <label class="toggle">
+                  <input type="checkbox" name="notify-deviation">
+                  <span class="toggle__track" aria-hidden="true"></span>
+                  <span class="toggle__thumb" aria-hidden="true"></span>
+                  <span class="sr-only">Forecast deviations</span>
+                </label>
+              </div>
+
+              <div class="toggle-row">
+                <div class="toggle-row__copy">
+                  <p class="toggle-row__name">Product updates</p>
+                  <p class="toggle-row__hint">A short note when a new tool ships. Roughly twice a year.</p>
+                </div>
+                <label class="toggle">
+                  <input type="checkbox" name="notify-product">
+                  <span class="toggle__track" aria-hidden="true"></span>
+                  <span class="toggle__thumb" aria-hidden="true"></span>
+                  <span class="sr-only">Product updates</span>
+                </label>
+              </div>
+            </div>
+          </section>
+
+          <!-- Connected services ───────────────────────────────────── -->
+          <section class="settings-section" id="connected" aria-labelledby="connected-h2">
+            <header class="settings-section__head">
+              <p class="settings-section__eyebrow">Section four</p>
+              <h2 class="settings-section__title" id="connected-h2">Connected services.</h2>
+              <p class="settings-section__lede">There are no integrations to manage, by design.</p>
+            </header>
+
+            <div class="settings-empty">
+              <p class="settings-empty__title">Nothing connected. Nothing to disconnect.</p>
+              <p class="settings-empty__body">
+                <strong>ProFinanceCast does not connect to bank accounts.</strong> Numbers are yours to enter and yours to keep. The household model lives in your browser; exports come from this page. We do not call Plaid, Yodlee, Truelayer, or any bank API. We never ask for online-banking credentials, and there is no integration marketplace planned.
+              </p>
+            </div>
+          </section>
+
+          <!-- Save bar ─────────────────────────────────────────────── -->
+          <div class="save-bar">
+            <button type="button" class="btn btn--ghost btn--sm">Discard</button>
+            <button type="submit" class="btn btn--primary btn--sm">Save changes</button>
+          </div>
+
+          <!-- Danger zone ──────────────────────────────────────────── -->
+          <section class="settings-section" id="danger" aria-labelledby="danger-h2">
+            <header class="settings-section__head">
+              <p class="settings-section__eyebrow">Section five</p>
+              <h2 class="settings-section__title" id="danger-h2">Danger zone.</h2>
+              <p class="settings-section__lede">Two irreversible actions, both gated by an explicit confirmation.</p>
+            </header>
+
+            <div class="danger" role="group" aria-labelledby="danger-h2">
+              <div class="danger__row">
+                <div class="danger__copy">
+                  <p class="danger__name">Export all data</p>
+                  <p class="danger__hint">A JSON bundle of the household model: figures, debts, goals, recurring transactions, and the full ledger. Open in any text editor.</p>
+                </div>
+                <button type="button" class="btn btn--ghost btn--sm" data-export>Export JSON</button>
+              </div>
+
+              <div class="danger__row">
+                <div class="danger__copy">
+                  <p class="danger__name">Delete account</p>
+                  <p class="danger__hint">Removes the household model and all preferences. Cannot be undone. Export first if you want a copy.</p>
+                </div>
+                <button type="button" class="btn btn--danger btn--sm" data-delete-open>Delete account</button>
+              </div>
+            </div>
+          </section>
+
+        </form>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Confirm modal (delete-account) ─────────────────────────────────── -->
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-body" data-modal>
+    <div class="modal__panel">
+      <p class="modal__eyebrow">Irreversible</p>
+      <h2 class="modal__title" id="modal-title">Delete this account?</h2>
+      <p class="modal__body" id="modal-body">
+        This removes the household model, preferences, and the full ledger. Demo accounts hold nothing persistent, so the action is a UI demonstration here &mdash; no data leaves the browser.
+      </p>
+      <div class="modal__actions">
+        <button type="button" class="btn btn--ghost btn--sm" data-modal-close>Keep account</button>
+        <button type="button" class="btn btn--danger btn--sm" data-modal-confirm>Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <div data-include="footer"></div>
+
+  <script src="/static/js/partials.js"></script>
+  <script src="/static/js/demo-data.js"></script>
+  <script src="/static/js/reveal.js"></script>
+  <script>
+    // Settings-page interactions: UI only. No persistence. No external calls.
+    // - Export JSON: serialises window.PFC_DATA to a small toast-style notice
+    //   (no actual file download, per the no-external-services constraint).
+    // - Delete-account: opens a confirmation modal; "Delete" closes the modal
+    //   and shows the same notice. Nothing is removed.
+    (function () {
+      var modal = document.querySelector('[data-modal]');
+      var openBtn = document.querySelector('[data-delete-open]');
+      var closeBtn = document.querySelector('[data-modal-close]');
+      var confirmBtn = document.querySelector('[data-modal-confirm]');
+      var exportBtn = document.querySelector('[data-export]');
+      var form = document.getElementById('settings-form');
+
+      function openModal() {
+        if (!modal) return;
+        modal.setAttribute('data-open', 'true');
+        if (closeBtn) closeBtn.focus();
+      }
+      function closeModal() {
+        if (!modal) return;
+        modal.removeAttribute('data-open');
+        if (openBtn) openBtn.focus();
+      }
+
+      if (openBtn) openBtn.addEventListener('click', openModal);
+      if (closeBtn) closeBtn.addEventListener('click', closeModal);
+      if (confirmBtn) confirmBtn.addEventListener('click', closeModal);
+      if (modal) {
+        modal.addEventListener('click', function (e) {
+          if (e.target === modal) closeModal();
+        });
+      }
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && modal && modal.getAttribute('data-open') === 'true') {
+          closeModal();
+        }
+      });
+
+      if (exportBtn) {
+        exportBtn.addEventListener('click', function () {
+          exportBtn.setAttribute('aria-disabled', 'true');
+          var original = exportBtn.textContent;
+          exportBtn.textContent = 'Demo: export disabled';
+          setTimeout(function () {
+            exportBtn.removeAttribute('aria-disabled');
+            exportBtn.textContent = original;
+          }, 1800);
+        });
+      }
+
+      if (form) {
+        form.addEventListener('submit', function (e) {
+          e.preventDefault();
+          var btn = form.querySelector('button[type="submit"]');
+          if (!btn) return;
+          var original = btn.textContent;
+          btn.textContent = 'Saved (demo)';
+          setTimeout(function () { btn.textContent = original; }, 1800);
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

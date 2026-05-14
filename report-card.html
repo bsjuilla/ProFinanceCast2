@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Report card &mdash; ProFinanceCast</title>
+  <meta name="description" content="A quarterly financial letter for the household. Net worth, debt, savings, and the forecast revision &mdash; in prose.">
+  <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/tokens.css">
+  <link rel="stylesheet" href="/static/css/theme-ivory.css">
+  <link rel="stylesheet" href="/static/css/theme-emerald.css">
+  <link rel="stylesheet" href="/static/css/base.css">
+  <link rel="stylesheet" href="/static/css/components.css">
+  <link rel="stylesheet" href="/static/css/nav.css">
+  <link rel="stylesheet" href="/static/css/footer.css">
+  <link rel="stylesheet" href="/static/css/charts.css">
+  <link rel="stylesheet" href="/static/css/app.css">
+  <link rel="stylesheet" href="/static/css/report-card.css">
+</head>
+<body data-theme="emerald">
+  <a class="skip-link" href="#main">Skip to report card</a>
+
+  <div data-include="header"></div>
+  <div data-include="banner"></div>
+
+  <div class="app-shell">
+    <div data-include="sidebar"></div>
+
+    <main class="app-main" id="main">
+
+      <!-- 1 · PAGE HEAD ───────────────────────────────────────────────── -->
+      <header class="page-head" data-reveal>
+        <div class="page-head__body">
+          <p class="eyebrow page-head__eyebrow">
+            <span>Report card</span>
+            <span class="page-head__sep" aria-hidden="true">&middot;</span>
+            <span class="mono">Q1 2026 close</span>
+          </p>
+          <h1 class="display display--md page-head__title">A short letter every quarter.</h1>
+          <p class="page-head__lede">What changed, what to watch, what to do next.</p>
+        </div>
+        <div class="page-head__actions">
+          <button type="button" class="btn btn--primary btn--sm" data-pdf-download>Download PDF</button>
+        </div>
+      </header>
+
+      <!-- 2 · REPORT BODY (private-bank letter composition) ───────────── -->
+      <article class="report" aria-label="Quarterly report card" data-reveal>
+
+        <!-- Masthead ─────────────────────────────────────────────────── -->
+        <header class="report__masthead">
+          <h2 class="report__masthead-title">First-quarter forecast letter.</h2>
+          <div class="report__masthead-meta">
+            <p class="report__masthead-period">
+              <span>Period</span>
+              <span aria-hidden="true">&middot;</span>
+              <span class="mono">01 Jan &rarr; 31 Mar 2026</span>
+            </p>
+            <p class="report__masthead-confidential">Private &middot; for this household</p>
+          </div>
+        </header>
+
+        <!-- Opening paragraph (3-4 sentences, narrative register) ─────── -->
+        <section class="report__opening">
+          <p class="report__opening-eyebrow">The quarter in one paragraph</p>
+          <p class="report__opening-body">
+            The household closed the first quarter with net worth at <span class="mono">$87,420</span>, a clean <span class="mono">$6,930</span> ahead of January. The credit-card line moved from <span class="mono">$4,610</span> to <span class="mono">$3,200</span> on a steady avalanche cadence; the student loan held within its amortisation. Liquid reserve crossed <span class="mono">4.8 months</span> of expenses for the first time, and the ten-year endpoint was lifted from <span class="mono">$400,800</span> to <span class="mono">$412,000</span> after the retirement-contribution revision. The arithmetic is plain: spend close to plan, retire interest first, the curve does the rest.
+          </p>
+        </section>
+
+        <!-- Metric cards (6 cards, the headline figures) ─────────────── -->
+        <section class="report__metrics" aria-label="Quarterly metric cards">
+          <div class="report__metric">
+            <p class="report__metric-label">Net-worth delta</p>
+            <p class="report__metric-value mono">+$6,930</p>
+            <p class="report__metric-foot">
+              <span class="report__metric-delta report__metric-delta--up">+8.6%</span>
+              <span>vs Q1 open</span>
+            </p>
+          </div>
+
+          <div class="report__metric">
+            <p class="report__metric-label">Debt reduction</p>
+            <p class="report__metric-value mono">&minus;$1,410</p>
+            <p class="report__metric-foot">
+              <span class="report__metric-delta report__metric-delta--down">&minus;14.1%</span>
+              <span>balances down</span>
+            </p>
+          </div>
+
+          <div class="report__metric">
+            <p class="report__metric-label">Savings rate</p>
+            <p class="report__metric-value mono">30.0%</p>
+            <p class="report__metric-foot">
+              <span class="report__metric-delta report__metric-delta--up">+1.4 pp</span>
+              <span>quarter on quarter</span>
+            </p>
+          </div>
+
+          <div class="report__metric">
+            <p class="report__metric-label">Forecast revision</p>
+            <p class="report__metric-value mono">+$11,200</p>
+            <p class="report__metric-foot">
+              <span class="report__metric-delta report__metric-delta--up">+2.8%</span>
+              <span>10-year endpoint</span>
+            </p>
+          </div>
+
+          <div class="report__metric">
+            <p class="report__metric-label">Emergency reserve</p>
+            <p class="report__metric-value mono">4.8 mo</p>
+            <p class="report__metric-foot">
+              <span class="report__metric-delta report__metric-delta--up">+0.6 mo</span>
+              <span>cover added</span>
+            </p>
+          </div>
+
+          <div class="report__metric">
+            <p class="report__metric-label">Health score</p>
+            <p class="report__metric-value mono">72 / 100</p>
+            <p class="report__metric-foot">
+              <span class="report__metric-delta report__metric-delta--up">+4</span>
+              <span>vs prior quarter</span>
+            </p>
+          </div>
+        </section>
+
+        <!-- What changed and why (2-paragraph commentary) ────────────── -->
+        <section class="report__commentary">
+          <p class="report__commentary-eyebrow">What changed and why</p>
+          <h2>Two decisions, one paragraph each.</h2>
+          <p>
+            The biggest mover was the <strong>retirement-contribution lift</strong> recorded on <span class="mono">22 April</span> &mdash; a one-percentage-point increase in the assumed annual contribution rate. On its own that change moves the ten-year endpoint from <span class="mono">$400,800</span> to <span class="mono">$418,300</span>. After the subsequent return-rate revision on <span class="mono">5 May</span>, which trimmed the assumed nominal return from <span class="mono">7.5%</span> to <span class="mono">7.0%</span>, the endpoint settled at the more honest <span class="mono">$412,000</span>. Net of both edits, the forecast remains higher than it began the quarter; the contribution increase did real work.
+          </p>
+          <p>
+            The second mover was <strong>cadence on the credit card</strong>. The household held the monthly debt allocation steady at <span class="mono">$410</span> across all three months, even when the freelance invoice landed in May. Avalanche math now retires the credit line in <strong>month 14</strong>; the student loan finishes in <strong>month 26</strong>. The discipline shows up not in any one transaction but in the absence of detours &mdash; no scenic interest, no balance creep, no debt-shuffling.
+          </p>
+        </section>
+
+        <!-- Figure (sparkline of net worth across the quarter) ────────── -->
+        <figure class="report__figure" aria-label="Net worth across the quarter">
+          <header class="report__figure-head">
+            <h3 class="report__figure-title">Net worth across the quarter.</h3>
+            <p class="report__figure-meta mono">$80,490 &rarr; $87,420</p>
+          </header>
+          <div class="report__figure-canvas">
+            <div class="chart" data-chart="sparkline" data-chart-opts='{
+              "values":[80490,81120,81880,82640,83310,83980,84720,85490,86220,86810,87100,87420],
+              "label":"Net worth weekly, Q1 2026"
+            }'></div>
+          </div>
+          <footer class="report__figure-foot">
+            <div class="report__figure-stat">
+              <p class="report__figure-stat-label">Open</p>
+              <p class="report__figure-stat-value mono">$80,490</p>
+            </div>
+            <div class="report__figure-stat">
+              <p class="report__figure-stat-label">Close</p>
+              <p class="report__figure-stat-value mono">$87,420</p>
+            </div>
+            <div class="report__figure-stat">
+              <p class="report__figure-stat-label">Change</p>
+              <p class="report__figure-stat-value mono">+$6,930</p>
+            </div>
+          </footer>
+        </figure>
+
+        <!-- Next-quarter focus (numbered bullets) ─────────────────────── -->
+        <section class="report__focus">
+          <p class="report__focus-eyebrow">Next quarter focus</p>
+          <h2>Three things to hold the line on.</h2>
+          <ol class="report__focus-list" role="list">
+            <li class="report__focus-item">
+              <span class="report__focus-num mono">01</span>
+              <p class="report__focus-text"><strong>Finish the credit card.</strong> Hold the <span class="mono">$410</span> monthly debt allocation, do not redirect to retirement until the avalanche path clears the balance in <strong>month 14</strong>. Interest avoided this quarter alone runs roughly <span class="mono">$210</span>.</p>
+            </li>
+            <li class="report__focus-item">
+              <span class="report__focus-num mono">02</span>
+              <p class="report__focus-text"><strong>Raise the emergency reserve to six months.</strong> The reserve currently covers <span class="mono">4.8 months</span>; adding <span class="mono">$6,280</span> over the next nine months reaches the six-month line without disturbing other goals.</p>
+            </li>
+            <li class="report__focus-item">
+              <span class="report__focus-num mono">03</span>
+              <p class="report__focus-text"><strong>Hold the savings rate at 30%.</strong> The lift to <span class="mono">30.0%</span> is the single most reliable lever in the forecast. A return to <span class="mono">28%</span> would cost the ten-year endpoint roughly <span class="mono">$22,000</span>; the cost of holding is, in practice, none.</p>
+            </li>
+          </ol>
+        </section>
+
+        <!-- Sign-off (letter close, secondary PDF button) ─────────────── -->
+        <footer class="report__signoff">
+          <p class="report__signoff-text">
+            <em>Forecast desk.</em>
+          </p>
+          <div class="report__signoff-actions">
+            <button type="button" class="btn btn--ghost btn--sm" data-pdf-download>Download PDF</button>
+          </div>
+        </footer>
+
+      </article>
+
+      <!-- Toast (UI-only PDF demo notice) ──────────────────────────────── -->
+      <div class="report__toast" role="status" aria-live="polite" data-toast>
+        Demo: export disabled.
+      </div>
+
+    </main>
+  </div>
+
+  <div data-include="footer"></div>
+
+  <script src="/static/js/partials.js"></script>
+  <script src="/static/js/demo-data.js"></script>
+  <script src="/static/js/charts.js"></script>
+  <script src="/static/js/reveal.js"></script>
+  <script>
+    // PDF download is UI only per RULING-01 (no external dependencies).
+    // Clicking shows a small toast for 1800ms.
+    (function () {
+      var toast = document.querySelector('[data-toast]');
+      var triggers = document.querySelectorAll('[data-pdf-download]');
+      if (!toast || !triggers.length) return;
+      var hideTimer = null;
+      triggers.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          toast.setAttribute('data-visible', 'true');
+          if (hideTimer) clearTimeout(hideTimer);
+          hideTimer = setTimeout(function () {
+            toast.removeAttribute('data-visible');
+          }, 1800);
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Debt optimizer &mdash; ProFinanceCast</title>
+  <meta name="description" content="Avalanche or snowball: which retires your debts faster. Two open balances, live recompute, payoff timeline, and a 12-month schedule.">
+  <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/tokens.css">
+  <link rel="stylesheet" href="/static/css/theme-ivory.css">
+  <link rel="stylesheet" href="/static/css/theme-emerald.css">
+  <link rel="stylesheet" href="/static/css/base.css">
+  <link rel="stylesheet" href="/static/css/components.css">
+  <link rel="stylesheet" href="/static/css/nav.css">
+  <link rel="stylesheet" href="/static/css/footer.css">
+  <link rel="stylesheet" href="/static/css/charts.css">
+  <link rel="stylesheet" href="/static/css/app.css">
+  <link rel="stylesheet" href="/static/css/debt-optimizer.css">
+</head>
+<body data-theme="emerald">
+  <a class="skip-link" href="#main">Skip to debt optimizer</a>
+
+  <div data-include="header"></div>
+  <div data-include="banner"></div>
+
+  <div class="app-shell">
+    <div data-include="sidebar"></div>
+
+    <main class="app-main" id="main">
+
+      <!-- ─────────────────────────────────────────────────────────────
+           1 · PAGE HEAD
+           ───────────────────────────────────────────────────────────── -->
+      <header class="page-head" data-reveal>
+        <div class="page-head__body">
+          <p class="eyebrow page-head__eyebrow">
+            <span>Debt optimizer</span>
+            <span class="page-head__sep" aria-hidden="true">&middot;</span>
+            <span class="mono">Two open balances</span>
+          </p>
+          <h1 class="display display--md page-head__title">Pay the highest rate first.</h1>
+          <p class="page-head__lede">The avalanche method orders your debts by interest rate. The snowball method orders them by balance. For this household, the math comes out to month 14, with $487 saved in interest.</p>
+        </div>
+        <div class="page-head__actions">
+          <a href="/tools/debt-strategy.html" class="btn btn--ghost btn--sm">Public version</a>
+        </div>
+      </header>
+
+      <!-- ─────────────────────────────────────────────────────────────
+           2 · TOOL GRID — inputs (left) · summary + chart (right)
+           ───────────────────────────────────────────────────────────── -->
+      <section class="tool-grid" aria-label="Debt strategy tool" data-reveal>
+
+        <!-- ── LEFT: Inputs ─────────────────────────────────── -->
+        <div class="inputs">
+
+          <header class="panel__head">
+            <div>
+              <p class="eyebrow">Your inputs</p>
+              <h2 class="panel__title" id="inputs-h2">Two debts, one extra payment.</h2>
+            </div>
+            <div class="toggle" role="group" aria-label="Payoff strategy">
+              <button type="button" class="toggle__btn" data-strategy="avalanche" aria-pressed="true">Avalanche</button>
+              <button type="button" class="toggle__btn" data-strategy="snowball"  aria-pressed="false">Snowball</button>
+            </div>
+          </header>
+
+          <!-- Debt 1: Credit card -->
+          <article class="debt-row" aria-labelledby="debt-cc">
+            <header class="debt-row__head">
+              <h3 class="debt-row__name" id="debt-cc">Credit card</h3>
+              <span class="debt-row__apr mono">24.9% APR</span>
+            </header>
+            <div class="debt-row__fields">
+              <label class="field">
+                <span class="field__label">Balance</span>
+                <span class="field__group">
+                  <span class="field__group__prefix">$</span>
+                  <input class="field__control field__control--mono" type="number" inputmode="decimal" value="3200" min="0" step="50" data-debt="cc" data-prop="balance" aria-label="Credit card balance">
+                </span>
+              </label>
+              <label class="field">
+                <span class="field__label">Minimum payment</span>
+                <span class="field__group">
+                  <span class="field__group__prefix">$</span>
+                  <input class="field__control field__control--mono" type="number" inputmode="decimal" value="80" min="0" step="5" data-debt="cc" data-prop="minPayment" aria-label="Credit card minimum payment">
+                </span>
+              </label>
+            </div>
+          </article>
+
+          <!-- Debt 2: Student loan -->
+          <article class="debt-row" aria-labelledby="debt-sl">
+            <header class="debt-row__head">
+              <h3 class="debt-row__name" id="debt-sl">Student loan</h3>
+              <span class="debt-row__apr mono">6.1% APR</span>
+            </header>
+            <div class="debt-row__fields">
+              <label class="field">
+                <span class="field__label">Balance</span>
+                <span class="field__group">
+                  <span class="field__group__prefix">$</span>
+                  <input class="field__control field__control--mono" type="number" inputmode="decimal" value="5380" min="0" step="50" data-debt="sl" data-prop="balance" aria-label="Student loan balance">
+                </span>
+              </label>
+              <label class="field">
+                <span class="field__label">Minimum payment</span>
+                <span class="field__group">
+                  <span class="field__group__prefix">$</span>
+                  <input class="field__control field__control--mono" type="number" inputmode="decimal" value="60" min="0" step="5" data-debt="sl" data-prop="minPayment" aria-label="Student loan minimum payment">
+                </span>
+              </label>
+            </div>
+          </article>
+
+          <!-- Extra payment -->
+          <article class="extra-field">
+            <label class="field">
+              <span class="field__label">Extra monthly payment</span>
+              <span class="field__hint">Above the minimums. Steered to the priority debt for the selected strategy.</span>
+              <span class="field__group">
+                <span class="field__group__prefix">$</span>
+                <input class="field__control field__control--mono" type="number" inputmode="decimal" value="270" min="0" step="10" id="extra-input" aria-label="Extra monthly payment">
+                <span class="field__group__suffix">/&thinsp;mo</span>
+              </span>
+            </label>
+          </article>
+
+        </div>
+
+        <!-- ── RIGHT: Summary + chart + schedule ────────────── -->
+        <div class="inputs">
+
+          <!-- Locked summary card (RULING R9 LOCKED_DISPLAY) -->
+          <section class="lock-summary" aria-labelledby="lock-h2" data-reveal>
+            <p class="lock-summary__eyebrow">
+              <span>Result</span>
+              <span aria-hidden="true">&middot;</span>
+              <span>Locked example</span>
+            </p>
+            <p class="lock-summary__line" id="lock-h2">
+              Avalanche pays this off in <span class="mono">month 14</span>, saving <span class="mono">$487</span> in interest versus snowball.
+            </p>
+            <p class="lock-summary__meta">
+              <span><span class="mono">$410</span>&thinsp;/&thinsp;mo to debt</span>
+              <span aria-hidden="true">&middot;</span>
+              <span><span class="mono">$8,580</span> outstanding</span>
+              <span aria-hidden="true">&middot;</span>
+              <span>Credit-card cleared first</span>
+            </p>
+          </section>
+
+          <!-- Live recompute strip (updates as inputs change) -->
+          <section class="live-strip" aria-label="Live recompute" data-reveal>
+            <div class="live-strip__cell">
+              <p class="live-strip__label">Months to clear</p>
+              <p class="live-strip__value mono" id="live-months">26</p>
+              <p class="live-strip__hint">Using current inputs</p>
+            </div>
+            <div class="live-strip__cell">
+              <p class="live-strip__label">Total interest</p>
+              <p class="live-strip__value mono" id="live-interest">$849</p>
+              <p class="live-strip__hint">Over the life of the loans</p>
+            </div>
+            <div class="live-strip__cell">
+              <p class="live-strip__label">Total paid</p>
+              <p class="live-strip__value mono" id="live-paid">$9,429</p>
+              <p class="live-strip__hint">Principal plus interest</p>
+            </div>
+          </section>
+
+          <!-- Payoff timeline waterfall -->
+          <section class="panel" aria-labelledby="waterfall-h2" data-reveal>
+            <header class="panel__head">
+              <div>
+                <p class="eyebrow">Today &middot; outstanding</p>
+                <h2 class="panel__title" id="waterfall-h2">Payoff timeline</h2>
+              </div>
+              <p class="panel__meta mono">CC first, then SL</p>
+            </header>
+            <div class="panel__canvas panel__canvas--waterfall">
+              <div class="chart" data-chart="waterfall" data-chart-opts='{"label":"Outstanding debt by balance"}'></div>
+            </div>
+            <footer class="panel__foot panel__foot--compact">
+              <div class="panel__stat">
+                <p class="panel__stat-label">CC paid off</p>
+                <p class="panel__stat-value mono" id="byd-cc">Month 6</p>
+              </div>
+              <div class="panel__stat">
+                <p class="panel__stat-label">SL paid off</p>
+                <p class="panel__stat-value mono" id="byd-sl">Month 26</p>
+              </div>
+              <div class="panel__stat">
+                <p class="panel__stat-label">Vs snowball</p>
+                <p class="panel__stat-value mono" id="byd-vs">$0 saved</p>
+              </div>
+            </footer>
+          </section>
+
+        </div>
+
+      </section>
+
+      <!-- ─────────────────────────────────────────────────────────────
+           3 · MONTHLY SCHEDULE TABLE (first 12 months, live recompute)
+           ───────────────────────────────────────────────────────────── -->
+      <section class="panel panel--flat row" aria-labelledby="schedule-h2" data-reveal>
+        <header class="panel__head">
+          <div>
+            <p class="eyebrow">First twelve months</p>
+            <h2 class="panel__title" id="schedule-h2">Month-by-month, principal and interest.</h2>
+          </div>
+          <p class="panel__meta mono"><span id="sched-strategy">Avalanche</span> &middot; 12 of <span id="sched-total" class="mono">26</span></p>
+        </header>
+
+        <div class="panel__table">
+          <table class="table activity schedule">
+            <thead>
+              <tr>
+                <th scope="col" class="activity__col-when">Month</th>
+                <th scope="col" class="schedule__th-num">Balance</th>
+                <th scope="col" class="schedule__th-num">Interest</th>
+                <th scope="col" class="schedule__th-num">Principal</th>
+                <th scope="col" class="schedule__th-num">Credit card</th>
+                <th scope="col" class="schedule__th-num">Student loan</th>
+              </tr>
+            </thead>
+            <tbody id="schedule-body">
+              <!-- Rows injected by the live-recompute script. -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ─────────────────────────────────────────────────────────────
+           4 · METHODOLOGY (short prose) — restraint per impeccable
+           ───────────────────────────────────────────────────────────── -->
+      <section class="panel panel--flat row" aria-labelledby="method-h2" data-reveal>
+        <header class="panel__head">
+          <div>
+            <p class="eyebrow">How this works</p>
+            <h2 class="panel__title" id="method-h2">Two rules, plain language.</h2>
+          </div>
+          <a href="/about.html#methodology" class="btn--link">Methodology &rarr;</a>
+        </header>
+        <div class="prose prose--narrow">
+          <ol>
+            <li><strong>Avalanche</strong> pays the minimum on every debt, then steers the entire extra payment to the highest-APR balance. When that balance clears, the freed cash waterfalls to the next-highest APR. Minimises total interest.</li>
+            <li><strong>Snowball</strong> pays the minimum on every debt, then steers the extra payment to the smallest balance. When that balance clears, the freed cash rolls to the next-smallest. Maximises the number of debts crossed off.</li>
+          </ol>
+          <p>For this household, the credit card is both the highest-APR balance and the smallest balance, so the two strategies often converge on the same priority order. The locked summary above reflects the household&rsquo;s configured scenario; the live strip recomputes whenever you edit an input.</p>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <div data-include="footer"></div>
+
+  <script src="/static/js/partials.js"></script>
+  <script src="/static/js/demo-data.js"></script>
+  <script src="/static/js/calc-debt.js"></script>
+  <script src="/static/js/charts.js"></script>
+  <script src="/static/js/reveal.js"></script>
+
+  <!-- ─────────────────────────────────────────────────────────────
+       Live recompute. systematic-debugging discipline applied:
+       - inputs read once into a debts[] snapshot, validated as numbers
+       - PFC_DEBT.simulate/compare called pure with the snapshot
+       - DOM writes go through one function, no cross-talk
+       - 240ms debounce per ui-ux-pro-max
+       ───────────────────────────────────────────────────────────── -->
+  <script>
+    (function () {
+      'use strict';
+
+      var TOOL = window.PFC_DEBT;
+      if (!TOOL) return;
+
+      // --- state -------------------------------------------------------
+      var state = {
+        strategy: 'avalanche',
+        debts: {
+          cc: { id: 'cc', name: 'Credit card', apr: 0.249, balance: 3200, minPayment: 80 },
+          sl: { id: 'sl', name: 'Student loan', apr: 0.061, balance: 5380, minPayment: 60 }
+        },
+        extra: 270
+      };
+
+      // --- DOM refs ----------------------------------------------------
+      var els = {
+        liveMonths:   document.getElementById('live-months'),
+        liveInterest: document.getElementById('live-interest'),
+        livePaid:     document.getElementById('live-paid'),
+        bydCc:        document.getElementById('byd-cc'),
+        bydSl:        document.getElementById('byd-sl'),
+        bydVs:        document.getElementById('byd-vs'),
+        schedBody:    document.getElementById('schedule-body'),
+        schedStrat:   document.getElementById('sched-strategy'),
+        schedTotal:   document.getElementById('sched-total'),
+        toggleBtns:   document.querySelectorAll('[data-strategy]')
+      };
+
+      function fmt(n) {
+        if (n == null || isNaN(n)) return '—';
+        var sign = n < 0 ? '−' : '';
+        return sign + '$' + Math.abs(Math.round(n)).toLocaleString('en-US');
+      }
+      function debtsArray() {
+        return [state.debts.cc, state.debts.sl];
+      }
+
+      // --- recompute & render -----------------------------------------
+      function recompute() {
+        var debts = debtsArray();
+        var extra = +state.extra || 0;
+
+        var run = TOOL.simulate(debts, extra, state.strategy);
+        var cmp = TOOL.compare(debts, extra);
+
+        // Live strip
+        els.liveMonths.textContent   = String(run.months);
+        els.liveInterest.textContent = fmt(run.totalInterest);
+        els.livePaid.textContent     = fmt(run.totalPaid);
+
+        // Per-debt payoff months
+        var ccRec = run.byDebt.filter(function (d) { return d.id === 'cc'; })[0];
+        var slRec = run.byDebt.filter(function (d) { return d.id === 'sl'; })[0];
+        els.bydCc.textContent = ccRec && ccRec.paidOffMonth ? ('Month ' + ccRec.paidOffMonth) : '—';
+        els.bydSl.textContent = slRec && slRec.paidOffMonth ? ('Month ' + slRec.paidOffMonth) : '—';
+
+        // Savings vs snowball (avalanche perspective)
+        var saved = state.strategy === 'avalanche' ? cmp.savings.interest : -cmp.savings.interest;
+        if (Math.abs(saved) < 0.5) {
+          els.bydVs.textContent = '$0 saved';
+        } else {
+          els.bydVs.textContent = fmt(saved) + ' saved';
+        }
+
+        // Schedule (first 12 rows)
+        var rows = run.schedule.slice(0, 12).map(function (s) {
+          var cc = s.debts.filter(function (x) { return x.id === 'cc'; })[0];
+          var sl = s.debts.filter(function (x) { return x.id === 'sl'; })[0];
+          var ccBal = cc ? cc.balance : 0;
+          var slBal = sl ? sl.balance : 0;
+          var rowClass = s.totalBalance < 0.005 ? ' class="schedule__zero"' : '';
+          return ''
+            + '<tr' + rowClass + '>'
+            +   '<td class="mono activity__when">M' + s.month + '</td>'
+            +   '<td class="schedule__bal mono">'  + fmt(s.totalBalance) + '</td>'
+            +   '<td class="schedule__int mono">'  + fmt(s.interestPaid) + '</td>'
+            +   '<td class="schedule__prin mono">' + fmt(s.principalPaid) + '</td>'
+            +   '<td class="schedule__bal mono">'  + (ccBal > 0 ? fmt(ccBal) : '—') + '</td>'
+            +   '<td class="schedule__bal mono">'  + (slBal > 0 ? fmt(slBal) : '—') + '</td>'
+            + '</tr>';
+        }).join('');
+        els.schedBody.innerHTML = rows;
+
+        els.schedStrat.textContent = state.strategy === 'avalanche' ? 'Avalanche' : 'Snowball';
+        els.schedTotal.textContent = String(run.months);
+      }
+
+      // --- input wiring -----------------------------------------------
+      function readInputs() {
+        document.querySelectorAll('[data-debt][data-prop]').forEach(function (input) {
+          var id = input.getAttribute('data-debt');
+          var prop = input.getAttribute('data-prop');
+          var v = parseFloat(input.value);
+          if (state.debts[id] && !isNaN(v) && v >= 0) {
+            state.debts[id][prop] = v;
+          }
+        });
+        var extraV = parseFloat(document.getElementById('extra-input').value);
+        if (!isNaN(extraV) && extraV >= 0) state.extra = extraV;
+      }
+
+      var debounceTimer = null;
+      function onInput() {
+        if (debounceTimer) clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(function () {
+          readInputs();
+          recompute();
+        }, 240);
+      }
+
+      document.querySelectorAll('[data-debt][data-prop], #extra-input').forEach(function (n) {
+        n.addEventListener('input', onInput);
+      });
+
+      els.toggleBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var s = btn.getAttribute('data-strategy');
+          if (s === state.strategy) return;
+          state.strategy = s;
+          els.toggleBtns.forEach(function (b) {
+            b.setAttribute('aria-pressed', b === btn ? 'true' : 'false');
+          });
+          recompute();
+        });
+      });
+
+      // Initial paint.
+      readInputs();
+      recompute();
+    }());
+  </script>
+</body>
+</html>

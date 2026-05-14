@@ -1,0 +1,254 @@
+/* =========================================================================
+   base.css - reset + typography + layout primitives
+   Mobile-first. Theme-agnostic; reads semantic tokens from theme files.
+   ========================================================================= */
+
+/* ---- Reset ----------------------------------------------------------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+html, body, h1, h2, h3, h4, h5, h6, p, ul, ol, li, figure, blockquote,
+dl, dd, fieldset, legend, table {
+  margin: 0;
+  padding: 0;
+}
+html {
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+}
+body {
+  min-height: 100dvh;
+  font-family: var(--f-body);
+  font-size: var(--fs-16);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-base);
+  background: var(--canvas);
+  color: var(--ink);
+  -moz-tab-size: 4;
+  tab-size: 4;
+}
+img, svg, video, canvas {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+button, input, select, textarea {
+  font: inherit;
+  color: inherit;
+}
+button {
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+a {
+  color: var(--link);
+  text-decoration: none;
+  transition: color var(--t-fast) var(--ease-out-quart);
+}
+a:hover {
+  color: var(--link-hover);
+}
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--c-gold);
+  outline-offset: 2px;
+  border-radius: var(--r-sharp);
+}
+hr {
+  border: 0;
+  border-top: 1px solid var(--rule);
+  margin: var(--s-8) 0;
+}
+ul, ol { list-style: none; }
+table { border-collapse: collapse; }
+
+/* ---- Typography ------------------------------------------------------ */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: var(--fw-medium);
+  line-height: var(--lh-snug);
+  letter-spacing: var(--ls-tight);
+}
+h1 { font-size: clamp(var(--fs-32), 5vw, var(--fs-56)); }
+h2 { font-size: clamp(var(--fs-28), 3.5vw, var(--fs-40)); }
+h3 { font-size: var(--fs-24); }
+h4 { font-size: var(--fs-20); }
+h5 { font-size: var(--fs-16); }
+h6 { font-size: var(--fs-14); }
+
+/* Display - reserved for Cormorant italic, used sparingly. */
+.display {
+  font-family: var(--f-display);
+  font-style: italic;
+  font-weight: var(--fw-medium);
+  letter-spacing: var(--ls-tight);
+  line-height: var(--lh-tight);
+}
+.display--xl { font-size: clamp(var(--fs-56), 8vw, var(--fs-72)); }
+.display--lg { font-size: clamp(var(--fs-40), 6vw, var(--fs-56)); }
+.display--md { font-size: clamp(var(--fs-32), 4.5vw, var(--fs-40)); }
+
+/* Eyebrow - tracked caps in 12px Inter 500. */
+.eyebrow {
+  font-family: var(--f-body);
+  font-size: var(--fs-12);
+  font-weight: var(--fw-medium);
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+  color: var(--ink-65);
+}
+
+/* Lede - lightly larger introductory paragraph. */
+.lede {
+  font-size: var(--fs-18);
+  line-height: var(--lh-loose);
+  color: var(--ink-80);
+  max-width: 60ch;
+}
+
+/* Body paragraph */
+p {
+  max-width: 70ch;
+  color: var(--ink-80);
+}
+
+/* Mono / tabular figure - MANDATORY for every financial number. */
+.mono, .figure, [data-figure] {
+  font-family: var(--f-mono);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1, 'lnum' 1;
+  letter-spacing: 0;
+}
+
+/* The brand wordmark - "ProFinanceCast" with italic Finance.
+   Used in nav and footer. The <em> tag inside the wordmark renders
+   Cormorant italic; the rest stays in Inter. */
+.wordmark {
+  font-family: var(--f-body);
+  font-weight: var(--fw-semi);
+  font-size: var(--fs-18);
+  letter-spacing: var(--ls-tight);
+  color: var(--ink);
+  white-space: nowrap;
+}
+.wordmark em {
+  font-family: var(--f-display);
+  font-style: italic;
+  font-weight: var(--fw-semi);
+  color: var(--accent);
+  padding: 0 1px;
+}
+
+/* ---- Layout primitives ----------------------------------------------- */
+.container {
+  width: 100%;
+  max-width: var(--content-base);
+  margin: 0 auto;
+  padding-inline: var(--gutter);
+}
+.container--narrow { max-width: var(--content-narrow); }
+.container--wide   { max-width: var(--content-wide); }
+.container--app    { max-width: var(--content-app); }
+.container--full   { max-width: none; padding-inline: 0; }
+
+/* Vertical rhythm */
+.stack > * + * { margin-top: var(--stack-gap, var(--s-4)); }
+.stack--xs > * + * { margin-top: var(--s-1); }
+.stack--sm > * + * { margin-top: var(--s-2); }
+.stack--md > * + * { margin-top: var(--s-4); }
+.stack--lg > * + * { margin-top: var(--s-8); }
+.stack--xl > * + * { margin-top: var(--s-12); }
+
+/* Grid helpers - CSS grid only, no calc() percentage math. */
+.grid {
+  display: grid;
+  gap: var(--grid-gap, var(--s-6));
+}
+.grid--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.grid--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.grid--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.grid--12 { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+
+@media (max-width: 768px) {
+  .grid--2, .grid--3, .grid--4 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Section block - the spacing unit between major page chunks. */
+.section {
+  padding-block: var(--section-pad, var(--s-16));
+}
+.section--sm { --section-pad: var(--s-12); }
+.section--lg { --section-pad: var(--s-24); }
+
+/* Hairline divider rules - the editorial tell. */
+.rule {
+  display: block;
+  height: 1px;
+  width: 100%;
+  background: var(--rule);
+  border: 0;
+  margin: 0;
+}
+.rule--strong { background: var(--rule-strong); }
+.rule--gold   { background: var(--c-gold); }
+.rule--short  { max-width: 96px; }
+.rule--draw {
+  transform-origin: left center;
+  transform: scaleX(0);
+  transition: transform var(--t-base) var(--ease-out-quart);
+}
+.rule--draw.is-revealed {
+  transform: scaleX(1);
+}
+
+/* ---- Reveal-on-scroll ------------------------------------------------ */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity var(--t-base) var(--ease-out-quart),
+    transform var(--t-base) var(--ease-out-quart);
+}
+[data-reveal].is-revealed {
+  opacity: 1;
+  transform: none;
+}
+[data-reveal][data-delay="1"] { transition-delay: 60ms; }
+[data-reveal][data-delay="2"] { transition-delay: 120ms; }
+[data-reveal][data-delay="3"] { transition-delay: 180ms; }
+[data-reveal][data-delay="4"] { transition-delay: 240ms; }
+
+/* ---- Visually-hidden helper ------------------------------------------ */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---- Focus skip-link (a11y) ------------------------------------------ */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--c-gold);
+  color: var(--c-emerald-black);
+  padding: var(--s-2) var(--s-4);
+  font-weight: var(--fw-medium);
+  z-index: var(--z-toast);
+  border-radius: 0 0 var(--r-sharp) 0;
+}
+.skip-link:focus {
+  left: 0;
+}

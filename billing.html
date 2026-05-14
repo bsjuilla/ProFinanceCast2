@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Pricing &mdash; ProFinanceCast</title>
+  <meta name="description" content="Three plans. One philosophy. Free is free forever. Pro pays once a month. Founders pays once.">
+  <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/tokens.css">
+  <link rel="stylesheet" href="/static/css/theme-ivory.css">
+  <link rel="stylesheet" href="/static/css/theme-emerald.css">
+  <link rel="stylesheet" href="/static/css/base.css">
+  <link rel="stylesheet" href="/static/css/components.css">
+  <link rel="stylesheet" href="/static/css/nav.css">
+  <link rel="stylesheet" href="/static/css/footer.css">
+  <link rel="stylesheet" href="/static/css/billing.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Product",
+        "@id": "https://profinancecast.com/billing#free",
+        "name": "ProFinanceCast Free",
+        "description": "A permanent free tier of ProFinanceCast. Net worth forecast, debt-free date, three goals, ten Sage messages per month, full export.",
+        "brand": { "@type": "Brand", "name": "ProFinanceCast" },
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD",
+          "url": "https://profinancecast.com/auth.html",
+          "availability": "https://schema.org/InStock",
+          "priceValidUntil": "2027-12-31"
+        }
+      },
+      {
+        "@type": "Product",
+        "@id": "https://profinancecast.com/billing#pro",
+        "name": "ProFinanceCast Pro",
+        "description": "Monthly subscription. Unlimited scenarios, salary calculator, recurring radar, 200 Sage messages per month, printable report card, monthly digest.",
+        "brand": { "@type": "Brand", "name": "ProFinanceCast" },
+        "offers": [
+          {
+            "@type": "Offer",
+            "name": "Monthly",
+            "price": "9",
+            "priceCurrency": "USD",
+            "url": "https://profinancecast.com/auth.html",
+            "availability": "https://schema.org/InStock",
+            "priceSpecification": {
+              "@type": "UnitPriceSpecification",
+              "price": "9",
+              "priceCurrency": "USD",
+              "billingDuration": "P1M"
+            }
+          },
+          {
+            "@type": "Offer",
+            "name": "Annual",
+            "price": "69",
+            "priceCurrency": "USD",
+            "url": "https://profinancecast.com/auth.html",
+            "availability": "https://schema.org/InStock",
+            "priceSpecification": {
+              "@type": "UnitPriceSpecification",
+              "price": "69",
+              "priceCurrency": "USD",
+              "billingDuration": "P1Y"
+            }
+          }
+        ]
+      },
+      {
+        "@type": "Product",
+        "@id": "https://profinancecast.com/billing#founders",
+        "name": "ProFinanceCast Founders Lifetime",
+        "description": "One-time licence. All Pro features, forever. No renewal. Direct line to the methodology desk. Roadmap voting. 500 seats total.",
+        "brand": { "@type": "Brand", "name": "ProFinanceCast" },
+        "offers": {
+          "@type": "Offer",
+          "price": "149",
+          "priceCurrency": "USD",
+          "url": "https://profinancecast.com/auth.html",
+          "availability": "https://schema.org/LimitedAvailability",
+          "inventoryLevel": { "@type": "QuantitativeValue", "value": 188 }
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body data-theme="ivory">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div data-include="header"></div>
+
+  <main id="main">
+
+    <!-- 1. PAGE HEADER -->
+    <section class="page-head" aria-labelledby="pricing-h1">
+      <div class="container">
+        <div class="page-head__body" data-reveal>
+          <p class="page-head__eyebrow">Pricing</p>
+          <h1 id="pricing-h1" class="page-head__title">Three plans. One philosophy.</h1>
+          <hr class="page-head__sep" aria-hidden="true">
+          <p class="page-head__lede">Free is free forever. Pro pays once a month. Founders pays once.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. THREE-TIER PRICING GRID -->
+    <section class="pricing" aria-label="Plans">
+      <div class="container">
+        <div class="pricing-grid">
+
+          <!-- FREE -->
+          <article class="tier" aria-labelledby="tier-free-name" data-reveal>
+            <p id="tier-free-name" class="tier__name">Free</p>
+            <p class="tier__price">
+              <span class="tier__price-currency mono">$</span><span class="tier__price-amount mono">0</span>
+              <span class="tier__price-cadence">forever</span>
+            </p>
+            <p class="tier__price-alt">No card. No expiry. No upsell.</p>
+            <ul class="tier__list">
+              <li>Net worth forecast</li>
+              <li>Debt-free date</li>
+              <li>3 goals</li>
+              <li>10 Sage messages per month</li>
+              <li>Export everything (CSV, JSON, PDF)</li>
+            </ul>
+            <a href="/auth.html" class="btn btn--ghost btn--lg tier__cta">Open a free forecast</a>
+          </article>
+
+          <!-- PRO (featured) -->
+          <article class="tier tier--featured" aria-labelledby="tier-pro-name" data-reveal data-delay="1">
+            <span class="tier__chip" aria-label="Most chosen plan">Most chosen</span>
+            <p id="tier-pro-name" class="tier__name">Pro</p>
+            <p class="tier__price">
+              <span class="tier__price-currency mono">$</span><span class="tier__price-amount mono">9</span>
+              <span class="tier__price-cadence">/ month</span>
+            </p>
+            <p class="tier__price-alt">or <span class="mono">$69</span> a year, billed once. Saves <span class="mono">$39</span>.</p>
+            <ul class="tier__list">
+              <li>Everything in Free</li>
+              <li>Unlimited scenarios</li>
+              <li>Salary calculator</li>
+              <li>Recurring radar</li>
+              <li>200 Sage messages per month</li>
+              <li>Printable report card</li>
+              <li>Plain-text monthly digest</li>
+            </ul>
+            <a href="/auth.html" class="btn btn--primary btn--lg tier__cta">Start Pro</a>
+          </article>
+
+          <!-- FOUNDERS -->
+          <article class="tier" aria-labelledby="tier-founders-name" data-reveal data-delay="2">
+            <p id="tier-founders-name" class="tier__name">Founders Lifetime</p>
+            <p class="tier__price">
+              <span class="tier__price-currency mono">$</span><span class="tier__price-amount mono">149</span>
+              <span class="tier__price-cadence">once</span>
+            </p>
+            <p class="tier__subtext"><span class="mono">500</span> seats. <span class="mono">312</span> claimed.</p>
+            <ul class="tier__list">
+              <li>All Pro features, forever</li>
+              <li>No renewal, no subscription</li>
+              <li>Direct line to the methodology desk</li>
+              <li>Voting on roadmap items</li>
+              <li>Early access to scenario-stacking and the property module</li>
+            </ul>
+            <a href="/auth.html" class="btn btn--ghost btn--lg tier__cta">Claim a seat</a>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. COMPARISON TABLE -->
+    <section class="compare" aria-labelledby="compare-title">
+      <div class="container">
+        <header class="compare__head" data-reveal>
+          <p class="eyebrow">What is included</p>
+          <h2 id="compare-title" class="compare__title">A full comparison.</h2>
+        </header>
+
+        <div class="compare__wrap" data-reveal>
+          <table class="compare__table" aria-describedby="compare-title">
+            <thead>
+              <tr>
+                <th scope="col">Feature</th>
+                <th scope="col" class="tier-col">Free</th>
+                <th scope="col" class="tier-col tier-col--featured">Pro</th>
+                <th scope="col" class="tier-col">Founders</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Net worth forecast (120 months)</th>
+                <td class="tier-col"><span class="compare__mark" aria-label="Included">&middot;</span></td>
+                <td class="tier-col tier-col--featured"><span class="compare__mark" aria-label="Included">&middot;</span></td>
+                <td class="tier-col"><span class="compare__mark" aria-label="Included">&middot;</span></td>
+              </tr>
+              <tr>
+                <th scope="row">Debt optimiser (avalanche &amp; snowball)</th>
+                <td class="tier-col"><span class="compare__mark">&middot;</span></td>
+                <td class="tier-col tier-col--featured"><span class="compare__mark">&middot;</span></td>
+                <td class="tier-col"><span class="compare__mark">&middot;</span></td>
+              </tr>
+              <tr>
+                <th scope="row">Cash forecast (12 months)</th>
+                <td class="tier-col"><span class="compare__mark">&middot;</span></td>
+                <td class="tier-col tier-col--featured"><span class="compare__mark">&middot;</span></td>
+                <td class="tier-col"><span class="compare__mark">&middot;</span></td>
+              </tr>
+              <tr>
+                <th scope="row">Goal tracking</th>
+                <td class="tier-col">3</td>
+                <td class="tier-col tier-col--featured">Unlimited</td>
+                <td class="tier-col">Unlimited</td>
+              </tr>
+              <tr>
+                <th scope="row">Recurring radar</th>
+                <td class="tier-col"><span class="compare__mark compare__mark--no" aria-label="Not included">&mdash;</span></td>
+                <td class="tier-col tier-col--featured"><span class="compare__mark">&middot;</span></td>
+                <td class="tier-col"><span class="compare__mark">&middot;</span></td>
+              </tr>
+              <tr>
+                <th scope="row">Scenarios</th>
+                <td class="tier-col"><span class="compare__mark compare__mark--no">&mdash;</span></td>
+                <td class="tier-col tier-col--featured">Unlimited</td>
+                <td class="tier-col">Unlimited</td>
+              </tr>
+              <tr>
+                <th scope="row">Salary calculator (US &amp; UK)</th>
+                <td class="tier-col"><span class="compare__mark compare__mark--no">&mdash;</span></td>
+                <td class="tier-col tier-col--featured"><span class="compare__mark">&middot;</span></td>
+                <td class="tier-col"><span class="compare__mark">&middot;</span></td>
+              </tr>
+              <tr>
+                <th scope="row">Sage AI (messages per month)</th>
+                <td class="tier-col">10</td>
+                <td class="tier-col tier-col--featured">200</td>
+                <td class="tier-col">200</td>
+              </tr>
+              <tr>
+                <th scope="row">Printable report card</th>
+                <td class="tier-col"><span class="compare__mark compare__mark--no">&mdash;</span></td>
+                <td class="tier-col tier-col--featured"><span class="compare__mark">&middot;</span></td>
+                <td class="tier-col"><span class="compare__mark">&middot;</span></td>
+              </tr>
+              <tr>
+                <th scope="row">Export (CSV, JSON, PDF)</th>
+                <td class="tier-col"><span class="compare__mark">&middot;</span></td>
+                <td class="tier-col tier-col--featured"><span class="compare__mark">&middot;</span></td>
+                <td class="tier-col"><span class="compare__mark">&middot;</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. FAQ -->
+    <section class="faq" aria-labelledby="faq-title">
+      <div class="container">
+        <header class="faq__head" data-reveal>
+          <p class="eyebrow">Questions</p>
+          <h2 id="faq-title" class="faq__title">Things people ask before signing up.</h2>
+        </header>
+
+        <div class="faq__grid">
+          <article class="faq__item panel--flat" data-reveal>
+            <h3 class="faq__q">Can I cancel anytime?</h3>
+            <p class="faq__a">Yes. Pro runs month-to-month or annually; cancellation is one click in your account and the subscription stops at the end of the current period. No phone call, no save offer, no retention flow. Your data remains accessible until the period ends, and exportable forever.</p>
+          </article>
+
+          <article class="faq__item panel--flat" data-reveal>
+            <h3 class="faq__q">What is the refund policy?</h3>
+            <p class="faq__a">Fourteen days, no questions. Email us and we return the charge in full. Applies to Pro monthly, Pro annual, and Founders. The number on the invoice is the number that goes back; we do not pro-rate or deduct a processing fee.</p>
+          </article>
+
+          <article class="faq__item panel--flat" data-reveal>
+            <h3 class="faq__q">What payment methods do you accept?</h3>
+            <p class="faq__a">Visa, Mastercard, American Express, and SEPA direct debit for European customers. Payments are processed by Stripe; we never see the card number. Receipts arrive by email immediately and the full invoice history is downloadable from your account.</p>
+          </article>
+
+          <article class="faq__item panel--flat" data-reveal>
+            <h3 class="faq__q">Is there a free trial?</h3>
+            <p class="faq__a">No trial, because there is a Free tier. Use the free forecast for as long as you like; upgrade when the Pro features become worth nine dollars a month. We would rather you take a year than be on a clock.</p>
+          </article>
+
+          <article class="faq__item panel--flat" data-reveal>
+            <h3 class="faq__q">Can I upgrade or change plans later?</h3>
+            <p class="faq__a">Yes. Move from Free to Pro at any time. Move from Pro monthly to Pro annual and we pro-rate the change. Move from Pro to Founders and we credit the unused portion of your subscription against the one-time price.</p>
+          </article>
+
+          <article class="faq__item panel--flat" data-reveal>
+            <h3 class="faq__q">What happens to my data if I cancel?</h3>
+            <p class="faq__a">Your forecast lives in your browser; we do not hold a server-side copy. Export to CSV or JSON before you go and you keep everything. Re-importing later is a single click and your account is reactivated where you left it.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. CLOSING STATEMENT -->
+    <section class="closing" aria-label="Closing statement">
+      <div class="container">
+        <div class="closing__inner" data-reveal>
+          <p class="closing__quote">Pricing is published in full. We do not run paid ads, so the price reflects the cost, not the marketing budget.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <div data-include="footer"></div>
+
+  <script src="/static/js/partials.js"></script>
+  <script src="/static/js/reveal.js"></script>
+</body>
+</html>

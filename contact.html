@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Contact &mdash; ProFinanceCast</title>
+  <meta name="description" content="Write to ProFinanceCast. A short form for questions, methodology notes, and press enquiries. Response time is 3 to 5 business days during the demo period.">
+  <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/tokens.css">
+  <link rel="stylesheet" href="/static/css/theme-ivory.css">
+  <link rel="stylesheet" href="/static/css/theme-emerald.css">
+  <link rel="stylesheet" href="/static/css/base.css">
+  <link rel="stylesheet" href="/static/css/components.css">
+  <link rel="stylesheet" href="/static/css/nav.css">
+  <link rel="stylesheet" href="/static/css/footer.css">
+  <link rel="stylesheet" href="/static/css/placeholder.css">
+</head>
+<body data-theme="ivory">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div data-include="header"></div>
+
+  <main id="main">
+
+    <!-- 1 · PAGE HEAD ─────────────────────────────────────────────────── -->
+    <section class="placeholder-head" aria-labelledby="contact-h1" data-reveal>
+      <div class="container container--narrow">
+        <p class="eyebrow">Contact</p>
+        <h1 id="contact-h1" class="placeholder-head__title">Contact ProFinanceCast.</h1>
+        <p class="placeholder-head__lede">A short form, read by a person. Methodology questions, press, refunds &mdash; all welcome.</p>
+        <hr class="placeholder-head__rule" aria-hidden="true">
+      </div>
+    </section>
+
+    <!-- 2 · BODY · FORM ───────────────────────────────────────────────── -->
+    <section class="placeholder-body" aria-labelledby="contact-form-h2" data-reveal>
+      <div class="container container--narrow">
+        <p class="eyebrow">Write to us</p>
+        <h2 id="contact-form-h2">A short message reaches a person.</h2>
+        <p>The form below is a placeholder during the demo period; submission is not wired up. The shape is the shape we plan to ship: four fields, no surveys, no marketing flags.</p>
+
+        <form class="placeholder-form" aria-labelledby="contact-form-h2" onsubmit="event.preventDefault();" novalidate>
+          <div class="field">
+            <label class="field__label" for="contact-name">Name</label>
+            <input
+              id="contact-name"
+              class="field__control"
+              type="text"
+              autocomplete="name"
+              placeholder="Your name">
+          </div>
+          <div class="field">
+            <label class="field__label" for="contact-email">Email</label>
+            <input
+              id="contact-email"
+              class="field__control"
+              type="email"
+              autocomplete="email"
+              placeholder="you@example.com">
+          </div>
+          <div class="field field--full">
+            <label class="field__label" for="contact-subject">Subject</label>
+            <input
+              id="contact-subject"
+              class="field__control"
+              type="text"
+              placeholder="A short line about what this is about">
+          </div>
+          <div class="field field--full">
+            <label class="field__label" for="contact-message">Message</label>
+            <textarea
+              id="contact-message"
+              class="field__control"
+              rows="6"
+              placeholder="Write in plain prose. We read every line."></textarea>
+            <p class="field__hint">Please don&rsquo;t paste account passwords, card numbers, or other secrets &mdash; we don&rsquo;t need them.</p>
+          </div>
+          <div class="field__actions">
+            <button class="btn btn--primary" type="submit" aria-disabled="true">Send message</button>
+            <p class="placeholder-form__note">Demo form &mdash; the button is for shape, not submission.</p>
+          </div>
+        </form>
+
+        <p>During the demo period response time is roughly 3 to 5 business days. Once the product ships publicly, the inbox is staffed within one working day and a postal address is available on request.</p>
+        <p>For most questions, the <a href="/help.html">help centre</a> already has the answer.</p>
+      </div>
+    </section>
+
+    <!-- 3 · FOOT ──────────────────────────────────────────────────────── -->
+    <section class="placeholder-foot" aria-label="Related" data-reveal>
+      <div class="container container--narrow">
+        <p class="eyebrow">Read instead</p>
+        <div class="placeholder-foot__links">
+          <a href="/help.html" class="placeholder-foot__link">Help centre &rarr;</a>
+          <a href="/index.html" class="placeholder-foot__link">Back to home &rarr;</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <div data-include="footer"></div>
+
+  <script src="/static/js/partials.js"></script>
+  <script src="/static/js/reveal.js"></script>
+</body>
+</html>

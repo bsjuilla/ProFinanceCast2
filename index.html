@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ProFinanceCast &mdash; A boutique forecasting house</title>
+  <meta name="description" content="Plan the next ten years without a bank password. Type four numbers, see the decade ahead. Your data stays in your browser.">
+  <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/tokens.css">
+  <link rel="stylesheet" href="/static/css/theme-ivory.css">
+  <link rel="stylesheet" href="/static/css/theme-emerald.css">
+  <link rel="stylesheet" href="/static/css/base.css">
+  <link rel="stylesheet" href="/static/css/components.css">
+  <link rel="stylesheet" href="/static/css/nav.css">
+  <link rel="stylesheet" href="/static/css/footer.css">
+  <link rel="stylesheet" href="/static/css/charts.css">
+  <link rel="stylesheet" href="/static/css/home.css">
+</head>
+<body data-theme="ivory">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div data-include="header" data-partial="header"></div>
+
+  <main id="main">
+
+    <!-- ------------------------------------------------------------ -->
+    <!-- 1 .. HERO                                                   -->
+    <!-- ------------------------------------------------------------ -->
+    <section class="hero" aria-labelledby="hero-h1">
+      <div class="container hero__inner">
+
+        <div class="hero__copy">
+          <p class="eyebrow hero__eyebrow">A forecasting tool for your personal finances</p>
+
+          <h1 id="hero-h1" class="hero__h1">
+            Plan the next ten years<span class="hero__h1-break"> </span><em>without a bank password.</em>
+          </h1>
+
+          <hr class="rule rule--gold rule--short hero__rule" aria-hidden="true">
+
+          <p class="hero__lede">
+            Type four numbers. See the next decade. Your data stays in your browser.
+          </p>
+
+          <div class="hero__ctas">
+            <a class="btn btn--primary btn--lg" href="/auth.html" data-href="auth.html">Open a forecast</a>
+            <a class="btn--quiet" href="/tools/" data-href="tools/index.html">
+              or try the tools without an account
+              <span aria-hidden="true" class="hero__arrow">&rarr;</span>
+            </a>
+          </div>
+        </div>
+
+        <figure class="hero__chart">
+          <figcaption class="hero__chart-head">
+            <span class="eyebrow">Forecast &mdash; ten years</span>
+            <span class="hero__chart-fig figure">$87,420 &nbsp;&rarr;&nbsp; $412,000</span>
+          </figcaption>
+
+          <div class="chart chart--flat hero__chart-mount"
+               data-chart="line"
+               data-chart-opts='{"source":"netWorthSeries"}'
+               data-reveal></div>
+
+          <div class="hero__chart-foot">
+            <span>Today</span>
+            <span>Year 5</span>
+            <span>Year 10</span>
+          </div>
+        </figure>
+
+      </div>
+    </section>
+
+    <!-- ------------------------------------------------------------ -->
+    <!-- 2 .. TRUST STRIP                                            -->
+    <!-- ------------------------------------------------------------ -->
+    <section class="trust" aria-label="Trust principles">
+      <div class="container container--wide">
+        <ul class="trust__row">
+          <li class="trust__cell">
+            <span class="trust__mark" aria-hidden="true"></span>
+            <span>No bank login required</span>
+          </li>
+          <li class="trust__cell">
+            <span class="trust__mark" aria-hidden="true"></span>
+            <span>Numbers never leave your browser</span>
+          </li>
+          <li class="trust__cell">
+            <span class="trust__mark" aria-hidden="true"></span>
+            <span>Methodology published in full</span>
+          </li>
+          <li class="trust__cell">
+            <span class="trust__mark" aria-hidden="true"></span>
+            <span>Export everything, anytime</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ------------------------------------------------------------ -->
+    <!-- 3 .. HOW IT WORKS                                           -->
+    <!-- ------------------------------------------------------------ -->
+    <section class="section how" aria-labelledby="how-title">
+      <div class="container container--wide">
+
+        <header class="section-head">
+          <p class="eyebrow">How it works</p>
+          <h2 id="how-title" class="display display--md">
+            <em>Three numbers, one decade, no spreadsheet.</em>
+          </h2>
+          <hr class="rule rule--short rule--gold" aria-hidden="true">
+        </header>
+
+        <ol class="steps">
+          <li class="step" data-reveal>
+            <span class="step__num figure">01</span>
+            <h3 class="step__title"><em>Open a forecast.</em></h3>
+            <p class="step__body">Sign in, then enter today&rsquo;s net worth, monthly income, monthly expenses, and a savings rate. That&rsquo;s the brief.</p>
+          </li>
+          <li class="step" data-reveal data-delay="1">
+            <span class="step__num figure">02</span>
+            <h3 class="step__title"><em>Read your decade.</em></h3>
+            <p class="step__body">A ten-year curve renders in your browser. Adjust any input, the curve responds. Nothing is uploaded.</p>
+          </li>
+          <li class="step" data-reveal data-delay="2">
+            <span class="step__num figure">03</span>
+            <h3 class="step__title"><em>Ask &ldquo;what if.&rdquo;</em></h3>
+            <p class="step__body">Layer in a raise, a move, a goal, a debt payoff schedule. Compare scenarios side by side. Export when you want a record.</p>
+          </li>
+        </ol>
+
+      </div>
+    </section>
+
+    <!-- ------------------------------------------------------------ -->
+    <!-- 4 .. FEATURE CONSTELLATION                                  -->
+    <!-- ------------------------------------------------------------ -->
+    <section class="section section--quiet features" aria-labelledby="features-title">
+      <div class="container container--wide">
+
+        <header class="section-head">
+          <p class="eyebrow">The full instrument</p>
+          <h2 id="features-title" class="display display--md">
+            <em>Six tools, one quiet workbench.</em>
+          </h2>
+          <hr class="rule rule--short rule--gold" aria-hidden="true">
+        </header>
+
+        <div class="features__grid">
+
+          <a class="feature" href="/net-worth.html" data-href="net-worth.html" data-reveal>
+            <h3 class="feature__title"><em>Net worth.</em></h3>
+            <p class="feature__body">A line for every account. Liquid, retirement, real assets, debts. One running figure, ten years long.</p>
+            <span class="feature__cta">Open net worth <span aria-hidden="true">&rarr;</span></span>
+          </a>
+
+          <a class="feature" href="/debt-optimizer.html" data-href="debt-optimizer.html" data-reveal data-delay="1">
+            <h3 class="feature__title"><em>Debt optimizer.</em></h3>
+            <p class="feature__body">Avalanche or snowball, to the month. See exactly when each balance hits zero and how much interest you saved.</p>
+            <span class="feature__cta">Run the optimizer <span aria-hidden="true">&rarr;</span></span>
+          </a>
+
+          <a class="feature" href="/cash-forecast.html" data-href="cash-forecast.html" data-reveal data-delay="2">
+            <h3 class="feature__title"><em>Cash forecast.</em></h3>
+            <p class="feature__body">Twelve months of income and expenses with seasonality. Catch the lean months before they catch you.</p>
+            <span class="feature__cta">See cash months <span aria-hidden="true">&rarr;</span></span>
+          </a>
+
+          <a class="feature" href="/goals.html" data-href="goals.html" data-reveal>
+            <h3 class="feature__title"><em>Goals.</em></h3>
+            <p class="feature__body">A house deposit. A sabbatical. A child&rsquo;s tuition. Pin a number to a month and watch the path resolve.</p>
+            <span class="feature__cta">Set a goal <span aria-hidden="true">&rarr;</span></span>
+          </a>
+
+          <a class="feature" href="/recurring.html" data-href="recurring.html" data-reveal data-delay="1">
+            <h3 class="feature__title"><em>Recurring.</em></h3>
+            <p class="feature__body">Every subscription, every standing order, in one ledger. Cancel one and the decade-line shifts.</p>
+            <span class="feature__cta">Audit recurring <span aria-hidden="true">&rarr;</span></span>
+          </a>
+
+          <a class="feature feature--pro" href="/sage.html" data-href="sage.html" data-reveal data-delay="2">
+            <div class="feature__head">
+              <h3 class="feature__title"><em>Sage.</em></h3>
+              <span class="badge badge--pro">Pro</span>
+            </div>
+            <p class="feature__body">A second opinion that reads only your own numbers. Ask in plain English; receive in plain prose.</p>
+            <span class="feature__cta">Meet Sage <span aria-hidden="true">&rarr;</span></span>
+          </a>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ------------------------------------------------------------ -->
+    <!-- 5 .. TRY A TOOL WITHOUT AN ACCOUNT                          -->
+    <!-- ------------------------------------------------------------ -->
+    <section class="section tools-strip" aria-labelledby="tools-title">
+      <div class="container container--wide">
+
+        <header class="section-head">
+          <p class="eyebrow">Open the door</p>
+          <h2 id="tools-title" class="display display--md">
+            <em>Try a tool without an account.</em>
+          </h2>
+          <hr class="rule rule--short rule--gold" aria-hidden="true">
+        </header>
+
+        <div class="tools__grid">
+
+          <a class="tool-card" href="/tools/debt-strategy.html" data-href="tools/debt-strategy.html" data-reveal>
+            <p class="eyebrow">Debt strategy</p>
+            <h3 class="tool-card__title"><em>Avalanche or snowball?</em></h3>
+            <p class="tool-card__lede">Two debts, two interest rates, one extra payment. We score the months and the interest saved.</p>
+            <p class="tool-card__preview figure">
+              Avalanche pays in month <strong>14</strong>, saves <strong>$487</strong> vs snowball.
+            </p>
+            <span class="tool-card__cta">Open debt strategy <span aria-hidden="true">&rarr;</span></span>
+          </a>
+
+          <a class="tool-card" href="/tools/take-home-pay.html" data-href="tools/take-home-pay.html" data-reveal data-delay="1">
+            <p class="eyebrow">Take-home pay</p>
+            <h3 class="tool-card__title"><em>What lands in the account?</em></h3>
+            <p class="tool-card__lede">Gross to net, state by state. Filing status, allowances, deductions. The figure you actually live on.</p>
+            <p class="tool-card__preview figure">
+              $95,000 in California &rarr; <strong>$5,847</strong>/mo net.
+            </p>
+            <span class="tool-card__cta">Open take-home pay <span aria-hidden="true">&rarr;</span></span>
+          </a>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ------------------------------------------------------------ -->
+    <!-- 6 .. PRICING TEASER                                         -->
+    <!-- ------------------------------------------------------------ -->
+    <section class="section pricing" aria-labelledby="pricing-title">
+      <div class="container container--wide">
+
+        <header class="section-head">
+          <p class="eyebrow">Pricing</p>
+          <h2 id="pricing-title" class="display display--md">
+            <em>One reasonable price. One Pro tier. One door open for life.</em>
+          </h2>
+          <hr class="rule rule--short rule--gold" aria-hidden="true">
+        </header>
+
+        <div class="pricing__grid">
+
+          <article class="tier" data-reveal>
+            <header class="tier__head">
+              <h3 class="tier__name"><em>Free</em></h3>
+              <p class="tier__price figure">$0<span class="tier__per"> / forever</span></p>
+              <p class="tier__sub">Everything a single household needs to start forecasting.</p>
+            </header>
+            <ul class="tier__list">
+              <li>10-year net-worth forecast</li>
+              <li>Debt optimizer (two strategies)</li>
+              <li>Cash forecast, 12 months</li>
+              <li>One household, browser-local</li>
+            </ul>
+          </article>
+
+          <article class="tier tier--featured" data-reveal data-delay="1">
+            <header class="tier__head">
+              <span class="badge badge--gold tier__flag">Most chosen</span>
+              <h3 class="tier__name"><em>Pro</em></h3>
+              <p class="tier__price figure">$9<span class="tier__per"> / month</span></p>
+              <p class="tier__sub">For the household that runs scenarios on a Sunday.</p>
+            </header>
+            <ul class="tier__list">
+              <li>Unlimited scenarios, side by side</li>
+              <li>Sage &mdash; written second opinions</li>
+              <li>Multi-household and joint forecasts</li>
+              <li>Quarterly export bundle (CSV, PDF)</li>
+            </ul>
+          </article>
+
+          <article class="tier" data-reveal data-delay="2">
+            <header class="tier__head">
+              <h3 class="tier__name"><em>Founders</em></h3>
+              <p class="tier__price figure">$149<span class="tier__per"> / lifetime</span></p>
+              <p class="tier__sub">One payment. Every feature. Every future tier we ship.</p>
+            </header>
+            <ul class="tier__list">
+              <li>Pro, in perpetuity</li>
+              <li>Locked-in early adopter price</li>
+              <li>Direct line to the methodology team</li>
+              <li>Limited to the first quarter cohort</li>
+            </ul>
+          </article>
+
+        </div>
+
+        <p class="pricing__foot">
+          <a class="btn--link" href="/billing.html" data-href="billing.html">See full pricing <span aria-hidden="true">&rarr;</span></a>
+        </p>
+
+      </div>
+    </section>
+
+    <!-- ------------------------------------------------------------ -->
+    <!-- 7 .. METHODOLOGY / INSTITUTIONAL NOTE                       -->
+    <!-- ------------------------------------------------------------ -->
+    <section class="section methodology" aria-labelledby="methodology-title">
+      <div class="container container--narrow">
+
+        <p class="eyebrow methodology__eyebrow">A note on methodology</p>
+        <h2 id="methodology-title" class="sr-only">Methodology</h2>
+
+        <blockquote class="methodology__quote">
+          <p>We hold a single position about money software: the tool that asks for your bank password is the tool you will eventually regret installing. Forecasting is arithmetic, not surveillance. Four honest inputs and a curve drawn in front of you tell a clearer story than a thousand reconciled transactions told by someone you cannot meet.</p>
+          <p>The figures shown on this site are computed by a small, documented set of equations. We publish them. You can read them. If a number on your screen ever surprises you, the math is there to inspect.</p>
+        </blockquote>
+
+        <p class="methodology__byline">A boutique forecasting house. Based in Europe. Independent.</p>
+
+        <p class="methodology__cta">
+          <a class="btn--link" href="/about.html#methodology" data-href="about.html#methodology">Read the methodology in full <span aria-hidden="true">&rarr;</span></a>
+        </p>
+
+      </div>
+    </section>
+
+    <!-- ------------------------------------------------------------ -->
+    <!-- 8 .. NEWSLETTER                                             -->
+    <!-- ------------------------------------------------------------ -->
+    <section class="section newsletter" id="newsletter" aria-labelledby="newsletter-title">
+      <div class="container container--narrow newsletter__inner">
+
+        <p class="eyebrow">The Forecast Digest</p>
+        <h2 id="newsletter-title" class="display display--md newsletter__title">
+          <em>One short letter, Monday morning.</em>
+        </h2>
+        <hr class="rule rule--short rule--gold" aria-hidden="true">
+
+        <form class="newsletter__form" action="#" method="post" novalidate>
+          <label class="sr-only" for="newsletter-email">Email address</label>
+          <input class="field__control newsletter__input"
+                 id="newsletter-email"
+                 type="email"
+                 name="email"
+                 placeholder="you@somewhere.tld"
+                 autocomplete="email"
+                 required>
+          <button class="btn btn--primary newsletter__submit" type="submit">Subscribe</button>
+        </form>
+
+        <p class="newsletter__fine">Plain text. No tracking pixels. Unsubscribe in one click.</p>
+
+      </div>
+    </section>
+
+  </main>
+
+  <div data-include="footer" data-partial="footer"></div>
+
+  <script src="/static/js/partials.js"></script>
+  <script src="/static/js/demo-data.js"></script>
+  <script src="/static/js/charts.js"></script>
+  <script src="/static/js/reveal.js"></script>
+</body>
+</html>
