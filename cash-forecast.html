@@ -1,288 +1,760 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Cash forecast &mdash; ProFinanceCast</title>
-  <meta name="description" content="Twelve months of income, expenses, and surplus. A monthly cadence of cash and where it ends up.">
-  <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cash forecast — ProFinanceCast</title>
+  <meta name="description" content="Your money, month by month. 24-month cash flow timeline with planned events and recurring items." />
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/css/tokens.css">
-  <link rel="stylesheet" href="/static/css/theme-ivory.css">
-  <link rel="stylesheet" href="/static/css/theme-emerald.css">
-  <link rel="stylesheet" href="/static/css/base.css">
-  <link rel="stylesheet" href="/static/css/components.css">
-  <link rel="stylesheet" href="/static/css/nav.css">
-  <link rel="stylesheet" href="/static/css/footer.css">
-  <link rel="stylesheet" href="/static/css/charts.css">
-  <link rel="stylesheet" href="/static/css/app.css">
-</head>
-<body data-theme="emerald">
-  <a class="skip-link" href="#main">Skip to cash forecast</a>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
 
-  <div data-include="header"></div>
-  <div data-include="banner"></div>
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/layout.css">
+
+  <style>
+    /* ===========================================================
+     * Cash forecast — page-local styles. BEM, no !important.
+     * =========================================================== */
+
+    .topbar { height: auto; min-height: var(--topbar-h); padding-block: 14px; }
+    .greet { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .greet__eyebrow {
+      font-family: var(--font-mono); font-size: var(--fs-tiny);
+      text-transform: uppercase; letter-spacing: var(--tracking-eyebrow);
+      color: var(--ink-400);
+    }
+    .greet__title {
+      font-family: var(--font-display);
+      font-size: clamp(1.15rem, 0.4vw + 1rem, 1.4rem);
+      font-weight: 500; color: var(--ink-100);
+      letter-spacing: -0.015em; line-height: 1.1;
+    }
+    .greet__title em { font-style: italic; color: var(--mint-400); font-weight: 400; }
+
+    /* ---------- Hero KPI row (3-col) ---------- */
+    .kpi-row { display: grid; gap: var(--space-5); grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    @media (max-width: 960px) { .kpi-row { grid-template-columns: 1fr; } }
+
+    .kpi-card {
+      position: relative; padding: var(--space-6);
+      background: oklch(24% 0.022 265 / 0.55);
+      backdrop-filter: blur(16px) saturate(140%);
+      -webkit-backdrop-filter: blur(16px) saturate(140%);
+      border: 1px solid oklch(100% 0 0 / 0.07);
+      border-radius: var(--r-lg);
+      box-shadow:
+        0 1px 0 0 oklch(100% 0 0 / 0.05) inset,
+        0 16px 40px -20px oklch(0% 0 0 / 0.55);
+      transition: transform var(--dur-base) var(--ease-standard),
+                  border-color var(--dur-base) var(--ease-standard);
+      overflow: hidden;
+    }
+    .kpi-card:hover { transform: translateY(-2px); border-color: oklch(78% 0.175 168 / 0.35); }
+    .kpi-card__eyebrow {
+      font-family: var(--font-mono); font-size: var(--fs-tiny);
+      text-transform: uppercase; letter-spacing: var(--tracking-eyebrow);
+      color: var(--ink-400); display: block; margin-bottom: var(--space-3);
+    }
+    .kpi-card__value {
+      font-family: var(--font-mono);
+      font-size: clamp(2rem, 1.4vw + 1.5rem, 3rem);
+      font-weight: 500; line-height: 1.05;
+      letter-spacing: -0.015em; color: var(--ink-100);
+      font-variant-numeric: tabular-nums; margin-bottom: var(--space-3);
+    }
+    .kpi-card__foot {
+      display: flex; align-items: center; justify-content: space-between; gap: var(--space-2);
+      font-family: var(--font-mono); font-size: var(--fs-tiny); color: var(--ink-400);
+    }
+    .kpi-card__foot em { color: var(--mint-400); font-style: normal; }
+
+    /* ---------- Big timeline chart ---------- */
+    .timeline-card { padding: var(--space-8); }
+    .timeline-card__head {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      gap: var(--space-4); margin-bottom: var(--space-6); flex-wrap: wrap;
+    }
+    .timeline-card__title-block { display: flex; flex-direction: column; gap: 6px; }
+    .timeline-card__eyebrow {
+      font-family: var(--font-mono); font-size: var(--fs-tiny);
+      text-transform: uppercase; letter-spacing: var(--tracking-eyebrow);
+      color: var(--mint-400);
+    }
+    .timeline-card__title {
+      font-family: var(--font-display);
+      font-size: var(--fs-display-sm); font-weight: 400;
+      color: var(--ink-100); letter-spacing: -0.025em; line-height: 1.05;
+    }
+    .timeline-card__title em { font-style: italic; color: var(--ink-200); font-weight: 300; }
+    .timeline-card__legend {
+      display: flex; gap: var(--space-5); align-items: center;
+      font-family: var(--font-mono); font-size: var(--fs-tiny);
+      color: var(--ink-400); text-transform: uppercase; letter-spacing: var(--tracking-eyebrow);
+    }
+    .timeline-card__legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .timeline-card__sw { width: 9px; height: 9px; border-radius: 2px; }
+
+    .timeline {
+      position: relative;
+      height: 400px;
+      width: 100%;
+      overflow: hidden;
+    }
+    .timeline__svg { display: block; width: 100%; height: 100%; overflow: visible; }
+    .timeline__tooltip {
+      position: absolute;
+      background: var(--ink-700);
+      border: 1px solid var(--ink-500);
+      border-radius: var(--r-sm);
+      padding: var(--space-3) var(--space-4);
+      font-family: var(--font-mono);
+      font-size: var(--fs-tiny);
+      color: var(--ink-100);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 120ms var(--ease-standard);
+      min-width: 140px;
+      box-shadow: 0 12px 28px -10px oklch(0% 0 0 / 0.6);
+      z-index: 10;
+    }
+    .timeline__tooltip-mo {
+      color: var(--ink-400); text-transform: uppercase; letter-spacing: 0.12em;
+      font-size: 10px; margin-bottom: 6px;
+    }
+    .timeline__tooltip-row { display: flex; justify-content: space-between; gap: var(--space-4); margin-top: 2px; }
+    .timeline__tooltip-row span:first-child { color: var(--ink-300); }
+    .timeline__tooltip-net { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--ink-500); color: var(--mint-300); }
+
+    /* ---------- Two-col: Events + Buffer ---------- */
+    .two-col {
+      display: grid; grid-template-columns: 1.4fr 1fr;
+      gap: var(--space-5);
+    }
+    @media (max-width: 1100px) { .two-col { grid-template-columns: 1fr; } }
+
+    .events-card, .buffer-card { padding: var(--space-8); }
+    .events-card__head, .buffer-card__head {
+      display: flex; align-items: baseline; justify-content: space-between;
+      margin-bottom: var(--space-6); gap: var(--space-4);
+    }
+    .events-card__title, .buffer-card__title {
+      font-family: var(--font-display);
+      font-size: var(--fs-h2); font-weight: 400; color: var(--ink-100);
+      letter-spacing: -0.02em;
+    }
+    .events-card__title em, .buffer-card__title em { font-style: italic; color: var(--mint-400); font-weight: 400; }
+
+    .event-row {
+      display: grid;
+      grid-template-columns: 60px 1fr auto;
+      align-items: center;
+      gap: var(--space-4);
+      padding: var(--space-3) 0;
+      border-top: 1px solid oklch(100% 0 0 / 0.05);
+    }
+    .event-row:first-child { border-top: 0; padding-top: 0; }
+    .event-row__when {
+      font-family: var(--font-mono); font-size: var(--fs-tiny);
+      color: var(--mint-400); text-transform: uppercase; letter-spacing: 0.12em;
+      line-height: 1.2;
+    }
+    .event-row__when-day { display: block; color: var(--ink-100); font-size: 1rem; letter-spacing: -0.01em; }
+    .event-row__main { min-width: 0; }
+    .event-row__label { font-size: var(--fs-small); color: var(--ink-100); font-weight: 500; }
+    .event-row__cat { font-size: var(--fs-tiny); color: var(--ink-400); margin-top: 2px; }
+    .event-row__amt {
+      font-family: var(--font-mono); font-size: var(--fs-small);
+      font-variant-numeric: tabular-nums; font-weight: 500;
+    }
+    .event-row__amt--pos { color: var(--mint-300); }
+    .event-row__amt--neg { color: var(--ink-200); }
+
+    .buffer-card__balance {
+      font-family: var(--font-mono);
+      font-size: clamp(2.5rem, 2.5vw + 1.5rem, 3.75rem);
+      font-weight: 500; line-height: 1.0;
+      letter-spacing: -0.02em; color: var(--ink-100);
+      font-variant-numeric: tabular-nums;
+      margin-bottom: var(--space-2);
+    }
+    .buffer-card__sub {
+      font-size: var(--fs-small); color: var(--ink-400);
+      margin-bottom: var(--space-6);
+    }
+    .buffer-card__chart { height: 120px; margin-bottom: var(--space-6); }
+    .buffer-card__chip {
+      display: inline-flex; align-items: center; gap: var(--space-2);
+      padding: 6px 12px; border-radius: var(--r-full);
+      background: oklch(78% 0.175 168 / 0.10);
+      border: 1px solid oklch(78% 0.175 168 / 0.30);
+      color: var(--mint-300); font-size: var(--fs-tiny);
+      font-family: var(--font-mono);
+    }
+    .buffer-card__chip svg { width: 12px; height: 12px; }
+
+    /* ---------- Recurring tiles grid ---------- */
+    .recurring-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-5);
+    }
+    @media (max-width: 1100px) { .recurring-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 560px)  { .recurring-grid { grid-template-columns: 1fr; } }
+
+    .recur-tile {
+      padding: var(--space-5);
+      background: oklch(24% 0.022 265 / 0.45);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid oklch(100% 0 0 / 0.06);
+      border-radius: var(--r-md);
+      transition: border-color var(--dur-fast) var(--ease-standard),
+                  background var(--dur-fast) var(--ease-standard);
+    }
+    .recur-tile:hover {
+      border-color: oklch(78% 0.175 168 / 0.30);
+      background: oklch(26% 0.024 265 / 0.55);
+    }
+    .recur-tile__head {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: var(--space-2); margin-bottom: var(--space-3);
+    }
+    .recur-tile__label { font-size: var(--fs-small); color: var(--ink-200); font-weight: 500; }
+    .recur-tile__cycle {
+      font-family: var(--font-mono); font-size: 10px;
+      text-transform: uppercase; letter-spacing: 0.12em;
+      color: var(--ink-400);
+    }
+    .recur-tile__amt {
+      font-family: var(--font-mono);
+      font-size: var(--fs-mono-md); font-weight: 500;
+      font-variant-numeric: tabular-nums; color: var(--ink-100);
+      margin-bottom: var(--space-3);
+    }
+    .recur-tile__amt--income { color: var(--mint-300); }
+    .recur-tile__spark { height: 32px; }
+
+    .sec-header { margin-bottom: var(--space-6); display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-4); }
+    .sec-title {
+      font-family: var(--font-display);
+      font-size: var(--fs-h2); font-weight: 400; color: var(--ink-100);
+      letter-spacing: -0.02em; line-height: 1.1;
+    }
+    .sec-title em { font-style: italic; color: var(--ink-300); font-weight: 300; }
+    .sec-sub { font-size: var(--fs-small); color: var(--ink-400); margin-top: 4px; }
+
+    .foot-strip {
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+      gap: var(--space-4); padding: var(--space-5) var(--space-2);
+      margin-top: var(--space-12);
+      border-top: 1px solid oklch(100% 0 0 / 0.05);
+      font-family: var(--font-mono); font-size: var(--fs-tiny); color: var(--ink-400);
+    }
+    .foot-strip__dot {
+      width: 5px; height: 5px; border-radius: var(--r-full);
+      background: var(--mint-500); box-shadow: 0 0 8px var(--mint-glow);
+      display: inline-block; margin-right: 8px;
+    }
+
+    [data-reveal-stagger] > * {
+      opacity: 0; transform: translateY(14px);
+      transition: opacity var(--dur-slow) var(--ease-standard),
+                  transform var(--dur-slow) var(--ease-standard);
+      transition-delay: calc(var(--i, 0) * 80ms);
+    }
+    [data-reveal-stagger].is-revealed > * { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) {
+      [data-reveal-stagger] > * { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body data-page="cash-forecast">
+
+  <!-- Aurora background -->
+  <div class="aurora-bg" aria-hidden="true">
+    <div class="aurora-bg__blob aurora-bg__blob--1"></div>
+    <div class="aurora-bg__blob aurora-bg__blob--2"></div>
+    <div class="aurora-bg__blob aurora-bg__blob--3"></div>
+    <div class="aurora-bg__blob aurora-bg__blob--4"></div>
+    <div class="aurora-bg__grain"></div>
+    <div class="aurora-bg__vignette"></div>
+  </div>
 
   <div class="app-shell">
-    <div data-include="sidebar"></div>
+    <div data-include="/partials/sidebar.html"></div>
 
-    <main class="app-main" id="main">
+    <main class="main">
+      <div data-include="/partials/topbar.html"></div>
 
-      <!-- 1 · PAGE HEAD -->
-      <header class="page-head" data-reveal>
-        <div class="page-head__body">
-          <p class="eyebrow page-head__eyebrow">
-            <span>Cash forecast</span>
-            <span class="page-head__sep" aria-hidden="true">&middot;</span>
-            <span class="mono">11 May 2026</span>
-          </p>
-          <h1 class="display display--md page-head__title">Income, expenses, surplus.</h1>
-          <p class="page-head__lede">12 months ahead.</p>
-        </div>
-        <div class="page-head__actions">
-          <a href="/recurring.html" class="btn btn--ghost btn--sm">Edit recurring</a>
-        </div>
-      </header>
+      <div class="main__content">
 
-      <!-- 2 · KPI STRIP -->
-      <section class="kpi-strip" aria-label="Cash flow headline figures" data-reveal>
+        <!-- ============================================================
+             SECTION 1 — Hero KPI row
+             ============================================================ -->
+        <section class="section" aria-labelledby="kpi-heading" style="margin-bottom: var(--space-12);">
+          <h2 id="kpi-heading" class="sr-only">Cash flow indicators</h2>
+          <div class="kpi-row" data-reveal-stagger>
 
-        <div class="kpi-cell">
-          <p class="kpi-cell__label">Monthly income</p>
-          <p class="kpi-cell__value mono">$7,400</p>
-          <p class="kpi-cell__foot">
-            <span class="kpi-cell__foot-sub">Salary + freelance</span>
-          </p>
-        </div>
+            <article class="kpi-card" style="--i:0;">
+              <span class="kpi-card__eyebrow">Avg monthly net</span>
+              <div class="kpi-card__value mono" data-kpi-value data-value="3582" data-currency="USD" data-decimals="0">$0</div>
+              <div class="kpi-card__foot">
+                <span><em>+12%</em> vs last year</span>
+                <span>24-mo avg</span>
+              </div>
+            </article>
 
-        <div class="kpi-cell">
-          <p class="kpi-cell__label">Monthly expenses</p>
-          <p class="kpi-cell__value mono">$5,180</p>
-          <p class="kpi-cell__foot">
-            <span class="kpi-cell__foot-sub">8 recurring categories</span>
-          </p>
-        </div>
+            <article class="kpi-card" style="--i:1;">
+              <span class="kpi-card__eyebrow">Best month ahead</span>
+              <div class="kpi-card__value mono" data-kpi-value data-value="5840" data-currency="USD" data-decimals="0">$0</div>
+              <div class="kpi-card__foot">
+                <span><em>Dec 2026</em> — bonus + low spend</span>
+                <span>peak</span>
+              </div>
+            </article>
 
-        <div class="kpi-cell">
-          <p class="kpi-cell__label">Monthly surplus</p>
-          <p class="kpi-cell__value mono">$2,220</p>
-          <p class="kpi-cell__foot mono">
-            <span class="kpi-cell__delta kpi-cell__delta--up">30.0%</span>
-            <span class="kpi-cell__foot-sub">of income</span>
-          </p>
-        </div>
+            <article class="kpi-card" style="--i:2;">
+              <span class="kpi-card__eyebrow">Tightest month ahead</span>
+              <div class="kpi-card__value mono" data-kpi-value data-value="1280" data-currency="USD" data-decimals="0">$0</div>
+              <div class="kpi-card__foot">
+                <span><em>Aug 2026</em> — vacation outflow</span>
+                <span>still positive</span>
+              </div>
+            </article>
 
-        <div class="kpi-cell">
-          <p class="kpi-cell__label">12-month surplus</p>
-          <p class="kpi-cell__value mono">$26,640</p>
-          <p class="kpi-cell__foot">
-            <span class="kpi-cell__foot-sub">Through Apr 2027</span>
-          </p>
-        </div>
-
-      </section>
-
-      <!-- 3 · CASH FLOW BARS -->
-      <section class="panel" aria-labelledby="bars-h2" data-reveal>
-        <header class="panel__head">
-          <div>
-            <p class="eyebrow">May 2026 &rarr; Apr 2027 &middot; this month highlighted</p>
-            <h2 class="panel__title" id="bars-h2">Income and expenses, month by month</h2>
           </div>
-          <p class="panel__meta mono">12 months &middot; $7,400 vs $5,180 avg</p>
-        </header>
-        <div class="panel__canvas">
-          <div class="chart" data-chart="bars" data-chart-opts='{"source":"cashFlow12m","label":"Monthly income and expenses for the next twelve months"}'></div>
-        </div>
-        <footer class="panel__foot">
-          <div class="panel__stat">
-            <p class="panel__stat-label">This month</p>
-            <p class="panel__stat-value mono">+$2,160</p>
-          </div>
-          <div class="panel__stat">
-            <p class="panel__stat-label">Tightest month</p>
-            <p class="panel__stat-value mono">Dec &middot; +$1,900</p>
-          </div>
-          <div class="panel__stat">
-            <p class="panel__stat-label">Easiest month</p>
-            <p class="panel__stat-value mono">Aug &middot; +$2,340</p>
-          </div>
-        </footer>
-      </section>
+        </section>
 
-      <!-- 4 · TWO COLUMN BREAKDOWN -->
-      <section class="grid grid--2 row" aria-label="Income and expense breakdown">
+        <!-- ============================================================
+             SECTION 2 — Big timeline chart
+             ============================================================ -->
+        <section class="section" aria-labelledby="timeline-heading" style="margin-bottom: var(--space-12);">
+          <article class="card card--glass timeline-card" data-reveal>
+            <header class="timeline-card__head">
+              <div class="timeline-card__title-block">
+                <span class="timeline-card__eyebrow">24-month view</span>
+                <h2 id="timeline-heading" class="timeline-card__title">Income against <em>outflow</em></h2>
+              </div>
+              <div class="timeline-card__legend">
+                <span><span class="timeline-card__sw" style="background:var(--mint-500);"></span>Income</span>
+                <span><span class="timeline-card__sw" style="background:var(--coral-500);"></span>Expense</span>
+                <span><span class="timeline-card__sw" style="background:var(--amber-400);border-radius:50%;"></span>Event</span>
+              </div>
+            </header>
 
-        <article class="panel panel--flat" aria-labelledby="income-h2" data-reveal>
-          <header class="panel__head">
-            <div>
-              <p class="eyebrow">Where money comes from</p>
-              <h2 class="panel__title" id="income-h2">Income breakdown</h2>
+            <div class="timeline" data-timeline>
+              <svg class="timeline__svg" data-timeline-svg aria-label="24-month cash flow timeline"></svg>
+              <div class="timeline__tooltip" data-timeline-tooltip></div>
             </div>
-            <p class="panel__meta mono">2 sources</p>
-          </header>
+          </article>
+        </section>
 
-          <div class="panel__table">
-            <table class="table activity">
-              <thead>
-                <tr>
-                  <th scope="col">Source</th>
-                  <th scope="col">Cadence</th>
-                  <th scope="col" class="activity__col-amount">Monthly</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Salary</td>
-                  <td><span class="activity__chip">Bi-monthly</span></td>
-                  <td class="mono activity__amount activity__amount--pos">+$6,800</td>
-                </tr>
-                <tr>
-                  <td>Freelance</td>
-                  <td><span class="activity__chip">Variable</span></td>
-                  <td class="mono activity__amount activity__amount--pos">+$600</td>
-                </tr>
-                <tr>
-                  <td><strong>Total</strong></td>
-                  <td></td>
-                  <td class="mono activity__amount activity__amount--pos"><strong>+$7,400</strong></td>
-                </tr>
-              </tbody>
-            </table>
+        <!-- ============================================================
+             SECTION 3 — Events + Buffer
+             ============================================================ -->
+        <section class="section" aria-labelledby="events-heading" style="margin-bottom: var(--space-12);">
+          <div class="two-col">
+
+            <article class="card card--glass events-card" data-reveal>
+              <header class="events-card__head">
+                <h2 id="events-heading" class="events-card__title">Upcoming <em>events</em></h2>
+                <span class="chip chip--neutral">Next 90 days</span>
+              </header>
+              <div data-events></div>
+            </article>
+
+            <article class="card card--glass buffer-card" data-reveal>
+              <header class="buffer-card__head">
+                <h2 class="buffer-card__title">Cash <em>buffer</em></h2>
+              </header>
+              <div class="buffer-card__balance mono" data-kpi-value data-value="6240" data-currency="USD" data-decimals="0">$0</div>
+              <div class="buffer-card__sub">Operating account, this morning</div>
+              <div class="buffer-card__chart" data-buffer-chart></div>
+              <div class="buffer-card__chip">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>
+                Stays positive for 24 months
+              </div>
+            </article>
+
           </div>
-        </article>
+        </section>
 
-        <article class="panel panel--flat" aria-labelledby="expenses-h2" data-reveal>
-          <header class="panel__head">
+        <!-- ============================================================
+             SECTION 4 — Recurring items grid
+             ============================================================ -->
+        <section class="section" aria-labelledby="recur-heading" style="margin-bottom: var(--space-8);">
+          <header class="sec-header">
             <div>
-              <p class="eyebrow">Where money goes</p>
-              <h2 class="panel__title" id="expenses-h2">Expense breakdown</h2>
+              <h2 id="recur-heading" class="sec-title">Money on a <em>schedule</em></h2>
+              <p class="sec-sub">Eight recurring lines, accounting for 86% of monthly flow.</p>
             </div>
-            <p class="panel__meta mono">8 categories</p>
           </header>
+          <div class="recurring-grid" data-reveal-stagger data-recur-grid></div>
+        </section>
 
-          <div class="panel__table">
-            <table class="table activity">
-              <thead>
-                <tr>
-                  <th scope="col">Category</th>
-                  <th scope="col">Cadence</th>
-                  <th scope="col" class="activity__col-amount">Monthly</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Rent</td>
-                  <td><span class="activity__chip">Monthly</span></td>
-                  <td class="mono activity__amount">&minus;$1,850</td>
-                </tr>
-                <tr>
-                  <td>Groceries</td>
-                  <td><span class="activity__chip">Monthly</span></td>
-                  <td class="mono activity__amount">&minus;$640</td>
-                </tr>
-                <tr>
-                  <td>Health insurance</td>
-                  <td><span class="activity__chip">Monthly</span></td>
-                  <td class="mono activity__amount">&minus;$380</td>
-                </tr>
-                <tr>
-                  <td>Utilities</td>
-                  <td><span class="activity__chip">Monthly</span></td>
-                  <td class="mono activity__amount">&minus;$185</td>
-                </tr>
-                <tr>
-                  <td>Internet</td>
-                  <td><span class="activity__chip">Monthly</span></td>
-                  <td class="mono activity__amount">&minus;$72</td>
-                </tr>
-                <tr>
-                  <td>Streaming</td>
-                  <td><span class="activity__chip">Monthly</span></td>
-                  <td class="mono activity__amount">&minus;$54</td>
-                </tr>
-                <tr>
-                  <td>Phone</td>
-                  <td><span class="activity__chip">Monthly</span></td>
-                  <td class="mono activity__amount">&minus;$45</td>
-                </tr>
-                <tr>
-                  <td>Gym membership</td>
-                  <td><span class="activity__chip">Monthly</span></td>
-                  <td class="mono activity__amount">&minus;$38</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </article>
-
-      </section>
-
-      <!-- 5 · CUMULATIVE SURPLUS AREA -->
-      <section class="panel row" aria-labelledby="cumulative-h2" data-reveal>
-        <header class="panel__head">
-          <div>
-            <p class="eyebrow">Cumulative surplus &middot; 12 months</p>
-            <h2 class="panel__title" id="cumulative-h2">What stacks up by April 2027</h2>
-          </div>
-          <p class="panel__meta mono">$0 &rarr; $26,640</p>
-        </header>
-        <div class="panel__canvas">
-          <div class="chart" data-chart="area" data-chart-opts='{
-            "values":[2160, 4400, 6500, 8780, 10920, 13060, 15040, 17170, 19310, 21540, 23730, 26640],
-            "xLabels":["May","Jun","Jul","Aug","Sep","Oct","Nov","Dec","Jan","Feb","Mar","Apr"],
-            "label":"Cumulative monthly surplus over the next twelve months"
-          }'></div>
+        <!-- Footer strip -->
+        <div class="foot-strip">
+          <div><span class="foot-strip__dot" aria-hidden="true"></span>Forecast assumes current income, recurring items, and scheduled events. Re-runs whenever you add anything.</div>
+          <div>Last recompute · 2 min ago</div>
         </div>
-        <footer class="panel__foot">
-          <div class="panel__stat">
-            <p class="panel__stat-label">After 3 months</p>
-            <p class="panel__stat-value mono">$6,500</p>
-          </div>
-          <div class="panel__stat">
-            <p class="panel__stat-label">After 6 months</p>
-            <p class="panel__stat-value mono">$13,060</p>
-          </div>
-          <div class="panel__stat">
-            <p class="panel__stat-label">After 12 months</p>
-            <p class="panel__stat-value mono">$26,640</p>
-          </div>
-        </footer>
-      </section>
 
-      <!-- 6 · ASSUMPTIONS PROSE -->
-      <section class="panel panel--flat row" aria-labelledby="assumptions-h2" data-reveal>
-        <header class="panel__head">
-          <div>
-            <p class="eyebrow">What this assumes</p>
-            <h2 class="panel__title" id="assumptions-h2">Three inputs, plainly stated.</h2>
-          </div>
-          <a href="/about.html#methodology" class="btn--link">Methodology &rarr;</a>
-        </header>
-
-        <div class="prose prose--narrow">
-          <p>The twelve-month cash forecast is built from your recurring transactions plus three modest assumptions.</p>
-
-          <ol>
-            <li><strong>Inflation on expenses.</strong> Expense categories rise <span class="mono">2.5%</span> annualised; the bars above already include a mild seasonal pattern (utilities tick up in winter, groceries dip in summer).</li>
-            <li><strong>Flat income.</strong> Salary and freelance income hold steady through the window; raises and new contracts are not modelled here. Use <a href="/scenarios.html">scenarios</a> to test them.</li>
-            <li><strong>No one-off events.</strong> Bonuses, tax refunds, large purchases, and emergency outlays are excluded. The forecast describes the household's underlying rhythm, not its surface weather.</li>
-          </ol>
-
-          <p>Full methodology, including how the seasonal pattern is generated and where rounding occurs, is documented on the <a href="/about.html#methodology">about page</a>.</p>
-        </div>
-      </section>
-
+      </div>
     </main>
   </div>
 
-  <div data-include="footer"></div>
+  <script src="/js/include.js"></script>
+  <script src="/js/motion.js"></script>
+  <script src="/js/charts.js"></script>
+  <script src="/js/demo-data.js"></script>
+  <script src="/js/app.js"></script>
 
-  <script src="/static/js/partials.js"></script>
-  <script src="/static/js/demo-data.js"></script>
-  <script src="/static/js/charts.js"></script>
-  <script src="/static/js/reveal.js"></script>
+  <script>
+    document.addEventListener("pfc:partials-ready", function () {
+      var D = window.PFC_DATA;
+      var M = window.PFC_MOTION;
+      var C = window.PFC_CHARTS;
+      if (!D || !M || !C) return;
+
+      M.pageTransition();
+
+      /* ---- Topbar injection ---- */
+      (function injectTopbar() {
+        var crumb = document.querySelector('[data-slot="breadcrumb"]');
+        var actions = document.querySelector('.topbar__actions');
+        if (!crumb || !actions) return;
+
+        crumb.innerHTML =
+          '<div class="greet">' +
+            '<span class="greet__eyebrow">Planning / Cash forecast</span>' +
+            '<span class="greet__title">Your money, <em>month by month</em></span>' +
+          '</div>';
+
+        var addBtn = document.createElement("button");
+        addBtn.type = "button";
+        addBtn.className = "btn btn--primary btn--sm";
+        addBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg><span>Add event</span>';
+        addBtn.addEventListener("click", function () { window.PFC && PFC.toast("Event form coming soon", "info", { duration: 1800 }); });
+        var searchBtn = actions.querySelector(".topbar__search");
+        if (searchBtn && searchBtn.nextSibling) actions.insertBefore(addBtn, searchBtn.nextSibling);
+        else actions.appendChild(addBtn);
+        if (M.magnetic) M.magnetic(addBtn, { strength: 0.20, radius: 80 });
+      })();
+
+      /* ---- KPI countUps ---- */
+      document.querySelectorAll("[data-kpi-value]").forEach(function (el) {
+        var val = parseFloat(el.getAttribute("data-value"));
+        var currency = el.getAttribute("data-currency") || undefined;
+        var decimals = parseInt(el.getAttribute("data-decimals") || "0", 10);
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) {
+              io.unobserve(el);
+              M.countUp(el, val, { currency: currency, decimals: decimals, duration: 1200 });
+            }
+          });
+        }, { threshold: 0.4 });
+        io.observe(el);
+      });
+
+      /* ---- Build 24-month timeline data ---- */
+      var MONTHS_ABBR = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+      function makeMonths() {
+        var now = new Date();
+        var arr = [];
+        for (var i = 0; i < 24; i++) {
+          var d = new Date(now.getFullYear(), now.getMonth() + i, 1);
+          // Income oscillates slightly, with a Dec bonus
+          var base = 7800;
+          var season = Math.sin(i * 0.7) * 180;
+          var bonus = d.getMonth() === 11 ? 1800 : 0;
+          var income = Math.round(base + season + bonus);
+          // Expense: base ~4218, summer travel spikes in Jul/Aug, holiday in Dec
+          var ebase = 4218;
+          var eseason = Math.cos(i * 0.55) * 220;
+          var travel = (d.getMonth() === 7) ? 1900 : (d.getMonth() === 6 ? 480 : 0);
+          var holiday = (d.getMonth() === 11) ? 740 : 0;
+          var expense = Math.round(ebase + eseason + travel + holiday);
+          arr.push({
+            i: i,
+            label: MONTHS_ABBR[d.getMonth()] + " " + String(d.getFullYear()).slice(2),
+            full: MONTHS_ABBR[d.getMonth()] + " " + d.getFullYear(),
+            income: income,
+            expense: expense,
+            net: income - expense,
+            events: []
+          });
+        }
+        // Floating events
+        var events = [
+          { mo: 2,  label: "Q1 bonus",         delta:  1800 },
+          { mo: 4,  label: "Iceland trip",     delta: -2400 },
+          { mo: 7,  label: "House offer",      delta: -8000 },
+          { mo: 12, label: "Tax refund",       delta:  1240 },
+          { mo: 15, label: "Wedding gift",     delta:   -680 },
+          { mo: 18, label: "Bonus payout",     delta:  2200 },
+        ];
+        events.forEach(function (ev) { if (arr[ev.mo]) arr[ev.mo].events.push(ev); });
+        return arr;
+      }
+
+      /* ---- Render big timeline (custom SVG) ---- */
+      (function buildTimeline() {
+        var wrap = document.querySelector("[data-timeline]");
+        var svg = document.querySelector("[data-timeline-svg]");
+        var tip = document.querySelector("[data-timeline-tooltip]");
+        if (!svg) return;
+        var months = makeMonths();
+        var W = wrap.clientWidth || 1000;
+        var H = 400;
+        var PAD = { t: 28, r: 16, b: 36, l: 16 };
+        var innerW = W - PAD.l - PAD.r;
+        var innerH = H - PAD.t - PAD.b;
+        var centerY = PAD.t + innerH / 2;
+        var maxVal = Math.max.apply(null, months.map(function (m) { return Math.max(m.income, m.expense); }));
+        var halfH = innerH / 2 - 12;
+        var colW = innerW / months.length;
+        var barW = Math.max(8, colW * 0.36);
+
+        svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+        svg.innerHTML = "";
+
+        var NS = "http://www.w3.org/2000/svg";
+        function mk(t, a) { var e = document.createElementNS(NS, t); Object.entries(a).forEach(function (kv) { e.setAttribute(kv[0], kv[1]); }); return e; }
+
+        // Centerline
+        svg.appendChild(mk("line", {
+          x1: PAD.l, x2: W - PAD.r, y1: centerY, y2: centerY,
+          stroke: "var(--ink-500)", "stroke-width": "1", opacity: "0.5"
+        }));
+
+        // Horizontal guidelines
+        [0.5, 1].forEach(function (frac) {
+          svg.appendChild(mk("line", {
+            x1: PAD.l, x2: W - PAD.r,
+            y1: centerY - halfH * frac, y2: centerY - halfH * frac,
+            stroke: "var(--ink-600)", "stroke-width": "1",
+            "stroke-dasharray": "2 5", opacity: "0.4"
+          }));
+          svg.appendChild(mk("line", {
+            x1: PAD.l, x2: W - PAD.r,
+            y1: centerY + halfH * frac, y2: centerY + halfH * frac,
+            stroke: "var(--ink-600)", "stroke-width": "1",
+            "stroke-dasharray": "2 5", opacity: "0.4"
+          }));
+        });
+
+        // Hover crosshair
+        var cross = mk("line", { x1: 0, x2: 0, y1: PAD.t, y2: H - PAD.b, stroke: "var(--mint-400)", "stroke-width": "1", opacity: "0" });
+        svg.appendChild(cross);
+
+        // Bars + events
+        months.forEach(function (m, i) {
+          var cx = PAD.l + colW * (i + 0.5);
+          var hInc = (m.income / maxVal) * halfH;
+          var hExp = (m.expense / maxVal) * halfH;
+
+          // Income bar (up from center)
+          var bInc = mk("rect", {
+            x: cx - barW - 1, y: centerY - hInc, width: barW, height: hInc,
+            rx: 2, fill: "var(--mint-500)", opacity: "0"
+          });
+          svg.appendChild(bInc);
+          // Expense bar (down from center)
+          var bExp = mk("rect", {
+            x: cx + 1, y: centerY, width: barW, height: hExp,
+            rx: 2, fill: "var(--coral-500)", opacity: "0"
+          });
+          svg.appendChild(bExp);
+
+          // Animate bars
+          var reduced = M.isReduced();
+          if (reduced) { bInc.setAttribute("opacity", "1"); bExp.setAttribute("opacity", "0.85"); }
+          else {
+            bInc.style.transition = "opacity 600ms " + (i * 22) + "ms var(--ease-standard), transform 700ms " + (i * 22) + "ms var(--ease-standard)";
+            bExp.style.transition = "opacity 600ms " + (i * 22 + 80) + "ms var(--ease-standard), transform 700ms " + (i * 22 + 80) + "ms var(--ease-standard)";
+            bInc.style.transformOrigin = (cx - barW / 2 - 1) + "px " + centerY + "px";
+            bExp.style.transformOrigin = (cx + barW / 2 + 1) + "px " + centerY + "px";
+            bInc.style.transform = "scaleY(0)";
+            bExp.style.transform = "scaleY(0)";
+            requestAnimationFrame(function () {
+              requestAnimationFrame(function () {
+                bInc.setAttribute("opacity", "1");
+                bExp.setAttribute("opacity", "0.85");
+                bInc.style.transform = "scaleY(1)";
+                bExp.style.transform = "scaleY(1)";
+              });
+            });
+          }
+
+          // Event dots — float above the income bar
+          m.events.forEach(function (ev, ei) {
+            var dotY = centerY - hInc - 14 - (ei * 12);
+            var dot = mk("circle", {
+              cx: cx, cy: dotY, r: 4,
+              fill: ev.delta > 0 ? "var(--mint-300)" : "var(--amber-400)",
+              stroke: "var(--ink-900)", "stroke-width": "2"
+            });
+            svg.appendChild(dot);
+            var pulse = mk("circle", {
+              cx: cx, cy: dotY, r: 4,
+              fill: "none",
+              stroke: ev.delta > 0 ? "var(--mint-400)" : "var(--amber-400)",
+              "stroke-width": "1.5",
+              opacity: "0.6"
+            });
+            svg.appendChild(pulse);
+            if (!reduced) {
+              pulse.style.transformOrigin = cx + "px " + dotY + "px";
+              pulse.style.animation = "tlpulse 2.4s var(--ease-standard) infinite";
+            }
+          });
+
+          // X-axis labels every 3 months
+          if (i % 3 === 0) {
+            var tx = mk("text", {
+              x: cx, y: H - 12,
+              "text-anchor": "middle",
+              "font-family": "var(--font-mono)",
+              "font-size": "10",
+              fill: "var(--ink-400)"
+            });
+            tx.textContent = m.label;
+            svg.appendChild(tx);
+          }
+        });
+
+        // Tooltip behavior
+        wrap.addEventListener("mousemove", function (e) {
+          var rect = svg.getBoundingClientRect();
+          var x = e.clientX - rect.left;
+          var scaleX = W / rect.width;
+          var localX = x * scaleX;
+          var idx = Math.max(0, Math.min(months.length - 1, Math.floor((localX - PAD.l) / colW)));
+          var m = months[idx];
+          var cx = PAD.l + colW * (idx + 0.5);
+          cross.setAttribute("x1", cx); cross.setAttribute("x2", cx);
+          cross.setAttribute("opacity", "0.4");
+          var evHtml = m.events.length
+            ? m.events.map(function (ev) {
+                var sign = ev.delta > 0 ? "+" : "−";
+                return '<div class="timeline__tooltip-row" style="color:' + (ev.delta > 0 ? 'var(--mint-300)' : 'var(--amber-400)') + ';"><span>' + ev.label + '</span><span>' + sign + M.formatNumber(Math.abs(ev.delta), { currency: "USD" }) + '</span></div>';
+              }).join("")
+            : "";
+          tip.innerHTML =
+            '<div class="timeline__tooltip-mo">' + m.full + '</div>' +
+            '<div class="timeline__tooltip-row"><span>Income</span><span>' + M.formatNumber(m.income, { currency: "USD" }) + '</span></div>' +
+            '<div class="timeline__tooltip-row"><span>Expense</span><span>' + M.formatNumber(m.expense, { currency: "USD" }) + '</span></div>' +
+            evHtml +
+            '<div class="timeline__tooltip-row timeline__tooltip-net"><span>Net</span><span>' + (m.net >= 0 ? '+' : '−') + M.formatNumber(Math.abs(m.net), { currency: "USD" }) + '</span></div>';
+          tip.style.opacity = "1";
+          var leftPx = (cx / W) * rect.width - 80;
+          leftPx = Math.max(8, Math.min(rect.width - 168, leftPx));
+          tip.style.left = leftPx + "px";
+          tip.style.top = "8px";
+        });
+        wrap.addEventListener("mouseleave", function () {
+          cross.setAttribute("opacity", "0");
+          tip.style.opacity = "0";
+        });
+
+        // Inject keyframes for tl pulse if not present
+        if (!document.getElementById("tl-pulse-style")) {
+          var st = document.createElement("style");
+          st.id = "tl-pulse-style";
+          st.textContent = "@keyframes tlpulse { 0%{opacity:.6;transform:scale(1);} 100%{opacity:0;transform:scale(2.6);} }";
+          document.head.appendChild(st);
+        }
+      })();
+
+      /* ---- Upcoming events list ---- */
+      (function buildEvents() {
+        var wrap = document.querySelector("[data-events]");
+        if (!wrap) return;
+        var months3 = ["May","Jun","Jul"];
+        var rows = [
+          { dt: ["May","16"], label: "Bi-weekly paycheck",       cat: "Income",       amt:  3214 },
+          { dt: ["May","20"], label: "Student loan auto-pay",     cat: "Debt",         amt:  -215 },
+          { dt: ["May","22"], label: "Auto loan",                  cat: "Debt",         amt:  -312 },
+          { dt: ["May","28"], label: "Goal transfer · House",      cat: "Savings",      amt:  -420 },
+          { dt: ["Jun","01"], label: "Rent",                       cat: "Housing",      amt: -1850 },
+          { dt: ["Jun","03"], label: "Utilities (estimated)",       cat: "Housing",      amt:  -184 },
+          { dt: ["Jun","15"], label: "Quarterly bonus",             cat: "Income",       amt:  1800 },
+          { dt: ["Jun","22"], label: "Annual domain renewals",      cat: "Subscriptions",amt:   -94 },
+          { dt: ["Jul","05"], label: "Iceland deposit · Icelandair",cat: "Travel",       amt:  -640 },
+          { dt: ["Jul","18"], label: "Performance bonus payout",    cat: "Income",       amt:  2200 },
+        ];
+        wrap.innerHTML = rows.map(function (r) {
+          var sign = r.amt >= 0 ? "+" : "−";
+          var cls = r.amt >= 0 ? "event-row__amt--pos" : "event-row__amt--neg";
+          return ''
+            + '<div class="event-row">'
+              + '<span class="event-row__when">' + r.dt[0] + '<span class="event-row__when-day mono">' + r.dt[1] + '</span></span>'
+              + '<div class="event-row__main">'
+                + '<div class="event-row__label">' + r.label + '</div>'
+                + '<div class="event-row__cat">' + r.cat + '</div>'
+              + '</div>'
+              + '<span class="event-row__amt ' + cls + '">' + sign + M.formatNumber(Math.abs(r.amt), { currency: "USD" }) + '</span>'
+            + '</div>';
+        }).join("");
+      })();
+
+      /* ---- Buffer trend chart ---- */
+      (function buildBuffer() {
+        var el = document.querySelector("[data-buffer-chart]");
+        if (!el) return;
+        var bal = D.cashForecast.currentBalance;
+        var pts = [];
+        var v = bal - 1200;
+        for (var i = 0; i < 30; i++) {
+          v += Math.sin(i * 0.5) * 380 + (i % 7 === 0 ? 600 : -120);
+          pts.push(Math.max(2000, v));
+        }
+        C.sparkline(el, pts, { height: 120, stroke: "var(--mint-400)", fill: true });
+      })();
+
+      /* ---- Recurring tiles ---- */
+      (function buildRecurring() {
+        var wrap = document.querySelector("[data-recur-grid]");
+        if (!wrap) return;
+        var items = [
+          { label: "Primary salary",     cycle: "1st & 15th",  amt:  7200, kind: "income" },
+          { label: "Rent · Brooklyn",     cycle: "Monthly · 1st",amt: -1850, kind: "expense" },
+          { label: "Side consulting",     cycle: "Variable",     amt:   480, kind: "income" },
+          { label: "Federal student loan",cycle: "Monthly · 20th",amt: -215, kind: "expense" },
+          { label: "Auto loan · Civic",   cycle: "Monthly · 22nd",amt: -312, kind: "expense" },
+          { label: "Spotify Family",      cycle: "Monthly",       amt:  -17, kind: "expense" },
+          { label: "Apple One",           cycle: "Monthly",       amt:  -20, kind: "expense" },
+          { label: "Dividend payout",     cycle: "Quarterly",     amt:   120, kind: "income" },
+        ];
+        wrap.innerHTML = items.map(function (it, i) {
+          var sign = it.amt > 0 ? "+" : "−";
+          return ''
+            + '<article class="recur-tile" style="--i:' + i + ';">'
+              + '<header class="recur-tile__head">'
+                + '<span class="recur-tile__label">' + it.label + '</span>'
+                + '<span class="recur-tile__cycle">' + it.cycle + '</span>'
+              + '</header>'
+              + '<div class="recur-tile__amt ' + (it.kind === "income" ? "recur-tile__amt--income" : "") + '">' + sign + M.formatNumber(Math.abs(it.amt), { currency: "USD" }) + '</div>'
+              + '<div class="recur-tile__spark" data-spark="' + i + '"></div>'
+            + '</article>';
+        }).join("");
+        // Sparklines
+        wrap.querySelectorAll("[data-spark]").forEach(function (el, i) {
+          var base = Math.abs(items[i].amt);
+          var data = [];
+          var v = base;
+          for (var k = 0; k < 12; k++) { v += Math.sin(k * 0.9 + i) * base * 0.06; data.push(v); }
+          setTimeout(function () {
+            C.sparkline(el, data, { height: 32, stroke: items[i].kind === "income" ? "var(--mint-400)" : "var(--coral-400)", fill: true });
+          }, 300);
+        });
+      })();
+
+      M.revealOnScroll("[data-reveal]");
+      M.revealOnScroll("[data-reveal-stagger]", { stagger: 0, threshold: 0.1 });
+    });
+  </script>
 </body>
 </html>

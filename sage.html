@@ -1,305 +1,576 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Sage &mdash; ProFinanceCast</title>
-  <meta name="description" content="Ask the forecasting desk. Sage answers from the household's numbers, in plain language.">
-  <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sage — ProFinanceCast</title>
+  <meta name="description" content="Ask anything about your money. Sage uses your numbers, never the internet." />
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/css/tokens.css">
-  <link rel="stylesheet" href="/static/css/theme-ivory.css">
-  <link rel="stylesheet" href="/static/css/theme-emerald.css">
-  <link rel="stylesheet" href="/static/css/base.css">
-  <link rel="stylesheet" href="/static/css/components.css">
-  <link rel="stylesheet" href="/static/css/nav.css">
-  <link rel="stylesheet" href="/static/css/footer.css">
-  <link rel="stylesheet" href="/static/css/charts.css">
-  <link rel="stylesheet" href="/static/css/app.css">
-  <link rel="stylesheet" href="/static/css/sage.css">
-</head>
-<body data-theme="emerald">
-  <a class="skip-link" href="#main">Skip to chat</a>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
 
-  <div data-include="header"></div>
-  <div data-include="banner"></div>
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/layout.css">
+
+  <style>
+    /* ===========================================================
+     * Sage — page-local styles. BEM, no !important.
+     * Calm, premium, editorial. No chatbot tropes.
+     * =========================================================== */
+
+    .topbar { height: auto; min-height: var(--topbar-h); padding-block: 14px; }
+    .greet { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .greet__eyebrow {
+      font-family: var(--font-mono); font-size: var(--fs-tiny);
+      text-transform: uppercase; letter-spacing: var(--tracking-eyebrow);
+      color: var(--ink-400);
+    }
+    .greet__title {
+      font-family: var(--font-display);
+      font-size: clamp(1.15rem, 0.4vw + 1rem, 1.4rem);
+      font-weight: 500; color: var(--ink-100);
+      letter-spacing: -0.015em; line-height: 1.1;
+    }
+
+    /* ---------- Greeting hero ---------- */
+    .greet-hero {
+      padding-block: var(--space-12) var(--space-10);
+      max-width: 900px;
+    }
+    .greet-hero__eyebrow {
+      font-family: var(--font-mono); font-size: var(--fs-tiny);
+      text-transform: uppercase; letter-spacing: var(--tracking-eyebrow);
+      color: var(--mint-400); display: inline-flex; align-items: center; gap: 8px;
+      margin-bottom: var(--space-5);
+    }
+    .greet-hero__eyebrow .sage-pulse {
+      width: 8px; height: 8px; border-radius: var(--r-full);
+      background: var(--mint-500);
+      box-shadow: 0 0 0 3px oklch(78% 0.175 168 / 0.18);
+      position: relative;
+    }
+    .greet-hero__eyebrow .sage-pulse::after {
+      content: ""; position: absolute; inset: -3px;
+      border-radius: var(--r-full); border: 1.5px solid var(--mint-500);
+      animation: sage-pulse 2.4s var(--ease-standard) infinite;
+      pointer-events: none;
+    }
+    @keyframes sage-pulse {
+      0%   { opacity: 0.8; transform: scale(1); }
+      100% { opacity: 0;   transform: scale(2.4); }
+    }
+    @media (prefers-reduced-motion: reduce) { .sage-pulse::after { animation: none; } }
+
+    .greet-hero__title {
+      font-family: var(--font-display);
+      font-size: var(--fs-display-lg);
+      font-weight: 300;
+      line-height: 1.02;
+      letter-spacing: -0.035em;
+      color: var(--ink-100);
+      margin-bottom: var(--space-5);
+    }
+    .greet-hero__title em {
+      font-style: italic; font-weight: 400;
+      color: var(--mint-400);
+    }
+    .greet-hero__sub {
+      font-size: 1.0625rem;
+      color: var(--ink-300);
+      line-height: 1.6;
+      max-width: 580px;
+    }
+
+    /* ---------- Ask textarea ---------- */
+    .ask {
+      padding: var(--space-6);
+      background: oklch(24% 0.022 265 / 0.55);
+      backdrop-filter: blur(20px) saturate(140%);
+      -webkit-backdrop-filter: blur(20px) saturate(140%);
+      border: 1px solid oklch(100% 0 0 / 0.08);
+      border-radius: var(--r-lg);
+      box-shadow:
+        0 1px 0 0 oklch(100% 0 0 / 0.06) inset,
+        0 16px 40px -20px oklch(0% 0 0 / 0.55);
+      transition: border-color var(--dur-base) var(--ease-standard),
+                  box-shadow var(--dur-base) var(--ease-standard);
+    }
+    .ask:focus-within {
+      border-color: oklch(78% 0.175 168 / 0.50);
+      box-shadow:
+        0 1px 0 0 oklch(100% 0 0 / 0.08) inset,
+        0 16px 40px -20px oklch(0% 0 0 / 0.55),
+        0 0 0 1px var(--mint-500),
+        0 0 32px -8px var(--mint-glow);
+    }
+    .ask__row {
+      display: grid; grid-template-columns: 1fr auto;
+      gap: var(--space-4); align-items: flex-end;
+    }
+    .ask__textarea {
+      width: 100%;
+      min-height: 60px;
+      resize: vertical;
+      background: transparent;
+      border: 0;
+      outline: none;
+      color: var(--ink-100);
+      font-family: var(--font-display);
+      font-size: clamp(1.125rem, 0.6vw + 1rem, 1.375rem);
+      font-weight: 300;
+      letter-spacing: -0.015em;
+      line-height: 1.5;
+      padding: var(--space-2) var(--space-3) 0;
+    }
+    .ask__textarea::placeholder { color: var(--ink-400); font-style: italic; }
+    .ask__send {
+      padding: 0.875rem 1.5rem;
+      font-family: var(--font-body);
+      font-size: var(--fs-body);
+      font-weight: 600;
+      color: var(--ink-900);
+      background: var(--mint-500);
+      border: 1px solid var(--mint-500);
+      border-radius: var(--r-md);
+      cursor: pointer;
+      transition: background var(--dur-fast), box-shadow var(--dur-base);
+      display: inline-flex; align-items: center; gap: 8px;
+      white-space: nowrap;
+    }
+    .ask__send:hover { background: var(--mint-400); box-shadow: var(--shadow-aurora); }
+
+    .ask-chips {
+      display: flex; flex-wrap: wrap; gap: var(--space-2);
+      margin-top: var(--space-5);
+    }
+    .ask-chip {
+      padding: 8px 14px;
+      background: transparent;
+      border: 1px solid var(--ink-500);
+      border-radius: var(--r-full);
+      color: var(--ink-300);
+      font-size: var(--fs-small);
+      cursor: pointer;
+      transition: all var(--dur-fast) var(--ease-standard);
+      font-family: var(--font-body);
+    }
+    .ask-chip:hover {
+      color: var(--mint-300);
+      border-color: oklch(78% 0.175 168 / 0.40);
+      background: oklch(78% 0.175 168 / 0.06);
+    }
+
+    /* ---------- Recent conversations ---------- */
+    .recent-list { display: flex; flex-direction: column; gap: var(--space-4); }
+    .recent {
+      padding: var(--space-6) var(--space-8);
+      background: oklch(24% 0.022 265 / 0.50);
+      backdrop-filter: blur(16px) saturate(140%);
+      -webkit-backdrop-filter: blur(16px) saturate(140%);
+      border: 1px solid oklch(100% 0 0 / 0.06);
+      border-radius: var(--r-lg);
+      transition: border-color var(--dur-base), transform var(--dur-base);
+      cursor: pointer;
+    }
+    .recent:hover {
+      border-color: oklch(78% 0.175 168 / 0.30);
+      transform: translateY(-2px);
+    }
+    .recent__q {
+      font-family: var(--font-display);
+      font-size: var(--fs-h3);
+      font-style: italic;
+      font-weight: 400;
+      color: var(--ink-100);
+      line-height: 1.3;
+      letter-spacing: -0.015em;
+      margin-bottom: var(--space-3);
+    }
+    .recent__a {
+      font-size: var(--fs-body);
+      color: var(--ink-300);
+      line-height: 1.6;
+      margin-bottom: var(--space-4);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .recent__foot {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: var(--space-4);
+    }
+    .recent__when {
+      font-family: var(--font-mono); font-size: var(--fs-tiny);
+      color: var(--ink-400); text-transform: uppercase; letter-spacing: var(--tracking-eyebrow);
+    }
+    .recent__cta {
+      font-family: var(--font-mono); font-size: var(--fs-tiny);
+      text-transform: uppercase; letter-spacing: var(--tracking-eyebrow);
+      color: var(--mint-400);
+      display: inline-flex; align-items: center; gap: 6px;
+      transition: gap var(--dur-fast);
+    }
+    .recent__cta:hover { gap: 10px; color: var(--mint-300); }
+
+    /* ---------- Sage's read ---------- */
+    .read-card { padding: var(--space-8); }
+    .read-card__head { margin-bottom: var(--space-8); }
+    .read-card__title {
+      font-family: var(--font-display); font-size: var(--fs-h2); font-weight: 400;
+      color: var(--ink-100); letter-spacing: -0.02em;
+    }
+    .read-card__title em { font-style: italic; color: var(--mint-400); font-weight: 400; }
+    .read-card__sub { font-size: var(--fs-small); color: var(--ink-400); margin-top: 6px; }
+
+    .read-stack { display: flex; flex-direction: column; }
+    .read-item {
+      display: grid; grid-template-columns: 14px 1fr;
+      gap: var(--space-5);
+      padding: var(--space-6) 0;
+      border-top: 1px solid oklch(100% 0 0 / 0.05);
+    }
+    .read-item:first-child { border-top: 0; padding-top: 0; }
+    .read-item:last-child  { padding-bottom: 0; }
+    .read-item__dot {
+      width: 10px; height: 10px; border-radius: var(--r-full);
+      background: var(--mint-500);
+      margin-top: 8px;
+      box-shadow: 0 0 0 3px oklch(78% 0.175 168 / 0.18);
+      position: relative;
+    }
+    .read-item__dot::after {
+      content: ""; position: absolute; inset: -3px;
+      border-radius: var(--r-full); border: 1.5px solid var(--mint-500);
+      animation: sage-pulse 2.4s var(--ease-standard) infinite;
+      pointer-events: none;
+    }
+    .read-item--watchout .read-item__dot { background: var(--amber-400); box-shadow: 0 0 0 3px oklch(80% 0.140 75 / 0.18); }
+    .read-item--watchout .read-item__dot::after { border-color: var(--amber-400); }
+    .read-item--win .read-item__dot { background: var(--lavender-500); box-shadow: 0 0 0 3px oklch(72% 0.115 295 / 0.18); }
+    .read-item--win .read-item__dot::after { border-color: var(--lavender-500); }
+
+    .read-item__headline {
+      font-family: var(--font-display);
+      font-size: var(--fs-h3);
+      font-weight: 400;
+      color: var(--ink-100);
+      letter-spacing: -0.015em;
+      line-height: 1.25;
+      margin-bottom: var(--space-3);
+    }
+    .read-item__body {
+      font-size: var(--fs-body);
+      color: var(--ink-300);
+      line-height: 1.6;
+      margin-bottom: var(--space-3);
+      max-width: 64ch;
+    }
+    .read-item__link {
+      font-family: var(--font-mono); font-size: var(--fs-tiny);
+      text-transform: uppercase; letter-spacing: var(--tracking-eyebrow);
+      color: var(--mint-400);
+      display: inline-flex; align-items: center; gap: 6px;
+      transition: gap var(--dur-fast);
+    }
+    .read-item__link:hover { gap: 10px; color: var(--mint-300); }
+
+    /* ---------- Capabilities strip ---------- */
+    .caps {
+      padding: var(--space-5) var(--space-6);
+      border-top: 1px solid oklch(100% 0 0 / 0.05);
+      font-family: var(--font-mono); font-size: var(--fs-tiny);
+      color: var(--ink-400);
+      text-align: center;
+      line-height: 2;
+    }
+    .caps__lead { color: var(--ink-300); margin-right: 4px; }
+    .caps__item { color: var(--ink-300); }
+    .caps__sep { color: var(--ink-500); margin: 0 var(--space-3); }
+
+    .sec-header { margin-bottom: var(--space-6); display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-4); }
+    .sec-title {
+      font-family: var(--font-display);
+      font-size: var(--fs-h2); font-weight: 400; color: var(--ink-100);
+      letter-spacing: -0.02em; line-height: 1.1;
+    }
+    .sec-title em { font-style: italic; color: var(--ink-300); font-weight: 300; }
+    .sec-link {
+      font-family: var(--font-mono); font-size: var(--fs-tiny);
+      text-transform: uppercase; letter-spacing: var(--tracking-eyebrow);
+      color: var(--mint-400);
+    }
+
+    .foot-strip {
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+      gap: var(--space-4); padding: var(--space-5) var(--space-2);
+      margin-top: var(--space-12);
+      border-top: 1px solid oklch(100% 0 0 / 0.05);
+      font-family: var(--font-mono); font-size: var(--fs-tiny); color: var(--ink-400);
+    }
+    .foot-strip__dot {
+      width: 5px; height: 5px; border-radius: var(--r-full);
+      background: var(--mint-500); box-shadow: 0 0 8px var(--mint-glow);
+      display: inline-block; margin-right: 8px;
+    }
+  </style>
+</head>
+<body data-page="sage">
+
+  <div class="aurora-bg" aria-hidden="true">
+    <div class="aurora-bg__blob aurora-bg__blob--1"></div>
+    <div class="aurora-bg__blob aurora-bg__blob--2"></div>
+    <div class="aurora-bg__blob aurora-bg__blob--3"></div>
+    <div class="aurora-bg__blob aurora-bg__blob--4"></div>
+    <div class="aurora-bg__grain"></div>
+    <div class="aurora-bg__vignette"></div>
+  </div>
 
   <div class="app-shell">
-    <div data-include="sidebar"></div>
+    <div data-include="/partials/sidebar.html"></div>
 
-    <main class="app-main" id="main">
+    <main class="main">
+      <div data-include="/partials/topbar.html"></div>
 
-      <!-- 1 · PAGE HEAD -->
-      <header class="page-head" data-reveal>
-        <div class="page-head__body">
-          <p class="eyebrow page-head__eyebrow">
-            <span>Sage</span>
-            <span class="page-head__sep" aria-hidden="true">&middot;</span>
-            <span>The forecasting desk, on call</span>
-          </p>
-          <h1 class="display display--md page-head__title">Ask the desk a question.</h1>
-          <p class="page-head__lede">A second pair of eyes on the household&rsquo;s numbers, written back as plain prose.</p>
-        </div>
-        <div class="page-head__actions">
-          <span class="badge badge--gold">Pro feature</span>
-        </div>
-      </header>
+      <div class="main__content">
 
-      <!-- 2 · DEMO-MODE STRIPE (per RULING-01 Q5) -->
-      <section class="sage-stripe" role="note" aria-label="Sage demo notice" data-reveal>
-        <span class="sage-stripe__dot" aria-hidden="true"></span>
-        <span class="sage-stripe__label">Demo mode</span>
-        <span class="sage-stripe__sep" aria-hidden="true">&middot;</span>
-        <span class="sage-stripe__copy">Sage is unavailable in this preview. One scripted reply is shown to illustrate the format.</span>
-      </section>
+        <!-- ============================================================
+             SECTION 1 — Greeting hero
+             ============================================================ -->
+        <section class="section" aria-labelledby="greet-heading">
+          <div class="greet-hero" data-reveal>
+            <span class="greet-hero__eyebrow">
+              <span class="sage-pulse" aria-hidden="true"></span>
+              Sage · listening
+            </span>
+            <h1 id="greet-heading" class="greet-hero__title">What's on your <em>mind</em>, Alex?</h1>
+            <p class="greet-hero__sub">Ask anything about your money. Sage uses your numbers — never the internet. Forecasts, transactions, goals, what-ifs.</p>
+          </div>
+        </section>
 
-      <!-- 3 · CHAT SURFACE -->
-      <section class="sage" aria-label="Conversation with Sage" data-reveal>
-
-        <!-- Conversation column -->
-        <div class="sage__thread" id="sage-thread" role="log" aria-live="polite" aria-atomic="false">
-
-          <!-- 3a · Opening preface from the desk -->
-          <article class="sage-msg sage-msg--sage" aria-label="Sage, opening">
-            <div class="sage-msg__avatar" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.25">
-                <circle cx="12" cy="12" r="9"></circle>
-                <path d="M7 13c1.6 1.5 3.2 2.2 5 2.2s3.4-.7 5-2.2"></path>
-                <path d="M9 9.5h.01M15 9.5h.01"></path>
-              </svg>
+        <!-- ============================================================
+             SECTION 2 — Ask textarea
+             ============================================================ -->
+        <section class="section" aria-labelledby="ask-heading" style="margin-bottom: var(--space-12);">
+          <h2 id="ask-heading" class="sr-only">Ask Sage</h2>
+          <div class="ask" data-reveal>
+            <div class="ask__row">
+              <textarea class="ask__textarea" placeholder="Try: 'When can I afford a house in NYC?'" rows="2" aria-label="Ask Sage anything"></textarea>
+              <button class="ask__send" type="button" data-ask-send>
+                Ask
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </button>
             </div>
-            <div class="sage-msg__body">
-              <p class="sage-msg__name">Sage</p>
-              <div class="sage-msg__prose">
-                <p>Good afternoon. I&rsquo;ve loaded the example household &mdash; net worth <span class="mono">$87,420</span>, two open balances totalling <span class="mono">$8,580</span>, monthly surplus around <span class="mono">$2,220</span>.</p>
-                <p>Ask anything &mdash; debt path, runway, retirement pacing, the ten-year endpoint. I&rsquo;ll answer in a paragraph, then pull out the figures worth keeping.</p>
+            <div class="ask-chips" aria-label="Suggested prompts">
+              <button class="ask-chip" type="button">When can I afford a house?</button>
+              <button class="ask-chip" type="button">What's draining my budget?</button>
+              <button class="ask-chip" type="button">Am I saving enough?</button>
+              <button class="ask-chip" type="button">Should I pay off the card or invest?</button>
+              <button class="ask-chip" type="button">Summarize last month</button>
+              <button class="ask-chip" type="button">Stress-test my buffer</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================================
+             SECTION 3 — Recent conversations
+             ============================================================ -->
+        <section class="section" aria-labelledby="recent-heading" style="margin-bottom: var(--space-12);">
+          <header class="sec-header">
+            <h2 id="recent-heading" class="sec-title">Recent <em>threads</em></h2>
+            <a href="#" class="sec-link">All conversations</a>
+          </header>
+          <div class="recent-list">
+
+            <article class="recent" data-reveal>
+              <div class="recent__q">When can I afford a house in NYC?</div>
+              <p class="recent__a">At your current savings rate of 21%, you'll reach a $65,000 down payment in 32 months — March 2029. A 20% raise pulls that to 24 months. I've drafted a "House at year 3" scenario you can tweak.</p>
+              <div class="recent__foot">
+                <span class="recent__when">2 days ago · 4 messages</span>
+                <a href="#" class="recent__cta">Continue
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </a>
               </div>
-              <p class="sage-msg__time mono" aria-label="14:02">14:02</p>
-            </div>
+            </article>
+
+            <article class="recent" data-reveal>
+              <div class="recent__q">Why did spending jump in April?</div>
+              <p class="recent__a">Three things: a $640 Iceland deposit, $312 in extra dining, and your Apple One family upgrade. Two of three were planned. The dining spike came from four weekends with the Brooklyn group.</p>
+              <div class="recent__foot">
+                <span class="recent__when">5 days ago · 2 messages</span>
+                <a href="#" class="recent__cta">Continue
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </a>
+              </div>
+            </article>
+
+            <article class="recent" data-reveal>
+              <div class="recent__q">Should I pay off the Sapphire or invest instead?</div>
+              <p class="recent__a">Pay it off. At 22.49% APR, the card is costing you more than any reasonable expected return. Avalanche the $4,280 balance first — it clears in nine months and saves $1,180 in interest.</p>
+              <div class="recent__foot">
+                <span class="recent__when">1 week ago · 6 messages</span>
+                <a href="#" class="recent__cta">Continue
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </a>
+              </div>
+            </article>
+
+            <article class="recent" data-reveal>
+              <div class="recent__q">If I quit at 40, what does the next twenty years look like?</div>
+              <p class="recent__a">Tight but workable. Your numbers cover 14 years of current expenses without new income, assuming a 7.2% return and 2.8% inflation. Cutting housing or moving cities adds five years of runway.</p>
+              <div class="recent__foot">
+                <span class="recent__when">2 weeks ago · 9 messages</span>
+                <a href="#" class="recent__cta">Continue
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </a>
+              </div>
+            </article>
+
+            <article class="recent" data-reveal>
+              <div class="recent__q">Am I overpaying on subscriptions?</div>
+              <p class="recent__a">A little. Seven active services totaling $187/mo. Three overlap (Spotify Family, Apple One, YouTube Premium all include music). A 12-minute audit frees up about $46 each month.</p>
+              <div class="recent__foot">
+                <span class="recent__when">3 weeks ago · 3 messages</span>
+                <a href="#" class="recent__cta">Continue
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </a>
+              </div>
+            </article>
+
+          </div>
+        </section>
+
+        <!-- ============================================================
+             SECTION 4 — Sage's read on you
+             ============================================================ -->
+        <section class="section" aria-labelledby="read-heading" style="margin-bottom: var(--space-12);">
+          <article class="card card--glass read-card" data-reveal>
+            <header class="read-card__head">
+              <h2 id="read-heading" class="read-card__title">Sage's <em>read on you</em></h2>
+              <p class="read-card__sub">Calm, infrequent observations. Updated when your numbers move enough to matter.</p>
+            </header>
+            <div class="read-stack" data-sage-read></div>
           </article>
+        </section>
 
-          <!-- 3b · Prompt suggestions (declarative; visual only in demo) -->
-          <div class="sage-suggestions" role="group" aria-label="Suggested questions">
-            <p class="sage-suggestions__label">Try one of these</p>
-            <ul class="sage-suggestions__list" role="list">
-              <li><button class="sage-chip" type="button" data-sage-prompt="What is the fastest path to debt-free for this household?">What is the fastest path to debt-free?</button></li>
-              <li><button class="sage-chip" type="button" data-sage-prompt="How many months of expenses does the liquid buffer cover?">How many months does the buffer cover?</button></li>
-              <li><button class="sage-chip" type="button" data-sage-prompt="What does the credit card cost us over the ten-year forecast?">What does the credit card cost over a decade?</button></li>
-              <li><button class="sage-chip" type="button" data-sage-prompt="Where should the freed cash go after the debt is cleared?">Where should freed cash go after the debt clears?</button></li>
-            </ul>
-          </div>
-
+        <!-- ============================================================
+             SECTION 5 — Capabilities strip
+             ============================================================ -->
+        <div class="caps" data-reveal>
+          <span class="caps__lead">Sage can:</span>
+          <span class="caps__item">forecast scenarios</span>
+          <span class="caps__sep">·</span>
+          <span class="caps__item">explain transactions</span>
+          <span class="caps__sep">·</span>
+          <span class="caps__item">summarize the month</span>
+          <span class="caps__sep">·</span>
+          <span class="caps__item">plan toward a goal</span>
+          <span class="caps__sep">·</span>
+          <span class="caps__item">stress-test your buffer</span>
         </div>
 
-        <!-- 4 · COMPOSER (input + send) -->
-        <form class="sage-composer" id="sage-composer" autocomplete="off" novalidate>
-          <label for="sage-input" class="sr-only">Ask Sage a question</label>
-          <div class="sage-composer__field">
-            <textarea
-              id="sage-input"
-              name="message"
-              class="sage-composer__input"
-              rows="1"
-              maxlength="600"
-              placeholder="Write a question. Press &#8594; to send."
-              aria-describedby="sage-composer-hint"
-            ></textarea>
-            <div class="sage-composer__meta" id="sage-composer-hint">
-              <span class="sage-composer__hint">Sage answers from this household&rsquo;s figures. Single message in demo mode.</span>
-              <span class="sage-composer__count mono" aria-live="off">
-                <span data-sage-count>0</span><span aria-hidden="true">&thinsp;/&thinsp;</span><span>600</span>
-              </span>
-            </div>
-          </div>
-          <button type="submit" class="btn btn--primary sage-composer__send" id="sage-send" aria-label="Send to Sage">
-            <span class="sage-composer__send-label">Send</span>
-            <span class="sage-composer__send-glyph" aria-hidden="true">&rarr;</span>
-          </button>
-        </form>
-
-      </section>
-
-      <!-- 5 · DESK NOTE (post-conversation context) -->
-      <section class="panel panel--flat row" aria-labelledby="desk-note-h2" data-reveal>
-        <header class="panel__head">
-          <div>
-            <p class="eyebrow">From the desk</p>
-            <h2 class="panel__title" id="desk-note-h2">How Sage reads your numbers.</h2>
-          </div>
-          <a href="/about.html#methodology" class="btn--link">Methodology &rarr;</a>
-        </header>
-        <div class="prose prose--narrow">
-          <p>Sage takes the same monthly figures the dashboard shows &mdash; income, expenses, balances, rates &mdash; and walks them forward under the assumptions you&rsquo;ve set. Nothing is improvised; every claim ties back to a number you can trace.</p>
-          <p>Responses are written in three movements: a one-paragraph answer, two or three observations worth keeping, and a single closing line. That shape is deliberate. It mirrors how a human advisor would brief you over coffee.</p>
+        <div class="foot-strip">
+          <div><span class="foot-strip__dot" aria-hidden="true"></span>Sage runs against your local data. Your questions and her answers never leave the device.</div>
+          <div>Model v2.4 · trained on financial reasoning</div>
         </div>
-      </section>
 
+      </div>
     </main>
   </div>
 
-  <div data-include="footer"></div>
+  <script src="/js/include.js"></script>
+  <script src="/js/motion.js"></script>
+  <script src="/js/charts.js"></script>
+  <script src="/js/demo-data.js"></script>
+  <script src="/js/app.js"></script>
 
-  <!-- Sage scripted-reply (RULING-01 Q5, verbatim) lives in a template node so it is not parsed as live content. -->
-  <template id="sage-reply-template">
-    <article class="sage-msg sage-msg--sage sage-msg--enter" aria-label="Sage reply">
-      <div class="sage-msg__avatar" aria-hidden="true">
-        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.25">
-          <circle cx="12" cy="12" r="9"></circle>
-          <path d="M7 13c1.6 1.5 3.2 2.2 5 2.2s3.4-.7 5-2.2"></path>
-          <path d="M9 9.5h.01M15 9.5h.01"></path>
-        </svg>
-      </div>
-      <div class="sage-msg__body">
-        <p class="sage-msg__name">Sage</p>
-        <div class="sage-msg__prose">
-          <p>Based on the example household, your fastest debt-free path is the <strong>avalanche</strong> method &mdash; pay the credit card balance first because the <span class="mono">24.9%</span> APR dwarfs the <span class="mono">6.1%</span> student loan. At your current <span class="mono">$410/mo</span> allocated to debt, you reach zero balance in month <span class="mono">14</span>.</p>
-          <p class="sage-msg__lede">Three observations:</p>
-          <ul class="sage-msg__list" role="list">
-            <li>Redirect the <span class="mono">$410/mo</span> into your retirement account once debt is cleared &mdash; that decision adds roughly <span class="mono">$51,000</span> to your 10-year forecast.</li>
-            <li>Your <span class="mono">$24,800</span> liquid buffer covers <span class="mono">4.8</span> months of expenses; you can hold here.</li>
-            <li>The credit card APR is the single largest drag on your forecast. Consider a <span class="mono">0%</span> balance transfer if available.</li>
-          </ul>
-          <aside class="sage-callout" role="note" aria-label="Headline figure">
-            <p class="sage-callout__label">10-year forecast lift, if redirected</p>
-            <p class="sage-callout__value mono">+$51,000</p>
-            <p class="sage-callout__foot">From the avalanche payoff being repointed to retirement on month <span class="mono">15</span>.</p>
-          </aside>
-          <p class="sage-msg__footnote"><em>Demo response. In production, Sage answers from your actual numbers.</em></p>
-        </div>
-        <p class="sage-msg__time mono"><span data-sage-time></span></p>
-      </div>
-    </article>
-  </template>
-
-  <template id="sage-typing-template">
-    <article class="sage-msg sage-msg--sage sage-msg--typing" aria-label="Sage is composing a reply">
-      <div class="sage-msg__avatar" aria-hidden="true">
-        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.25">
-          <circle cx="12" cy="12" r="9"></circle>
-          <path d="M7 13c1.6 1.5 3.2 2.2 5 2.2s3.4-.7 5-2.2"></path>
-          <path d="M9 9.5h.01M15 9.5h.01"></path>
-        </svg>
-      </div>
-      <div class="sage-msg__body">
-        <p class="sage-msg__name">Sage</p>
-        <p class="sage-typing" aria-live="polite">
-          <span class="sage-typing__dot"></span>
-          <span class="sage-typing__dot"></span>
-          <span class="sage-typing__dot"></span>
-          <span class="sr-only">Sage is composing a reply.</span>
-        </p>
-      </div>
-    </article>
-  </template>
-
-  <script src="/static/js/partials.js"></script>
-  <script src="/static/js/demo-data.js"></script>
-  <script src="/static/js/charts.js"></script>
-  <script src="/static/js/reveal.js"></script>
   <script>
-    /* Sage demo behaviour: single scripted reply, 1200ms typing indicator,
-       input disabled after first send. Honors prefers-reduced-motion via the
-       global short-circuit in tokens.css (transitions collapse). */
-    (function () {
-      'use strict';
-      var form  = document.getElementById('sage-composer');
-      var input = document.getElementById('sage-input');
-      var send  = document.getElementById('sage-send');
-      var thread = document.getElementById('sage-thread');
-      var counter = document.querySelector('[data-sage-count]');
-      var replyTmpl  = document.getElementById('sage-reply-template');
-      var typingTmpl = document.getElementById('sage-typing-template');
-      if (!form || !input || !send || !thread) return;
+    document.addEventListener("pfc:partials-ready", function () {
+      var D = window.PFC_DATA;
+      var M = window.PFC_MOTION;
+      if (!D || !M) return;
 
-      function fmtTime() {
-        var d = new Date();
-        var h = String(d.getHours()).padStart(2, '0');
-        var m = String(d.getMinutes()).padStart(2, '0');
-        return h + ':' + m;
-      }
-      function autosize() {
-        input.style.height = 'auto';
-        input.style.height = Math.min(input.scrollHeight, 220) + 'px';
-      }
-      function setCount() {
-        if (counter) counter.textContent = String(input.value.length);
-      }
-      function setDisabled(state) {
-        input.disabled = state;
-        send.disabled = state;
-        send.setAttribute('aria-disabled', String(state));
-        if (state) {
-          input.setAttribute('placeholder', 'Demo conversation complete. Refresh to try a different question.');
-          input.value = '';
-          setCount();
-        }
-      }
-      // Prompt chips populate the input but do not auto-send.
-      document.querySelectorAll('[data-sage-prompt]').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-          if (input.disabled) return;
-          input.value = btn.getAttribute('data-sage-prompt') || '';
-          autosize();
-          setCount();
-          input.focus();
+      M.pageTransition();
+
+      /* ---- Topbar ---- */
+      (function injectTopbar() {
+        var crumb = document.querySelector('[data-slot="breadcrumb"]');
+        var actions = document.querySelector('.topbar__actions');
+        if (!crumb || !actions) return;
+        crumb.innerHTML =
+          '<div class="greet">' +
+            '<span class="greet__eyebrow">Sage / Insights</span>' +
+            '<span class="greet__title">Sage</span>' +
+          '</div>';
+
+        var newBtn = document.createElement("button");
+        newBtn.type = "button";
+        newBtn.className = "btn btn--ghost btn--sm";
+        newBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg><span>New conversation</span>';
+        newBtn.addEventListener("click", function () {
+          var ta = document.querySelector(".ask__textarea");
+          if (ta) { ta.value = ""; ta.focus(); }
+        });
+        var searchBtn = actions.querySelector(".topbar__search");
+        if (searchBtn && searchBtn.nextSibling) actions.insertBefore(newBtn, searchBtn.nextSibling);
+        else actions.appendChild(newBtn);
+      })();
+
+      /* ---- Sage's read on you (use PFC_DATA.sageInsights + add 1 calm one) ---- */
+      (function buildRead() {
+        var wrap = document.querySelector("[data-sage-read]");
+        if (!wrap) return;
+        var classMap = { opportunity: "", watchout: "read-item--watchout", win: "read-item--win" };
+        var items = (D.sageInsights || []).slice();
+        // Add a fourth, calmly observational insight
+        items.push({
+          kind: "opportunity",
+          title: "Your spending rhythm has stabilized",
+          body: "Four months in a row your monthly expenses landed within $180 of the median. That kind of consistency makes every forecast more reliable.",
+          action: "See the trend"
+        });
+        wrap.innerHTML = items.map(function (ins) {
+          return ''
+            + '<article class="read-item ' + (classMap[ins.kind] || "") + '">'
+              + '<span class="read-item__dot" aria-hidden="true"></span>'
+              + '<div>'
+                + '<h3 class="read-item__headline">' + ins.title + '</h3>'
+                + '<p class="read-item__body">' + ins.body + '</p>'
+                + '<a href="#" class="read-item__link">Tell me more'
+                  + ' <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>'
+                + '</a>'
+              + '</div>'
+            + '</article>';
+        }).join("");
+      })();
+
+      /* ---- Chip clicks populate textarea ---- */
+      document.querySelectorAll(".ask-chip").forEach(function (chip) {
+        chip.addEventListener("click", function () {
+          var ta = document.querySelector(".ask__textarea");
+          if (!ta) return;
+          ta.value = chip.textContent.trim();
+          ta.focus();
         });
       });
 
-      input.addEventListener('input', function () {
-        autosize();
-        setCount();
-      });
-      // Submit on plain Enter; allow Shift+Enter for newlines.
-      input.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter' && !e.shiftKey) {
-          e.preventDefault();
-          form.requestSubmit();
-        }
-      });
+      /* ---- Ask button — demo only, shows calm toast ---- */
+      var sendBtn = document.querySelector("[data-ask-send]");
+      if (sendBtn) {
+        M.magnetic(sendBtn, { strength: 0.18, radius: 70 });
+        sendBtn.addEventListener("click", function () {
+          var ta = document.querySelector(".ask__textarea");
+          var q = ta && ta.value.trim();
+          if (!q) { ta && ta.focus(); return; }
+          if (window.PFC && PFC.toast) PFC.toast("Sage is reading your numbers...", "info", { duration: 1800 });
+        });
+      }
 
-      form.addEventListener('submit', function (e) {
-        e.preventDefault();
-        var text = (input.value || '').trim();
-        if (!text || input.disabled) return;
-
-        // 1 · Render the user's message immediately.
-        var userMsg = document.createElement('article');
-        userMsg.className = 'sage-msg sage-msg--user sage-msg--enter';
-        userMsg.setAttribute('aria-label', 'You');
-        userMsg.innerHTML =
-          '<div class="sage-msg__body">' +
-            '<p class="sage-msg__name">You</p>' +
-            '<div class="sage-msg__prose"><p></p></div>' +
-            '<p class="sage-msg__time mono">' + fmtTime() + '</p>' +
-          '</div>';
-        userMsg.querySelector('.sage-msg__prose p').textContent = text;
-        thread.appendChild(userMsg);
-        thread.scrollTop = thread.scrollHeight;
-
-        // 2 · Lock the composer (prevents a second send producing the same canned reply).
-        setDisabled(true);
-
-        // 3 · Insert the typing indicator.
-        var typingNode = typingTmpl.content.firstElementChild.cloneNode(true);
-        thread.appendChild(typingNode);
-        thread.scrollTop = thread.scrollHeight;
-
-        // 4 · After 1200ms (Q5), swap in the verbatim scripted reply.
-        window.setTimeout(function () {
-          typingNode.remove();
-          var reply = replyTmpl.content.firstElementChild.cloneNode(true);
-          var t = reply.querySelector('[data-sage-time]');
-          if (t) t.textContent = fmtTime();
-          thread.appendChild(reply);
-          thread.scrollTop = thread.scrollHeight;
-        }, 1200);
-      });
-
-      // Initial autosize on load (no-op when empty).
-      autosize();
-    })();
+      M.revealOnScroll("[data-reveal]");
+    });
   </script>
 </body>
 </html>

@@ -1,352 +1,774 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Open your forecast &mdash; ProFinanceCast</title>
-  <meta name="description" content="Three short steps. Income, expenses, one debt and one goal. Your forecast updates as you type. Nothing leaves your browser.">
-  <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
+  <title>ProFinanceCast — Get started</title>
+  <meta name="description" content="Four quick questions. About ninety seconds. Your ten-year financial forecast.">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
 
-  <link rel="stylesheet" href="/static/css/tokens.css">
-  <link rel="stylesheet" href="/static/css/theme-ivory.css">
-  <link rel="stylesheet" href="/static/css/theme-emerald.css">
-  <link rel="stylesheet" href="/static/css/base.css">
-  <link rel="stylesheet" href="/static/css/components.css">
-  <link rel="stylesheet" href="/static/css/nav.css">
-  <link rel="stylesheet" href="/static/css/footer.css">
-  <link rel="stylesheet" href="/static/css/auth.css">
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/layout.css">
+
+  <style>
+    /* ============ ONBOARDING — page-scoped (ob-) ============ */
+
+    .ob-shell {
+      display: flex; flex-direction: column;
+      min-height: 100dvh;
+    }
+
+    /* Top bar */
+    .ob-topbar {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: var(--space-6);
+      padding: var(--space-5) clamp(var(--space-4), 3vw, var(--space-10));
+    }
+    .ob-topbar__brand {
+      display: inline-flex; align-items: center; gap: var(--space-3);
+      font-family: var(--font-display); font-size: 1.0625rem; font-weight: 500;
+      color: var(--ink-100); letter-spacing: -0.01em;
+    }
+    .ob-topbar__mark {
+      width: 28px; height: 28px; border-radius: 8px;
+      display: grid; place-items: center;
+      background: linear-gradient(135deg, var(--mint-500), var(--lavender-500));
+      color: var(--ink-900); font-family: var(--font-display); font-weight: 600;
+    }
+    .ob-topbar__skip {
+      justify-self: end;
+      font-size: var(--fs-small); color: var(--ink-400);
+      display: inline-flex; align-items: center; gap: 6px;
+      transition: color var(--dur-fast);
+    }
+    .ob-topbar__skip:hover { color: var(--ink-200); }
+
+    /* Main stage */
+    .ob-stage {
+      flex: 1;
+      display: flex; align-items: center; justify-content: center;
+      padding: var(--space-8) clamp(var(--space-4), 3vw, var(--space-10)) var(--space-16);
+      position: relative;
+    }
+    .ob-stage__inner {
+      width: 100%;
+      max-width: 980px;
+      position: relative;
+    }
+
+    /* Step container — absolute-stacked so the active one fills the stage */
+    .ob-step {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 320ms var(--ease-emphasis), transform 320ms var(--ease-emphasis);
+      pointer-events: none;
+      position: absolute; inset: 0;
+    }
+    .ob-step.is-active {
+      position: relative;
+      opacity: 1; transform: none;
+      pointer-events: auto;
+    }
+    .ob-step.is-exit {
+      opacity: 0; transform: translateY(-16px);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .ob-step { transition: none; }
+    }
+
+    /* Common typographic primitives */
+    .ob-eyebrow {
+      display: inline-flex; align-items: center; gap: var(--space-2);
+      padding: 5px 10px; align-self: flex-start;
+      background: oklch(78% 0.175 168 / 0.08);
+      border: 1px solid oklch(78% 0.175 168 / 0.25);
+      border-radius: var(--r-full);
+      font-family: var(--font-mono); font-size: var(--fs-tiny);
+      color: var(--mint-300); letter-spacing: var(--tracking-eyebrow); text-transform: uppercase;
+    }
+    .ob-display {
+      font-family: var(--font-display); font-weight: 400;
+      font-size: clamp(2.5rem, 5.5vw + 0.5rem, 4.75rem);
+      line-height: 1; letter-spacing: -0.035em;
+      color: var(--ink-100);
+    }
+    .ob-sub {
+      font-size: 1.1875rem; line-height: 1.5;
+      color: var(--ink-300); max-width: 56ch;
+    }
+    .ob-fineprint {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: var(--fs-tiny); color: var(--ink-400);
+    }
+    .ob-fineprint svg { color: var(--mint-400); }
+
+    /* Step 1 — Welcome */
+    .ob-step--welcome {
+      display: flex; flex-direction: column; gap: var(--space-6);
+      text-align: left; max-width: 760px;
+    }
+    .ob-step--welcome .ob-actions { margin-top: var(--space-6); display: flex; align-items: center; gap: var(--space-4); flex-wrap: wrap; }
+
+    /* Step 2 — Numbers */
+    .ob-numbers { display: grid; grid-template-columns: 1fr 1.05fr; gap: clamp(var(--space-8), 5vw, var(--space-16)); align-items: start; }
+    @media (max-width: 900px) { .ob-numbers { grid-template-columns: 1fr; } }
+    .ob-numbers__left { display: flex; flex-direction: column; gap: var(--space-5); }
+    .ob-numbers__title { font-family: var(--font-display); font-size: clamp(2rem, 3vw + 0.5rem, 2.75rem); line-height: 1.05; letter-spacing: -0.03em; color: var(--ink-100); }
+    .ob-numbers__lede { color: var(--ink-300); font-size: 1.0625rem; max-width: 36ch; }
+
+    /* Live mini-display */
+    .ob-projection {
+      margin-top: var(--space-4);
+      padding: var(--space-5) var(--space-6);
+      background: oklch(24% 0.022 265 / 0.45);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid oklch(100% 0 0 / 0.06);
+      border-radius: var(--r-lg);
+    }
+    .ob-projection__label { font-family: var(--font-mono); font-size: var(--fs-tiny); text-transform: uppercase; letter-spacing: var(--tracking-eyebrow); color: var(--ink-400); }
+    .ob-projection__value {
+      margin-top: 4px;
+      font-family: var(--font-mono); font-variant-numeric: tabular-nums;
+      font-size: clamp(1.875rem, 3vw + 0.5rem, 2.5rem); font-weight: 500;
+      color: var(--ink-100); letter-spacing: -0.01em;
+      transition: color var(--dur-base) var(--ease-standard);
+    }
+    .ob-projection.is-updating .ob-projection__value { color: var(--mint-300); }
+    .ob-projection__sub { color: var(--ink-400); font-size: var(--fs-small); margin-top: 4px; }
+
+    /* Numbers — input grid */
+    .ob-fields { display: grid; gap: var(--space-4); }
+    .ob-field {
+      position: relative;
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .ob-field__inputwrap {
+      position: relative;
+      transition: transform var(--dur-fast) var(--ease-standard);
+    }
+    .ob-field__currency {
+      position: absolute; top: 50%; left: 16px;
+      transform: translateY(-50%);
+      font-family: var(--font-mono); font-size: 1.0625rem;
+      color: var(--ink-400);
+      pointer-events: none;
+      transition: color var(--dur-fast);
+    }
+    .ob-field__input {
+      width: 100%;
+      padding: 22px 16px 14px 32px;
+      background: oklch(24% 0.022 265 / 0.55);
+      color: var(--ink-100);
+      border: 1px solid oklch(100% 0 0 / 0.08);
+      border-radius: var(--r-md);
+      font-family: var(--font-mono); font-variant-numeric: tabular-nums;
+      font-size: 1.0625rem; letter-spacing: -0.005em;
+      transition: border-color var(--dur-fast) var(--ease-standard), background var(--dur-fast) var(--ease-standard), box-shadow var(--dur-base) var(--ease-standard), transform var(--dur-fast) var(--ease-standard);
+    }
+    .ob-field__input::placeholder { color: transparent; }
+    .ob-field__input:hover { border-color: oklch(100% 0 0 / 0.18); }
+    .ob-field__input:focus {
+      outline: none;
+      border-color: var(--mint-500);
+      background: oklch(24% 0.022 265 / 0.85);
+      box-shadow: 0 0 0 4px oklch(78% 0.175 168 / 0.15);
+      transform: scale(1.005);
+    }
+    .ob-field__input:focus ~ .ob-field__currency { color: var(--mint-400); }
+    .ob-field__label {
+      position: absolute;
+      top: 14px; left: 32px;
+      pointer-events: none;
+      font-family: var(--font-body);
+      font-size: 1rem;
+      color: var(--ink-400);
+      transition: top var(--dur-fast) var(--ease-standard), font-size var(--dur-fast) var(--ease-standard), color var(--dur-fast) var(--ease-standard), left var(--dur-fast) var(--ease-standard);
+    }
+    .ob-field__input:focus + .ob-field__label,
+    .ob-field__input:not(:placeholder-shown) + .ob-field__label {
+      top: 6px;
+      left: 32px;
+      font-family: var(--font-mono);
+      font-size: var(--fs-tiny);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-eyebrow);
+      color: var(--mint-400);
+    }
+    .ob-field__hint { font-size: var(--fs-tiny); color: var(--ink-400); padding-left: 4px; }
+
+    /* Step 3 — Goals */
+    .ob-step--goals { display: flex; flex-direction: column; gap: var(--space-8); }
+    .ob-step--goals .ob-header { display: flex; flex-direction: column; gap: var(--space-4); }
+    .ob-goals-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-4);
+    }
+    @media (max-width: 760px) { .ob-goals-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 480px) { .ob-goals-grid { grid-template-columns: 1fr; } }
+    .ob-goal {
+      position: relative;
+      padding: var(--space-5);
+      background: oklch(24% 0.022 265 / 0.55);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid oklch(100% 0 0 / 0.08);
+      border-radius: var(--r-lg);
+      cursor: pointer;
+      transition: transform var(--dur-fast) var(--ease-standard), border-color var(--dur-base) var(--ease-standard), background var(--dur-base) var(--ease-standard), box-shadow var(--dur-base) var(--ease-standard);
+      display: flex; flex-direction: column; gap: var(--space-3);
+      min-height: 152px;
+      user-select: none;
+    }
+    .ob-goal:hover { transform: translateY(-2px); border-color: oklch(100% 0 0 / 0.18); }
+    .ob-goal__check {
+      position: absolute; top: var(--space-4); right: var(--space-4);
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      border: 1.5px solid var(--ink-500);
+      display: grid; place-items: center;
+      color: transparent;
+      transition: background var(--dur-base) var(--ease-standard), border-color var(--dur-base) var(--ease-standard), color var(--dur-base) var(--ease-standard);
+    }
+    .ob-goal__icon {
+      width: 40px; height: 40px; border-radius: var(--r-sm);
+      display: grid; place-items: center;
+      background: oklch(100% 0 0 / 0.04);
+      border: 1px solid oklch(100% 0 0 / 0.06);
+      color: var(--ink-200);
+      transition: background var(--dur-base), color var(--dur-base), border-color var(--dur-base);
+    }
+    .ob-goal__title { font-family: var(--font-display); font-size: 1.1875rem; color: var(--ink-100); letter-spacing: -0.015em; line-height: 1.15; }
+    .ob-goal__body { font-size: var(--fs-small); color: var(--ink-400); line-height: 1.45; }
+    .ob-goal[aria-checked="true"] {
+      border-color: var(--mint-500);
+      background: oklch(78% 0.175 168 / 0.08);
+      box-shadow: 0 0 0 1px var(--mint-500), 0 0 40px -10px var(--mint-glow);
+    }
+    .ob-goal[aria-checked="true"] .ob-goal__check {
+      background: var(--mint-500); border-color: var(--mint-500); color: var(--ink-900);
+    }
+    .ob-goal[aria-checked="true"] .ob-goal__icon {
+      background: oklch(78% 0.175 168 / 0.18); color: var(--mint-300); border-color: oklch(78% 0.175 168 / 0.25);
+    }
+
+    /* Step 4 — Ready */
+    .ob-step--ready { display: flex; flex-direction: column; gap: var(--space-8); align-items: stretch; }
+    .ob-step--ready .ob-header { text-align: center; align-items: center; display: flex; flex-direction: column; gap: var(--space-4); }
+    .ob-summary {
+      position: relative;
+      padding: clamp(var(--space-6), 3vw, var(--space-10));
+      background: oklch(24% 0.022 265 / 0.55);
+      backdrop-filter: blur(20px) saturate(140%);
+      -webkit-backdrop-filter: blur(20px) saturate(140%);
+      border: 1px solid oklch(100% 0 0 / 0.08);
+      border-radius: var(--r-xl);
+      box-shadow:
+        0 1px 0 0 oklch(100% 0 0 / 0.06) inset,
+        0 40px 80px -32px oklch(0% 0 0 / 0.65),
+        0 0 60px -24px var(--mint-glow);
+    }
+    .ob-summary__kpis {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-6);
+      padding-bottom: var(--space-6);
+      border-bottom: 1px solid oklch(100% 0 0 / 0.06);
+      margin-bottom: var(--space-6);
+    }
+    @media (max-width: 700px) { .ob-summary__kpis { grid-template-columns: 1fr; gap: var(--space-5); } }
+    .ob-summary__kpi { display: flex; flex-direction: column; gap: var(--space-2); }
+    .ob-summary__kpi-label { font-family: var(--font-mono); font-size: var(--fs-tiny); text-transform: uppercase; letter-spacing: var(--tracking-eyebrow); color: var(--ink-400); }
+    .ob-summary__kpi-value {
+      font-family: var(--font-mono); font-variant-numeric: tabular-nums;
+      font-size: clamp(1.875rem, 3vw + 0.5rem, 2.5rem);
+      font-weight: 500; color: var(--ink-100); line-height: 1; letter-spacing: -0.01em;
+    }
+    .ob-summary__kpi-meta { font-size: var(--fs-small); color: var(--ink-400); }
+    .ob-summary__chart { height: 160px; }
+    .ob-step--ready .ob-actions {
+      display: flex; flex-direction: column; align-items: center; gap: var(--space-3); margin-top: var(--space-2);
+    }
+    .ob-step--ready .ob-actions .btn--primary { padding: 1rem 2rem; }
+
+    /* Nav row at bottom of steps */
+    .ob-nav {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: var(--space-4); margin-top: var(--space-8);
+    }
+    .ob-nav__back {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: var(--fs-small); color: var(--ink-300);
+      padding: 8px 12px; border-radius: var(--r-sm);
+      transition: color var(--dur-fast), background var(--dur-fast);
+    }
+    .ob-nav__back:hover { color: var(--ink-100); background: oklch(100% 0 0 / 0.04); }
+    .ob-nav__back[disabled] { opacity: 0; pointer-events: none; }
+    .ob-nav__count {
+      font-family: var(--font-mono); font-size: var(--fs-tiny);
+      color: var(--ink-400); letter-spacing: 0.04em;
+    }
+
+    /* Subtle entrance for the entire stage on load */
+    .ob-stage-enter {
+      animation: ob-fade-in 540ms var(--ease-emphasis) both;
+    }
+    @keyframes ob-fade-in {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: none; }
+    }
+    @media (prefers-reduced-motion: reduce) { .ob-stage-enter { animation: none; } }
+
+    /* Hide non-active steps from layout (we use absolute positioning above) */
+    .ob-step:not(.is-active) { visibility: hidden; }
+    .ob-step.is-active { visibility: visible; }
+  </style>
 </head>
-<body data-theme="emerald">
+<body data-page="onboarding">
 
-  <a class="skip-link" href="#main">Skip to onboarding</a>
+  <!-- Aurora background -->
+  <div class="aurora-bg" aria-hidden="true">
+    <div class="aurora-bg__blob aurora-bg__blob--1"></div>
+    <div class="aurora-bg__blob aurora-bg__blob--2"></div>
+    <div class="aurora-bg__blob aurora-bg__blob--3"></div>
+    <div class="aurora-bg__blob aurora-bg__blob--4"></div>
+    <div class="aurora-bg__grain"></div>
+    <div class="aurora-bg__vignette"></div>
+  </div>
 
-  <div data-include="header"></div>
-  <div data-include="banner"></div>
+  <div class="ob-shell">
 
-  <main id="main">
-    <div class="wizard-shell">
+    <!-- ============ TOP BAR ============ -->
+    <header class="ob-topbar">
+      <a href="/" class="ob-topbar__brand" aria-label="ProFinanceCast home">
+        <span class="ob-topbar__mark" aria-hidden="true">P</span>
+        <span>ProFinanceCast</span>
+      </a>
+      <div data-include="/partials/onboarding-progress.html" aria-label="Progress"></div>
+      <a href="/dashboard.html" class="ob-topbar__skip">
+        Skip for now
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </a>
+    </header>
 
-      <!-- ===== TOP STRIP - context + escape hatch ===== -->
-      <div class="wizard-top">
-        <span class="wizard-top__label">New forecast</span>
-        <a class="wizard-skip" href="/dashboard.html" data-href="dashboard.html">
-          Skip the wizard &rarr;
-        </a>
+    <!-- ============ STAGE ============ -->
+    <main class="ob-stage ob-stage-enter" id="obStage">
+      <div class="ob-stage__inner">
+
+        <!-- Step 1: WELCOME -->
+        <section class="ob-step ob-step--welcome is-active" data-step="1" aria-labelledby="ob-welcome-title">
+          <span class="ob-eyebrow">Welcome</span>
+          <h1 class="ob-display" id="ob-welcome-title">
+            Let's see where your money lands.
+          </h1>
+          <p class="ob-sub">Four quick questions. About ninety seconds. We'll show you your ten-year forecast on the next screen.</p>
+          <div class="ob-actions">
+            <button class="btn btn--primary btn--lg" data-ob-next>
+              Begin
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </button>
+            <span class="ob-fineprint">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>
+              Your numbers stay in your browser. We can't see them.
+            </span>
+          </div>
+        </section>
+
+        <!-- Step 2: NUMBERS -->
+        <section class="ob-step ob-step--numbers" data-step="2" aria-labelledby="ob-numbers-title">
+          <div class="ob-numbers">
+            <div class="ob-numbers__left">
+              <span class="ob-eyebrow">Step 2 · Your numbers</span>
+              <h2 class="ob-numbers__title" id="ob-numbers-title">Tell us about your monthly money.</h2>
+              <p class="ob-numbers__lede">Approximate is fine. You can change anything later — every figure is editable inside the dashboard.</p>
+
+              <div class="ob-projection" id="obProjection" aria-live="polite">
+                <span class="ob-projection__label">Projected 10-year net worth</span>
+                <div class="ob-projection__value mono" id="obProjValue">$0</div>
+                <span class="ob-projection__sub">Updates live as you type</span>
+              </div>
+            </div>
+
+            <form class="ob-fields" id="obForm" autocomplete="off" novalidate>
+              <div class="ob-field">
+                <div class="ob-field__inputwrap">
+                  <input class="ob-field__input" id="obIncome" type="number" inputmode="decimal" min="0" step="100" placeholder=" " required>
+                  <label class="ob-field__label" for="obIncome">Monthly income (after tax)</label>
+                  <span class="ob-field__currency" aria-hidden="true">$</span>
+                </div>
+                <span class="ob-field__hint">Take-home, including any side income.</span>
+              </div>
+
+              <div class="ob-field">
+                <div class="ob-field__inputwrap">
+                  <input class="ob-field__input" id="obExpenses" type="number" inputmode="decimal" min="0" step="100" placeholder=" " required>
+                  <label class="ob-field__label" for="obExpenses">Monthly expenses</label>
+                  <span class="ob-field__currency" aria-hidden="true">$</span>
+                </div>
+                <span class="ob-field__hint">Rent, food, subscriptions, transit — the usual.</span>
+              </div>
+
+              <div class="ob-field">
+                <div class="ob-field__inputwrap">
+                  <input class="ob-field__input" id="obSavings" type="number" inputmode="decimal" min="0" step="50" placeholder=" " required>
+                  <label class="ob-field__label" for="obSavings">Monthly savings</label>
+                  <span class="ob-field__currency" aria-hidden="true">$</span>
+                </div>
+                <span class="ob-field__hint">What you set aside, on average.</span>
+              </div>
+
+              <div class="ob-field">
+                <div class="ob-field__inputwrap">
+                  <input class="ob-field__input" id="obDebt" type="number" inputmode="decimal" min="0" step="500" placeholder=" ">
+                  <label class="ob-field__label" for="obDebt">Total debt</label>
+                  <span class="ob-field__currency" aria-hidden="true">$</span>
+                </div>
+                <span class="ob-field__hint">Credit cards, student loans, car. Leave blank if none.</span>
+              </div>
+            </form>
+          </div>
+
+          <div class="ob-nav">
+            <button class="ob-nav__back" data-ob-back>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 5l-7 7 7 7"/></svg>
+              Back
+            </button>
+            <span class="ob-nav__count">02 / 04</span>
+            <button class="btn btn--primary" data-ob-next>
+              Continue
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+        </section>
+
+        <!-- Step 3: GOALS -->
+        <section class="ob-step ob-step--goals" data-step="3" aria-labelledby="ob-goals-title">
+          <div class="ob-header">
+            <span class="ob-eyebrow">Step 3 · Goals</span>
+            <h2 class="ob-display" id="ob-goals-title" style="font-size: clamp(2rem, 3.5vw + 0.5rem, 3rem);">Pick what you're aiming at.</h2>
+            <p class="ob-sub">Choose any number — or none. We'll tune your dashboard to surface the right metrics.</p>
+          </div>
+
+          <div class="ob-goals-grid" id="obGoals" role="group" aria-label="Financial goals">
+            <button type="button" class="ob-goal" role="checkbox" aria-checked="false" data-goal="house">
+              <span class="ob-goal__icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+              </span>
+              <span class="ob-goal__title">House down payment</span>
+              <span class="ob-goal__body">Save toward a first or next home.</span>
+              <span class="ob-goal__check" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m20 6-11 11-5-5"/></svg></span>
+            </button>
+
+            <button type="button" class="ob-goal" role="checkbox" aria-checked="false" data-goal="emergency">
+              <span class="ob-goal__icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.5 9 8 11 4.5-2 8-6 8-11V5l-8-3z"/></svg>
+              </span>
+              <span class="ob-goal__title">Emergency fund</span>
+              <span class="ob-goal__body">Build three to six months of runway.</span>
+              <span class="ob-goal__check" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m20 6-11 11-5-5"/></svg></span>
+            </button>
+
+            <button type="button" class="ob-goal" role="checkbox" aria-checked="false" data-goal="debt">
+              <span class="ob-goal__icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h13l-4-4M16 12l-4 4"/><path d="M21 7v10"/></svg>
+              </span>
+              <span class="ob-goal__title">Pay off debt</span>
+              <span class="ob-goal__body">Snowball, avalanche, or your own pace.</span>
+              <span class="ob-goal__check" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m20 6-11 11-5-5"/></svg></span>
+            </button>
+
+            <button type="button" class="ob-goal" role="checkbox" aria-checked="false" data-goal="vacation">
+              <span class="ob-goal__icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 22h20"/><path d="M17 22V6l-7-4-7 4v16"/><path d="M10 22V12h4v10"/></svg>
+              </span>
+              <span class="ob-goal__title">Vacation fund</span>
+              <span class="ob-goal__body">A trip, a sabbatical, a slow month.</span>
+              <span class="ob-goal__check" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m20 6-11 11-5-5"/></svg></span>
+            </button>
+
+            <button type="button" class="ob-goal" role="checkbox" aria-checked="false" data-goal="retirement">
+              <span class="ob-goal__icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+              </span>
+              <span class="ob-goal__title">Retirement boost</span>
+              <span class="ob-goal__body">Add to your long-term horizon.</span>
+              <span class="ob-goal__check" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m20 6-11 11-5-5"/></svg></span>
+            </button>
+
+            <button type="button" class="ob-goal" role="checkbox" aria-checked="false" data-goal="custom">
+              <span class="ob-goal__icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+              </span>
+              <span class="ob-goal__title">Something else</span>
+              <span class="ob-goal__body">Name your own goal inside the app.</span>
+              <span class="ob-goal__check" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m20 6-11 11-5-5"/></svg></span>
+            </button>
+          </div>
+
+          <div class="ob-nav">
+            <button class="ob-nav__back" data-ob-back>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 5l-7 7 7 7"/></svg>
+              Back
+            </button>
+            <span class="ob-nav__count">03 / 04</span>
+            <button class="btn btn--primary" data-ob-next>
+              Continue
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+        </section>
+
+        <!-- Step 4: READY -->
+        <section class="ob-step ob-step--ready" data-step="4" aria-labelledby="ob-ready-title">
+          <div class="ob-header">
+            <span class="ob-eyebrow">Step 4 · You're set</span>
+            <h2 class="ob-display" id="ob-ready-title">Your forecast is ready.</h2>
+            <p class="ob-sub" style="text-align:center;">Here's the headline. Inside the dashboard you'll find the full ten-year breakdown, every metric, every scenario.</p>
+          </div>
+
+          <div class="ob-summary">
+            <div class="ob-summary__kpis">
+              <div class="ob-summary__kpi">
+                <span class="ob-summary__kpi-label">10-year net worth</span>
+                <span class="ob-summary__kpi-value mono" id="obSumNw">$0</span>
+                <span class="ob-summary__kpi-meta">on current trajectory</span>
+              </div>
+              <div class="ob-summary__kpi">
+                <span class="ob-summary__kpi-label">Months to debt-free</span>
+                <span class="ob-summary__kpi-value mono" id="obSumDebt">0</span>
+                <span class="ob-summary__kpi-meta">at your pace</span>
+              </div>
+              <div class="ob-summary__kpi">
+                <span class="ob-summary__kpi-label">Financial health</span>
+                <span class="ob-summary__kpi-value mono" id="obSumHealth">—</span>
+                <span class="ob-summary__kpi-meta">across savings + debt</span>
+              </div>
+            </div>
+
+            <div class="ob-summary__chart" id="obSumChart" aria-label="10-year forecast curve"></div>
+          </div>
+
+          <div class="ob-actions">
+            <a href="/dashboard.html" class="btn btn--primary btn--lg">
+              Open my dashboard
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </a>
+            <span class="ob-fineprint">You can edit anything later.</span>
+          </div>
+
+          <div class="ob-nav">
+            <button class="ob-nav__back" data-ob-back>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 5l-7 7 7 7"/></svg>
+              Back
+            </button>
+            <span class="ob-nav__count">04 / 04</span>
+            <span></span>
+          </div>
+        </section>
+
       </div>
+    </main>
+  </div>
 
-      <!-- ===== STEP 1 - INCOME ===== -->
-      <section class="wizard-step is-active"
-               data-step="1"
-               aria-labelledby="step1-h1"
-               data-reveal>
+  <!-- ============ SCRIPTS ============ -->
+  <script src="/js/demo-data.js" defer></script>
+  <script src="/js/motion.js" defer></script>
+  <script src="/js/charts.js" defer></script>
+  <script src="/js/include.js" defer></script>
+  <script src="/js/app.js" defer></script>
 
-        <p class="wizard-step__eyebrow">Opening your forecast &middot; Step 1 of 3</p>
-        <h1 id="step1-h1" class="wizard-step__h1">
-          <em>Let&rsquo;s start with what you bring in.</em>
-        </h1>
-        <p class="wizard-step__lede">
-          Just a rough monthly figure. You can adjust later.
-        </p>
+  <script defer>
+    document.addEventListener("pfc:partials-ready", () => {
+      const M = window.PFC_MOTION, C = window.PFC_CHARTS;
 
-        <div class="wizard-step__card">
-          <form class="wizard-step__stack"
-                aria-label="Income"
-                onsubmit="event.preventDefault(); return false;">
+      // ----------- State -----------
+      const TOTAL_STEPS = 4;
+      let currentStep = 1;
+      const data = { income: 0, expenses: 0, savings: 0, debt: 0, goals: new Set() };
 
-            <div class="field">
-              <label class="field__label" for="income-monthly">Monthly income (after tax)</label>
-              <div class="field__group">
-                <span class="field__group__prefix" id="income-prefix" data-prefix>$</span>
-                <input class="field__control auth-fig"
-                       id="income-monthly"
-                       name="income-monthly"
-                       type="text"
-                       inputmode="numeric"
-                       autocomplete="off"
-                       placeholder="7,400"
-                       aria-describedby="income-prefix">
-              </div>
-            </div>
-
-            <div class="wizard-step__row">
-
-              <div class="field">
-                <label class="field__label" for="income-source">Source</label>
-                <select class="field__control" id="income-source" name="income-source">
-                  <option>Salary</option>
-                  <option>Self-employed</option>
-                  <option>Mixed</option>
-                </select>
-              </div>
-
-              <div class="field">
-                <label class="field__label" for="income-currency">Currency</label>
-                <select class="field__control"
-                        id="income-currency"
-                        name="income-currency"
-                        data-currency>
-                  <option value="USD">US dollars ($)</option>
-                  <option value="GBP">British pounds (&pound;)</option>
-                </select>
-              </div>
-
-            </div>
-          </form>
-        </div>
-      </section>
-
-      <!-- ===== STEP 2 - EXPENSES ===== -->
-      <section class="wizard-step"
-               data-step="2"
-               aria-labelledby="step2-h1">
-
-        <p class="wizard-step__eyebrow">Opening your forecast &middot; Step 2 of 3</p>
-        <h1 id="step2-h1" class="wizard-step__h1">
-          <em>Now what goes out.</em>
-        </h1>
-        <p class="wizard-step__lede">
-          A monthly total and a rough split. The categories don&rsquo;t have to be exact.
-        </p>
-
-        <div class="wizard-step__card">
-          <form class="wizard-step__stack"
-                aria-label="Expenses"
-                onsubmit="event.preventDefault(); return false;">
-
-            <div class="field">
-              <label class="field__label" for="expenses-monthly">Monthly expenses (total)</label>
-              <div class="field__group">
-                <span class="field__group__prefix" data-prefix>$</span>
-                <input class="field__control auth-fig"
-                       id="expenses-monthly"
-                       name="expenses-monthly"
-                       type="text"
-                       inputmode="numeric"
-                       autocomplete="off"
-                       placeholder="5,180">
-              </div>
-            </div>
-
-            <div class="wizard-step__subgroup">
-              <p class="wizard-step__subgroup-title">By category</p>
-              <div class="wizard-step__categories">
-
-                <div class="field">
-                  <label class="field__label" for="cat-housing">Housing</label>
-                  <div class="field__group">
-                    <span class="field__group__prefix" data-prefix>$</span>
-                    <input class="field__control auth-fig" id="cat-housing" type="text" inputmode="numeric" placeholder="1,950">
-                  </div>
-                </div>
-
-                <div class="field">
-                  <label class="field__label" for="cat-food">Food &amp; groceries</label>
-                  <div class="field__group">
-                    <span class="field__group__prefix" data-prefix>$</span>
-                    <input class="field__control auth-fig" id="cat-food" type="text" inputmode="numeric" placeholder="780">
-                  </div>
-                </div>
-
-                <div class="field">
-                  <label class="field__label" for="cat-transport">Transport</label>
-                  <div class="field__group">
-                    <span class="field__group__prefix" data-prefix>$</span>
-                    <input class="field__control auth-fig" id="cat-transport" type="text" inputmode="numeric" placeholder="420">
-                  </div>
-                </div>
-
-                <div class="field">
-                  <label class="field__label" for="cat-other">Everything else</label>
-                  <div class="field__group">
-                    <span class="field__group__prefix" data-prefix>$</span>
-                    <input class="field__control auth-fig" id="cat-other" type="text" inputmode="numeric" placeholder="2,030">
-                  </div>
-                </div>
-
-              </div>
-            </div>
-
-          </form>
-        </div>
-      </section>
-
-      <!-- ===== STEP 3 - DEBTS + GOALS ===== -->
-      <section class="wizard-step"
-               data-step="3"
-               aria-labelledby="step3-h1">
-
-        <p class="wizard-step__eyebrow">Opening your forecast &middot; Step 3 of 3</p>
-        <h1 id="step3-h1" class="wizard-step__h1">
-          <em>Two more things and you&rsquo;re forecasting.</em>
-        </h1>
-        <p class="wizard-step__lede">
-          One debt, one goal. Add more from the dashboard later.
-        </p>
-
-        <div class="wizard-step__card">
-          <form class="wizard-step__stack"
-                aria-label="Debt and goal"
-                onsubmit="event.preventDefault(); return false;">
-
-            <div class="wizard-step__subgroup" style="margin-top:0;padding-top:0;border-top:0;">
-              <p class="wizard-step__subgroup-title">A debt</p>
-              <div class="wizard-step__mini-row">
-
-                <div class="field">
-                  <label class="field__label" for="debt-name">Name</label>
-                  <input class="field__control" id="debt-name" type="text" placeholder="Credit card" autocomplete="off">
-                </div>
-
-                <div class="field">
-                  <label class="field__label" for="debt-balance">Balance</label>
-                  <div class="field__group">
-                    <span class="field__group__prefix" data-prefix>$</span>
-                    <input class="field__control auth-fig" id="debt-balance" type="text" inputmode="numeric" placeholder="3,200">
-                  </div>
-                </div>
-
-                <div class="field">
-                  <label class="field__label" for="debt-apr">APR</label>
-                  <div class="field__group">
-                    <input class="field__control auth-fig" id="debt-apr" type="text" inputmode="decimal" placeholder="24.9">
-                    <span class="field__group__suffix">%</span>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-
-            <div class="wizard-step__subgroup">
-              <p class="wizard-step__subgroup-title">A goal</p>
-              <div class="wizard-step__mini-row">
-
-                <div class="field">
-                  <label class="field__label" for="goal-name">Name</label>
-                  <input class="field__control" id="goal-name" type="text" placeholder="Emergency fund" autocomplete="off">
-                </div>
-
-                <div class="field">
-                  <label class="field__label" for="goal-target">Target</label>
-                  <div class="field__group">
-                    <span class="field__group__prefix" data-prefix>$</span>
-                    <input class="field__control auth-fig" id="goal-target" type="text" inputmode="numeric" placeholder="31,080">
-                  </div>
-                </div>
-
-                <div class="field">
-                  <label class="field__label" for="goal-by">By</label>
-                  <input class="field__control" id="goal-by" type="text" placeholder="Dec 2026" autocomplete="off">
-                </div>
-
-              </div>
-            </div>
-
-          </form>
-        </div>
-      </section>
-
-      <!-- ===== PROGRESS DOTS + ACTIONS (shared across steps) ===== -->
-      <div class="wizard-progress"
-           role="progressbar"
-           aria-valuemin="1"
-           aria-valuemax="3"
-           aria-valuenow="1"
-           aria-label="Wizard progress, step 1 of 3"
-           id="wizard-progress">
-        <span class="wizard-progress__dot is-active" data-dot="1" aria-hidden="true"></span>
-        <span class="wizard-progress__rule" aria-hidden="true"></span>
-        <span class="wizard-progress__dot" data-dot="2" aria-hidden="true"></span>
-        <span class="wizard-progress__rule" aria-hidden="true"></span>
-        <span class="wizard-progress__dot" data-dot="3" aria-hidden="true"></span>
-      </div>
-
-      <div class="wizard-actions">
-        <button type="button" class="btn btn--ghost" id="wizard-back" disabled>
-          &larr; Back
-        </button>
-        <button type="button" class="btn btn--primary" id="wizard-next">
-          Continue &rarr;
-        </button>
-      </div>
-
-    </div>
-  </main>
-
-  <div data-include="footer"></div>
-
-  <script src="/static/js/partials.js"></script>
-  <script src="/static/js/reveal.js"></script>
-
-  <script>
-    /* ----------------------------------------------------------
-       Wizard navigation: pure UI swap. Nothing submits, nothing
-       is persisted. Last step's "Continue" sends the visitor to
-       the dashboard (the dashboard already shows demo data per
-       RULING-01 Q4 so the seam is clean).
-       ---------------------------------------------------------- */
-    (function () {
-      var steps = document.querySelectorAll('.wizard-step');
-      var dots  = document.querySelectorAll('.wizard-progress__dot');
-      var prog  = document.getElementById('wizard-progress');
-      var back  = document.getElementById('wizard-back');
-      var next  = document.getElementById('wizard-next');
-      var idx   = 1;
-      var max   = steps.length;
-
-      function render() {
-        steps.forEach(function (s) {
-          s.classList.toggle('is-active', parseInt(s.dataset.step, 10) === idx);
-        });
-        dots.forEach(function (d) {
-          d.classList.toggle('is-active', parseInt(d.dataset.dot, 10) <= idx);
-        });
-        back.disabled = (idx === 1);
-        next.textContent = (idx === max) ? 'Open the dashboard →' : 'Continue →';
-        if (prog) {
-          prog.setAttribute('aria-valuenow', String(idx));
-          prog.setAttribute('aria-label', 'Wizard progress, step ' + idx + ' of ' + max);
-        }
-        /* Focus the first input of the freshly-visible step
-           so keyboard / screen-reader users land in the form.
-           Skip on the first paint (already focused-or-elsewhere). */
-        var active = document.querySelector('.wizard-step.is-active');
-        if (active && document.activeElement === document.body) {
-          var first = active.querySelector('input, select');
-          if (first) first.focus({ preventScroll: true });
-        }
-      }
-
-      back.addEventListener('click', function () {
-        if (idx > 1) { idx -= 1; render(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
-      });
-
-      next.addEventListener('click', function () {
-        if (idx < max) {
-          idx += 1;
-          render();
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        } else {
-          window.location.href = '/dashboard.html';
-        }
-      });
-
-      /* Currency prefix swap. The Step-1 select drives every
-         dollar prefix on every step. Pound or dollar - the same
-         two symbols. No third currency in this preview.        */
-      var currency = document.querySelector('[data-currency]');
-      if (currency) {
-        currency.addEventListener('change', function () {
-          var sym = currency.value === 'GBP' ? '£' : '$';
-          document.querySelectorAll('[data-prefix]').forEach(function (p) {
-            p.textContent = sym;
-          });
+      // ----------- Progress sync -----------
+      function syncProgress() {
+        const progressEl = document.querySelector(".pfc-onboard-progress");
+        if (!progressEl) return;
+        progressEl.setAttribute("data-step", String(currentStep));
+        progressEl.querySelectorAll(".pfc-onboard-progress__step").forEach((s) => {
+          const n = Number(s.getAttribute("data-step"));
+          s.removeAttribute("data-state");
+          if (n < currentStep) s.setAttribute("data-state", "done");
+          else if (n === currentStep) s.setAttribute("data-state", "active");
         });
       }
-    }());
+      syncProgress();
+
+      // ----------- Step transitions -----------
+      const steps = Array.from(document.querySelectorAll(".ob-step"));
+      function goTo(n) {
+        n = Math.max(1, Math.min(TOTAL_STEPS, n));
+        if (n === currentStep) return;
+        const out = steps.find((s) => Number(s.dataset.step) === currentStep);
+        const next = steps.find((s) => Number(s.dataset.step) === n);
+        if (!next) return;
+
+        out.classList.add("is-exit");
+        out.classList.remove("is-active");
+        // Use a short timeout so the exit transition starts cleanly
+        setTimeout(() => {
+          out.classList.remove("is-exit");
+        }, 320);
+
+        next.classList.add("is-active");
+        currentStep = n;
+        syncProgress();
+        // Focus management — move focus to first heading in new step.
+        const heading = next.querySelector("h1, h2");
+        if (heading) {
+          heading.setAttribute("tabindex", "-1");
+          heading.focus({ preventScroll: true });
+        }
+
+        // Step-specific entry hooks.
+        if (n === 4) renderSummary();
+      }
+
+      document.querySelectorAll("[data-ob-next]").forEach((b) =>
+        b.addEventListener("click", () => goTo(currentStep + 1))
+      );
+      document.querySelectorAll("[data-ob-back]").forEach((b) =>
+        b.addEventListener("click", () => goTo(currentStep - 1))
+      );
+
+      // ----------- Step 2 — inputs + live projection -----------
+      const inputs = {
+        income: document.getElementById("obIncome"),
+        expenses: document.getElementById("obExpenses"),
+        savings: document.getElementById("obSavings"),
+        debt: document.getElementById("obDebt"),
+      };
+      const projection = document.getElementById("obProjection");
+      const projValue = document.getElementById("obProjValue");
+      let debTimer = null;
+
+      function readInputs() {
+        data.income = Number(inputs.income.value) || 0;
+        data.expenses = Number(inputs.expenses.value) || 0;
+        data.savings = Number(inputs.savings.value) || 0;
+        data.debt = Number(inputs.debt.value) || 0;
+      }
+      function projectNetWorth() {
+        // Illustrative compounding per brief:
+        // (savings * 12 * 10) + (income * 0.01 * 60), minus debt.
+        const base = data.savings * 12 * 10;
+        const growth = data.income * 0.01 * 60;
+        return Math.max(0, Math.round(base + growth - data.debt));
+      }
+      function updateProjection() {
+        readInputs();
+        const to = projectNetWorth();
+        projection.classList.add("is-updating");
+        // Soft count from current value.
+        const cur = Number(String(projValue.textContent).replace(/[^0-9.-]/g, "")) || 0;
+        M.countUp(projValue, to, { currency: "USD", from: cur, duration: 600 });
+        setTimeout(() => projection.classList.remove("is-updating"), 700);
+      }
+      Object.values(inputs).forEach((el) => {
+        el.addEventListener("input", () => {
+          clearTimeout(debTimer);
+          debTimer = setTimeout(updateProjection, 160);
+        });
+      });
+
+      // Seed with illustrative defaults so the projection card isn't $0 forever.
+      inputs.income.value = 7800;
+      inputs.expenses.value = 4210;
+      inputs.savings.value = 1840;
+      inputs.debt.value = 12400;
+      updateProjection();
+
+      // ----------- Step 3 — goal toggle -----------
+      document.querySelectorAll(".ob-goal").forEach((g) => {
+        g.addEventListener("click", () => {
+          const checked = g.getAttribute("aria-checked") === "true";
+          g.setAttribute("aria-checked", String(!checked));
+          const key = g.dataset.goal;
+          if (checked) data.goals.delete(key);
+          else data.goals.add(key);
+        });
+        g.addEventListener("keydown", (e) => {
+          if (e.key === " " || e.key === "Enter") { e.preventDefault(); g.click(); }
+        });
+      });
+
+      // ----------- Step 4 — summary -----------
+      let summaryRendered = false;
+      function renderSummary() {
+        if (summaryRendered) return;
+        summaryRendered = true;
+        readInputs();
+        const nw = projectNetWorth();
+        // Debt-free estimate: total debt / monthly savings (illustrative)
+        const months = data.savings > 0 ? Math.max(1, Math.round(data.debt / Math.max(200, data.savings * 0.6))) : 0;
+        // Health score band:
+        const ratio = data.income > 0 ? data.savings / data.income : 0;
+        const grade =
+          ratio >= 0.30 ? "A" :
+          ratio >= 0.20 ? "A−" :
+          ratio >= 0.15 ? "B+" :
+          ratio >= 0.10 ? "B"  :
+          ratio >= 0.05 ? "B−" : "C+";
+
+        M.countUp(document.getElementById("obSumNw"), nw, { currency: "USD", duration: 1500 });
+        M.countUp(document.getElementById("obSumDebt"), months, { duration: 1200 });
+        // Grade: fade-in
+        const gEl = document.getElementById("obSumHealth");
+        gEl.style.opacity = "0";
+        gEl.textContent = grade;
+        setTimeout(() => {
+          gEl.style.transition = "opacity 600ms var(--ease-standard)";
+          gEl.style.opacity = "1";
+        }, 200);
+
+        // Forecast curve
+        const chartEl = document.getElementById("obSumChart");
+        const series = [];
+        let v = (data.savings * 12) + 5000;
+        for (let i = 0; i < 40; i++) {
+          v += (data.savings * 12) / 4 + Math.sin(i / 3) * 600;
+          series.push({ label: `Q${i + 1}`, value: Math.round(v) });
+        }
+        setTimeout(() => C.areaChart(chartEl, series, { height: 160, currency: "USD", showAxis: false }), 60);
+      }
+
+      // ----------- Keyboard convenience -----------
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && (e.target.tagName === "INPUT" || e.target.tagName === "BUTTON")) {
+          // Don't hijack textareas etc.
+          if (e.target.tagName === "INPUT" && currentStep === 2) {
+            // Move to next input or advance
+            const order = ["obIncome", "obExpenses", "obSavings", "obDebt"];
+            const idx = order.indexOf(e.target.id);
+            if (idx >= 0 && idx < order.length - 1) {
+              e.preventDefault();
+              document.getElementById(order[idx + 1]).focus();
+            } else if (idx === order.length - 1) {
+              e.preventDefault();
+              goTo(currentStep + 1);
+            }
+          }
+        }
+        if (e.key === "Escape" && currentStep > 1) {
+          goTo(currentStep - 1);
+        }
+      });
+    });
   </script>
 
 </body>

@@ -1,0 +1,138 @@
+/* ProFinanceCast2 — Aurora Cinema design tokens
+ * Page agents: load these fonts in <head> of every HTML page:
+ *   <link rel="preconnect" href="https://fonts.googleapis.com">
+ *   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ *   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+ *
+ * Principle (impeccable): theme chosen from scene — "an analyst checking forecasts at 11pm on a 14-inch laptop,
+ * needing calm focus, not crypto-bro neon." → cinematic dark with restrained mint accent.
+ */
+
+:root {
+  /* ---------- INK SCALE (tinted toward indigo, never pure #000) ---------- */
+  --ink-900: oklch(16% 0.018 265);   /* deepest canvas */
+  --ink-800: oklch(20% 0.020 265);   /* canvas raised */
+  --ink-700: oklch(24% 0.022 265);   /* card bg */
+  --ink-600: oklch(30% 0.022 265);   /* raised card / hover */
+  --ink-500: oklch(38% 0.020 265);   /* borders */
+  --ink-400: oklch(58% 0.018 265);   /* subtle / disabled text */
+  --ink-300: oklch(78% 0.014 265);   /* body text */
+  --ink-200: oklch(90% 0.010 265);   /* secondary display text */
+  --ink-100: oklch(97% 0.006 265);   /* near-white display text */
+
+  /* ---------- MINT (electric primary) ---------- */
+  --mint-300: oklch(92% 0.090 168);
+  --mint-400: oklch(82% 0.150 168);
+  --mint-500: oklch(78% 0.175 168);   /* approx #4FE0B0 — primary */
+  --mint-600: oklch(66% 0.165 168);
+  --mint-glow: oklch(78% 0.175 168 / 0.35);
+
+  /* ---------- SECONDARIES ---------- */
+  --coral-500: oklch(74% 0.135 28);   /* warm soft coral */
+  --coral-400: oklch(80% 0.110 28);
+  --lavender-500: oklch(72% 0.115 295); /* cool accent */
+  --lavender-400: oklch(80% 0.090 295);
+  --amber-400: oklch(80% 0.140 75);   /* caution */
+
+  /* ---------- SEMANTIC ---------- */
+  --positive: var(--mint-500);
+  --negative: var(--coral-500);
+  --neutral: var(--ink-400);
+  --warn: var(--amber-400);
+  --focus-ring: var(--mint-500);
+
+  /* ---------- AURORA GRADIENT STOPS ---------- */
+  --aurora-1: oklch(60% 0.180 168 / 0.45);  /* mint blob */
+  --aurora-2: oklch(55% 0.170 295 / 0.40);  /* lavender blob */
+  --aurora-3: oklch(60% 0.140 28 / 0.30);   /* coral blob */
+  --aurora-4: oklch(50% 0.150 230 / 0.35);  /* deep teal blob */
+
+  /* ---------- TYPOGRAPHY ---------- */
+  --font-display: "Fraunces", "Instrument Serif", ui-serif, Georgia, serif;
+  --font-body:    "Geist", ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", sans-serif;
+  --font-mono:    "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* Fluid type scale (clamp: min, fluid, max). Ratio ~1.28, per impeccable spec. */
+  --fs-display-xl: clamp(3.5rem, 6.5vw + 0.5rem, 6.75rem);  /* hero */
+  --fs-display-lg: clamp(2.75rem, 4.5vw + 0.5rem, 4.75rem);
+  --fs-display-md: clamp(2.25rem, 3vw + 0.6rem, 3.5rem);
+  --fs-display-sm: clamp(1.875rem, 2vw + 0.75rem, 2.5rem);
+  --fs-h1: clamp(1.75rem, 1.4vw + 1rem, 2.25rem);
+  --fs-h2: clamp(1.5rem, 1vw + 0.9rem, 1.875rem);
+  --fs-h3: clamp(1.25rem, 0.6vw + 0.9rem, 1.5rem);
+  --fs-h4: 1.125rem;
+  --fs-body:  1rem;
+  --fs-small: 0.8125rem;
+  --fs-tiny:  0.6875rem;
+
+  --fs-mono-xl: clamp(2.5rem, 3.5vw + 0.5rem, 3.75rem);  /* KPI big number */
+  --fs-mono-lg: clamp(1.75rem, 1.6vw + 0.9rem, 2.25rem);
+  --fs-mono-md: 1.125rem;
+  --fs-mono-sm: 0.8125rem;
+
+  --lh-tight: 1.05;
+  --lh-snug:  1.2;
+  --lh-body:  1.55;
+  --lh-loose: 1.7;
+  --tracking-display: -0.025em;
+  --tracking-mono: -0.01em;
+  --tracking-eyebrow: 0.14em;
+
+  /* ---------- SPACING (4px base) ---------- */
+  --space-1:  0.25rem;   /* 4 */
+  --space-2:  0.5rem;    /* 8 */
+  --space-3:  0.75rem;   /* 12 */
+  --space-4:  1rem;      /* 16 */
+  --space-5:  1.25rem;   /* 20 */
+  --space-6:  1.5rem;    /* 24 */
+  --space-8:  2rem;      /* 32 */
+  --space-10: 2.5rem;    /* 40 */
+  --space-12: 3rem;      /* 48 */
+  --space-16: 4rem;      /* 64 */
+  --space-20: 5rem;      /* 80 */
+  --space-24: 6rem;      /* 96 */
+  --space-32: 8rem;      /* 128 */
+  --space-section: clamp(4rem, 8vw, 7rem);
+
+  /* ---------- RADII ---------- */
+  --r-sm:   8px;
+  --r-md:   14px;
+  --r-lg:   22px;
+  --r-xl:   32px;
+  --r-full: 9999px;
+
+  /* ---------- SHADOWS (tinted to canvas hue) ---------- */
+  --shadow-card:    0 1px 0 0 oklch(100% 0 0 / 0.04) inset,
+                    0 12px 32px -16px oklch(0% 0 0 / 0.55);
+  --shadow-raised:  0 1px 0 0 oklch(100% 0 0 / 0.06) inset,
+                    0 24px 56px -20px oklch(0% 0 0 / 0.65);
+  --shadow-aurora:  0 0 0 1px var(--mint-500),
+                    0 8px 40px -8px var(--mint-glow),
+                    0 1px 0 0 oklch(100% 0 0 / 0.10) inset;
+  --shadow-focus:   0 0 0 2px var(--ink-900), 0 0 0 4px var(--mint-500);
+
+  /* ---------- MOTION ---------- */
+  /* ease-out-quart — per impeccable "no bounce, exponential curves" */
+  --ease-standard: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-emphasis: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-exit:     cubic-bezier(0.7, 0, 0.84, 0);
+  --dur-fast:    180ms;
+  --dur-base:    320ms;
+  --dur-slow:    600ms;
+  --dur-aurora:  8000ms;
+
+  /* ---------- LAYOUT ---------- */
+  --maxw-content: 1240px;
+  --maxw-narrow:  720px;
+  --maxw-wide:    1440px;
+  --sidebar-w:    264px;
+  --topbar-h:     68px;
+
+  /* ---------- Z-INDEX SCALE ---------- */
+  --z-base:    0;
+  --z-raised:  10;
+  --z-sticky:  100;
+  --z-overlay: 500;
+  --z-modal:   1000;
+  --z-toast:   2000;
+}

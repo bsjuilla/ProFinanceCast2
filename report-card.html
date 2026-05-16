@@ -1,237 +1,640 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Report card &mdash; ProFinanceCast</title>
-  <meta name="description" content="A quarterly financial letter for the household. Net worth, debt, savings, and the forecast revision &mdash; in prose.">
-  <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Report card — ProFinanceCast</title>
+  <meta name="description" content="Your financial health, graded across five dimensions. B+ overall." />
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/css/tokens.css">
-  <link rel="stylesheet" href="/static/css/theme-ivory.css">
-  <link rel="stylesheet" href="/static/css/theme-emerald.css">
-  <link rel="stylesheet" href="/static/css/base.css">
-  <link rel="stylesheet" href="/static/css/components.css">
-  <link rel="stylesheet" href="/static/css/nav.css">
-  <link rel="stylesheet" href="/static/css/footer.css">
-  <link rel="stylesheet" href="/static/css/charts.css">
-  <link rel="stylesheet" href="/static/css/app.css">
-  <link rel="stylesheet" href="/static/css/report-card.css">
-</head>
-<body data-theme="emerald">
-  <a class="skip-link" href="#main">Skip to report card</a>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
 
-  <div data-include="header"></div>
-  <div data-include="banner"></div>
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/layout.css">
+
+  <style>
+    /* ===========================================================
+     * Report card — page-local styles. BEM, no !important.
+     * =========================================================== */
+
+    .topbar { height: auto; min-height: var(--topbar-h); padding-block: 14px; }
+    .greet { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .greet__eyebrow {
+      font-family: var(--font-mono); font-size: var(--fs-tiny);
+      text-transform: uppercase; letter-spacing: var(--tracking-eyebrow);
+      color: var(--ink-400);
+    }
+    .greet__title {
+      font-family: var(--font-display);
+      font-size: clamp(1.15rem, 0.4vw + 1rem, 1.4rem);
+      font-weight: 500; color: var(--ink-100);
+      letter-spacing: -0.015em; line-height: 1.1;
+    }
+    .greet__title em { font-style: italic; color: var(--amber-400); font-weight: 400; }
+
+    /* ---------- Hero grade card ---------- */
+    .grade-card {
+      position: relative;
+      padding: var(--space-12) var(--space-8);
+      text-align: center;
+      background: oklch(24% 0.022 265 / 0.55);
+      backdrop-filter: blur(20px) saturate(140%);
+      -webkit-backdrop-filter: blur(20px) saturate(140%);
+      border: 1px solid oklch(80% 0.140 75 / 0.30);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      box-shadow:
+        0 1px 0 0 oklch(100% 0 0 / 0.06) inset,
+        0 24px 56px -20px oklch(0% 0 0 / 0.55),
+        0 0 60px -20px oklch(80% 0.140 75 / 0.30);
+    }
+    .grade-card::before {
+      content: ""; position: absolute; inset: 0;
+      background:
+        radial-gradient(60% 50% at 50% 0%, oklch(80% 0.140 75 / 0.18), transparent 70%),
+        radial-gradient(40% 40% at 50% 100%, oklch(78% 0.175 168 / 0.10), transparent 70%);
+      pointer-events: none;
+    }
+    .grade-card > * { position: relative; }
+    .grade-card__eyebrow {
+      font-family: var(--font-mono); font-size: var(--fs-tiny);
+      text-transform: uppercase; letter-spacing: var(--tracking-eyebrow);
+      color: var(--amber-400);
+      margin-bottom: var(--space-4);
+    }
+    .grade-wrap {
+      position: relative;
+      display: inline-grid; place-items: center;
+      width: clamp(240px, 30vw, 320px);
+      height: clamp(240px, 30vw, 320px);
+      margin-bottom: var(--space-6);
+    }
+    .grade-wrap__ring { position: absolute; inset: 0; }
+    .grade-letter {
+      font-family: var(--font-display);
+      font-size: clamp(8.75rem, 14vw + 1rem, 13.75rem);
+      font-weight: 400;
+      font-style: italic;
+      color: var(--ink-100);
+      letter-spacing: -0.04em;
+      line-height: 0.85;
+      background: linear-gradient(180deg, var(--ink-100) 0%, var(--amber-400) 130%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .grade-card__score {
+      font-family: var(--font-mono);
+      font-size: var(--fs-mono-lg); font-weight: 500;
+      color: var(--ink-100); font-variant-numeric: tabular-nums;
+      letter-spacing: -0.02em;
+      margin-bottom: var(--space-2);
+    }
+    .grade-card__score-of {
+      color: var(--ink-400); font-weight: 400; font-size: 0.7em;
+    }
+    .grade-card__caption {
+      font-size: var(--fs-small); color: var(--ink-300);
+      max-width: 460px; margin: 0 auto; line-height: 1.5;
+    }
+    .grade-card__chips {
+      display: inline-flex; gap: var(--space-3);
+      margin-top: var(--space-5);
+      flex-wrap: wrap; justify-content: center;
+    }
+    .grade-card__chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 12px; border-radius: var(--r-full);
+      font-family: var(--font-mono); font-size: var(--fs-tiny);
+      color: var(--mint-300);
+      background: oklch(78% 0.175 168 / 0.10);
+      border: 1px solid oklch(78% 0.175 168 / 0.28);
+    }
+    .grade-card__chip--warn {
+      color: var(--amber-400);
+      background: oklch(80% 0.140 75 / 0.10);
+      border-color: oklch(80% 0.140 75 / 0.30);
+    }
+
+    /* ---------- 5 dimension cards ---------- */
+    .dim-grid {
+      display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--space-5);
+    }
+    @media (max-width: 1100px) { .dim-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 640px)  { .dim-grid { grid-template-columns: repeat(2, 1fr); } }
+
+    .dim-card {
+      padding: var(--space-6) var(--space-5);
+      background: oklch(24% 0.022 265 / 0.55);
+      backdrop-filter: blur(16px) saturate(140%);
+      -webkit-backdrop-filter: blur(16px) saturate(140%);
+      border: 1px solid oklch(100% 0 0 / 0.07);
+      border-radius: var(--r-lg);
+      display: flex; flex-direction: column; align-items: center; text-align: center;
+      gap: var(--space-3);
+      transition: transform var(--dur-base) var(--ease-standard),
+                  border-color var(--dur-base) var(--ease-standard);
+    }
+    .dim-card:hover { transform: translateY(-3px); border-color: oklch(78% 0.175 168 / 0.30); }
+    .dim-card__ring { width: 96px; height: 96px; }
+    .dim-card__label {
+      font-size: var(--fs-small); color: var(--ink-200); font-weight: 500;
+      margin-top: var(--space-2);
+    }
+    .dim-card__summary {
+      font-size: var(--fs-tiny); color: var(--ink-400); line-height: 1.4;
+      min-height: 32px;
+    }
+    .dim-card__link {
+      font-family: var(--font-mono); font-size: 10px;
+      text-transform: uppercase; letter-spacing: var(--tracking-eyebrow);
+      color: var(--mint-400);
+      display: inline-flex; align-items: center; gap: 4px;
+      transition: gap var(--dur-fast) var(--ease-standard);
+      margin-top: auto;
+    }
+    .dim-card__link:hover { gap: 8px; color: var(--mint-300); }
+
+    /* ---------- Strengths & weaknesses ---------- */
+    .sw-row {
+      display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-5);
+    }
+    @media (max-width: 900px) { .sw-row { grid-template-columns: 1fr; } }
+    .sw-card { padding: var(--space-8); }
+    .sw-card__head { margin-bottom: var(--space-6); }
+    .sw-card__title {
+      font-family: var(--font-display); font-size: var(--fs-h2); font-weight: 400;
+      color: var(--ink-100); letter-spacing: -0.02em;
+    }
+    .sw-card__title em { font-style: italic; font-weight: 400; }
+    .sw-card--strength .sw-card__title em { color: var(--mint-400); }
+    .sw-card--weakness .sw-card__title em { color: var(--coral-500); }
+
+    .sw-item {
+      display: grid; grid-template-columns: 22px 1fr auto;
+      gap: var(--space-4);
+      padding: var(--space-4) 0;
+      border-top: 1px solid oklch(100% 0 0 / 0.05);
+      align-items: flex-start;
+    }
+    .sw-item:first-child { border-top: 0; padding-top: 0; }
+    .sw-item:last-child  { padding-bottom: 0; }
+    .sw-item__icon {
+      width: 22px; height: 22px;
+      display: grid; place-items: center;
+      border-radius: var(--r-full);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .sw-card--strength .sw-item__icon {
+      color: var(--mint-300);
+      background: oklch(78% 0.175 168 / 0.12);
+    }
+    .sw-card--weakness .sw-item__icon {
+      color: var(--coral-500);
+      background: oklch(74% 0.135 28 / 0.12);
+    }
+    .sw-item__body { font-size: var(--fs-small); color: var(--ink-200); line-height: 1.5; }
+    .sw-item__body strong { color: var(--ink-100); font-weight: 500; display: block; margin-bottom: 2px; }
+    .sw-item__action {
+      font-family: var(--font-mono); font-size: 10px;
+      text-transform: uppercase; letter-spacing: var(--tracking-eyebrow);
+      color: var(--mint-400);
+      padding: 6px 10px;
+      border: 1px solid oklch(78% 0.175 168 / 0.22);
+      border-radius: var(--r-full);
+      white-space: nowrap;
+      transition: background var(--dur-fast), color var(--dur-fast);
+    }
+    .sw-item__action:hover { background: oklch(78% 0.175 168 / 0.10); color: var(--mint-300); }
+
+    /* ---------- Trend chart card ---------- */
+    .trend-card { padding: var(--space-8); }
+    .trend-card__head {
+      display: flex; align-items: baseline; justify-content: space-between;
+      margin-bottom: var(--space-6); gap: var(--space-4); flex-wrap: wrap;
+    }
+    .trend-card__title {
+      font-family: var(--font-display); font-size: var(--fs-h2); font-weight: 400;
+      color: var(--ink-100); letter-spacing: -0.02em;
+    }
+    .trend-card__title em { font-style: italic; color: var(--mint-400); font-weight: 400; }
+    .trend-card__note { font-family: var(--font-mono); font-size: var(--fs-tiny); color: var(--ink-400); text-transform: uppercase; letter-spacing: var(--tracking-eyebrow); }
+    .trend-chart-wrap { position: relative; height: 240px; }
+
+    /* ---------- Improve card ---------- */
+    .improve-card { padding: var(--space-8); }
+    .improve-card__head { margin-bottom: var(--space-6); }
+    .improve-card__title {
+      font-family: var(--font-display); font-size: var(--fs-h2); font-weight: 400;
+      color: var(--ink-100); letter-spacing: -0.02em;
+    }
+    .improve-card__title em { font-style: italic; color: var(--mint-400); font-weight: 400; }
+    .improve-list {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-5);
+    }
+    @media (max-width: 900px) { .improve-list { grid-template-columns: 1fr; } }
+    .improve-item {
+      padding: var(--space-5);
+      background: oklch(20% 0.020 265 / 0.5);
+      border: 1px solid oklch(100% 0 0 / 0.05);
+      border-radius: var(--r-md);
+      display: flex; flex-direction: column; gap: var(--space-3);
+    }
+    .improve-item__num {
+      font-family: var(--font-mono); font-size: var(--fs-tiny);
+      color: var(--mint-400); text-transform: uppercase; letter-spacing: var(--tracking-eyebrow);
+    }
+    .improve-item__title { font-size: var(--fs-body); color: var(--ink-100); font-weight: 500; line-height: 1.3; }
+    .improve-item__body { font-size: var(--fs-small); color: var(--ink-300); line-height: 1.5; }
+    .improve-item__impact {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: var(--font-mono); font-size: var(--fs-tiny);
+      color: var(--mint-300);
+      padding: 4px 10px;
+      background: oklch(78% 0.175 168 / 0.10);
+      border-radius: var(--r-full);
+      align-self: flex-start;
+    }
+
+    .sec-header { margin-bottom: var(--space-6); }
+    .sec-title {
+      font-family: var(--font-display);
+      font-size: var(--fs-h2); font-weight: 400; color: var(--ink-100);
+      letter-spacing: -0.02em; line-height: 1.1;
+    }
+    .sec-title em { font-style: italic; color: var(--ink-300); font-weight: 300; }
+    .sec-sub { font-size: var(--fs-small); color: var(--ink-400); margin-top: 4px; }
+
+    .foot-strip {
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+      gap: var(--space-4); padding: var(--space-5) var(--space-2);
+      margin-top: var(--space-12);
+      border-top: 1px solid oklch(100% 0 0 / 0.05);
+      font-family: var(--font-mono); font-size: var(--fs-tiny); color: var(--ink-400);
+    }
+    .foot-strip__dot {
+      width: 5px; height: 5px; border-radius: var(--r-full);
+      background: var(--mint-500); box-shadow: 0 0 8px var(--mint-glow);
+      display: inline-block; margin-right: 8px;
+    }
+
+    [data-reveal-stagger] > * {
+      opacity: 0; transform: translateY(14px);
+      transition: opacity var(--dur-slow) var(--ease-standard),
+                  transform var(--dur-slow) var(--ease-standard);
+      transition-delay: calc(var(--i, 0) * 80ms);
+    }
+    [data-reveal-stagger].is-revealed > * { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) {
+      [data-reveal-stagger] > * { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body data-page="report-card">
+
+  <div class="aurora-bg" aria-hidden="true">
+    <div class="aurora-bg__blob aurora-bg__blob--1"></div>
+    <div class="aurora-bg__blob aurora-bg__blob--2"></div>
+    <div class="aurora-bg__blob aurora-bg__blob--3"></div>
+    <div class="aurora-bg__blob aurora-bg__blob--4"></div>
+    <div class="aurora-bg__grain"></div>
+    <div class="aurora-bg__vignette"></div>
+  </div>
 
   <div class="app-shell">
-    <div data-include="sidebar"></div>
+    <div data-include="/partials/sidebar.html"></div>
 
-    <main class="app-main" id="main">
+    <main class="main">
+      <div data-include="/partials/topbar.html"></div>
 
-      <!-- 1 · PAGE HEAD ───────────────────────────────────────────────── -->
-      <header class="page-head" data-reveal>
-        <div class="page-head__body">
-          <p class="eyebrow page-head__eyebrow">
-            <span>Report card</span>
-            <span class="page-head__sep" aria-hidden="true">&middot;</span>
-            <span class="mono">Q1 2026 close</span>
-          </p>
-          <h1 class="display display--md page-head__title">A short letter every quarter.</h1>
-          <p class="page-head__lede">What changed, what to watch, what to do next.</p>
-        </div>
-        <div class="page-head__actions">
-          <button type="button" class="btn btn--primary btn--sm" data-pdf-download>Download PDF</button>
-        </div>
-      </header>
+      <div class="main__content">
 
-      <!-- 2 · REPORT BODY (private-bank letter composition) ───────────── -->
-      <article class="report" aria-label="Quarterly report card" data-reveal>
-
-        <!-- Masthead ─────────────────────────────────────────────────── -->
-        <header class="report__masthead">
-          <h2 class="report__masthead-title">First-quarter forecast letter.</h2>
-          <div class="report__masthead-meta">
-            <p class="report__masthead-period">
-              <span>Period</span>
-              <span aria-hidden="true">&middot;</span>
-              <span class="mono">01 Jan &rarr; 31 Mar 2026</span>
-            </p>
-            <p class="report__masthead-confidential">Private &middot; for this household</p>
-          </div>
-        </header>
-
-        <!-- Opening paragraph (3-4 sentences, narrative register) ─────── -->
-        <section class="report__opening">
-          <p class="report__opening-eyebrow">The quarter in one paragraph</p>
-          <p class="report__opening-body">
-            The household closed the first quarter with net worth at <span class="mono">$87,420</span>, a clean <span class="mono">$6,930</span> ahead of January. The credit-card line moved from <span class="mono">$4,610</span> to <span class="mono">$3,200</span> on a steady avalanche cadence; the student loan held within its amortisation. Liquid reserve crossed <span class="mono">4.8 months</span> of expenses for the first time, and the ten-year endpoint was lifted from <span class="mono">$400,800</span> to <span class="mono">$412,000</span> after the retirement-contribution revision. The arithmetic is plain: spend close to plan, retire interest first, the curve does the rest.
-          </p>
+        <!-- ============================================================
+             SECTION 1 — Hero grade card
+             ============================================================ -->
+        <section class="section" aria-labelledby="grade-heading" style="margin-bottom: var(--space-12);">
+          <article class="grade-card" data-reveal>
+            <span class="grade-card__eyebrow">Overall · 12-month rolling</span>
+            <div class="grade-wrap">
+              <div class="grade-wrap__ring" data-grade-ring></div>
+              <span class="grade-letter" id="grade-heading">B+</span>
+            </div>
+            <div class="grade-card__score mono">
+              <span data-score-value data-value="78">0</span><span class="grade-card__score-of"> / 100</span>
+            </div>
+            <p class="grade-card__caption">Above average across savings and investing, with room to grow your emergency runway. Up 4 points in the last 90 days.</p>
+            <div class="grade-card__chips">
+              <span class="grade-card__chip">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>
+                Passing
+              </span>
+              <span class="grade-card__chip">+4 / 90d</span>
+              <span class="grade-card__chip grade-card__chip--warn">Watch · runway</span>
+            </div>
+          </article>
         </section>
 
-        <!-- Metric cards (6 cards, the headline figures) ─────────────── -->
-        <section class="report__metrics" aria-label="Quarterly metric cards">
-          <div class="report__metric">
-            <p class="report__metric-label">Net-worth delta</p>
-            <p class="report__metric-value mono">+$6,930</p>
-            <p class="report__metric-foot">
-              <span class="report__metric-delta report__metric-delta--up">+8.6%</span>
-              <span>vs Q1 open</span>
-            </p>
-          </div>
-
-          <div class="report__metric">
-            <p class="report__metric-label">Debt reduction</p>
-            <p class="report__metric-value mono">&minus;$1,410</p>
-            <p class="report__metric-foot">
-              <span class="report__metric-delta report__metric-delta--down">&minus;14.1%</span>
-              <span>balances down</span>
-            </p>
-          </div>
-
-          <div class="report__metric">
-            <p class="report__metric-label">Savings rate</p>
-            <p class="report__metric-value mono">30.0%</p>
-            <p class="report__metric-foot">
-              <span class="report__metric-delta report__metric-delta--up">+1.4 pp</span>
-              <span>quarter on quarter</span>
-            </p>
-          </div>
-
-          <div class="report__metric">
-            <p class="report__metric-label">Forecast revision</p>
-            <p class="report__metric-value mono">+$11,200</p>
-            <p class="report__metric-foot">
-              <span class="report__metric-delta report__metric-delta--up">+2.8%</span>
-              <span>10-year endpoint</span>
-            </p>
-          </div>
-
-          <div class="report__metric">
-            <p class="report__metric-label">Emergency reserve</p>
-            <p class="report__metric-value mono">4.8 mo</p>
-            <p class="report__metric-foot">
-              <span class="report__metric-delta report__metric-delta--up">+0.6 mo</span>
-              <span>cover added</span>
-            </p>
-          </div>
-
-          <div class="report__metric">
-            <p class="report__metric-label">Health score</p>
-            <p class="report__metric-value mono">72 / 100</p>
-            <p class="report__metric-foot">
-              <span class="report__metric-delta report__metric-delta--up">+4</span>
-              <span>vs prior quarter</span>
-            </p>
-          </div>
-        </section>
-
-        <!-- What changed and why (2-paragraph commentary) ────────────── -->
-        <section class="report__commentary">
-          <p class="report__commentary-eyebrow">What changed and why</p>
-          <h2>Two decisions, one paragraph each.</h2>
-          <p>
-            The biggest mover was the <strong>retirement-contribution lift</strong> recorded on <span class="mono">22 April</span> &mdash; a one-percentage-point increase in the assumed annual contribution rate. On its own that change moves the ten-year endpoint from <span class="mono">$400,800</span> to <span class="mono">$418,300</span>. After the subsequent return-rate revision on <span class="mono">5 May</span>, which trimmed the assumed nominal return from <span class="mono">7.5%</span> to <span class="mono">7.0%</span>, the endpoint settled at the more honest <span class="mono">$412,000</span>. Net of both edits, the forecast remains higher than it began the quarter; the contribution increase did real work.
-          </p>
-          <p>
-            The second mover was <strong>cadence on the credit card</strong>. The household held the monthly debt allocation steady at <span class="mono">$410</span> across all three months, even when the freelance invoice landed in May. Avalanche math now retires the credit line in <strong>month 14</strong>; the student loan finishes in <strong>month 26</strong>. The discipline shows up not in any one transaction but in the absence of detours &mdash; no scenic interest, no balance creep, no debt-shuffling.
-          </p>
-        </section>
-
-        <!-- Figure (sparkline of net worth across the quarter) ────────── -->
-        <figure class="report__figure" aria-label="Net worth across the quarter">
-          <header class="report__figure-head">
-            <h3 class="report__figure-title">Net worth across the quarter.</h3>
-            <p class="report__figure-meta mono">$80,490 &rarr; $87,420</p>
+        <!-- ============================================================
+             SECTION 2 — Five dimensions
+             ============================================================ -->
+        <section class="section" aria-labelledby="dim-heading" style="margin-bottom: var(--space-12);">
+          <header class="sec-header">
+            <h2 id="dim-heading" class="sec-title">Five dimensions, <em>graded</em></h2>
+            <p class="sec-sub">Each card weighted equally toward the overall score.</p>
           </header>
-          <div class="report__figure-canvas">
-            <div class="chart" data-chart="sparkline" data-chart-opts='{
-              "values":[80490,81120,81880,82640,83310,83980,84720,85490,86220,86810,87100,87420],
-              "label":"Net worth weekly, Q1 2026"
-            }'></div>
-          </div>
-          <footer class="report__figure-foot">
-            <div class="report__figure-stat">
-              <p class="report__figure-stat-label">Open</p>
-              <p class="report__figure-stat-value mono">$80,490</p>
-            </div>
-            <div class="report__figure-stat">
-              <p class="report__figure-stat-label">Close</p>
-              <p class="report__figure-stat-value mono">$87,420</p>
-            </div>
-            <div class="report__figure-stat">
-              <p class="report__figure-stat-label">Change</p>
-              <p class="report__figure-stat-value mono">+$6,930</p>
-            </div>
-          </footer>
-        </figure>
-
-        <!-- Next-quarter focus (numbered bullets) ─────────────────────── -->
-        <section class="report__focus">
-          <p class="report__focus-eyebrow">Next quarter focus</p>
-          <h2>Three things to hold the line on.</h2>
-          <ol class="report__focus-list" role="list">
-            <li class="report__focus-item">
-              <span class="report__focus-num mono">01</span>
-              <p class="report__focus-text"><strong>Finish the credit card.</strong> Hold the <span class="mono">$410</span> monthly debt allocation, do not redirect to retirement until the avalanche path clears the balance in <strong>month 14</strong>. Interest avoided this quarter alone runs roughly <span class="mono">$210</span>.</p>
-            </li>
-            <li class="report__focus-item">
-              <span class="report__focus-num mono">02</span>
-              <p class="report__focus-text"><strong>Raise the emergency reserve to six months.</strong> The reserve currently covers <span class="mono">4.8 months</span>; adding <span class="mono">$6,280</span> over the next nine months reaches the six-month line without disturbing other goals.</p>
-            </li>
-            <li class="report__focus-item">
-              <span class="report__focus-num mono">03</span>
-              <p class="report__focus-text"><strong>Hold the savings rate at 30%.</strong> The lift to <span class="mono">30.0%</span> is the single most reliable lever in the forecast. A return to <span class="mono">28%</span> would cost the ten-year endpoint roughly <span class="mono">$22,000</span>; the cost of holding is, in practice, none.</p>
-            </li>
-          </ol>
+          <div class="dim-grid" data-reveal-stagger data-dim-grid></div>
         </section>
 
-        <!-- Sign-off (letter close, secondary PDF button) ─────────────── -->
-        <footer class="report__signoff">
-          <p class="report__signoff-text">
-            <em>Forecast desk.</em>
-          </p>
-          <div class="report__signoff-actions">
-            <button type="button" class="btn btn--ghost btn--sm" data-pdf-download>Download PDF</button>
+        <!-- ============================================================
+             SECTION 3 — Strengths & weaknesses
+             ============================================================ -->
+        <section class="section" aria-labelledby="sw-heading" style="margin-bottom: var(--space-12);">
+          <h2 id="sw-heading" class="sr-only">Strengths and areas to improve</h2>
+          <div class="sw-row">
+
+            <article class="card card--glass sw-card sw-card--strength" data-reveal>
+              <header class="sw-card__head">
+                <h3 class="sw-card__title">What's <em>working</em></h3>
+              </header>
+              <div class="sw-list">
+
+                <div class="sw-item">
+                  <span class="sw-item__icon" aria-hidden="true">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>
+                  </span>
+                  <div class="sw-item__body"><strong>Savings rate at a 12-month high</strong>21% this month, up from 16% in January.</div>
+                  <a href="#" class="sw-item__action">Lock in</a>
+                </div>
+
+                <div class="sw-item">
+                  <span class="sw-item__icon" aria-hidden="true">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>
+                  </span>
+                  <div class="sw-item__body"><strong>401(k) maxed for the year</strong>You hit the IRS cap two months early.</div>
+                  <a href="#" class="sw-item__action">Review</a>
+                </div>
+
+                <div class="sw-item">
+                  <span class="sw-item__icon" aria-hidden="true">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>
+                  </span>
+                  <div class="sw-item__body"><strong>Debt-to-income trending down</strong>From 0.34 to 0.28 in nine months.</div>
+                  <a href="#" class="sw-item__action">Keep going</a>
+                </div>
+
+                <div class="sw-item">
+                  <span class="sw-item__icon" aria-hidden="true">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>
+                  </span>
+                  <div class="sw-item__body"><strong>Spending below budget · 7 of 8 categories</strong>Only entertainment ran over, by $34.</div>
+                  <a href="#" class="sw-item__action">Adjust</a>
+                </div>
+
+              </div>
+            </article>
+
+            <article class="card card--glass sw-card sw-card--weakness" data-reveal>
+              <header class="sw-card__head">
+                <h3 class="sw-card__title">Areas to <em>improve</em></h3>
+              </header>
+              <div class="sw-list">
+
+                <div class="sw-item">
+                  <span class="sw-item__icon" aria-hidden="true">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.86L1.82 18a2 2 0 0 0 1.7 3h16.94a2 2 0 0 0 1.7-3L13.7 3.86a2 2 0 0 0-3.4 0z"/></svg>
+                  </span>
+                  <div class="sw-item__body"><strong>Emergency fund at 4.2 of 6 months</strong>You're 30% short. At current pace, full coverage in 11 months.</div>
+                  <a href="#" class="sw-item__action">Address</a>
+                </div>
+
+                <div class="sw-item">
+                  <span class="sw-item__icon" aria-hidden="true">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.86L1.82 18a2 2 0 0 0 1.7 3h16.94a2 2 0 0 0 1.7-3L13.7 3.86a2 2 0 0 0-3.4 0z"/></svg>
+                  </span>
+                  <div class="sw-item__body"><strong>Credit card at 22.49% APR</strong>Costliest debt in your stack. Avalanche method clears it nine months sooner.</div>
+                  <a href="#" class="sw-item__action">Address</a>
+                </div>
+
+                <div class="sw-item">
+                  <span class="sw-item__icon" aria-hidden="true">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.86L1.82 18a2 2 0 0 0 1.7 3h16.94a2 2 0 0 0 1.7-3L13.7 3.86a2 2 0 0 0-3.4 0z"/></svg>
+                  </span>
+                  <div class="sw-item__body"><strong>Concentration risk · 64% in tech ETFs</strong>One sector is doing most of the heavy lifting in your portfolio.</div>
+                  <a href="#" class="sw-item__action">Address</a>
+                </div>
+
+              </div>
+            </article>
+
           </div>
-        </footer>
+        </section>
 
-      </article>
+        <!-- ============================================================
+             SECTION 4 — Trend chart
+             ============================================================ -->
+        <section class="section" aria-labelledby="trend-heading" style="margin-bottom: var(--space-12);">
+          <article class="card card--glass trend-card" data-reveal>
+            <header class="trend-card__head">
+              <h2 id="trend-heading" class="trend-card__title">Score over <em>twelve months</em></h2>
+              <span class="trend-card__note">High Apr · 81 · &nbsp;&nbsp; Low Jul · 64</span>
+            </header>
+            <div class="trend-chart-wrap" data-trend-chart></div>
+          </article>
+        </section>
 
-      <!-- Toast (UI-only PDF demo notice) ──────────────────────────────── -->
-      <div class="report__toast" role="status" aria-live="polite" data-toast>
-        Demo: export disabled.
+        <!-- ============================================================
+             SECTION 5 — Improve your score
+             ============================================================ -->
+        <section class="section" aria-labelledby="imp-heading" style="margin-bottom: var(--space-8);">
+          <article class="card card--glass improve-card" data-reveal>
+            <header class="improve-card__head">
+              <h2 id="imp-heading" class="improve-card__title">Three moves to push to an <em>A−</em></h2>
+            </header>
+            <div class="improve-list">
+
+              <div class="improve-item">
+                <span class="improve-item__num">Move 01</span>
+                <h3 class="improve-item__title">Auto-transfer $300 to emergency fund</h3>
+                <p class="improve-item__body">Bi-weekly on payday. Closes the 6-month buffer gap in seven months instead of eleven.</p>
+                <span class="improve-item__impact">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>
+                  +6 points
+                </span>
+              </div>
+
+              <div class="improve-item">
+                <span class="improve-item__num">Move 02</span>
+                <h3 class="improve-item__title">Avalanche the Sapphire card first</h3>
+                <p class="improve-item__body">Redirect $260/mo from student loan minimum. Saves $1,180 in interest and clears nine months earlier.</p>
+                <span class="improve-item__impact">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>
+                  +5 points
+                </span>
+              </div>
+
+              <div class="improve-item">
+                <span class="improve-item__num">Move 03</span>
+                <h3 class="improve-item__title">Rebalance into a broad-market ETF</h3>
+                <p class="improve-item__body">Trim tech allocation from 64% to 45%. Cuts concentration risk and lifts the diversification subscore.</p>
+                <span class="improve-item__impact">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>
+                  +4 points
+                </span>
+              </div>
+
+            </div>
+          </article>
+        </section>
+
+        <div class="foot-strip">
+          <div><span class="foot-strip__dot" aria-hidden="true"></span>Score recalculated weekly. Heuristic, not a credit score.</div>
+          <div>Last graded · 3 days ago</div>
+        </div>
+
       </div>
-
     </main>
   </div>
 
-  <div data-include="footer"></div>
+  <script src="/js/include.js"></script>
+  <script src="/js/motion.js"></script>
+  <script src="/js/charts.js"></script>
+  <script src="/js/demo-data.js"></script>
+  <script src="/js/app.js"></script>
 
-  <script src="/static/js/partials.js"></script>
-  <script src="/static/js/demo-data.js"></script>
-  <script src="/static/js/charts.js"></script>
-  <script src="/static/js/reveal.js"></script>
   <script>
-    // PDF download is UI only per RULING-01 (no external dependencies).
-    // Clicking shows a small toast for 1800ms.
-    (function () {
-      var toast = document.querySelector('[data-toast]');
-      var triggers = document.querySelectorAll('[data-pdf-download]');
-      if (!toast || !triggers.length) return;
-      var hideTimer = null;
-      triggers.forEach(function (btn) {
-        btn.addEventListener('click', function () {
-          toast.setAttribute('data-visible', 'true');
-          if (hideTimer) clearTimeout(hideTimer);
-          hideTimer = setTimeout(function () {
-            toast.removeAttribute('data-visible');
-          }, 1800);
-        });
-      });
-    })();
+    document.addEventListener("pfc:partials-ready", function () {
+      var D = window.PFC_DATA;
+      var M = window.PFC_MOTION;
+      var C = window.PFC_CHARTS;
+      if (!D || !M || !C) return;
+
+      M.pageTransition();
+
+      /* ---- Topbar ---- */
+      (function injectTopbar() {
+        var crumb = document.querySelector('[data-slot="breadcrumb"]');
+        var actions = document.querySelector('.topbar__actions');
+        if (!crumb || !actions) return;
+        crumb.innerHTML =
+          '<div class="greet">' +
+            '<span class="greet__eyebrow">Overview / Report card</span>' +
+            '<span class="greet__title">Your financial health · <em>B+</em></span>' +
+          '</div>';
+
+        var shareBtn = document.createElement("button");
+        shareBtn.type = "button";
+        shareBtn.className = "btn btn--ghost btn--sm";
+        shareBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7"/><path d="M16 6l-4-4-4 4"/><path d="M12 2v14"/></svg><span>Export</span>';
+        shareBtn.addEventListener("click", function () { window.PFC && PFC.toast("PDF export coming soon", "info", { duration: 1800 }); });
+        var searchBtn = actions.querySelector(".topbar__search");
+        if (searchBtn && searchBtn.nextSibling) actions.insertBefore(shareBtn, searchBtn.nextSibling);
+        else actions.appendChild(shareBtn);
+      })();
+
+      /* ---- Hero grade ring + score countUp ---- */
+      (function buildGrade() {
+        var ringEl = document.querySelector("[data-grade-ring]");
+        if (ringEl) {
+          // Match grade-wrap clamp; use a generous default.
+          var size = ringEl.parentElement.clientWidth || 280;
+          C.progressRing(ringEl, 78, { size: size, thickness: 6, color: "var(--amber-400)", showLabel: false });
+        }
+        var scoreEl = document.querySelector("[data-score-value]");
+        if (scoreEl) {
+          var io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) {
+              if (e.isIntersecting) { io.unobserve(scoreEl); M.countUp(scoreEl, 78, { decimals: 0, duration: 1400 }); }
+            });
+          }, { threshold: 0.4 });
+          io.observe(scoreEl);
+        }
+      })();
+
+      /* ---- Five dimension cards ---- */
+      (function buildDims() {
+        var wrap = document.querySelector("[data-dim-grid]");
+        if (!wrap) return;
+        var dims = [
+          { label: "Savings rate",      score: 82, color: "var(--mint-500)", summary: "21% this month, ahead of plan" },
+          { label: "Debt management",   score: 71, color: "var(--mint-400)", summary: "DTI down to 0.28" },
+          { label: "Goal progress",     score: 76, color: "var(--mint-300)", summary: "Three of four on pace" },
+          { label: "Diversification",   score: 64, color: "var(--coral-400)",summary: "64% concentrated in tech" },
+          { label: "Emergency runway",  score: 70, color: "var(--lavender-500)", summary: "4.2 of 6 months covered" },
+        ];
+        wrap.innerHTML = dims.map(function (d, i) {
+          return ''
+            + '<article class="dim-card" style="--i:' + i + ';">'
+              + '<div class="dim-card__ring" data-ring="' + i + '"></div>'
+              + '<div class="dim-card__label">' + d.label + '</div>'
+              + '<div class="dim-card__summary">' + d.summary + '</div>'
+              + '<a href="#" class="dim-card__link">Tap for tips '
+                + '<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>'
+              + '</a>'
+            + '</article>';
+        }).join("");
+        // Render rings after layout
+        setTimeout(function () {
+          dims.forEach(function (d, i) {
+            var el = wrap.querySelector('[data-ring="' + i + '"]');
+            if (el) C.progressRing(el, d.score, { size: 96, thickness: 8, color: d.color, showLabel: true });
+          });
+        }, 300);
+      })();
+
+      /* ---- Trend chart with high/low annotations ---- */
+      (function buildTrend() {
+        var wrap = document.querySelector("[data-trend-chart]");
+        if (!wrap) return;
+        var months = ["Jun","Jul","Aug","Sep","Oct","Nov","Dec","Jan","Feb","Mar","Apr","May"];
+        var scores = [69, 64, 67, 70, 72, 71, 73, 74, 76, 79, 81, 78];
+        var data = months.map(function (m, i) { return { label: m, value: scores[i] }; });
+        C.areaChart(wrap, data, { height: 240, currency: undefined, ariaLabel: "Health score over 12 months" });
+
+        // Add high/low markers after render
+        setTimeout(function () {
+          var svg = wrap.querySelector("svg");
+          if (!svg) return;
+          var W = svg.viewBox.baseVal.width;
+          var H = svg.viewBox.baseVal.height;
+          var PAD = { l: 12, r: 12, t: 16, b: 28 };
+          var innerW = W - PAD.l - PAD.r;
+          var innerH = H - PAD.t - PAD.b;
+          var max = Math.max.apply(null, scores);
+          var min = Math.min.apply(null, scores);
+          var range = max - min || 1;
+          var stepX = innerW / (scores.length - 1);
+          var hiIdx = scores.indexOf(max), loIdx = scores.indexOf(min);
+          var NS = "http://www.w3.org/2000/svg";
+          function mk(t, a) { var e = document.createElementNS(NS, t); Object.entries(a).forEach(function (kv) { e.setAttribute(kv[0], kv[1]); }); return e; }
+          [
+            { idx: hiIdx, label: "High · " + max, color: "var(--mint-400)" },
+            { idx: loIdx, label: "Low · " + min,  color: "var(--coral-500)" }
+          ].forEach(function (mk2) {
+            var x = PAD.l + mk2.idx * stepX;
+            var y = PAD.t + innerH - ((scores[mk2.idx] - min) / range) * innerH;
+            svg.appendChild(mk("circle", { cx: x, cy: y, r: 5, fill: mk2.color, stroke: "var(--ink-900)", "stroke-width": "2" }));
+            var t = mk("text", {
+              x: x, y: y - 12,
+              "text-anchor": "middle",
+              "font-family": "var(--font-mono)", "font-size": "10",
+              fill: mk2.color
+            });
+            t.textContent = mk2.label;
+            svg.appendChild(t);
+          });
+        }, 700);
+      })();
+
+      M.revealOnScroll("[data-reveal]");
+      M.revealOnScroll("[data-reveal-stagger]", { stagger: 0, threshold: 0.1 });
+
+      // Magnetic on call-to-action chips
+      document.querySelectorAll(".sw-item__action").forEach(function (a) { M.magnetic(a, { strength: 0.10, radius: 50 }); });
+    });
   </script>
 </body>
 </html>

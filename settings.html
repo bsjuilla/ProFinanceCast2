@@ -1,388 +1,505 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Settings &mdash; ProFinanceCast</title>
-  <meta name="description" content="Account, preferences, notifications, and data controls for your ProFinanceCast household.">
-  <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Settings — ProFinanceCast</title>
+  <meta name="description" content="Account, preferences, privacy, data. Quiet controls for a calm tool.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/css/tokens.css">
-  <link rel="stylesheet" href="/static/css/theme-ivory.css">
-  <link rel="stylesheet" href="/static/css/theme-emerald.css">
-  <link rel="stylesheet" href="/static/css/base.css">
-  <link rel="stylesheet" href="/static/css/components.css">
-  <link rel="stylesheet" href="/static/css/nav.css">
-  <link rel="stylesheet" href="/static/css/footer.css">
-  <link rel="stylesheet" href="/static/css/charts.css">
-  <link rel="stylesheet" href="/static/css/app.css">
-  <link rel="stylesheet" href="/static/css/settings.css">
-</head>
-<body data-theme="emerald">
-  <a class="skip-link" href="#main">Skip to settings</a>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <style>
+    /* settings — utility surface, lighter than dashboard */
+    .topbar__title { display:flex; flex-direction:column; gap:2px; min-width:0; flex:1; padding-left:var(--space-6); border-left:1px solid var(--ink-500); margin-left:var(--space-4); }
+    .topbar__title h1 { font-size:1.0625rem; font-family:var(--font-body); font-weight:500; letter-spacing:-0.01em; color:var(--ink-100); line-height:1.2; }
 
-  <div data-include="header"></div>
-  <div data-include="banner"></div>
+    .settings { display:grid; grid-template-columns: 240px 1fr; gap:var(--space-10); align-items:flex-start; }
+    @media (max-width:900px){ .settings { grid-template-columns:1fr; gap:var(--space-6); } }
+
+    .settings-nav { position:sticky; top: calc(var(--topbar-h) + var(--space-6)); display:flex; flex-direction:column; gap:2px; padding:var(--space-3); background:oklch(20% 0.020 265 / 0.55); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid oklch(100% 0 0 / 0.06); border-radius:var(--r-lg); }
+    .settings-nav__btn { display:flex; align-items:center; gap:var(--space-3); padding:9px var(--space-3); font-size:var(--fs-small); color:var(--ink-300); border-radius:var(--r-sm); text-align:left; transition: background var(--dur-fast) var(--ease-standard), color var(--dur-fast) var(--ease-standard); cursor:pointer; }
+    .settings-nav__btn:hover { background:oklch(100% 0 0 / 0.04); color:var(--ink-100); }
+    .settings-nav__btn[aria-selected="true"] { background:oklch(78% 0.175 168 / 0.10); color:var(--mint-300); }
+    .settings-nav__btn svg { width:16px; height:16px; opacity:.85; flex-shrink:0; }
+
+    .settings-pane { display:flex; flex-direction:column; gap:var(--space-8); min-width:0; }
+    .settings-section { display:none; flex-direction:column; gap:var(--space-6); }
+    .settings-section.is-active { display:flex; }
+    .settings-section__head { display:flex; flex-direction:column; gap:6px; }
+    .settings-section__eyebrow { font-family:var(--font-mono); font-size:var(--fs-tiny); text-transform:uppercase; letter-spacing:var(--tracking-eyebrow); color:var(--mint-400); }
+    .settings-section__title { font-family:var(--font-display); font-size:var(--fs-display-sm); font-weight:400; letter-spacing:var(--tracking-display); color:var(--ink-100); line-height:1.05; }
+    .settings-section__title em { font-style:italic; color:var(--mint-400); font-weight:400; }
+    .settings-section__lede { font-size:var(--fs-small); color:var(--ink-400); max-width:60ch; }
+
+    /* Profile */
+    .profile-head { display:flex; gap:var(--space-6); align-items:center; padding-bottom:var(--space-6); border-bottom:1px solid oklch(100% 0 0 / 0.06); margin-bottom:var(--space-2); }
+    .profile-avatar { width:84px; height:84px; border-radius:var(--r-full); display:grid; place-items:center; font-family:var(--font-display); font-size:2rem; color:var(--ink-900); background:linear-gradient(135deg, var(--mint-500), var(--lavender-500)); flex-shrink:0; }
+    .profile-head__meta { display:flex; flex-direction:column; gap:4px; }
+    .profile-head__name { font-family:var(--font-display); font-size:var(--fs-h2); color:var(--ink-100); }
+    .profile-head__sub { font-size:var(--fs-small); color:var(--ink-400); }
+    .profile-head__sub .mono { color:var(--ink-200); }
+
+    .form-grid { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:var(--space-5); }
+    @media (max-width:680px){ .form-grid { grid-template-columns:1fr; } }
+    .form-grid--full { grid-template-columns:1fr; }
+    .form-actions { display:flex; gap:var(--space-3); justify-content:flex-end; padding-top:var(--space-4); border-top:1px solid oklch(100% 0 0 / 0.06); }
+
+    /* Toggle rows (privacy, notifications) */
+    .toggle-rows { display:flex; flex-direction:column; }
+    .toggle-row-x { display:grid; grid-template-columns:1fr auto; gap:var(--space-5); align-items:center; padding:var(--space-5) 0; border-top:1px solid oklch(100% 0 0 / 0.05); }
+    .toggle-row-x:first-child { border-top:0; padding-top:0; }
+    .toggle-row-x:last-child { padding-bottom:0; }
+    .toggle-row-x__main { display:flex; flex-direction:column; gap:4px; min-width:0; }
+    .toggle-row-x__label { font-size:var(--fs-body); font-weight:500; color:var(--ink-100); }
+    .toggle-row-x__hint { font-size:var(--fs-small); color:var(--ink-400); line-height:1.5; }
+
+    /* Preferences */
+    .pref-row { display:grid; grid-template-columns:1fr auto; gap:var(--space-5); align-items:center; padding:var(--space-4) 0; border-top:1px solid oklch(100% 0 0 / 0.05); }
+    .pref-row:first-child { border-top:0; padding-top:0; }
+    .pref-row__main { display:flex; flex-direction:column; gap:2px; }
+    .pref-row__label { font-size:var(--fs-body); font-weight:500; color:var(--ink-100); }
+    .pref-row__hint { font-size:var(--fs-small); color:var(--ink-400); }
+    .pref-segmented { display:inline-flex; padding:3px; background:var(--ink-800); border:1px solid var(--ink-500); border-radius:var(--r-md); gap:2px; }
+    .pref-segmented button { padding:7px 14px; font-size:var(--fs-small); color:var(--ink-400); border-radius:calc(var(--r-md) - 4px); cursor:pointer; transition: background var(--dur-fast) var(--ease-standard), color var(--dur-fast) var(--ease-standard); font-weight:500; }
+    .pref-segmented button:hover { color:var(--ink-200); }
+    .pref-segmented button[aria-selected="true"] { background:var(--ink-600); color:var(--ink-100); }
+
+    /* Data section */
+    .data-grid { display:grid; grid-template-columns:repeat(3, 1fr); gap:var(--space-5); }
+    @media (max-width:900px){ .data-grid { grid-template-columns:1fr; } }
+    .data-card { padding:var(--space-6); display:flex; flex-direction:column; gap:var(--space-3); cursor:pointer; transition: border-color var(--dur-fast) var(--ease-standard), transform var(--dur-base) var(--ease-standard); }
+    .data-card:hover { border-color:var(--mint-500); transform:translateY(-2px); }
+    .data-card--danger:hover { border-color:var(--coral-500); }
+    .data-card__icon { width:36px; height:36px; border-radius:var(--r-sm); display:grid; place-items:center; background:oklch(78% 0.175 168 / 0.10); color:var(--mint-400); }
+    .data-card--danger .data-card__icon { background:oklch(74% 0.135 28 / 0.10); color:var(--coral-400); }
+    .data-card__title { font-size:var(--fs-body); font-weight:500; color:var(--ink-100); }
+    .data-card__hint { font-size:var(--fs-small); color:var(--ink-400); line-height:1.5; }
+    .data-card__cta { margin-top:auto; font-family:var(--font-mono); font-size:var(--fs-tiny); text-transform:uppercase; letter-spacing:var(--tracking-eyebrow); color:var(--mint-400); display:inline-flex; align-items:center; gap:6px; transition: gap var(--dur-fast) var(--ease-standard); }
+    .data-card:hover .data-card__cta { gap:10px; }
+    .data-card--danger .data-card__cta { color:var(--coral-400); }
+
+    /* Connected accounts empty state */
+    .connected-empty { padding:var(--space-10); text-align:center; display:flex; flex-direction:column; gap:var(--space-3); align-items:center; }
+    .connected-empty__icon { width:48px; height:48px; border-radius:var(--r-md); display:grid; place-items:center; background:oklch(78% 0.175 168 / 0.10); color:var(--mint-400); margin-bottom:var(--space-2); }
+    .connected-empty__title { font-family:var(--font-display); font-size:var(--fs-h3); color:var(--ink-100); }
+    .connected-empty__body { font-size:var(--fs-small); color:var(--ink-300); max-width:42ch; line-height:1.6; }
+    .connected-empty__link { font-family:var(--font-mono); font-size:var(--fs-tiny); text-transform:uppercase; letter-spacing:var(--tracking-eyebrow); color:var(--mint-400); display:inline-flex; align-items:center; gap:6px; margin-top:var(--space-2); transition: gap var(--dur-fast) var(--ease-standard); }
+    .connected-empty__link:hover { gap:10px; color:var(--mint-300); }
+
+    /* Danger zone */
+    .danger-card { padding:var(--space-6); border-color:oklch(74% 0.135 28 / 0.40); background:oklch(74% 0.135 28 / 0.04); display:flex; gap:var(--space-5); align-items:center; justify-content:space-between; flex-wrap:wrap; }
+    .danger-card__main { display:flex; flex-direction:column; gap:4px; min-width:0; }
+    .danger-card__title { font-family:var(--font-display); font-size:var(--fs-h3); color:var(--ink-100); }
+    .danger-card__hint { font-size:var(--fs-small); color:var(--ink-300); max-width:50ch; }
+    .btn--danger { background:transparent; border-color:var(--coral-500); color:var(--coral-400); }
+    .btn--danger:hover { background:oklch(74% 0.135 28 / 0.10); color:var(--coral-400); border-color:var(--coral-400); }
+  </style>
+</head>
+<body data-page="settings">
+  <div class="aurora-bg" aria-hidden="true">
+    <div class="aurora-bg__blob aurora-bg__blob--1"></div>
+    <div class="aurora-bg__blob aurora-bg__blob--2"></div>
+    <div class="aurora-bg__blob aurora-bg__blob--3"></div>
+    <div class="aurora-bg__blob aurora-bg__blob--4"></div>
+    <div class="aurora-bg__grain"></div>
+    <div class="aurora-bg__vignette"></div>
+  </div>
 
   <div class="app-shell">
-    <div data-include="sidebar"></div>
+    <div data-include="/partials/sidebar.html"></div>
 
-    <main class="app-main" id="main">
-
-      <!-- 1 · PAGE HEAD ───────────────────────────────────────────────── -->
-      <header class="page-head" data-reveal>
-        <div class="page-head__body">
-          <p class="eyebrow page-head__eyebrow">
-            <span>Settings</span>
-            <span class="page-head__sep" aria-hidden="true">&middot;</span>
-            <span class="mono">11 May 2026</span>
-          </p>
-          <h1 class="display display--md page-head__title">Account and preferences.</h1>
-          <p class="page-head__lede">Five sections. Edit what you need, keep what you do not.</p>
+    <main class="main">
+      <header class="topbar" data-pfc-topbar>
+        <div class="topbar__breadcrumb">
+          <span>Account</span>
+          <span class="topbar__breadcrumb-sep" aria-hidden="true">/</span>
+          <span class="topbar__breadcrumb-current">Settings</span>
         </div>
-        <div class="page-head__actions">
-          <a href="/dashboard.html" class="btn btn--ghost btn--sm">Back to dashboard</a>
+        <div class="topbar__title"><h1>Settings</h1></div>
+        <div class="topbar__actions">
+          <button type="button" class="btn btn--ghost btn--sm">Discard changes</button>
         </div>
       </header>
 
-      <!-- 2 · SETTINGS LAYOUT (in-page nav + pane) ────────────────────── -->
-      <div class="settings-layout" data-reveal>
+      <div class="main__content">
+        <div class="settings" data-reveal>
 
-        <!-- A · In-page navigation ───────────────────────────────────── -->
-        <nav class="settings-nav" aria-label="Settings sections">
-          <p class="settings-nav__label">On this page</p>
-          <a class="settings-nav__link" href="#account">Account</a>
-          <a class="settings-nav__link" href="#preferences">Preferences</a>
-          <a class="settings-nav__link" href="#notifications">Notifications</a>
-          <a class="settings-nav__link" href="#connected">Connected services</a>
-          <a class="settings-nav__link settings-nav__link--danger" href="#danger">Danger zone</a>
-        </nav>
+          <!-- Left rail -->
+          <nav class="settings-nav" aria-label="Settings sections">
+            <button class="settings-nav__btn" data-tab="profile" aria-selected="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+              Profile
+            </button>
+            <button class="settings-nav__btn" data-tab="preferences">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h10M4 18h16"/><circle cx="16" cy="12" r="2"/></svg>
+              Preferences
+            </button>
+            <button class="settings-nav__btn" data-tab="privacy">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg>
+              Privacy
+            </button>
+            <button class="settings-nav__btn" data-tab="data">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg>
+              Data
+            </button>
+            <button class="settings-nav__btn" data-tab="connected">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.1 0l3-3a5 5 0 0 0-7.1-7.1L11.5 4.5"/><path d="M14 11a5 5 0 0 0-7.1 0l-3 3a5 5 0 0 0 7.1 7.1l1.5-1.5"/></svg>
+              Connected accounts
+            </button>
+            <button class="settings-nav__btn" data-tab="notifications">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10 21a2 2 0 0 0 4 0"/></svg>
+              Notifications
+            </button>
+            <button class="settings-nav__btn" data-tab="danger">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18h.01"/></svg>
+              Danger zone
+            </button>
+          </nav>
 
-        <!-- B · Settings pane ──────────────────────────────────────── -->
-        <form class="settings-pane" id="settings-form" novalidate>
+          <!-- Right pane -->
+          <div class="settings-pane">
 
-          <!-- Account ──────────────────────────────────────────────── -->
-          <section class="settings-section" id="account" aria-labelledby="account-h2">
-            <header class="settings-section__head">
-              <p class="settings-section__eyebrow">Section one</p>
-              <h2 class="settings-section__title" id="account-h2">Account.</h2>
-              <p class="settings-section__lede">How we address you and where the monthly letter lands.</p>
-            </header>
-
-            <div class="settings-field">
-              <div class="settings-field__head">
-                <label class="settings-field__label" for="account-name">Name</label>
-                <p class="settings-field__hint">Used on the report card. Just a first name is fine.</p>
+            <!-- PROFILE (default visible) -->
+            <section class="settings-section is-active" data-section="profile">
+              <div class="settings-section__head">
+                <span class="settings-section__eyebrow">01 · Identity</span>
+                <h2 class="settings-section__title">Your <em>profile</em></h2>
+                <p class="settings-section__lede">The basics. Used for greetings, currency formatting, and not much else.</p>
               </div>
-              <input class="field__control" type="text" id="account-name" name="name" value="Alex Morgan" autocomplete="name">
-            </div>
 
-            <div class="settings-field">
-              <div class="settings-field__head">
-                <label class="settings-field__label" for="account-email">Email</label>
-                <p class="settings-field__hint">Quarterly letter and goal milestones are sent here.</p>
-              </div>
-              <input class="field__control" type="email" id="account-email" name="email" value="alex@household.example" autocomplete="email">
-            </div>
-
-            <div class="settings-field">
-              <div class="settings-field__head">
-                <label class="settings-field__label" for="account-household">Household label</label>
-                <p class="settings-field__hint">A short name used in exports and headers.</p>
-              </div>
-              <input class="field__control" type="text" id="account-household" name="household" value="Example household">
-            </div>
-          </section>
-
-          <!-- Preferences ──────────────────────────────────────────── -->
-          <section class="settings-section" id="preferences" aria-labelledby="preferences-h2">
-            <header class="settings-section__head">
-              <p class="settings-section__eyebrow">Section two</p>
-              <h2 class="settings-section__title" id="preferences-h2">Preferences.</h2>
-              <p class="settings-section__lede">Look, currency, and the calendar your reporting follows.</p>
-            </header>
-
-            <div class="settings-field">
-              <div class="settings-field__head">
-                <p class="settings-field__label" id="theme-label">Default theme</p>
-                <p class="settings-field__hint">Editorial ivory for the marketing surface, sovereign emerald for the app.</p>
-              </div>
-              <div class="segmented" role="radiogroup" aria-labelledby="theme-label">
-                <input type="radio" id="theme-ivory" name="theme" value="ivory">
-                <label for="theme-ivory">Ivory</label>
-                <input type="radio" id="theme-emerald" name="theme" value="emerald" checked>
-                <label for="theme-emerald">Emerald</label>
-              </div>
-            </div>
-
-            <div class="settings-row-2">
-              <div class="settings-field">
-                <div class="settings-field__head">
-                  <label class="settings-field__label" for="pref-currency">Default currency</label>
+              <article class="card card--glass card--pad-lg">
+                <div class="profile-head">
+                  <div class="profile-avatar">A</div>
+                  <div class="profile-head__meta">
+                    <div class="profile-head__name">Alex Morgan</div>
+                    <div class="profile-head__sub">Member since <span class="mono">Sep 2024</span> · <span class="mono">Pro plan</span></div>
+                  </div>
                 </div>
-                <select class="field__control" id="pref-currency" name="currency">
-                  <option value="USD" selected>USD &mdash; US dollar</option>
-                  <option value="EUR">EUR &mdash; Euro</option>
-                  <option value="GBP">GBP &mdash; Pound sterling</option>
-                  <option value="CAD">CAD &mdash; Canadian dollar</option>
-                  <option value="AUD">AUD &mdash; Australian dollar</option>
-                  <option value="CHF">CHF &mdash; Swiss franc</option>
-                </select>
-              </div>
 
-              <div class="settings-field">
-                <div class="settings-field__head">
-                  <label class="settings-field__label" for="pref-fiscal">Fiscal-year start</label>
+                <div class="form-grid">
+                  <div class="field field--float">
+                    <input class="input" id="prof-name" type="text" placeholder=" " value="Alex Morgan">
+                    <label class="field__label" for="prof-name">Full name</label>
+                  </div>
+                  <div class="field field--float">
+                    <input class="input" id="prof-email" type="email" placeholder=" " value="alex@morgan.studio">
+                    <label class="field__label" for="prof-email">Email address</label>
+                  </div>
+                  <div class="field">
+                    <label class="field__label" for="prof-currency">Currency</label>
+                    <select class="select" id="prof-currency">
+                      <option>USD — US Dollar</option>
+                      <option>EUR — Euro</option>
+                      <option>GBP — Pound Sterling</option>
+                      <option>JPY — Japanese Yen</option>
+                      <option>CAD — Canadian Dollar</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label class="field__label" for="prof-country">Country</label>
+                    <select class="select" id="prof-country">
+                      <option>United States</option>
+                      <option>United Kingdom</option>
+                      <option>Canada</option>
+                      <option>Germany</option>
+                      <option>Japan</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label class="field__label" for="prof-tz">Timezone</label>
+                    <select class="select" id="prof-tz">
+                      <option>America/New_York (UTC-5)</option>
+                      <option>America/Los_Angeles (UTC-8)</option>
+                      <option>Europe/London (UTC+0)</option>
+                      <option>Europe/Berlin (UTC+1)</option>
+                      <option>Asia/Tokyo (UTC+9)</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label class="field__label" for="prof-lang">Display name</label>
+                    <input class="input" id="prof-lang" type="text" value="Alex">
+                    <span class="field__hint">Used in greetings. Doesn't have to match your full name.</span>
+                  </div>
                 </div>
-                <select class="field__control" id="pref-fiscal" name="fiscalStart">
-                  <option value="01" selected>January</option>
-                  <option value="04">April</option>
-                  <option value="07">July</option>
-                  <option value="10">October</option>
-                </select>
-              </div>
-            </div>
 
-            <div class="settings-field">
-              <div class="settings-field__head">
-                <label class="settings-field__label" for="pref-density">Display density</label>
-                <p class="settings-field__hint">Tabular density for charts and tables.</p>
-              </div>
-              <select class="field__control" id="pref-density" name="density">
-                <option value="comfortable" selected>Comfortable</option>
-                <option value="compact">Compact</option>
-              </select>
-            </div>
-          </section>
-
-          <!-- Notifications ────────────────────────────────────────── -->
-          <section class="settings-section" id="notifications" aria-labelledby="notifications-h2">
-            <header class="settings-section__head">
-              <p class="settings-section__eyebrow">Section three</p>
-              <h2 class="settings-section__title" id="notifications-h2">Notifications.</h2>
-              <p class="settings-section__lede">Five things the system can tell you, by email. Off by default for anything you did not opt into.</p>
-            </header>
-
-            <div class="toggle-list" role="group" aria-labelledby="notifications-h2">
-              <div class="toggle-row">
-                <div class="toggle-row__copy">
-                  <p class="toggle-row__name">Monthly report</p>
-                  <p class="toggle-row__hint">A one-page summary on the first of every month.</p>
+                <div class="form-actions">
+                  <button type="button" class="btn btn--ghost">Cancel</button>
+                  <button type="button" class="btn btn--primary" data-magnetic>Save changes</button>
                 </div>
-                <label class="toggle">
-                  <input type="checkbox" name="notify-monthly" checked>
-                  <span class="toggle__track" aria-hidden="true"></span>
-                  <span class="toggle__thumb" aria-hidden="true"></span>
-                  <span class="sr-only">Monthly report</span>
-                </label>
+              </article>
+            </section>
+
+            <!-- PREFERENCES -->
+            <section class="settings-section" data-section="preferences">
+              <div class="settings-section__head">
+                <span class="settings-section__eyebrow">02 · Feel</span>
+                <h2 class="settings-section__title">Preferences</h2>
+                <p class="settings-section__lede">Small choices that shape how the app feels every day.</p>
               </div>
 
-              <div class="toggle-row">
-                <div class="toggle-row__copy">
-                  <p class="toggle-row__name">Quarterly report card</p>
-                  <p class="toggle-row__hint">The private-bank letter, four times a year.</p>
+              <article class="card card--glass card--pad-lg">
+                <div class="pref-row">
+                  <div class="pref-row__main">
+                    <span class="pref-row__label">Theme</span>
+                    <span class="pref-row__hint">Dark is the default. Auto follows your system.</span>
+                  </div>
+                  <div class="pref-segmented" role="tablist">
+                    <button aria-selected="true">Dark</button>
+                    <button>Auto</button>
+                  </div>
                 </div>
-                <label class="toggle">
-                  <input type="checkbox" name="notify-quarterly" checked>
-                  <span class="toggle__track" aria-hidden="true"></span>
-                  <span class="toggle__thumb" aria-hidden="true"></span>
-                  <span class="sr-only">Quarterly report card</span>
-                </label>
-              </div>
-
-              <div class="toggle-row">
-                <div class="toggle-row__copy">
-                  <p class="toggle-row__name">Goal milestones</p>
-                  <p class="toggle-row__hint">When a goal hits 25, 50, 75, or 100 percent.</p>
+                <div class="pref-row">
+                  <div class="pref-row__main">
+                    <span class="pref-row__label">Motion</span>
+                    <span class="pref-row__hint">Reduce respects your OS preference automatically.</span>
+                  </div>
+                  <div class="pref-segmented" role="tablist">
+                    <button aria-selected="true">Full</button>
+                    <button>Reduced</button>
+                  </div>
                 </div>
-                <label class="toggle">
-                  <input type="checkbox" name="notify-goals" checked>
-                  <span class="toggle__track" aria-hidden="true"></span>
-                  <span class="toggle__thumb" aria-hidden="true"></span>
-                  <span class="sr-only">Goal milestones</span>
-                </label>
-              </div>
-
-              <div class="toggle-row">
-                <div class="toggle-row__copy">
-                  <p class="toggle-row__name">Debt-free reached</p>
-                  <p class="toggle-row__hint">A single note when the last balance clears.</p>
+                <div class="pref-row">
+                  <div class="pref-row__main">
+                    <span class="pref-row__label">Number format</span>
+                    <span class="pref-row__hint">Affects thousands separator and decimal mark.</span>
+                  </div>
+                  <div class="pref-segmented" role="tablist">
+                    <button aria-selected="true">US · 1,234.56</button>
+                    <button>EU · 1.234,56</button>
+                  </div>
                 </div>
-                <label class="toggle">
-                  <input type="checkbox" name="notify-debt-free" checked>
-                  <span class="toggle__track" aria-hidden="true"></span>
-                  <span class="toggle__thumb" aria-hidden="true"></span>
-                  <span class="sr-only">Debt-free reached</span>
-                </label>
-              </div>
-
-              <div class="toggle-row">
-                <div class="toggle-row__copy">
-                  <p class="toggle-row__name">Forecast deviations</p>
-                  <p class="toggle-row__hint">When actuals drift more than five percent from plan.</p>
+                <div class="pref-row">
+                  <div class="pref-row__main">
+                    <span class="pref-row__label">Language</span>
+                    <span class="pref-row__hint">Interface language. More coming soon.</span>
+                  </div>
+                  <select class="select" style="width:auto;min-width:180px;">
+                    <option>English (US)</option>
+                    <option>English (UK)</option>
+                    <option>Deutsch</option>
+                    <option>Français</option>
+                    <option>日本語</option>
+                  </select>
                 </div>
-                <label class="toggle">
-                  <input type="checkbox" name="notify-deviation">
-                  <span class="toggle__track" aria-hidden="true"></span>
-                  <span class="toggle__thumb" aria-hidden="true"></span>
-                  <span class="sr-only">Forecast deviations</span>
-                </label>
+              </article>
+            </section>
+
+            <!-- PRIVACY -->
+            <section class="settings-section" data-section="privacy">
+              <div class="settings-section__head">
+                <span class="settings-section__eyebrow">03 · What we see</span>
+                <h2 class="settings-section__title">Privacy</h2>
+                <p class="settings-section__lede">All calculations run in your browser. You decide what, if anything, leaves the device.</p>
               </div>
 
-              <div class="toggle-row">
-                <div class="toggle-row__copy">
-                  <p class="toggle-row__name">Product updates</p>
-                  <p class="toggle-row__hint">A short note when a new tool ships. Roughly twice a year.</p>
+              <article class="card card--glass card--pad-lg">
+                <div class="toggle-rows">
+                  <div class="toggle-row-x">
+                    <div class="toggle-row-x__main">
+                      <span class="toggle-row-x__label">Anonymous analytics</span>
+                      <span class="toggle-row-x__hint">Aggregate usage counts. No financial figures, no identifiers.</span>
+                    </div>
+                    <label class="toggle"><input type="checkbox" class="toggle__input" checked><span class="toggle__slider"></span></label>
+                  </div>
+                  <div class="toggle-row-x">
+                    <div class="toggle-row-x__main">
+                      <span class="toggle-row-x__label">Error reports</span>
+                      <span class="toggle-row-x__hint">Crash traces help us fix bugs. Scrubbed of any user content.</span>
+                    </div>
+                    <label class="toggle"><input type="checkbox" class="toggle__input" checked><span class="toggle__slider"></span></label>
+                  </div>
+                  <div class="toggle-row-x">
+                    <div class="toggle-row-x__main">
+                      <span class="toggle-row-x__label">Product update emails</span>
+                      <span class="toggle-row-x__hint">Quarterly digest of what shipped. Unsubscribe anytime.</span>
+                    </div>
+                    <label class="toggle"><input type="checkbox" class="toggle__input"><span class="toggle__slider"></span></label>
+                  </div>
+                  <div class="toggle-row-x">
+                    <div class="toggle-row-x__main">
+                      <span class="toggle-row-x__label">Public profile</span>
+                      <span class="toggle-row-x__hint">Let others find you by handle. Off by default.</span>
+                    </div>
+                    <label class="toggle"><input type="checkbox" class="toggle__input"><span class="toggle__slider"></span></label>
+                  </div>
                 </div>
-                <label class="toggle">
-                  <input type="checkbox" name="notify-product">
-                  <span class="toggle__track" aria-hidden="true"></span>
-                  <span class="toggle__thumb" aria-hidden="true"></span>
-                  <span class="sr-only">Product updates</span>
-                </label>
+              </article>
+            </section>
+
+            <!-- DATA -->
+            <section class="settings-section" data-section="data">
+              <div class="settings-section__head">
+                <span class="settings-section__eyebrow">04 · Yours to take</span>
+                <h2 class="settings-section__title">Your data</h2>
+                <p class="settings-section__lede">Export or wipe at any time. Everything is stored locally.</p>
               </div>
-            </div>
-          </section>
 
-          <!-- Connected services ───────────────────────────────────── -->
-          <section class="settings-section" id="connected" aria-labelledby="connected-h2">
-            <header class="settings-section__head">
-              <p class="settings-section__eyebrow">Section four</p>
-              <h2 class="settings-section__title" id="connected-h2">Connected services.</h2>
-              <p class="settings-section__lede">There are no integrations to manage, by design.</p>
-            </header>
+              <div class="data-grid">
+                <article class="card card--glass data-card">
+                  <span class="data-card__icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h14l3 3v13H4z"/><path d="M8 12h8M8 16h5"/></svg></span>
+                  <div>
+                    <div class="data-card__title">Export to CSV</div>
+                    <div class="data-card__hint">Transactions, goals, debts, snapshots. Opens in any spreadsheet.</div>
+                  </div>
+                  <span class="data-card__cta">Download <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+                </article>
+                <article class="card card--glass data-card">
+                  <span class="data-card__icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4h4l4 4v12H8z"/><path d="M14 4v4h4"/><path d="M11 13l-2 2 2 2M13 13l2 2-2 2"/></svg></span>
+                  <div>
+                    <div class="data-card__title">Export to JSON</div>
+                    <div class="data-card__hint">Full snapshot, machine-readable. Re-import to any device.</div>
+                  </div>
+                  <span class="data-card__cta">Download <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+                </article>
+                <article class="card card--glass data-card data-card--danger">
+                  <span class="data-card__icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M5 6l1 14h12l1-14"/></svg></span>
+                  <div>
+                    <div class="data-card__title">Wipe all local data</div>
+                    <div class="data-card__hint">Removes every byte from this browser. Cannot be undone.</div>
+                  </div>
+                  <span class="data-card__cta">Wipe <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+                </article>
+              </div>
+            </section>
 
-            <div class="settings-empty">
-              <p class="settings-empty__title">Nothing connected. Nothing to disconnect.</p>
-              <p class="settings-empty__body">
-                <strong>ProFinanceCast does not connect to bank accounts.</strong> Numbers are yours to enter and yours to keep. The household model lives in your browser; exports come from this page. We do not call Plaid, Yodlee, Truelayer, or any bank API. We never ask for online-banking credentials, and there is no integration marketplace planned.
-              </p>
-            </div>
-          </section>
+            <!-- CONNECTED ACCOUNTS -->
+            <section class="settings-section" data-section="connected">
+              <div class="settings-section__head">
+                <span class="settings-section__eyebrow">05 · Optional</span>
+                <h2 class="settings-section__title">Connected accounts</h2>
+              </div>
 
-          <!-- Save bar ─────────────────────────────────────────────── -->
-          <div class="save-bar">
-            <button type="button" class="btn btn--ghost btn--sm">Discard</button>
-            <button type="submit" class="btn btn--primary btn--sm">Save changes</button>
+              <article class="card card--glass connected-empty">
+                <span class="connected-empty__icon">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.1 0l3-3a5 5 0 0 0-7.1-7.1L11.5 4.5"/><path d="M14 11a5 5 0 0 0-7.1 0l-3 3a5 5 0 0 0 7.1 7.1l1.5-1.5"/></svg>
+                </span>
+                <h3 class="connected-empty__title">Connect a bank? You don't have to.</h3>
+                <p class="connected-empty__body">ProFinanceCast works completely offline. Add accounts only if you want auto-sync. Your numbers stay just as private either way.</p>
+                <a href="#" class="connected-empty__link">Read the privacy promise <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+              </article>
+            </section>
+
+            <!-- NOTIFICATIONS -->
+            <section class="settings-section" data-section="notifications">
+              <div class="settings-section__head">
+                <span class="settings-section__eyebrow">06 · How we ping you</span>
+                <h2 class="settings-section__title">Notifications</h2>
+                <p class="settings-section__lede">All optional. None are urgent enough to interrupt you.</p>
+              </div>
+
+              <article class="card card--glass card--pad-lg">
+                <div class="toggle-rows">
+                  <div class="toggle-row-x">
+                    <div class="toggle-row-x__main">
+                      <span class="toggle-row-x__label">Goal milestones reached</span>
+                      <span class="toggle-row-x__hint">When a goal hits 25, 50, 75, 100%.</span>
+                    </div>
+                    <label class="toggle"><input type="checkbox" class="toggle__input" checked><span class="toggle__slider"></span></label>
+                  </div>
+                  <div class="toggle-row-x">
+                    <div class="toggle-row-x__main">
+                      <span class="toggle-row-x__label">Monthly summary</span>
+                      <span class="toggle-row-x__hint">Three-paragraph rundown on the first of each month.</span>
+                    </div>
+                    <label class="toggle"><input type="checkbox" class="toggle__input" checked><span class="toggle__slider"></span></label>
+                  </div>
+                  <div class="toggle-row-x">
+                    <div class="toggle-row-x__main">
+                      <span class="toggle-row-x__label">Recurring charge due</span>
+                      <span class="toggle-row-x__hint">Three days before a recurring item posts.</span>
+                    </div>
+                    <label class="toggle"><input type="checkbox" class="toggle__input"><span class="toggle__slider"></span></label>
+                  </div>
+                  <div class="toggle-row-x">
+                    <div class="toggle-row-x__main">
+                      <span class="toggle-row-x__label">Sage finds something new</span>
+                      <span class="toggle-row-x__hint">Insight or opportunity flagged with high confidence.</span>
+                    </div>
+                    <label class="toggle"><input type="checkbox" class="toggle__input" checked><span class="toggle__slider"></span></label>
+                  </div>
+                  <div class="toggle-row-x">
+                    <div class="toggle-row-x__main">
+                      <span class="toggle-row-x__label">Cash forecast warning</span>
+                      <span class="toggle-row-x__hint">If projected balance dips below your safety floor.</span>
+                    </div>
+                    <label class="toggle"><input type="checkbox" class="toggle__input" checked><span class="toggle__slider"></span></label>
+                  </div>
+                  <div class="toggle-row-x">
+                    <div class="toggle-row-x__main">
+                      <span class="toggle-row-x__label">Weekly journal nudge</span>
+                      <span class="toggle-row-x__hint">A gentle Sunday prompt to write five lines.</span>
+                    </div>
+                    <label class="toggle"><input type="checkbox" class="toggle__input"><span class="toggle__slider"></span></label>
+                  </div>
+                </div>
+              </article>
+            </section>
+
+            <!-- DANGER -->
+            <section class="settings-section" data-section="danger">
+              <div class="settings-section__head">
+                <span class="settings-section__eyebrow">07 · Last resort</span>
+                <h2 class="settings-section__title">Danger zone</h2>
+              </div>
+
+              <article class="card danger-card">
+                <div class="danger-card__main">
+                  <h3 class="danger-card__title">Delete account</h3>
+                  <p class="danger-card__hint">This permanently removes your local data, plan, and any synced backups. No going back.</p>
+                </div>
+                <button type="button" class="btn btn--danger">Delete account</button>
+              </article>
+            </section>
+
           </div>
-
-          <!-- Danger zone ──────────────────────────────────────────── -->
-          <section class="settings-section" id="danger" aria-labelledby="danger-h2">
-            <header class="settings-section__head">
-              <p class="settings-section__eyebrow">Section five</p>
-              <h2 class="settings-section__title" id="danger-h2">Danger zone.</h2>
-              <p class="settings-section__lede">Two irreversible actions, both gated by an explicit confirmation.</p>
-            </header>
-
-            <div class="danger" role="group" aria-labelledby="danger-h2">
-              <div class="danger__row">
-                <div class="danger__copy">
-                  <p class="danger__name">Export all data</p>
-                  <p class="danger__hint">A JSON bundle of the household model: figures, debts, goals, recurring transactions, and the full ledger. Open in any text editor.</p>
-                </div>
-                <button type="button" class="btn btn--ghost btn--sm" data-export>Export JSON</button>
-              </div>
-
-              <div class="danger__row">
-                <div class="danger__copy">
-                  <p class="danger__name">Delete account</p>
-                  <p class="danger__hint">Removes the household model and all preferences. Cannot be undone. Export first if you want a copy.</p>
-                </div>
-                <button type="button" class="btn btn--danger btn--sm" data-delete-open>Delete account</button>
-              </div>
-            </div>
-          </section>
-
-        </form>
+        </div>
       </div>
-
     </main>
   </div>
 
-  <!-- Confirm modal (delete-account) ─────────────────────────────────── -->
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-body" data-modal>
-    <div class="modal__panel">
-      <p class="modal__eyebrow">Irreversible</p>
-      <h2 class="modal__title" id="modal-title">Delete this account?</h2>
-      <p class="modal__body" id="modal-body">
-        This removes the household model, preferences, and the full ledger. Demo accounts hold nothing persistent, so the action is a UI demonstration here &mdash; no data leaves the browser.
-      </p>
-      <div class="modal__actions">
-        <button type="button" class="btn btn--ghost btn--sm" data-modal-close>Keep account</button>
-        <button type="button" class="btn btn--danger btn--sm" data-modal-confirm>Delete</button>
-      </div>
-    </div>
-  </div>
-
-  <div data-include="footer"></div>
-
-  <script src="/static/js/partials.js"></script>
-  <script src="/static/js/demo-data.js"></script>
-  <script src="/static/js/reveal.js"></script>
+  <script src="/js/demo-data.js"></script>
+  <script src="/js/include.js"></script>
+  <script src="/js/motion.js"></script>
+  <script src="/js/charts.js"></script>
+  <script src="/js/app.js"></script>
   <script>
-    // Settings-page interactions: UI only. No persistence. No external calls.
-    // - Export JSON: serialises window.PFC_DATA to a small toast-style notice
-    //   (no actual file download, per the no-external-services constraint).
-    // - Delete-account: opens a confirmation modal; "Delete" closes the modal
-    //   and shows the same notice. Nothing is removed.
-    (function () {
-      var modal = document.querySelector('[data-modal]');
-      var openBtn = document.querySelector('[data-delete-open]');
-      var closeBtn = document.querySelector('[data-modal-close]');
-      var confirmBtn = document.querySelector('[data-modal-confirm]');
-      var exportBtn = document.querySelector('[data-export]');
-      var form = document.getElementById('settings-form');
+    document.addEventListener("pfc:partials-ready", function () {
+      var M = window.PFC_MOTION;
 
-      function openModal() {
-        if (!modal) return;
-        modal.setAttribute('data-open', 'true');
-        if (closeBtn) closeBtn.focus();
-      }
-      function closeModal() {
-        if (!modal) return;
-        modal.removeAttribute('data-open');
-        if (openBtn) openBtn.focus();
-      }
-
-      if (openBtn) openBtn.addEventListener('click', openModal);
-      if (closeBtn) closeBtn.addEventListener('click', closeModal);
-      if (confirmBtn) confirmBtn.addEventListener('click', closeModal);
-      if (modal) {
-        modal.addEventListener('click', function (e) {
-          if (e.target === modal) closeModal();
+      // Tab switching
+      var navBtns = document.querySelectorAll(".settings-nav__btn");
+      var sections = document.querySelectorAll(".settings-section");
+      navBtns.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var tab = btn.getAttribute("data-tab");
+          navBtns.forEach(function (b) { b.removeAttribute("aria-selected"); });
+          btn.setAttribute("aria-selected", "true");
+          sections.forEach(function (s) { s.classList.toggle("is-active", s.getAttribute("data-section") === tab); });
         });
-      }
-      document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape' && modal && modal.getAttribute('data-open') === 'true') {
-          closeModal();
-        }
       });
 
-      if (exportBtn) {
-        exportBtn.addEventListener('click', function () {
-          exportBtn.setAttribute('aria-disabled', 'true');
-          var original = exportBtn.textContent;
-          exportBtn.textContent = 'Demo: export disabled';
-          setTimeout(function () {
-            exportBtn.removeAttribute('aria-disabled');
-            exportBtn.textContent = original;
-          }, 1800);
+      // Segmented control toggles
+      document.querySelectorAll(".pref-segmented").forEach(function (group) {
+        group.querySelectorAll("button").forEach(function (b) {
+          b.addEventListener("click", function () {
+            group.querySelectorAll("button").forEach(function (x) { x.removeAttribute("aria-selected"); });
+            b.setAttribute("aria-selected", "true");
+          });
         });
-      }
+      });
 
-      if (form) {
-        form.addEventListener('submit', function (e) {
-          e.preventDefault();
-          var btn = form.querySelector('button[type="submit"]');
-          if (!btn) return;
-          var original = btn.textContent;
-          btn.textContent = 'Saved (demo)';
-          setTimeout(function () { btn.textContent = original; }, 1800);
+      // Magnetic on primary
+      if (M && M.magnetic) {
+        document.querySelectorAll("[data-magnetic]").forEach(function (el) {
+          M.magnetic(el, { strength: 0.18, radius: 70 });
         });
       }
-    })();
+      if (M && M.revealOnScroll) M.revealOnScroll("[data-reveal]");
+    });
   </script>
 </body>
 </html>

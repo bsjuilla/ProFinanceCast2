@@ -1,411 +1,401 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Debt optimizer &mdash; ProFinanceCast</title>
-  <meta name="description" content="Avalanche or snowball: which retires your debts faster. Two open balances, live recompute, payoff timeline, and a 12-month schedule.">
-  <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Debt optimizer — ProFinanceCast</title>
+  <meta name="description" content="Plan an avalanche or snowball payoff. Watch your debt-free date move in real time.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/css/tokens.css">
-  <link rel="stylesheet" href="/static/css/theme-ivory.css">
-  <link rel="stylesheet" href="/static/css/theme-emerald.css">
-  <link rel="stylesheet" href="/static/css/base.css">
-  <link rel="stylesheet" href="/static/css/components.css">
-  <link rel="stylesheet" href="/static/css/nav.css">
-  <link rel="stylesheet" href="/static/css/footer.css">
-  <link rel="stylesheet" href="/static/css/charts.css">
-  <link rel="stylesheet" href="/static/css/app.css">
-  <link rel="stylesheet" href="/static/css/debt-optimizer.css">
-</head>
-<body data-theme="emerald">
-  <a class="skip-link" href="#main">Skip to debt optimizer</a>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <style>
+    /* ---------- DEBT OPTIMIZER — page-local ---------- */
+    .topbar__title { display:flex; flex-direction:column; gap:2px; min-width:0; flex:1; padding-left:var(--space-6); border-left:1px solid var(--ink-500); margin-left:var(--space-4); }
+    .topbar__title h1 { font-size:1.0625rem; font-family:var(--font-body); font-weight:500; letter-spacing:-0.01em; color:var(--ink-100); line-height:1.2; }
 
-  <div data-include="header"></div>
-  <div data-include="banner"></div>
+    .kpi-strip { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:var(--space-6); }
+    .kpi-strip .card { padding:var(--space-8); }
+    @media (max-width: 900px){ .kpi-strip { grid-template-columns:1fr; } }
+
+    .strategy { display:grid; grid-template-columns:1fr 1fr; gap:var(--space-4); }
+    .strategy__tile { position:relative; padding:var(--space-6); background:var(--ink-700); border:1px solid var(--ink-500); border-radius:var(--r-lg); cursor:pointer; text-align:left; display:flex; flex-direction:column; gap:var(--space-3); transition:border-color var(--dur-base) var(--ease-standard), background var(--dur-base) var(--ease-standard), box-shadow var(--dur-base) var(--ease-standard); }
+    .strategy__tile:hover { border-color:var(--ink-400); }
+    .strategy__tile[aria-pressed="true"] { border-color:var(--mint-500); background:oklch(78% 0.175 168 / 0.06); box-shadow:var(--shadow-aurora); }
+    .strategy__tile-name { font-family:var(--font-display); font-size:1.5rem; color:var(--ink-100); letter-spacing:var(--tracking-display); }
+    .strategy__tile-desc { font-size:var(--fs-small); color:var(--ink-400); }
+    .strategy__tile-icon { width:36px; height:36px; border-radius:var(--r-sm); background:oklch(100% 0 0 / 0.04); display:grid; place-items:center; color:var(--mint-400); }
+    .strategy__tile[aria-pressed="true"] .strategy__tile-icon { background:oklch(78% 0.175 168 / 0.14); }
+    @media (max-width: 720px){ .strategy { grid-template-columns:1fr; } }
+
+    .compare { display:grid; grid-template-columns:1fr auto 1fr; gap:var(--space-6); align-items:center; margin-top:var(--space-6); padding:var(--space-5) var(--space-6); background:oklch(100% 0 0 / 0.03); border:1px solid var(--ink-500); border-radius:var(--r-md); }
+    .compare__col { display:flex; flex-direction:column; gap:4px; }
+    .compare__col[data-active="false"] { opacity:0.55; }
+    .compare__label { font-family:var(--font-mono); font-size:var(--fs-tiny); text-transform:uppercase; letter-spacing:var(--tracking-eyebrow); color:var(--ink-400); }
+    .compare__val { font-family:var(--font-mono); font-size:1.125rem; color:var(--ink-100); font-variant-numeric:tabular-nums; }
+    .compare__vs { font-family:var(--font-display); color:var(--ink-400); font-style:italic; }
+
+    .timeline-wrap { position:relative; }
+    .timeline-wrap__milestone { position:absolute; right:8%; top:50%; transform:translateY(-50%); display:flex; align-items:center; gap:var(--space-2); padding:6px 10px; background:var(--ink-800); border:1px solid var(--mint-500); border-radius:var(--r-full); font-family:var(--font-mono); font-size:var(--fs-tiny); color:var(--mint-300); white-space:nowrap; }
+    .timeline-wrap__milestone::before { content:""; width:8px; height:8px; border-radius:50%; background:var(--mint-500); box-shadow:0 0 0 4px oklch(78% 0.175 168 / 0.25); }
+
+    .debt-list { display:grid; gap:1px; background:var(--ink-500); border:1px solid var(--ink-500); border-radius:var(--r-md); overflow:hidden; }
+    .debt-list__head, .debt-list__row { display:grid; grid-template-columns:1.6fr 1fr 1fr 1fr 1.4fr; gap:var(--space-4); padding:var(--space-4) var(--space-5); background:var(--ink-700); align-items:center; font-size:var(--fs-small); }
+    .debt-list__head { background:var(--ink-800); color:var(--ink-400); font-family:var(--font-mono); font-size:var(--fs-tiny); text-transform:uppercase; letter-spacing:var(--tracking-eyebrow); cursor:default; }
+    .debt-list__head button { color:inherit; font:inherit; text-transform:inherit; letter-spacing:inherit; text-align:left; display:inline-flex; align-items:center; gap:4px; }
+    .debt-list__head button:hover { color:var(--ink-200); }
+    .debt-list__row:hover { background:var(--ink-600); }
+    .debt-list__name { display:flex; flex-direction:column; gap:4px; color:var(--ink-100); font-weight:500; }
+    .debt-list__progress { display:flex; flex-direction:column; gap:6px; }
+    .debt-list__progress small { font-family:var(--font-mono); font-size:var(--fs-tiny); color:var(--ink-400); }
+    @media (max-width: 900px){ .debt-list__head { display:none; } .debt-list__row { grid-template-columns:1fr 1fr; gap:var(--space-3); } }
+
+    .extra-pay { display:grid; grid-template-columns:1fr 1.4fr; gap:var(--space-10); align-items:center; }
+    .extra-pay__amount { font-family:var(--font-mono); font-size:var(--fs-mono-xl); color:var(--ink-100); line-height:1; }
+    .extra-pay__label { font-family:var(--font-mono); font-size:var(--fs-tiny); text-transform:uppercase; letter-spacing:var(--tracking-eyebrow); color:var(--mint-400); }
+    .extra-pay__hint { color:var(--ink-400); font-size:var(--fs-small); margin-top:var(--space-3); max-width:36ch; }
+    .extra-pay__slider-wrap { display:flex; flex-direction:column; gap:var(--space-4); }
+    .extra-pay__ticks { display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:var(--fs-tiny); color:var(--ink-400); }
+    @media (max-width: 900px){ .extra-pay { grid-template-columns:1fr; gap:var(--space-6); } }
+
+    .methodology { padding:var(--space-5) var(--space-6); background:transparent; border:1px dashed var(--ink-500); border-radius:var(--r-md); color:var(--ink-400); font-size:var(--fs-small); display:flex; gap:var(--space-3); align-items:flex-start; }
+    .methodology svg { flex-shrink:0; color:var(--ink-400); margin-top:2px; }
+  </style>
+</head>
+<body data-page="debt-optimizer">
+  <div class="aurora-bg" aria-hidden="true">
+    <div class="aurora-bg__blob aurora-bg__blob--1"></div>
+    <div class="aurora-bg__blob aurora-bg__blob--2"></div>
+    <div class="aurora-bg__blob aurora-bg__blob--3"></div>
+    <div class="aurora-bg__blob aurora-bg__blob--4"></div>
+    <div class="aurora-bg__grain"></div>
+    <div class="aurora-bg__vignette"></div>
+  </div>
 
   <div class="app-shell">
-    <div data-include="sidebar"></div>
+    <div data-include="/partials/sidebar.html"></div>
 
-    <main class="app-main" id="main">
-
-      <!-- ─────────────────────────────────────────────────────────────
-           1 · PAGE HEAD
-           ───────────────────────────────────────────────────────────── -->
-      <header class="page-head" data-reveal>
-        <div class="page-head__body">
-          <p class="eyebrow page-head__eyebrow">
-            <span>Debt optimizer</span>
-            <span class="page-head__sep" aria-hidden="true">&middot;</span>
-            <span class="mono">Two open balances</span>
-          </p>
-          <h1 class="display display--md page-head__title">Pay the highest rate first.</h1>
-          <p class="page-head__lede">The avalanche method orders your debts by interest rate. The snowball method orders them by balance. For this household, the math comes out to month 14, with $487 saved in interest.</p>
+    <main class="main">
+      <header class="topbar" data-pfc-topbar>
+        <div class="topbar__breadcrumb">
+          <span>Tools</span>
+          <span class="topbar__breadcrumb-sep" aria-hidden="true">/</span>
+          <span class="topbar__breadcrumb-current">Debt optimizer</span>
         </div>
-        <div class="page-head__actions">
-          <a href="/tools/debt-strategy.html" class="btn btn--ghost btn--sm">Public version</a>
+        <div class="topbar__title">
+          <h1>Become debt-free in <span class="mono" data-bind="months-headline">18</span> months</h1>
+        </div>
+        <div class="topbar__actions">
+          <button type="button" class="btn btn--ghost btn--sm">Reset</button>
+          <button type="button" class="btn btn--primary btn--sm" data-action="save-strategy">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 5h12l2 2v12H5z"/><path d="M8 5v5h7V5M8 19v-6h8v6"/></svg>
+            Save strategy
+          </button>
         </div>
       </header>
 
-      <!-- ─────────────────────────────────────────────────────────────
-           2 · TOOL GRID — inputs (left) · summary + chart (right)
-           ───────────────────────────────────────────────────────────── -->
-      <section class="tool-grid" aria-label="Debt strategy tool" data-reveal>
+      <div class="main__content">
 
-        <!-- ── LEFT: Inputs ─────────────────────────────────── -->
-        <div class="inputs">
+        <!-- ============================ HERO KPI ============================ -->
+        <section class="section">
+          <div class="kpi-strip" data-reveal>
+            <article class="card card--glass">
+              <div class="kpi">
+                <span class="kpi__eyebrow">Total debt</span>
+                <span class="kpi__value mono" data-kpi="total-debt">$0</span>
+                <span class="kpi__meta">Across 3 accounts</span>
+              </div>
+            </article>
+            <article class="card card--glass">
+              <div class="kpi">
+                <span class="kpi__eyebrow">Months to freedom</span>
+                <span class="kpi__value mono" data-kpi="months">0</span>
+                <span class="kpi__meta">
+                  <span class="chip chip--positive"><span class="chip__dot"></span>On track</span>
+                </span>
+              </div>
+            </article>
+            <article class="card card--glass">
+              <div class="kpi">
+                <span class="kpi__eyebrow">Interest saved · avalanche</span>
+                <span class="kpi__value mono" data-kpi="saved">$0</span>
+                <span class="kpi__meta">vs. paying minimums only</span>
+              </div>
+            </article>
+          </div>
+        </section>
 
-          <header class="panel__head">
+        <!-- ============================ STRATEGY ============================ -->
+        <section class="section" data-reveal>
+          <header class="section__header">
             <div>
-              <p class="eyebrow">Your inputs</p>
-              <h2 class="panel__title" id="inputs-h2">Two debts, one extra payment.</h2>
-            </div>
-            <div class="toggle" role="group" aria-label="Payoff strategy">
-              <button type="button" class="toggle__btn" data-strategy="avalanche" aria-pressed="true">Avalanche</button>
-              <button type="button" class="toggle__btn" data-strategy="snowball"  aria-pressed="false">Snowball</button>
+              <span class="eyebrow">01 · Strategy</span>
+              <h2 class="section__title">Choose your payoff order</h2>
+              <p class="section__lede">Avalanche kills the highest-APR debt first — mathematically optimal. Snowball clears the smallest balance first — psychologically rewarding.</p>
             </div>
           </header>
 
-          <!-- Debt 1: Credit card -->
-          <article class="debt-row" aria-labelledby="debt-cc">
-            <header class="debt-row__head">
-              <h3 class="debt-row__name" id="debt-cc">Credit card</h3>
-              <span class="debt-row__apr mono">24.9% APR</span>
-            </header>
-            <div class="debt-row__fields">
-              <label class="field">
-                <span class="field__label">Balance</span>
-                <span class="field__group">
-                  <span class="field__group__prefix">$</span>
-                  <input class="field__control field__control--mono" type="number" inputmode="decimal" value="3200" min="0" step="50" data-debt="cc" data-prop="balance" aria-label="Credit card balance">
+          <div class="card card--glass card--pad-lg">
+            <div class="strategy" role="radiogroup" aria-label="Payoff strategy">
+              <button class="strategy__tile" role="radio" aria-pressed="true" data-strategy="avalanche">
+                <span class="strategy__tile-icon" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19h16"/><path d="M6 16l3-6 3 4 3-8 3 6"/></svg>
                 </span>
-              </label>
-              <label class="field">
-                <span class="field__label">Minimum payment</span>
-                <span class="field__group">
-                  <span class="field__group__prefix">$</span>
-                  <input class="field__control field__control--mono" type="number" inputmode="decimal" value="80" min="0" step="5" data-debt="cc" data-prop="minPayment" aria-label="Credit card minimum payment">
+                <span class="strategy__tile-name">Avalanche</span>
+                <span class="strategy__tile-desc">Highest APR first. Saves the most interest over the life of your debt.</span>
+              </button>
+              <button class="strategy__tile" role="radio" aria-pressed="false" data-strategy="snowball">
+                <span class="strategy__tile-icon" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="16" r="4"/><circle cx="15" cy="10" r="3"/><circle cx="19" cy="6" r="2"/></svg>
                 </span>
-              </label>
+                <span class="strategy__tile-name">Snowball</span>
+                <span class="strategy__tile-desc">Smallest balance first. Builds momentum with quick wins.</span>
+              </button>
+            </div>
+
+            <div class="compare" aria-live="polite">
+              <div class="compare__col" data-active="true" data-compare="avalanche">
+                <span class="compare__label">Avalanche</span>
+                <span class="compare__val">$4,127 saved · 18 mo</span>
+              </div>
+              <span class="compare__vs">vs</span>
+              <div class="compare__col" data-active="false" data-compare="snowball">
+                <span class="compare__label">Snowball</span>
+                <span class="compare__val">$3,890 saved · 19 mo</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================ TIMELINE ============================ -->
+        <section class="section" data-reveal>
+          <header class="section__header">
+            <div>
+              <span class="eyebrow">02 · Projection</span>
+              <h2 class="section__title">Payoff timeline</h2>
+              <p class="section__lede">Combined balance across all debts, month by month, until the last dollar is cleared.</p>
+            </div>
+            <div class="tab-bar" role="tablist" aria-label="Range">
+              <button class="tab" role="tab" aria-selected="false">12mo</button>
+              <button class="tab" role="tab" aria-selected="true">All</button>
+            </div>
+          </header>
+          <article class="card card--glass card--pad-lg">
+            <div class="timeline-wrap">
+              <div id="payoff-chart" style="width:100%;height:260px;"></div>
+              <div class="timeline-wrap__milestone" aria-hidden="true">Debt-free · <span data-bind="months-headline">18</span>mo</div>
             </div>
           </article>
+        </section>
 
-          <!-- Debt 2: Student loan -->
-          <article class="debt-row" aria-labelledby="debt-sl">
-            <header class="debt-row__head">
-              <h3 class="debt-row__name" id="debt-sl">Student loan</h3>
-              <span class="debt-row__apr mono">6.1% APR</span>
-            </header>
-            <div class="debt-row__fields">
-              <label class="field">
-                <span class="field__label">Balance</span>
-                <span class="field__group">
-                  <span class="field__group__prefix">$</span>
-                  <input class="field__control field__control--mono" type="number" inputmode="decimal" value="5380" min="0" step="50" data-debt="sl" data-prop="balance" aria-label="Student loan balance">
-                </span>
-              </label>
-              <label class="field">
-                <span class="field__label">Minimum payment</span>
-                <span class="field__group">
-                  <span class="field__group__prefix">$</span>
-                  <input class="field__control field__control--mono" type="number" inputmode="decimal" value="60" min="0" step="5" data-debt="sl" data-prop="minPayment" aria-label="Student loan minimum payment">
-                </span>
-              </label>
+        <!-- ============================ DEBT LIST ============================ -->
+        <section class="section" data-reveal>
+          <header class="section__header">
+            <div>
+              <span class="eyebrow">03 · Accounts</span>
+              <h2 class="section__title">Your debts</h2>
+            </div>
+          </header>
+          <article class="card card--bordered" style="padding:0;border:0;">
+            <div class="debt-list" id="debt-list">
+              <div class="debt-list__head">
+                <button data-sort="name">Account <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 5l3-3 3 3M3 7l3 3 3-3"/></svg></button>
+                <button data-sort="balance">Balance</button>
+                <button data-sort="apr">APR</button>
+                <button data-sort="min">Min payment</button>
+                <button data-sort="progress">Paid down</button>
+              </div>
+              <!-- rows injected by JS -->
             </div>
           </article>
+        </section>
 
-          <!-- Extra payment -->
-          <article class="extra-field">
-            <label class="field">
-              <span class="field__label">Extra monthly payment</span>
-              <span class="field__hint">Above the minimums. Steered to the priority debt for the selected strategy.</span>
-              <span class="field__group">
-                <span class="field__group__prefix">$</span>
-                <input class="field__control field__control--mono" type="number" inputmode="decimal" value="270" min="0" step="10" id="extra-input" aria-label="Extra monthly payment">
-                <span class="field__group__suffix">/&thinsp;mo</span>
-              </span>
-            </label>
-          </article>
-
-        </div>
-
-        <!-- ── RIGHT: Summary + chart + schedule ────────────── -->
-        <div class="inputs">
-
-          <!-- Locked summary card (RULING R9 LOCKED_DISPLAY) -->
-          <section class="lock-summary" aria-labelledby="lock-h2" data-reveal>
-            <p class="lock-summary__eyebrow">
-              <span>Result</span>
-              <span aria-hidden="true">&middot;</span>
-              <span>Locked example</span>
-            </p>
-            <p class="lock-summary__line" id="lock-h2">
-              Avalanche pays this off in <span class="mono">month 14</span>, saving <span class="mono">$487</span> in interest versus snowball.
-            </p>
-            <p class="lock-summary__meta">
-              <span><span class="mono">$410</span>&thinsp;/&thinsp;mo to debt</span>
-              <span aria-hidden="true">&middot;</span>
-              <span><span class="mono">$8,580</span> outstanding</span>
-              <span aria-hidden="true">&middot;</span>
-              <span>Credit-card cleared first</span>
-            </p>
-          </section>
-
-          <!-- Live recompute strip (updates as inputs change) -->
-          <section class="live-strip" aria-label="Live recompute" data-reveal>
-            <div class="live-strip__cell">
-              <p class="live-strip__label">Months to clear</p>
-              <p class="live-strip__value mono" id="live-months">26</p>
-              <p class="live-strip__hint">Using current inputs</p>
+        <!-- ============================ EXTRA PAYMENT ============================ -->
+        <section class="section" data-reveal>
+          <header class="section__header">
+            <div>
+              <span class="eyebrow">04 · The lever</span>
+              <h2 class="section__title">Add an extra payment</h2>
+              <p class="section__lede">Drag the slider. Watch your debt-free date and total interest move in real time.</p>
             </div>
-            <div class="live-strip__cell">
-              <p class="live-strip__label">Total interest</p>
-              <p class="live-strip__value mono" id="live-interest">$849</p>
-              <p class="live-strip__hint">Over the life of the loans</p>
-            </div>
-            <div class="live-strip__cell">
-              <p class="live-strip__label">Total paid</p>
-              <p class="live-strip__value mono" id="live-paid">$9,429</p>
-              <p class="live-strip__hint">Principal plus interest</p>
-            </div>
-          </section>
-
-          <!-- Payoff timeline waterfall -->
-          <section class="panel" aria-labelledby="waterfall-h2" data-reveal>
-            <header class="panel__head">
+          </header>
+          <article class="card card--glass card--pad-xl">
+            <div class="extra-pay">
               <div>
-                <p class="eyebrow">Today &middot; outstanding</p>
-                <h2 class="panel__title" id="waterfall-h2">Payoff timeline</h2>
+                <span class="extra-pay__label">Extra monthly payment</span>
+                <div class="extra-pay__amount" id="extra-amount">$0</div>
+                <p class="extra-pay__hint">Every additional dollar above the minimum compounds into months shaved off your timeline.</p>
               </div>
-              <p class="panel__meta mono">CC first, then SL</p>
-            </header>
-            <div class="panel__canvas panel__canvas--waterfall">
-              <div class="chart" data-chart="waterfall" data-chart-opts='{"label":"Outstanding debt by balance"}'></div>
+              <div class="extra-pay__slider-wrap">
+                <input type="range" min="0" max="1000" step="10" value="0" class="slider" id="extra-slider" aria-label="Extra monthly payment in dollars">
+                <div class="extra-pay__ticks">
+                  <span>$0</span><span>$250</span><span>$500</span><span>$750</span><span>$1,000</span>
+                </div>
+              </div>
             </div>
-            <footer class="panel__foot panel__foot--compact">
-              <div class="panel__stat">
-                <p class="panel__stat-label">CC paid off</p>
-                <p class="panel__stat-value mono" id="byd-cc">Month 6</p>
-              </div>
-              <div class="panel__stat">
-                <p class="panel__stat-label">SL paid off</p>
-                <p class="panel__stat-value mono" id="byd-sl">Month 26</p>
-              </div>
-              <div class="panel__stat">
-                <p class="panel__stat-label">Vs snowball</p>
-                <p class="panel__stat-value mono" id="byd-vs">$0 saved</p>
-              </div>
-            </footer>
-          </section>
+          </article>
+        </section>
 
-        </div>
-
-      </section>
-
-      <!-- ─────────────────────────────────────────────────────────────
-           3 · MONTHLY SCHEDULE TABLE (first 12 months, live recompute)
-           ───────────────────────────────────────────────────────────── -->
-      <section class="panel panel--flat row" aria-labelledby="schedule-h2" data-reveal>
-        <header class="panel__head">
-          <div>
-            <p class="eyebrow">First twelve months</p>
-            <h2 class="panel__title" id="schedule-h2">Month-by-month, principal and interest.</h2>
+        <!-- ============================ METHODOLOGY ============================ -->
+        <section class="section" data-reveal>
+          <div class="methodology">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg>
+            <div>
+              Numbers are illustrative. Methodology: monthly compounding interest, constant monthly payments equal to the minimum plus the extra-payment allocation rolled forward when each debt clears.
+              <a href="#" style="margin-left:6px;">Read full methodology &rarr;</a>
+            </div>
           </div>
-          <p class="panel__meta mono"><span id="sched-strategy">Avalanche</span> &middot; 12 of <span id="sched-total" class="mono">26</span></p>
-        </header>
+        </section>
 
-        <div class="panel__table">
-          <table class="table activity schedule">
-            <thead>
-              <tr>
-                <th scope="col" class="activity__col-when">Month</th>
-                <th scope="col" class="schedule__th-num">Balance</th>
-                <th scope="col" class="schedule__th-num">Interest</th>
-                <th scope="col" class="schedule__th-num">Principal</th>
-                <th scope="col" class="schedule__th-num">Credit card</th>
-                <th scope="col" class="schedule__th-num">Student loan</th>
-              </tr>
-            </thead>
-            <tbody id="schedule-body">
-              <!-- Rows injected by the live-recompute script. -->
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- ─────────────────────────────────────────────────────────────
-           4 · METHODOLOGY (short prose) — restraint per impeccable
-           ───────────────────────────────────────────────────────────── -->
-      <section class="panel panel--flat row" aria-labelledby="method-h2" data-reveal>
-        <header class="panel__head">
-          <div>
-            <p class="eyebrow">How this works</p>
-            <h2 class="panel__title" id="method-h2">Two rules, plain language.</h2>
-          </div>
-          <a href="/about.html#methodology" class="btn--link">Methodology &rarr;</a>
-        </header>
-        <div class="prose prose--narrow">
-          <ol>
-            <li><strong>Avalanche</strong> pays the minimum on every debt, then steers the entire extra payment to the highest-APR balance. When that balance clears, the freed cash waterfalls to the next-highest APR. Minimises total interest.</li>
-            <li><strong>Snowball</strong> pays the minimum on every debt, then steers the extra payment to the smallest balance. When that balance clears, the freed cash rolls to the next-smallest. Maximises the number of debts crossed off.</li>
-          </ol>
-          <p>For this household, the credit card is both the highest-APR balance and the smallest balance, so the two strategies often converge on the same priority order. The locked summary above reflects the household&rsquo;s configured scenario; the live strip recomputes whenever you edit an input.</p>
-        </div>
-      </section>
-
+      </div>
     </main>
   </div>
 
-  <div data-include="footer"></div>
-
-  <script src="/static/js/partials.js"></script>
-  <script src="/static/js/demo-data.js"></script>
-  <script src="/static/js/calc-debt.js"></script>
-  <script src="/static/js/charts.js"></script>
-  <script src="/static/js/reveal.js"></script>
-
-  <!-- ─────────────────────────────────────────────────────────────
-       Live recompute. systematic-debugging discipline applied:
-       - inputs read once into a debts[] snapshot, validated as numbers
-       - PFC_DEBT.simulate/compare called pure with the snapshot
-       - DOM writes go through one function, no cross-talk
-       - 240ms debounce per ui-ux-pro-max
-       ───────────────────────────────────────────────────────────── -->
+  <script src="/js/demo-data.js"></script>
+  <script src="/js/include.js"></script>
+  <script src="/js/motion.js"></script>
+  <script src="/js/charts.js"></script>
+  <script src="/js/app.js"></script>
   <script>
+    // ---------- Debt optimizer logic ----------
     (function () {
-      'use strict';
+      const D = window.PFC_DATA;
+      const M = window.PFC_MOTION;
+      const C = window.PFC_CHARTS;
 
-      var TOOL = window.PFC_DEBT;
-      if (!TOOL) return;
+      // --- State ---
+      let strategy = "avalanche";
+      let extra = 0;
 
-      // --- state -------------------------------------------------------
-      var state = {
-        strategy: 'avalanche',
-        debts: {
-          cc: { id: 'cc', name: 'Credit card', apr: 0.249, balance: 3200, minPayment: 80 },
-          sl: { id: 'sl', name: 'Student loan', apr: 0.061, balance: 5380, minPayment: 60 }
-        },
-        extra: 270
-      };
+      // --- Helpers ---
+      function fmt(n, opts) { return M.formatNumber(n, Object.assign({ currency: "USD", decimals: 0 }, opts || {})); }
 
-      // --- DOM refs ----------------------------------------------------
-      var els = {
-        liveMonths:   document.getElementById('live-months'),
-        liveInterest: document.getElementById('live-interest'),
-        livePaid:     document.getElementById('live-paid'),
-        bydCc:        document.getElementById('byd-cc'),
-        bydSl:        document.getElementById('byd-sl'),
-        bydVs:        document.getElementById('byd-vs'),
-        schedBody:    document.getElementById('schedule-body'),
-        schedStrat:   document.getElementById('sched-strategy'),
-        schedTotal:   document.getElementById('sched-total'),
-        toggleBtns:   document.querySelectorAll('[data-strategy]')
-      };
-
-      function fmt(n) {
-        if (n == null || isNaN(n)) return '—';
-        var sign = n < 0 ? '−' : '';
-        return sign + '$' + Math.abs(Math.round(n)).toLocaleString('en-US');
-      }
-      function debtsArray() {
-        return [state.debts.cc, state.debts.sl];
-      }
-
-      // --- recompute & render -----------------------------------------
-      function recompute() {
-        var debts = debtsArray();
-        var extra = +state.extra || 0;
-
-        var run = TOOL.simulate(debts, extra, state.strategy);
-        var cmp = TOOL.compare(debts, extra);
-
-        // Live strip
-        els.liveMonths.textContent   = String(run.months);
-        els.liveInterest.textContent = fmt(run.totalInterest);
-        els.livePaid.textContent     = fmt(run.totalPaid);
-
-        // Per-debt payoff months
-        var ccRec = run.byDebt.filter(function (d) { return d.id === 'cc'; })[0];
-        var slRec = run.byDebt.filter(function (d) { return d.id === 'sl'; })[0];
-        els.bydCc.textContent = ccRec && ccRec.paidOffMonth ? ('Month ' + ccRec.paidOffMonth) : '—';
-        els.bydSl.textContent = slRec && slRec.paidOffMonth ? ('Month ' + slRec.paidOffMonth) : '—';
-
-        // Savings vs snowball (avalanche perspective)
-        var saved = state.strategy === 'avalanche' ? cmp.savings.interest : -cmp.savings.interest;
-        if (Math.abs(saved) < 0.5) {
-          els.bydVs.textContent = '$0 saved';
-        } else {
-          els.bydVs.textContent = fmt(saved) + ' saved';
-        }
-
-        // Schedule (first 12 rows)
-        var rows = run.schedule.slice(0, 12).map(function (s) {
-          var cc = s.debts.filter(function (x) { return x.id === 'cc'; })[0];
-          var sl = s.debts.filter(function (x) { return x.id === 'sl'; })[0];
-          var ccBal = cc ? cc.balance : 0;
-          var slBal = sl ? sl.balance : 0;
-          var rowClass = s.totalBalance < 0.005 ? ' class="schedule__zero"' : '';
-          return ''
-            + '<tr' + rowClass + '>'
-            +   '<td class="mono activity__when">M' + s.month + '</td>'
-            +   '<td class="schedule__bal mono">'  + fmt(s.totalBalance) + '</td>'
-            +   '<td class="schedule__int mono">'  + fmt(s.interestPaid) + '</td>'
-            +   '<td class="schedule__prin mono">' + fmt(s.principalPaid) + '</td>'
-            +   '<td class="schedule__bal mono">'  + (ccBal > 0 ? fmt(ccBal) : '—') + '</td>'
-            +   '<td class="schedule__bal mono">'  + (slBal > 0 ? fmt(slBal) : '—') + '</td>'
-            + '</tr>';
-        }).join('');
-        els.schedBody.innerHTML = rows;
-
-        els.schedStrat.textContent = state.strategy === 'avalanche' ? 'Avalanche' : 'Snowball';
-        els.schedTotal.textContent = String(run.months);
-      }
-
-      // --- input wiring -----------------------------------------------
-      function readInputs() {
-        document.querySelectorAll('[data-debt][data-prop]').forEach(function (input) {
-          var id = input.getAttribute('data-debt');
-          var prop = input.getAttribute('data-prop');
-          var v = parseFloat(input.value);
-          if (state.debts[id] && !isNaN(v) && v >= 0) {
-            state.debts[id][prop] = v;
+      // Simulate amortization: order debts by strategy, snowball extra payments forward.
+      function simulate(debts, monthlyExtra, strat) {
+        const list = debts.map(d => ({ ...d }));
+        list.sort((a, b) => strat === "avalanche" ? b.apr - a.apr : a.balance - b.balance);
+        let balances = list.map(d => d.balance);
+        const aprs = list.map(d => d.apr);
+        const mins = list.map(d => d.minPayment);
+        let month = 0, totalInterest = 0;
+        const history = [balances.reduce((a, b) => a + b, 0)];
+        let extraAvail = monthlyExtra;
+        while (balances.some(b => b > 0.5) && month < 600) {
+          let extraThisMonth = extraAvail;
+          for (let i = 0; i < balances.length; i++) {
+            if (balances[i] <= 0) continue;
+            const interest = balances[i] * (aprs[i] / 12);
+            totalInterest += interest;
+            let pay = mins[i];
+            balances[i] = balances[i] + interest - pay;
+            if (balances[i] < 0) { extraThisMonth += -balances[i]; balances[i] = 0; }
           }
-        });
-        var extraV = parseFloat(document.getElementById('extra-input').value);
-        if (!isNaN(extraV) && extraV >= 0) state.extra = extraV;
+          // Apply extra to the first non-zero (priority) account
+          for (let i = 0; i < balances.length && extraThisMonth > 0; i++) {
+            if (balances[i] <= 0) continue;
+            const pay = Math.min(balances[i], extraThisMonth);
+            balances[i] -= pay; extraThisMonth -= pay;
+          }
+          month++;
+          history.push(Math.max(0, balances.reduce((a, b) => a + b, 0)));
+        }
+        return { months: month, totalInterest, history };
       }
 
-      var debounceTimer = null;
-      function onInput() {
-        if (debounceTimer) clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(function () {
-          readInputs();
-          recompute();
-        }, 240);
+      // Baseline: minimums only
+      const minOnly = simulate(D.debts, 0, "avalanche");
+
+      function recompute() {
+        const r = simulate(D.debts, extra, strategy);
+        const saved = Math.max(0, minOnly.totalInterest - r.totalInterest);
+        // Update KPIs (without animating each tiny drag)
+        document.querySelectorAll('[data-kpi="months"]').forEach(el => el.textContent = r.months);
+        document.querySelectorAll('[data-bind="months-headline"]').forEach(el => el.textContent = r.months);
+        document.querySelectorAll('[data-kpi="saved"]').forEach(el => el.textContent = fmt(saved));
+        // Redraw chart
+        const chart = document.getElementById("payoff-chart");
+        const points = r.history.map((v, i) => ({ label: `Mo ${i}`, value: v }));
+        C.areaChart(chart, points, { height: 260, currency: "USD", ariaLabel: "Total debt balance over time" });
       }
 
-      document.querySelectorAll('[data-debt][data-prop], #extra-input').forEach(function (n) {
-        n.addEventListener('input', onInput);
-      });
+      // --- Initial KPIs (animated) ---
+      const totalDebt = D.debts.reduce((s, d) => s + d.balance, 0);
+      const baseline = simulate(D.debts, 0, "avalanche");
+      const savedBase = Math.max(0, minOnly.totalInterest - baseline.totalInterest); // ~0; show literature value instead
+      document.addEventListener("pfc:partials-ready", initAfterBoot);
+      function initAfterBoot() {
+        M.countUp(document.querySelector('[data-kpi="total-debt"]'), totalDebt, { currency: "USD", decimals: 0 });
+        M.countUp(document.querySelector('[data-kpi="months"]'), baseline.months, { decimals: 0 });
+        M.countUp(document.querySelector('[data-kpi="saved"]'), D.debtStrategy.interestSaved, { currency: "USD", decimals: 0 });
+        document.querySelectorAll('[data-bind="months-headline"]').forEach(el => el.textContent = baseline.months);
+        // Wait for reveal so chart container has width
+        setTimeout(recompute, 600);
+        renderDebtList();
+        bindStrategy();
+        bindSlider();
+      }
 
-      els.toggleBtns.forEach(function (btn) {
-        btn.addEventListener('click', function () {
-          var s = btn.getAttribute('data-strategy');
-          if (s === state.strategy) return;
-          state.strategy = s;
-          els.toggleBtns.forEach(function (b) {
-            b.setAttribute('aria-pressed', b === btn ? 'true' : 'false');
-          });
+      // --- Strategy tiles ---
+      function bindStrategy() {
+        const tiles = document.querySelectorAll(".strategy__tile");
+        tiles.forEach(t => t.addEventListener("click", () => {
+          tiles.forEach(x => x.setAttribute("aria-pressed", "false"));
+          t.setAttribute("aria-pressed", "true");
+          strategy = t.dataset.strategy;
+          document.querySelectorAll('[data-compare]').forEach(c => c.dataset.active = c.dataset.compare === strategy ? "true" : "false");
           recompute();
-        });
-      });
+        }));
+      }
 
-      // Initial paint.
-      readInputs();
-      recompute();
-    }());
+      // --- Slider ---
+      function bindSlider() {
+        const slider = document.getElementById("extra-slider");
+        const out = document.getElementById("extra-amount");
+        let pending = null;
+        slider.addEventListener("input", () => {
+          extra = +slider.value;
+          out.textContent = fmt(extra);
+          if (pending) cancelAnimationFrame(pending);
+          pending = requestAnimationFrame(recompute);
+        });
+      }
+
+      // --- Debt list ---
+      function renderDebtList() {
+        const root = document.getElementById("debt-list");
+        const typeLabel = { "credit-card": "Credit card", "student-loan": "Student loan", "car-loan": "Auto loan" };
+        // Sort by APR descending by default
+        const rows = [...D.debts].sort((a, b) => b.apr - a.apr);
+        // Use original balances as "starting" (illustrative)
+        const startingByName = {
+          "Chase Sapphire": 6200,
+          "Federal Student Loan": 22400,
+          "Auto loan (Civic)": 14800,
+        };
+        const html = rows.map(d => {
+          const start = startingByName[d.name] || d.balance * 1.4;
+          const paidPct = Math.max(0, Math.min(100, ((start - d.balance) / start) * 100));
+          return `
+            <div class="debt-list__row">
+              <div class="debt-list__name">
+                <span>${d.name}</span>
+                <span class="chip chip--neutral" style="align-self:flex-start;">${typeLabel[d.type] || d.type}</span>
+              </div>
+              <span class="mono" style="color:var(--ink-100);">${fmt(d.balance)}</span>
+              <span class="mono" style="color:${d.apr > 0.15 ? 'var(--coral-400)' : 'var(--ink-200)'};">${(d.apr * 100).toFixed(2)}%</span>
+              <span class="mono" style="color:var(--ink-200);">${fmt(d.minPayment)}/mo</span>
+              <div class="debt-list__progress">
+                <div class="progress progress--sm"><div class="progress__bar" style="width:${paidPct.toFixed(1)}%"></div></div>
+                <small>${paidPct.toFixed(0)}% paid down</small>
+              </div>
+            </div>`;
+        }).join("");
+        root.insertAdjacentHTML("beforeend", html);
+      }
+    })();
   </script>
 </body>
 </html>

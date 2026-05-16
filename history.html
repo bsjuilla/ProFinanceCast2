@@ -1,174 +1,322 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>History &mdash; ProFinanceCast</title>
-  <meta name="description" content="A reverse-chronological ledger of changes you have made to your forecast. Goals, debts, income, scenarios &mdash; in order.">
-  <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>History — ProFinanceCast</title>
+  <meta name="description" content="A vertical record of what you've done. Scenarios, forecasts, goals, notes — in order.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/css/tokens.css">
-  <link rel="stylesheet" href="/static/css/theme-ivory.css">
-  <link rel="stylesheet" href="/static/css/theme-emerald.css">
-  <link rel="stylesheet" href="/static/css/base.css">
-  <link rel="stylesheet" href="/static/css/components.css">
-  <link rel="stylesheet" href="/static/css/nav.css">
-  <link rel="stylesheet" href="/static/css/footer.css">
-  <link rel="stylesheet" href="/static/css/charts.css">
-  <link rel="stylesheet" href="/static/css/app.css">
-  <link rel="stylesheet" href="/static/css/history.css">
-</head>
-<body data-theme="emerald">
-  <a class="skip-link" href="#main">Skip to history</a>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <style>
+    .topbar__title { display:flex; flex-direction:column; gap:2px; min-width:0; flex:1; padding-left:var(--space-6); border-left:1px solid var(--ink-500); margin-left:var(--space-4); }
+    .topbar__title h1 { font-size:1.0625rem; font-family:var(--font-body); font-weight:500; letter-spacing:-0.01em; color:var(--ink-100); line-height:1.2; }
+    .topbar__search-inline { display:flex; align-items:center; gap:8px; padding:7px 12px; background:oklch(100% 0 0 / 0.04); border:1px solid oklch(100% 0 0 / 0.08); border-radius:var(--r-md); color:var(--ink-300); font-size:var(--fs-small); min-width:240px; }
+    .topbar__search-inline svg { width:14px; height:14px; opacity:.7; }
+    .topbar__search-inline input { background:transparent; border:0; outline:none; color:var(--ink-100); flex:1; font-size:var(--fs-small); }
+    .topbar__search-inline input::placeholder { color:var(--ink-400); }
 
-  <div data-include="header"></div>
-  <div data-include="banner"></div>
+    /* Filter chips */
+    .filter-row { display:flex; gap:var(--space-2); flex-wrap:wrap; padding:var(--space-2); }
+    .filter-chip { padding:7px 14px; font-size:var(--fs-small); color:var(--ink-300); background:transparent; border:1px solid var(--ink-500); border-radius:var(--r-full); cursor:pointer; transition: background var(--dur-fast) var(--ease-standard), color var(--dur-fast) var(--ease-standard), border-color var(--dur-fast) var(--ease-standard); }
+    .filter-chip:hover { color:var(--ink-100); border-color:var(--ink-400); }
+    .filter-chip[aria-selected="true"] { background:oklch(78% 0.175 168 / 0.12); color:var(--mint-300); border-color:oklch(78% 0.175 168 / 0.35); }
+
+    /* Timeline */
+    .timeline { display:flex; flex-direction:column; gap:var(--space-2); margin-top:var(--space-4); }
+    .day-header { display:flex; align-items:center; gap:var(--space-4); padding:var(--space-5) 0 var(--space-2); font-family:var(--font-mono); font-size:var(--fs-tiny); text-transform:uppercase; letter-spacing:var(--tracking-eyebrow); color:var(--mint-400); }
+    .day-header::after { content:""; flex:1; height:1px; background:linear-gradient(90deg, oklch(78% 0.175 168 / 0.30), transparent); }
+
+    .event { display:grid; grid-template-columns: 92px 28px 1fr; gap:var(--space-4); align-items:flex-start; padding:var(--space-3) 0; position:relative; }
+    @media (max-width:640px){ .event { grid-template-columns: 70px 22px 1fr; gap:var(--space-3); } }
+    .event__time { font-family:var(--font-mono); font-size:var(--fs-tiny); color:var(--ink-400); padding-top:var(--space-4); text-align:right; font-variant-numeric:tabular-nums; }
+    .event__rail { position:relative; display:flex; justify-content:center; padding-top:var(--space-4); }
+    .event__rail::before { content:""; position:absolute; top:0; bottom:-100%; left:50%; width:1px; background:oklch(100% 0 0 / 0.08); transform:translateX(-50%); }
+    .event:last-child .event__rail::before { display:none; }
+    .event__dot { width:10px; height:10px; border-radius:var(--r-full); background:var(--ink-600); border:1px solid var(--ink-500); position:relative; z-index:1; flex-shrink:0; }
+    .event--milestone .event__dot { background:var(--mint-500); border-color:var(--mint-500); box-shadow:0 0 0 4px oklch(78% 0.175 168 / 0.18); }
+    .event__card { padding:var(--space-5) var(--space-6); display:flex; flex-direction:column; gap:6px; transition: border-color var(--dur-fast) var(--ease-standard), transform var(--dur-base) var(--ease-standard); }
+    .event__card:hover { transform:translateX(2px); border-color:oklch(78% 0.175 168 / 0.30); }
+    .event__head { display:flex; align-items:center; gap:var(--space-3); flex-wrap:wrap; }
+    .event__title { font-family:var(--font-display); font-size:var(--fs-h3); color:var(--ink-100); font-weight:400; line-height:1.2; letter-spacing:-0.015em; }
+    .event__title em { font-style:italic; color:var(--mint-400); font-weight:400; }
+    .event__body { font-size:var(--fs-small); color:var(--ink-300); line-height:1.55; max-width:60ch; }
+    .event__foot { display:flex; align-items:center; gap:var(--space-3); margin-top:6px; }
+    .event__link { font-family:var(--font-mono); font-size:var(--fs-tiny); text-transform:uppercase; letter-spacing:var(--tracking-eyebrow); color:var(--mint-400); display:inline-flex; align-items:center; gap:6px; transition: gap var(--dur-fast) var(--ease-standard); }
+    .event__link:hover { gap:10px; color:var(--mint-300); }
+
+    /* Stats footer */
+    .stats { display:grid; grid-template-columns:repeat(3, 1fr); gap:var(--space-5); margin-top:var(--space-10); }
+    @media (max-width:780px){ .stats { grid-template-columns:1fr; } }
+    .stat { padding:var(--space-6); display:flex; flex-direction:column; gap:6px; }
+    .stat__eyebrow { font-family:var(--font-mono); font-size:var(--fs-tiny); text-transform:uppercase; letter-spacing:var(--tracking-eyebrow); color:var(--ink-400); }
+    .stat__val { font-family:var(--font-mono); font-size:var(--fs-mono-xl); color:var(--ink-100); font-variant-numeric:tabular-nums; line-height:1; letter-spacing:-0.02em; }
+    .stat__delta { font-size:var(--fs-tiny); color:var(--mint-400); font-family:var(--font-mono); }
+  </style>
+</head>
+<body data-page="history">
+  <div class="aurora-bg" aria-hidden="true">
+    <div class="aurora-bg__blob aurora-bg__blob--1"></div>
+    <div class="aurora-bg__blob aurora-bg__blob--2"></div>
+    <div class="aurora-bg__blob aurora-bg__blob--3"></div>
+    <div class="aurora-bg__blob aurora-bg__blob--4"></div>
+    <div class="aurora-bg__grain"></div>
+    <div class="aurora-bg__vignette"></div>
+  </div>
 
   <div class="app-shell">
-    <div data-include="sidebar"></div>
+    <div data-include="/partials/sidebar.html"></div>
 
-    <main class="app-main" id="main">
-
-      <!-- 1 · PAGE HEAD ───────────────────────────────────────────────── -->
-      <header class="page-head" data-reveal>
-        <div class="page-head__body">
-          <p class="eyebrow page-head__eyebrow">
-            <span>History</span>
-            <span class="page-head__sep" aria-hidden="true">&middot;</span>
-            <span class="mono">11 May 2026</span>
-          </p>
-          <h1 class="display display--md page-head__title">What you have changed.</h1>
-          <p class="page-head__lede">A reverse-chronological ledger of edits to your forecast.</p>
+    <main class="main">
+      <header class="topbar" data-pfc-topbar>
+        <div class="topbar__breadcrumb">
+          <span>Records</span>
+          <span class="topbar__breadcrumb-sep" aria-hidden="true">/</span>
+          <span class="topbar__breadcrumb-current">History</span>
         </div>
-        <div class="page-head__actions">
-          <a href="/settings.html" class="btn btn--ghost btn--sm">Export ledger</a>
+        <div class="topbar__title"><h1>What you've done</h1></div>
+        <div class="topbar__actions">
+          <label class="topbar__search-inline">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <input type="search" placeholder="Search the record">
+          </label>
         </div>
       </header>
 
-      <!-- 2 · LEDGER ─────────────────────────────────────────────────── -->
-      <section class="ledger" aria-label="Activity ledger" data-reveal>
+      <div class="main__content">
 
-        <!-- May 2026 ─────────────────────────────────────────────────── -->
-        <article class="ledger__month" aria-labelledby="m-may2026">
-          <header class="ledger__month-head">
-            <h2 class="ledger__month-eyebrow" id="m-may2026">May 2026 &middot; this month</h2>
-            <p class="ledger__month-count"><span class="mono">6</span> entries</p>
-          </header>
+        <!-- Filter chips -->
+        <section class="section" data-reveal>
+          <div class="card card--glass">
+            <div class="filter-row" role="tablist" aria-label="Filter by event type">
+              <button class="filter-chip" aria-selected="true">All · 47</button>
+              <button class="filter-chip">Scenarios · 18</button>
+              <button class="filter-chip">Forecasts · 6</button>
+              <button class="filter-chip">Goals · 14</button>
+              <button class="filter-chip">Debt strategies · 5</button>
+              <button class="filter-chip">Notes · 4</button>
+            </div>
+          </div>
+        </section>
 
-          <div class="ledger__row">
-            <p class="ledger__when mono">09 May &middot; 09:48</p>
-            <p class="ledger__verb">Re-ran the forecast.</p>
-            <p class="ledger__detail">Refreshed the ten-year net-worth model after edits to retirement-return and inflation assumptions. CAGR settled at <span class="mono">16.8%</span>, endpoint <span class="mono">$412,000</span>.</p>
+        <!-- Timeline -->
+        <section class="section" data-reveal>
+          <div class="timeline">
+
+            <div class="day-header">Today · May 16, 2026</div>
+
+            <article class="event event--milestone">
+              <span class="event__time">09:42 am</span>
+              <span class="event__rail"><span class="event__dot"></span></span>
+              <div class="card card--glass event__card">
+                <div class="event__head">
+                  <h3 class="event__title">Paid off <em>Chase Sapphire</em></h3>
+                  <span class="chip chip--positive"><span class="chip__dot"></span>Milestone</span>
+                </div>
+                <p class="event__body">Final $128 minimum cleared the balance. Saved an estimated $1,180 in interest by running the avalanche method for 11 months.</p>
+                <div class="event__foot"><a href="#" class="event__link">View debt timeline <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+              </div>
+            </article>
+
+            <article class="event">
+              <span class="event__time">08:14 am</span>
+              <span class="event__rail"><span class="event__dot"></span></span>
+              <div class="card card--glass event__card">
+                <div class="event__head">
+                  <h3 class="event__title">Ran scenario "Take the raise, defer the move"</h3>
+                </div>
+                <p class="event__body">Modelled accepting the 12% raise while delaying the apartment move by six months. Net worth at 5Y rises by $14,200.</p>
+                <div class="event__foot"><a href="#" class="event__link">Open scenario <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+              </div>
+            </article>
+
+            <div class="day-header">Yesterday · May 15</div>
+
+            <article class="event">
+              <span class="event__time">06:30 pm</span>
+              <span class="event__rail"><span class="event__dot"></span></span>
+              <div class="card card--glass event__card">
+                <div class="event__head"><h3 class="event__title">Journal entry "Paid off the credit card"</h3></div>
+                <p class="event__body">Four-minute read. Mood tagged Steady.</p>
+                <div class="event__foot"><a href="#" class="event__link">Read entry <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+              </div>
+            </article>
+
+            <article class="event">
+              <span class="event__time">11:08 am</span>
+              <span class="event__rail"><span class="event__dot"></span></span>
+              <div class="card card--glass event__card">
+                <div class="event__head"><h3 class="event__title">Updated <em>Iceland trip</em> goal target</h3></div>
+                <p class="event__body">Raised from $4,200 to $4,800 after revising flight estimates. New monthly contribution: $240.</p>
+              </div>
+            </article>
+
+            <div class="day-header">Last week</div>
+
+            <article class="event event--milestone">
+              <span class="event__time">May 13</span>
+              <span class="event__rail"><span class="event__dot"></span></span>
+              <div class="card card--glass event__card">
+                <div class="event__head">
+                  <h3 class="event__title"><em>Iceland trip</em> goal crossed 40%</h3>
+                  <span class="chip chip--positive"><span class="chip__dot"></span>Milestone</span>
+                </div>
+                <p class="event__body">$1,920 of $4,800. On pace to finish six weeks before departure.</p>
+              </div>
+            </article>
+
+            <article class="event">
+              <span class="event__time">May 12</span>
+              <span class="event__rail"><span class="event__dot"></span></span>
+              <div class="card card--glass event__card">
+                <div class="event__head"><h3 class="event__title">Generated 5-year forecast snapshot</h3></div>
+                <p class="event__body">Net worth projected at $156K by May 2031 under current trajectory.</p>
+                <div class="event__foot"><a href="#" class="event__link">Open forecast <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+              </div>
+            </article>
+
+            <article class="event">
+              <span class="event__time">May 11</span>
+              <span class="event__rail"><span class="event__dot"></span></span>
+              <div class="card card--glass event__card">
+                <div class="event__head"><h3 class="event__title">Switched debt strategy to <em>avalanche</em></h3></div>
+                <p class="event__body">Re-allocated $260/mo from student loan minimum to Chase Sapphire. Saves projected $1,180 in interest.</p>
+              </div>
+            </article>
+
+            <article class="event">
+              <span class="event__time">May 10</span>
+              <span class="event__rail"><span class="event__dot"></span></span>
+              <div class="card card--glass event__card">
+                <div class="event__head"><h3 class="event__title">Ran scenario "Move to Lisbon"</h3></div>
+                <p class="event__body">Modelled relocation in Q3 2027 with cost-of-living adjustment of -34%. Forecast hits FI three years earlier.</p>
+                <div class="event__foot"><a href="#" class="event__link">Open scenario <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+              </div>
+            </article>
+
+            <div class="day-header">May 2026</div>
+
+            <article class="event">
+              <span class="event__time">May 06</span>
+              <span class="event__rail"><span class="event__dot"></span></span>
+              <div class="card card--glass event__card">
+                <div class="event__head"><h3 class="event__title">Added goal "Retirement boost"</h3></div>
+                <p class="event__body">Target $12,000 by Dec 31, 2026. Starting balance $4,380.</p>
+              </div>
+            </article>
+
+            <article class="event">
+              <span class="event__time">May 04</span>
+              <span class="event__rail"><span class="event__dot"></span></span>
+              <div class="card card--glass event__card">
+                <div class="event__head"><h3 class="event__title">Cancelled four recurring subscriptions</h3></div>
+                <p class="event__body">Notion AI, Headspace, Dropbox Plus, Setapp. Saves $46.18 per month.</p>
+              </div>
+            </article>
+
+            <article class="event event--milestone">
+              <span class="event__time">May 01</span>
+              <span class="event__rail"><span class="event__dot"></span></span>
+              <div class="card card--glass event__card">
+                <div class="event__head">
+                  <h3 class="event__title">Savings rate hit <em>21%</em> — 12-month high</h3>
+                  <span class="chip chip--positive"><span class="chip__dot"></span>Milestone</span>
+                </div>
+                <p class="event__body">Up from 16% in January. Sustained for three consecutive months now.</p>
+              </div>
+            </article>
+
+            <article class="event">
+              <span class="event__time">Apr 28</span>
+              <span class="event__rail"><span class="event__dot"></span></span>
+              <div class="card card--glass event__card">
+                <div class="event__head"><h3 class="event__title">Ran scenario "Pause retirement, sprint house"</h3></div>
+                <p class="event__body">Modelled redirecting $400/mo from 401k to down payment. Closes the gap five months sooner.</p>
+              </div>
+            </article>
+
+            <article class="event">
+              <span class="event__time">Apr 22</span>
+              <span class="event__rail"><span class="event__dot"></span></span>
+              <div class="card card--glass event__card">
+                <div class="event__head"><h3 class="event__title">Saved monthly report card · April 2026</h3></div>
+                <p class="event__body">Grade B+. Strongest dimension: investing (84). Weakest: emergency fund (68).</p>
+              </div>
+            </article>
+
+            <article class="event">
+              <span class="event__time">Apr 17</span>
+              <span class="event__rail"><span class="event__dot"></span></span>
+              <div class="card card--glass event__card">
+                <div class="event__head"><h3 class="event__title">Updated salary expectation in calculator</h3></div>
+                <p class="event__body">Raised from $86K to $96K after offer letter. Effective tax bracket shifts; take-home revised to 71%.</p>
+              </div>
+            </article>
+
           </div>
 
-          <div class="ledger__row">
-            <p class="ledger__when mono">07 May &middot; 20:05</p>
-            <p class="ledger__verb">Lifted a goal target.</p>
-            <p class="ledger__detail">Raised the <strong>Emergency fund</strong> goal from <span class="mono">$28,000</span> to <span class="mono">$31,080</span> to match six months of current expenses.</p>
+          <!-- Stats footer -->
+          <div class="stats">
+            <article class="card card--glass stat">
+              <span class="stat__eyebrow">Scenarios run</span>
+              <span class="stat__val mono" data-count="18">0</span>
+              <span class="stat__delta">+6 this month</span>
+            </article>
+            <article class="card card--glass stat">
+              <span class="stat__eyebrow">Forecasts saved</span>
+              <span class="stat__val mono" data-count="6">0</span>
+              <span class="stat__delta">+1 this month</span>
+            </article>
+            <article class="card card--glass stat">
+              <span class="stat__eyebrow">Goals achieved</span>
+              <span class="stat__val mono" data-count="2">0</span>
+              <span class="stat__delta">Credit card cleared today</span>
+            </article>
           </div>
+        </section>
 
-          <div class="ledger__row">
-            <p class="ledger__when mono">06 May &middot; 07:55</p>
-            <p class="ledger__verb">Paid down the credit card.</p>
-            <p class="ledger__detail">Logged a <span class="mono">$350</span> payment against the <strong>Credit card</strong> balance. Avalanche path now clears the line in <strong>month 14</strong>.</p>
-          </div>
-
-          <div class="ledger__row">
-            <p class="ledger__when mono">05 May &middot; 17:48</p>
-            <p class="ledger__verb">Adjusted retirement return.</p>
-            <p class="ledger__detail">Trimmed the assumed nominal return on tax-advantaged accounts from <span class="mono">7.5%</span> to <span class="mono">7.0%</span>. Endpoint slid <span class="mono">&minus;$8,200</span>.</p>
-          </div>
-
-          <div class="ledger__row">
-            <p class="ledger__when mono">03 May &middot; 21:11</p>
-            <p class="ledger__verb">Saved a scenario.</p>
-            <p class="ledger__detail">Persisted the <strong>&ldquo;Move to lower-cost city&rdquo;</strong> scenario with a fifteen-percent rent reduction. Endpoint <span class="mono">$503,000</span>, an uplift of <span class="mono">$91,000</span>.</p>
-          </div>
-
-          <div class="ledger__row">
-            <p class="ledger__when mono">02 May &middot; 15:40</p>
-            <p class="ledger__verb">Exported the household model.</p>
-            <p class="ledger__detail">Downloaded a <strong>JSON</strong> bundle of the full household model for an offline review.</p>
-          </div>
-        </article>
-
-        <!-- April 2026 ───────────────────────────────────────────────── -->
-        <article class="ledger__month" aria-labelledby="m-apr2026">
-          <header class="ledger__month-head">
-            <h2 class="ledger__month-eyebrow" id="m-apr2026">April 2026</h2>
-            <p class="ledger__month-count"><span class="mono">5</span> entries</p>
-          </header>
-
-          <div class="ledger__row">
-            <p class="ledger__when mono">30 Apr &middot; 22:14</p>
-            <p class="ledger__verb">Re-baselined the quarter.</p>
-            <p class="ledger__detail">Quarterly baseline run after April close. Endpoint nudged up <span class="mono">+$11,200</span> versus the Q1 model, mostly from a stronger savings rate.</p>
-          </div>
-
-          <div class="ledger__row">
-            <p class="ledger__when mono">29 Apr &middot; 13:36</p>
-            <p class="ledger__verb">Asked Sage about a balance transfer.</p>
-            <p class="ledger__detail">Modelled a hypothetical <strong>0% balance-transfer</strong> on the credit card. Roughly <span class="mono">$210</span> in interest avoided if the promotional window holds.</p>
-          </div>
-
-          <div class="ledger__row">
-            <p class="ledger__when mono">28 Apr &middot; 19:02</p>
-            <p class="ledger__verb">Created a goal.</p>
-            <p class="ledger__detail">Opened a new <strong>Sabbatical fund</strong> goal: <span class="mono">$15,540</span> over twenty-eight months, funded from monthly surplus.</p>
-          </div>
-
-          <div class="ledger__row">
-            <p class="ledger__when mono">22 Apr &middot; 10:09</p>
-            <p class="ledger__verb">Raised retirement contributions.</p>
-            <p class="ledger__detail">Lifted the assumed retirement contribution rate by one percentage point. Endpoint shifted to <span class="mono">$418,300</span>, then re-settled at <span class="mono">$412,000</span> after the May 5 return-rate edit.</p>
-          </div>
-
-          <div class="ledger__row">
-            <p class="ledger__when mono">17 Apr &middot; 15:55</p>
-            <p class="ledger__verb">Updated income.</p>
-            <p class="ledger__detail">Recorded a small base-salary correction following payroll reconciliation. Monthly income held at <span class="mono">$7,400</span>; first full Q2 baseline locked.</p>
-          </div>
-        </article>
-
-        <!-- March 2026 ───────────────────────────────────────────────── -->
-        <article class="ledger__month" aria-labelledby="m-mar2026">
-          <header class="ledger__month-head">
-            <h2 class="ledger__month-eyebrow" id="m-mar2026">March 2026</h2>
-            <p class="ledger__month-count"><span class="mono">3</span> entries</p>
-          </header>
-
-          <div class="ledger__row">
-            <p class="ledger__when mono">28 Mar &middot; 11:02</p>
-            <p class="ledger__verb">Added a debt.</p>
-            <p class="ledger__detail">Recorded the <strong>Student loan</strong> at <span class="mono">$5,380</span> outstanding, <span class="mono">6.1%</span> APR, minimum payment <span class="mono">$60</span>.</p>
-          </div>
-
-          <div class="ledger__row">
-            <p class="ledger__when mono">14 Mar &middot; 09:30</p>
-            <p class="ledger__verb">Set monthly expenses.</p>
-            <p class="ledger__detail">Calibrated total monthly expenses to <span class="mono">$5,180</span> after three weeks of bank-statement reconciliation. Rent, utilities, and groceries account for <span class="mono">$2,675</span>.</p>
-          </div>
-
-          <div class="ledger__row">
-            <p class="ledger__when mono">02 Mar &middot; 18:20</p>
-            <p class="ledger__verb">Opened the household.</p>
-            <p class="ledger__detail">Created the household model with starting net worth <span class="mono">$80,490</span>, liquid <span class="mono">$22,400</span>, retirement <span class="mono">$66,670</span>, and an initial ten-year endpoint of <span class="mono">$398,100</span>.</p>
-          </div>
-        </article>
-
-        <p class="ledger__foot">Ledger shows every edit you made to the forecast, newest first. Daily snapshots, market quotes, and automatic figures are not listed here &mdash; only your changes appear, so the record reads as a journal of decisions rather than a feed.</p>
-
-      </section>
-
+      </div>
     </main>
   </div>
 
-  <div data-include="footer"></div>
+  <script src="/js/demo-data.js"></script>
+  <script src="/js/include.js"></script>
+  <script src="/js/motion.js"></script>
+  <script src="/js/charts.js"></script>
+  <script src="/js/app.js"></script>
+  <script>
+    document.addEventListener("pfc:partials-ready", function () {
+      var M = window.PFC_MOTION;
 
-  <script src="/static/js/partials.js"></script>
-  <script src="/static/js/demo-data.js"></script>
-  <script src="/static/js/reveal.js"></script>
+      // Filter chip toggling (visual)
+      document.querySelectorAll(".filter-chip").forEach(function (c) {
+        c.addEventListener("click", function () {
+          document.querySelectorAll(".filter-chip").forEach(function (x) { x.removeAttribute("aria-selected"); });
+          c.setAttribute("aria-selected", "true");
+        });
+      });
+
+      // KPI countUp
+      document.querySelectorAll("[data-count]").forEach(function (el) {
+        var val = +el.getAttribute("data-count");
+        var io = new IntersectionObserver(function (es) {
+          es.forEach(function (e) {
+            if (e.isIntersecting) {
+              io.unobserve(el);
+              if (M && M.countUp) M.countUp(el, val, { decimals: 0, duration: 1000 });
+              else el.textContent = val;
+            }
+          });
+        }, { threshold: 0.4 });
+        io.observe(el);
+      });
+
+      if (M && M.revealOnScroll) M.revealOnScroll("[data-reveal]");
+    });
+  </script>
 </body>
 </html>

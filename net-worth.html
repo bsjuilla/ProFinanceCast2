@@ -1,319 +1,367 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Net worth &mdash; ProFinanceCast</title>
-  <meta name="description" content="A 120-month forecast of household net worth. Assets and debts month-by-month, compounded.">
-  <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Net worth — ProFinanceCast</title>
+  <meta name="description" content="Your full financial picture — assets, liabilities, and a 10-year forecast.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/css/tokens.css">
-  <link rel="stylesheet" href="/static/css/theme-ivory.css">
-  <link rel="stylesheet" href="/static/css/theme-emerald.css">
-  <link rel="stylesheet" href="/static/css/base.css">
-  <link rel="stylesheet" href="/static/css/components.css">
-  <link rel="stylesheet" href="/static/css/nav.css">
-  <link rel="stylesheet" href="/static/css/footer.css">
-  <link rel="stylesheet" href="/static/css/charts.css">
-  <link rel="stylesheet" href="/static/css/app.css">
-</head>
-<body data-theme="emerald">
-  <a class="skip-link" href="#main">Skip to net-worth view</a>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <style>
+    .topbar__title { display:flex; flex-direction:column; gap:2px; min-width:0; flex:1; padding-left:var(--space-6); border-left:1px solid var(--ink-500); margin-left:var(--space-4); }
+    .topbar__title h1 { font-size:1.0625rem; font-family:var(--font-body); font-weight:500; letter-spacing:-0.01em; color:var(--ink-100); line-height:1.2; }
 
-  <div data-include="header"></div>
-  <div data-include="banner"></div>
+    /* Hero */
+    .nw-hero { display:grid; grid-template-columns:1.5fr 1fr; gap:var(--space-10); align-items:center; }
+    .nw-hero__big { font-family:var(--font-mono); font-size:var(--fs-display-xl); line-height:0.95; color:var(--ink-100); font-variant-numeric:tabular-nums; letter-spacing:var(--tracking-mono); }
+    .nw-hero__spark { height:60px; margin-top:var(--space-5); }
+    .nw-hero__chips { display:flex; gap:var(--space-2); margin-top:var(--space-4); }
+    @media (max-width: 900px){ .nw-hero { grid-template-columns:1fr; } }
+
+    /* Assets vs Liabilities — split with floating net */
+    .split { position:relative; display:grid; grid-template-columns:1fr 1fr; gap:var(--space-10); }
+    .split::before { content:""; position:absolute; left:50%; top:0; bottom:0; width:1px; background:linear-gradient(180deg, transparent, var(--ink-500) 20%, var(--ink-500) 80%, transparent); transform:translateX(-50%); }
+    .split__net { position:absolute; left:50%; top:50%; transform:translate(-50%, -50%); padding:var(--space-3) var(--space-5); background:var(--ink-800); border:1px solid var(--mint-500); border-radius:var(--r-full); font-family:var(--font-mono); display:flex; flex-direction:column; align-items:center; gap:2px; box-shadow:0 0 0 6px var(--ink-900), var(--shadow-aurora); white-space:nowrap; z-index:2; }
+    .split__net-label { font-size:var(--fs-tiny); text-transform:uppercase; letter-spacing:var(--tracking-eyebrow); color:var(--ink-400); }
+    .split__net-val { font-size:1.125rem; color:var(--ink-100); }
+    @media (max-width: 900px){ .split { grid-template-columns:1fr; } .split::before, .split__net { display:none; } }
+
+    .line-list { display:flex; flex-direction:column; gap:1px; background:var(--ink-500); border-radius:var(--r-md); overflow:hidden; border:1px solid var(--ink-500); }
+    .line-list__head { display:grid; grid-template-columns:1.4fr 1fr 1fr; gap:var(--space-3); padding:var(--space-3) var(--space-5); background:var(--ink-800); color:var(--ink-400); font-family:var(--font-mono); font-size:var(--fs-tiny); text-transform:uppercase; letter-spacing:var(--tracking-eyebrow); }
+    .line-list__row { display:grid; grid-template-columns:1.4fr 1fr 1fr; gap:var(--space-3); padding:var(--space-4) var(--space-5); background:var(--ink-700); align-items:center; font-size:var(--fs-small); }
+    .line-list__row:hover { background:var(--ink-600); }
+    .line-list__name { display:flex; align-items:center; gap:var(--space-3); color:var(--ink-100); }
+    .line-list__name svg { width:18px; height:18px; opacity:0.7; color:var(--mint-400); }
+    .line-list__row--neg .line-list__name svg { color:var(--coral-400); }
+    .line-list__spark { height:24px; min-width:60px; }
+
+    /* Milestones timeline */
+    .milestones { position:relative; padding:var(--space-8) 0 var(--space-4); }
+    .milestones__line { position:absolute; left:0; right:0; top:50%; height:1px; background:linear-gradient(90deg, transparent, var(--mint-500) 10%, var(--mint-500) 90%, transparent); }
+    .milestones__items { position:relative; display:grid; grid-template-columns:repeat(6, 1fr); }
+    .milestone { position:relative; display:flex; flex-direction:column; align-items:center; gap:var(--space-3); padding:0 var(--space-2); }
+    .milestone__date { font-family:var(--font-mono); font-size:var(--fs-tiny); color:var(--ink-400); margin-bottom:var(--space-4); }
+    .milestone__dot { width:14px; height:14px; border-radius:50%; background:var(--mint-500); border:3px solid var(--ink-900); box-shadow:0 0 0 4px oklch(78% 0.175 168 / 0.15); position:relative; z-index:2; transition:transform var(--dur-fast) var(--ease-standard), box-shadow var(--dur-fast) var(--ease-standard); }
+    .milestone:hover .milestone__dot { transform:scale(1.15); box-shadow:0 0 0 6px oklch(78% 0.175 168 / 0.30); }
+    .milestone__label { font-size:var(--fs-small); color:var(--ink-200); text-align:center; margin-top:var(--space-4); max-width:14ch; }
+    .milestone__tooltip { position:absolute; bottom:calc(100% + 4px); left:50%; transform:translateX(-50%) translateY(4px); padding:6px 10px; background:var(--ink-600); border:1px solid var(--ink-500); border-radius:var(--r-sm); font-family:var(--font-mono); font-size:var(--fs-tiny); color:var(--ink-100); opacity:0; pointer-events:none; transition:opacity var(--dur-fast) var(--ease-standard); white-space:nowrap; }
+    .milestone:hover .milestone__tooltip { opacity:1; transform:translateX(-50%); }
+    @media (max-width: 900px){ .milestones__items { grid-template-columns:repeat(2, 1fr); gap:var(--space-6); } .milestones__line { display:none; } }
+
+    .quick-actions { display:grid; grid-template-columns:1fr 1fr; gap:var(--space-4); }
+    .quick-actions .btn { padding:var(--space-5); justify-content:flex-start; height:auto; }
+    @media (max-width: 700px){ .quick-actions { grid-template-columns:1fr; } }
+
+    .alloc-grid { display:grid; grid-template-columns:1fr 1fr; gap:var(--space-8); align-items:center; }
+    @media (max-width: 900px){ .alloc-grid { grid-template-columns:1fr; } }
+    .alloc-legend { display:flex; flex-direction:column; gap:var(--space-4); }
+    .alloc-legend__row { display:grid; grid-template-columns:14px 1fr auto auto; gap:var(--space-3); align-items:center; font-size:var(--fs-small); }
+    .alloc-legend__swatch { width:10px; height:10px; border-radius:3px; }
+  </style>
+</head>
+<body data-page="net-worth">
+  <div class="aurora-bg" aria-hidden="true">
+    <div class="aurora-bg__blob aurora-bg__blob--1"></div>
+    <div class="aurora-bg__blob aurora-bg__blob--2"></div>
+    <div class="aurora-bg__blob aurora-bg__blob--3"></div>
+    <div class="aurora-bg__blob aurora-bg__blob--4"></div>
+    <div class="aurora-bg__grain"></div>
+    <div class="aurora-bg__vignette"></div>
+  </div>
 
   <div class="app-shell">
-    <div data-include="sidebar"></div>
+    <div data-include="/partials/sidebar.html"></div>
 
-    <main class="app-main" id="main">
-
-      <!-- 1 · PAGE HEAD -->
-      <header class="page-head" data-reveal>
-        <div class="page-head__body">
-          <p class="eyebrow page-head__eyebrow">
-            <span>Net worth</span>
-            <span class="page-head__sep" aria-hidden="true">&middot;</span>
-            <span class="mono">11 May 2026</span>
-          </p>
-          <h1 class="display display--md page-head__title">Where the next decade lands.</h1>
-          <p class="page-head__lede">120 months of compounding, assets and debts month-by-month.</p>
+    <main class="main">
+      <header class="topbar" data-pfc-topbar>
+        <div class="topbar__breadcrumb">
+          <span>Overview</span>
+          <span class="topbar__breadcrumb-sep" aria-hidden="true">/</span>
+          <span class="topbar__breadcrumb-current">Net worth</span>
         </div>
-        <div class="page-head__actions">
-          <a href="/settings.html" class="btn btn--ghost btn--sm">Edit assumptions</a>
+        <div class="topbar__title">
+          <h1>Your net worth · <span class="mono">$87,420</span></h1>
+        </div>
+        <div class="topbar__actions">
+          <button type="button" class="btn btn--ghost btn--sm">Export</button>
+          <button type="button" class="btn btn--primary btn--sm">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+            Add account
+          </button>
         </div>
       </header>
 
-      <!-- 2 · KPI STRIP -->
-      <section class="kpi-strip" aria-label="Net-worth headline figures" data-reveal>
+      <div class="main__content">
 
-        <div class="kpi-cell">
-          <p class="kpi-cell__label">Today</p>
-          <p class="kpi-cell__value mono">$87,420</p>
-          <p class="kpi-cell__foot mono">
-            <span class="kpi-cell__delta kpi-cell__delta--up">+$2,310</span>
-            <span class="kpi-cell__foot-sub">this month</span>
-          </p>
-        </div>
+        <!-- ============================ HERO ============================ -->
+        <section class="section">
+          <article class="card card--glass card--pad-xl" data-reveal>
+            <div class="nw-hero">
+              <div>
+                <span class="eyebrow">Current net worth</span>
+                <div class="nw-hero__big" id="nw-big" style="margin-top:var(--space-3);">$0</div>
+                <div class="nw-hero__chips">
+                  <span class="chip chip--positive"><span class="chip__dot"></span>+12.4% YoY</span>
+                  <span class="chip">+$4,280 · 3 mo</span>
+                  <span class="chip">As of May 16</span>
+                </div>
+              </div>
+              <div>
+                <span class="eyebrow">24-month trend</span>
+                <div class="nw-hero__spark" id="nw-hero-spark"></div>
+              </div>
+            </div>
+          </article>
+        </section>
 
-        <div class="kpi-cell">
-          <p class="kpi-cell__label">One year</p>
-          <p class="kpi-cell__value mono">$117,400</p>
-          <p class="kpi-cell__foot">
-            <span class="kpi-cell__foot-sub">May 2027 &middot; projected</span>
-          </p>
-        </div>
-
-        <div class="kpi-cell">
-          <p class="kpi-cell__label">Five years</p>
-          <p class="kpi-cell__value mono">$232,800</p>
-          <p class="kpi-cell__foot">
-            <span class="kpi-cell__foot-sub">May 2031 &middot; projected</span>
-          </p>
-        </div>
-
-        <div class="kpi-cell">
-          <p class="kpi-cell__label">Ten years</p>
-          <p class="kpi-cell__value mono">$412,000</p>
-          <p class="kpi-cell__foot">
-            <span class="kpi-cell__foot-sub">May 2036 &middot; endpoint</span>
-          </p>
-        </div>
-
-      </section>
-
-      <!-- 3 · MAIN FORECAST -->
-      <section class="panel" aria-labelledby="forecast-h2" data-reveal>
-        <header class="panel__head">
-          <div>
-            <p class="eyebrow">May 2026 &rarr; May 2036</p>
-            <h2 class="panel__title" id="forecast-h2">Net worth &mdash; May 2026 &rarr; May 2036</h2>
-          </div>
-          <p class="panel__meta mono">120 months &middot; $87,420 &rarr; $412,000</p>
-        </header>
-        <div class="panel__canvas">
-          <div class="chart" data-chart="line" data-chart-opts='{"source":"netWorthSeries","label":"120-month net worth forecast"}'></div>
-        </div>
-        <footer class="panel__foot">
-          <div class="panel__stat">
-            <p class="panel__stat-label">Starting</p>
-            <p class="panel__stat-value mono">$87,420</p>
-          </div>
-          <div class="panel__stat">
-            <p class="panel__stat-label">Ending</p>
-            <p class="panel__stat-value mono">$412,000</p>
-          </div>
-          <div class="panel__stat">
-            <p class="panel__stat-label">CAGR</p>
-            <p class="panel__stat-value mono">16.8%</p>
-          </div>
-        </footer>
-      </section>
-
-      <!-- 4 · COMPOSITION (assets vs debts) -->
-      <section class="grid grid--2 row" aria-label="Composition today">
-
-        <article class="panel" aria-labelledby="assets-h2" data-reveal>
-          <header class="panel__head">
+        <!-- ============================ FORECAST ============================ -->
+        <section class="section" data-reveal>
+          <header class="section__header">
             <div>
-              <p class="eyebrow">Today &middot; positive</p>
-              <h2 class="panel__title" id="assets-h2">What you own</h2>
+              <span class="eyebrow">01 · Forecast curve</span>
+              <h2 class="section__title">Where you're headed</h2>
+              <p class="section__lede">Your trajectory at your current savings rate. Past values are faded; the future is mint.</p>
             </div>
-            <p class="panel__meta mono">$96,000</p>
+            <div class="tab-bar" role="tablist" aria-label="Range">
+              <button class="tab" role="tab" aria-selected="false" data-range="12">1Y</button>
+              <button class="tab" role="tab" aria-selected="true" data-range="60">5Y</button>
+              <button class="tab" role="tab" aria-selected="false" data-range="120">10Y</button>
+            </div>
           </header>
+          <article class="card card--glass card--pad-lg">
+            <div id="forecast-chart" style="width:100%;height:280px;"></div>
+          </article>
+        </section>
 
-          <ul class="pro-tile__list" role="list">
-            <li class="pro-tile__row">
-              <span class="pro-tile__row-label">Liquid assets</span>
-              <div class="chart" data-chart="hbar" data-chart-opts='{"value":24800,"max":96000,"label":"Liquid assets share"}'></div>
-              <span class="pro-tile__row-value mono">$24,800</span>
-            </li>
-            <li class="pro-tile__row">
-              <span class="pro-tile__row-label">Retirement</span>
-              <div class="chart" data-chart="hbar" data-chart-opts='{"value":71200,"max":96000,"label":"Retirement assets share"}'></div>
-              <span class="pro-tile__row-value mono">$71,200</span>
-            </li>
-          </ul>
-
-          <footer class="panel__foot panel__foot--compact">
-            <div class="panel__stat">
-              <p class="panel__stat-label">Liquid</p>
-              <p class="panel__stat-value mono">25.8%</p>
-            </div>
-            <div class="panel__stat">
-              <p class="panel__stat-label">Retirement</p>
-              <p class="panel__stat-value mono">74.2%</p>
-            </div>
-            <div class="panel__stat">
-              <p class="panel__stat-label">Total</p>
-              <p class="panel__stat-value mono">$96,000</p>
-            </div>
-          </footer>
-        </article>
-
-        <article class="panel" aria-labelledby="debts-h2" data-reveal>
-          <header class="panel__head">
+        <!-- ============================ SPLIT ============================ -->
+        <section class="section" data-reveal>
+          <header class="section__header">
             <div>
-              <p class="eyebrow">Today &middot; negative</p>
-              <h2 class="panel__title" id="debts-h2">What you owe</h2>
+              <span class="eyebrow">02 · Composition</span>
+              <h2 class="section__title">Assets &amp; liabilities</h2>
+              <p class="section__lede">Every dollar you own, and every dollar you owe.</p>
             </div>
-            <p class="panel__meta mono">&minus;$8,580</p>
           </header>
-
-          <div class="panel__canvas panel__canvas--waterfall">
-            <div class="chart" data-chart="waterfall" data-chart-opts='{"label":"Outstanding debt by balance"}'></div>
-          </div>
-
-          <footer class="panel__foot panel__foot--compact">
-            <div class="panel__stat">
-              <p class="panel__stat-label">Credit card</p>
-              <p class="panel__stat-value mono">$3,200</p>
+          <article class="card card--bordered" style="padding:var(--space-8); border:1px solid var(--ink-500); background:oklch(100% 0 0 / 0.02);">
+            <div class="split">
+              <div>
+                <header class="row row--between" style="margin-bottom:var(--space-4);">
+                  <span class="eyebrow" style="color:var(--mint-400);">Assets</span>
+                  <span class="mono" style="color:var(--ink-100);" id="assets-total">$0</span>
+                </header>
+                <div class="line-list" id="assets-list"></div>
+              </div>
+              <div>
+                <header class="row row--between" style="margin-bottom:var(--space-4);">
+                  <span class="eyebrow" style="color:var(--coral-400);">Liabilities</span>
+                  <span class="mono" style="color:var(--ink-100);" id="liabs-total">$0</span>
+                </header>
+                <div class="line-list" id="liabs-list"></div>
+              </div>
+              <div class="split__net">
+                <span class="split__net-label">Net</span>
+                <span class="split__net-val mono" id="split-net">$0</span>
+              </div>
             </div>
-            <div class="panel__stat">
-              <p class="panel__stat-label">Student loan</p>
-              <p class="panel__stat-value mono">$5,380</p>
+          </article>
+        </section>
+
+        <!-- ============================ ALLOCATION ============================ -->
+        <section class="section" data-reveal>
+          <header class="section__header">
+            <div>
+              <span class="eyebrow">03 · Allocation</span>
+              <h2 class="section__title">Asset mix</h2>
             </div>
-            <div class="panel__stat">
-              <p class="panel__stat-label">Of assets</p>
-              <p class="panel__stat-value mono">8.9%</p>
+          </header>
+          <article class="card card--glass card--pad-lg">
+            <div class="alloc-grid">
+              <div id="alloc-donut" style="width:240px;height:240px;justify-self:center;"></div>
+              <div class="alloc-legend" id="alloc-legend"></div>
             </div>
-          </footer>
-        </article>
+          </article>
+        </section>
 
-      </section>
+        <!-- ============================ MILESTONES ============================ -->
+        <section class="section" data-reveal>
+          <header class="section__header">
+            <div>
+              <span class="eyebrow">04 · The road here</span>
+              <h2 class="section__title">Milestones</h2>
+            </div>
+          </header>
+          <article class="card card--glass card--pad-lg">
+            <div class="milestones">
+              <div class="milestones__line"></div>
+              <div class="milestones__items" id="milestones-items">
+                <!-- Injected -->
+              </div>
+            </div>
+          </article>
+        </section>
 
-      <!-- 5 · ANNUAL SUMMARY TABLE (10 rows) -->
-      <section class="panel panel--flat row" aria-labelledby="annual-h2" data-reveal>
-        <header class="panel__head">
-          <div>
-            <p class="eyebrow">Year by year</p>
-            <h2 class="panel__title" id="annual-h2">A decade, in twelve-month steps</h2>
+        <!-- ============================ QUICK ACTIONS ============================ -->
+        <section class="section" data-reveal>
+          <div class="quick-actions">
+            <button class="card card--glass card--interactive" style="text-align:left;cursor:pointer;">
+              <div class="row row--gap-md" style="gap:var(--space-4);">
+                <span style="width:44px;height:44px;border-radius:var(--r-md);background:oklch(78% 0.175 168 / 0.12);display:grid;place-items:center;color:var(--mint-400);">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+                </span>
+                <div>
+                  <div style="color:var(--ink-100);font-weight:500;">Add an asset</div>
+                  <div class="muted" style="font-size:var(--fs-small);">Cash, brokerage, real estate, vehicles</div>
+                </div>
+              </div>
+            </button>
+            <button class="card card--glass card--interactive" style="text-align:left;cursor:pointer;">
+              <div class="row row--gap-md" style="gap:var(--space-4);">
+                <span style="width:44px;height:44px;border-radius:var(--r-md);background:oklch(74% 0.135 28 / 0.12);display:grid;place-items:center;color:var(--coral-400);">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg>
+                </span>
+                <div>
+                  <div style="color:var(--ink-100);font-weight:500;">Add a liability</div>
+                  <div class="muted" style="font-size:var(--fs-small);">Mortgage, loans, credit cards</div>
+                </div>
+              </div>
+            </button>
           </div>
-          <p class="panel__meta mono">10 rows &middot; year-end values</p>
-        </header>
+        </section>
 
-        <div class="panel__table">
-          <table class="table activity">
-            <thead>
-              <tr>
-                <th scope="col" class="activity__col-when">Year</th>
-                <th scope="col">Net worth</th>
-                <th scope="col">Assets</th>
-                <th scope="col">Debts</th>
-                <th scope="col" class="activity__col-amount">YoY change</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="mono activity__when">May 2027</td>
-                <td class="mono">$117,400</td>
-                <td class="mono">$124,200</td>
-                <td class="mono">&minus;$6,800</td>
-                <td class="mono activity__amount activity__amount--pos">+$29,980</td>
-              </tr>
-              <tr>
-                <td class="mono activity__when">May 2028</td>
-                <td class="mono">$144,800</td>
-                <td class="mono">$148,100</td>
-                <td class="mono">&minus;$3,300</td>
-                <td class="mono activity__amount activity__amount--pos">+$27,400</td>
-              </tr>
-              <tr>
-                <td class="mono activity__when">May 2029</td>
-                <td class="mono">$173,600</td>
-                <td class="mono">$173,600</td>
-                <td class="mono">$0</td>
-                <td class="mono activity__amount activity__amount--pos">+$28,800</td>
-              </tr>
-              <tr>
-                <td class="mono activity__when">May 2030</td>
-                <td class="mono">$202,100</td>
-                <td class="mono">$202,100</td>
-                <td class="mono">$0</td>
-                <td class="mono activity__amount activity__amount--pos">+$28,500</td>
-              </tr>
-              <tr>
-                <td class="mono activity__when">May 2031</td>
-                <td class="mono">$232,800</td>
-                <td class="mono">$232,800</td>
-                <td class="mono">$0</td>
-                <td class="mono activity__amount activity__amount--pos">+$30,700</td>
-              </tr>
-              <tr>
-                <td class="mono activity__when">May 2032</td>
-                <td class="mono">$266,400</td>
-                <td class="mono">$266,400</td>
-                <td class="mono">$0</td>
-                <td class="mono activity__amount activity__amount--pos">+$33,600</td>
-              </tr>
-              <tr>
-                <td class="mono activity__when">May 2033</td>
-                <td class="mono">$303,800</td>
-                <td class="mono">$303,800</td>
-                <td class="mono">$0</td>
-                <td class="mono activity__amount activity__amount--pos">+$37,400</td>
-              </tr>
-              <tr>
-                <td class="mono activity__when">May 2034</td>
-                <td class="mono">$343,500</td>
-                <td class="mono">$343,500</td>
-                <td class="mono">$0</td>
-                <td class="mono activity__amount activity__amount--pos">+$39,700</td>
-              </tr>
-              <tr>
-                <td class="mono activity__when">May 2035</td>
-                <td class="mono">$381,700</td>
-                <td class="mono">$381,700</td>
-                <td class="mono">$0</td>
-                <td class="mono activity__amount activity__amount--pos">+$38,200</td>
-              </tr>
-              <tr>
-                <td class="mono activity__when">May 2036</td>
-                <td class="mono">$412,000</td>
-                <td class="mono">$412,000</td>
-                <td class="mono">$0</td>
-                <td class="mono activity__amount activity__amount--pos">+$30,300</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- 6 · ASSUMPTIONS FOOTER -->
-      <section class="panel panel--flat row" aria-labelledby="assumptions-h2" data-reveal>
-        <header class="panel__head">
-          <div>
-            <p class="eyebrow">What this assumes</p>
-            <h2 class="panel__title" id="assumptions-h2">Five inputs, plain language.</h2>
-          </div>
-          <a href="/about.html#methodology" class="btn--link">Methodology &rarr;</a>
-        </header>
-
-        <div class="prose prose--narrow">
-          <p>The forecast above is a deterministic projection, not a guarantee. Five assumptions shape the curve.</p>
-
-          <ol>
-            <li><strong>Income growth.</strong> Gross income rises <span class="mono">3.0%</span> per year, slightly above long-run wage inflation in the household's market.</li>
-            <li><strong>Retirement return.</strong> Tax-advantaged accounts compound at <span class="mono">7.0%</span> nominal, a conservative read on a sixty-forty allocation after fees.</li>
-            <li><strong>Inflation.</strong> Personal expenses rise <span class="mono">2.5%</span> per year, ahead of headline CPI to account for housing and healthcare drift.</li>
-            <li><strong>Debt payoff.</strong> Existing balances are retired on the avalanche schedule; freed cash redirects to retirement on month <span class="mono">15</span>.</li>
-            <li><strong>Savings rate.</strong> The household saves and invests <span class="mono">30%</span> of monthly surplus through the projection window.</li>
-          </ol>
-
-          <p>Change any assumption on the <a href="/settings.html">settings page</a> and every figure recomputes. The full methodology, including how compounding is applied month-by-month, is documented on the <a href="/about.html#methodology">about page</a>.</p>
-        </div>
-      </section>
-
+      </div>
     </main>
   </div>
 
-  <div data-include="footer"></div>
+  <script src="/js/demo-data.js"></script>
+  <script src="/js/include.js"></script>
+  <script src="/js/motion.js"></script>
+  <script src="/js/charts.js"></script>
+  <script src="/js/app.js"></script>
+  <script>
+    (function () {
+      const D = window.PFC_DATA, M = window.PFC_MOTION, C = window.PFC_CHARTS;
 
-  <script src="/static/js/partials.js"></script>
-  <script src="/static/js/demo-data.js"></script>
-  <script src="/static/js/charts.js"></script>
-  <script src="/static/js/reveal.js"></script>
+      const assets = [
+        { name: "Cash & checking",  type: "Cash",        value: 14820, spark: [10,11,12,11,13,14,15] },
+        { name: "Brokerage (taxable)", type: "Investments", value: 38640, spark: [22,24,28,30,33,36,38] },
+        { name: "Retirement (401k + Roth)", type: "Investments", value: 52410, spark: [30,33,36,40,44,48,52] },
+        { name: "Vehicles",         type: "Vehicles",    value: 12800, spark: [16,15,14,14,13,13,12] },
+        { name: "Other",            type: "Other",       value:  4870, spark: [4,4,5,5,5,5,5] },
+      ];
+      const liabs = [
+        { name: "Chase Sapphire",      type: "Credit card",  value: 4280,  spark: [9,8,7,7,6,5,4] },
+        { name: "Federal Student Loan",type: "Student loan", value: 18460, spark: [24,23,22,21,20,19,18] },
+        { name: "Auto loan (Civic)",   type: "Auto loan",    value: 9120,  spark: [14,13,12,11,11,10,9] },
+        { name: "Mortgage",            type: "Mortgage",     value: 0,     spark: [0,0,0,0,0,0,0] },
+      ];
+
+      const assetIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18l5-6 4 3 7-9"/><path d="M14 6h5v5"/></svg>`;
+      const liabIcon  = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 6l-5 6-4-3-7 9"/><path d="M10 18H5v-5"/></svg>`;
+
+      function fmt(n) { return M.formatNumber(n, { currency: "USD", decimals: 0 }); }
+
+      function renderList(rootId, rows, totalId, isLiab) {
+        const root = document.getElementById(rootId);
+        root.innerHTML = `<div class="line-list__head"><span>Account</span><span>Balance</span><span style="text-align:right;">Trend</span></div>` +
+          rows.map((r, i) => `
+            <div class="line-list__row ${isLiab ? "line-list__row--neg" : ""}">
+              <div class="line-list__name">${isLiab ? liabIcon : assetIcon}<span>${r.name}</span><span class="chip chip--neutral">${r.type}</span></div>
+              <span class="mono" style="color:var(--ink-100);">${fmt(r.value)}</span>
+              <div class="line-list__spark" data-spark="${rootId}-${i}"></div>
+            </div>`).join("");
+        const total = rows.reduce((s, r) => s + r.value, 0);
+        document.getElementById(totalId).textContent = fmt(total);
+
+        rows.forEach((r, i) => {
+          const el = root.querySelector(`[data-spark="${rootId}-${i}"]`);
+          if (el && r.spark && r.spark.some(v => v > 0)) {
+            C.sparkline(el, r.spark, { height: 24, stroke: isLiab ? "var(--coral-400)" : "var(--mint-400)", strokeWidth: 1.5, fill: false });
+          }
+        });
+        return total;
+      }
+
+      function renderForecast(months) {
+        const past = D.netWorth.history.slice(-12).map((d, i) => ({ label: `-${12 - i}mo`, value: d.value }));
+        const future = D.forecast.months.slice(0, months).map((d, i) => ({ label: d.label, value: d.value }));
+        const combined = past.concat(future);
+        C.areaChart(document.getElementById("forecast-chart"), combined, {
+          height: 280,
+          currency: "USD",
+          ariaLabel: "Net worth over time",
+        });
+      }
+
+      function renderMilestones() {
+        const items = [
+          { date: "2023 Q2", label: "First $10K saved", val: 10240 },
+          { date: "2023 Q4", label: "Paid off credit card", val: 18760 },
+          { date: "2024 Q1", label: "Hit $50K net worth", val: 51200 },
+          { date: "2024 Q3", label: "Started Roth IRA", val: 64480 },
+          { date: "2025 Q1", label: "First index fund", val: 73200 },
+          { date: "2026 Q2", label: "Crossed $87K", val: 87420 },
+        ];
+        const root = document.getElementById("milestones-items");
+        root.innerHTML = items.map(m => `
+          <div class="milestone">
+            <div class="milestone__date">${m.date}</div>
+            <div class="milestone__dot" aria-hidden="true">
+              <div class="milestone__tooltip">${fmt(m.val)}</div>
+            </div>
+            <div class="milestone__label">${m.label}</div>
+          </div>`).join("");
+      }
+
+      function renderAllocation() {
+        const segs = [
+          { label: "Cash",        value: 14820, color: "var(--mint-500)" },
+          { label: "Stocks",      value: 91050, color: "var(--lavender-500)" },
+          { label: "Real estate", value: 0,     color: "var(--coral-500)" },
+          { label: "Vehicles",    value: 12800, color: "var(--amber-400)" },
+          { label: "Other",       value: 4870,  color: "var(--ink-400)" },
+        ].filter(s => s.value > 0);
+        const total = segs.reduce((s, x) => s + x.value, 0);
+        C.donut(document.getElementById("alloc-donut"), segs, {
+          size: 240, thickness: 24,
+          centerValue: M.formatNumber(total, { currency: "USD", decimals: 0, compact: true }),
+          centerLabel: "Total assets",
+        });
+        document.getElementById("alloc-legend").innerHTML = segs.map(s => `
+          <div class="alloc-legend__row">
+            <span class="alloc-legend__swatch" style="background:${s.color};"></span>
+            <span style="color:var(--ink-200);">${s.label}</span>
+            <span class="mono" style="color:var(--ink-100);">${fmt(s.value)}</span>
+            <span class="mono muted">${((s.value / total) * 100).toFixed(0)}%</span>
+          </div>`).join("");
+      }
+
+      document.addEventListener("pfc:partials-ready", () => {
+        M.countUp(document.getElementById("nw-big"), D.netWorth.current, { currency: "USD", decimals: 0 });
+        C.sparkline(document.getElementById("nw-hero-spark"), D.netWorth.history.map(d => d.value), { height: 60, stroke: "var(--mint-400)" });
+
+        setTimeout(() => renderForecast(60), 300);
+
+        document.querySelectorAll('[data-range]').forEach(btn => {
+          btn.addEventListener("click", () => {
+            document.querySelectorAll('[data-range]').forEach(b => b.setAttribute("aria-selected", "false"));
+            btn.setAttribute("aria-selected", "true");
+            renderForecast(+btn.dataset.range);
+          });
+        });
+
+        const a = renderList("assets-list", assets, "assets-total", false);
+        const l = renderList("liabs-list",  liabs,  "liabs-total",  true);
+        document.getElementById("split-net").textContent = fmt(a - l);
+
+        renderAllocation();
+        renderMilestones();
+      });
+    })();
+  </script>
 </body>
 </html>

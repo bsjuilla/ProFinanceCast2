@@ -1,324 +1,299 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Pricing &mdash; ProFinanceCast</title>
-  <meta name="description" content="Three plans. One philosophy. Free is free forever. Pro pays once a month. Founders pays once.">
-  <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Billing — ProFinanceCast</title>
+  <meta name="description" content="Your plan, payment method, and invoices. Honest pricing, no dark patterns.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/css/tokens.css">
-  <link rel="stylesheet" href="/static/css/theme-ivory.css">
-  <link rel="stylesheet" href="/static/css/theme-emerald.css">
-  <link rel="stylesheet" href="/static/css/base.css">
-  <link rel="stylesheet" href="/static/css/components.css">
-  <link rel="stylesheet" href="/static/css/nav.css">
-  <link rel="stylesheet" href="/static/css/footer.css">
-  <link rel="stylesheet" href="/static/css/billing.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <style>
+    .topbar__title { display:flex; flex-direction:column; gap:2px; min-width:0; flex:1; padding-left:var(--space-6); border-left:1px solid var(--ink-500); margin-left:var(--space-4); }
+    .topbar__title h1 { font-size:1.0625rem; font-family:var(--font-body); font-weight:500; letter-spacing:-0.01em; color:var(--ink-100); line-height:1.2; }
 
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "Product",
-        "@id": "https://profinancecast.com/billing#free",
-        "name": "ProFinanceCast Free",
-        "description": "A permanent free tier of ProFinanceCast. Net worth forecast, debt-free date, three goals, ten Sage messages per month, full export.",
-        "brand": { "@type": "Brand", "name": "ProFinanceCast" },
-        "offers": {
-          "@type": "Offer",
-          "price": "0",
-          "priceCurrency": "USD",
-          "url": "https://profinancecast.com/auth.html",
-          "availability": "https://schema.org/InStock",
-          "priceValidUntil": "2027-12-31"
-        }
-      },
-      {
-        "@type": "Product",
-        "@id": "https://profinancecast.com/billing#pro",
-        "name": "ProFinanceCast Pro",
-        "description": "Monthly subscription. Unlimited scenarios, salary calculator, recurring radar, 200 Sage messages per month, printable report card, monthly digest.",
-        "brand": { "@type": "Brand", "name": "ProFinanceCast" },
-        "offers": [
-          {
-            "@type": "Offer",
-            "name": "Monthly",
-            "price": "9",
-            "priceCurrency": "USD",
-            "url": "https://profinancecast.com/auth.html",
-            "availability": "https://schema.org/InStock",
-            "priceSpecification": {
-              "@type": "UnitPriceSpecification",
-              "price": "9",
-              "priceCurrency": "USD",
-              "billingDuration": "P1M"
-            }
-          },
-          {
-            "@type": "Offer",
-            "name": "Annual",
-            "price": "69",
-            "priceCurrency": "USD",
-            "url": "https://profinancecast.com/auth.html",
-            "availability": "https://schema.org/InStock",
-            "priceSpecification": {
-              "@type": "UnitPriceSpecification",
-              "price": "69",
-              "priceCurrency": "USD",
-              "billingDuration": "P1Y"
-            }
-          }
-        ]
-      },
-      {
-        "@type": "Product",
-        "@id": "https://profinancecast.com/billing#founders",
-        "name": "ProFinanceCast Founders Lifetime",
-        "description": "One-time licence. All Pro features, forever. No renewal. Direct line to the methodology desk. Roadmap voting. 500 seats total.",
-        "brand": { "@type": "Brand", "name": "ProFinanceCast" },
-        "offers": {
-          "@type": "Offer",
-          "price": "149",
-          "priceCurrency": "USD",
-          "url": "https://profinancecast.com/auth.html",
-          "availability": "https://schema.org/LimitedAvailability",
-          "inventoryLevel": { "@type": "QuantitativeValue", "value": 188 }
-        }
-      }
-    ]
-  }
-  </script>
+    /* Plan hero */
+    .plan-hero { padding:var(--space-10); display:grid; grid-template-columns: 1fr auto; gap:var(--space-8); align-items:center; }
+    @media (max-width:900px){ .plan-hero { grid-template-columns:1fr; } }
+    .plan-hero__left { display:flex; flex-direction:column; gap:var(--space-4); min-width:0; }
+    .plan-hero__chips { display:flex; gap:var(--space-2); flex-wrap:wrap; }
+    .plan-hero__price { font-family:var(--font-mono); font-size:clamp(3rem, 4vw + 1.5rem, 5rem); font-weight:500; color:var(--ink-100); line-height:1; letter-spacing:-0.02em; font-variant-numeric:tabular-nums; }
+    .plan-hero__price small { font-size:0.32em; color:var(--ink-400); font-weight:400; margin-left:8px; letter-spacing:0; }
+    .plan-hero__meta { font-family:var(--font-mono); font-size:var(--fs-small); color:var(--ink-400); }
+    .plan-hero__meta strong { color:var(--ink-200); font-weight:500; }
+    .plan-hero__right { display:flex; flex-direction:column; gap:var(--space-3); align-items:flex-end; }
+    @media (max-width:900px){ .plan-hero__right { align-items:flex-start; } }
+    .save-pill { display:inline-flex; align-items:center; gap:8px; padding:8px 14px; border-radius:var(--r-full); background:oklch(78% 0.175 168 / 0.10); border:1px solid oklch(78% 0.175 168 / 0.35); color:var(--mint-300); font-family:var(--font-mono); font-size:var(--fs-small); cursor:pointer; transition: background var(--dur-fast) var(--ease-standard); }
+    .save-pill:hover { background:oklch(78% 0.175 168 / 0.18); }
+
+    /* Plan comparison */
+    .plans { display:grid; grid-template-columns:repeat(3, 1fr); gap:var(--space-5); }
+    @media (max-width:900px){ .plans { grid-template-columns:1fr; } }
+    .plan-card { padding:var(--space-6); display:flex; flex-direction:column; gap:var(--space-4); transition: border-color var(--dur-fast) var(--ease-standard), transform var(--dur-base) var(--ease-standard); position:relative; }
+    .plan-card--current { border-color:oklch(78% 0.175 168 / 0.55); }
+    .plan-card--founder { border-color:transparent; box-shadow: 0 0 0 1px var(--lavender-500), 0 0 36px -8px oklch(72% 0.115 295 / 0.5); }
+    .plan-card:hover { transform:translateY(-2px); }
+    .plan-card__head { display:flex; align-items:flex-start; justify-content:space-between; gap:var(--space-3); }
+    .plan-card__name { font-family:var(--font-display); font-size:var(--fs-h3); color:var(--ink-100); }
+    .plan-card__price { font-family:var(--font-mono); font-size:var(--fs-mono-lg); color:var(--ink-100); font-variant-numeric:tabular-nums; letter-spacing:-0.01em; }
+    .plan-card__price small { font-size:0.5em; color:var(--ink-400); }
+    .plan-card__features { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:var(--space-3); font-size:var(--fs-small); color:var(--ink-300); }
+    .plan-card__features li { display:flex; align-items:flex-start; gap:8px; line-height:1.5; }
+    .plan-card__features svg { flex-shrink:0; margin-top:3px; color:var(--mint-400); }
+    .plan-card__cta { margin-top:auto; }
+    .chip--lavender { background:oklch(72% 0.115 295 / 0.12); color:var(--lavender-400); border-color:oklch(72% 0.115 295 / 0.40); }
+
+    /* Payment method */
+    .pay-card { padding:var(--space-8); display:grid; grid-template-columns: auto 1fr auto; gap:var(--space-6); align-items:center; }
+    @media (max-width:680px){ .pay-card { grid-template-columns:1fr; text-align:center; } }
+    .pay-visual { width:88px; height:56px; border-radius:var(--r-md); background:linear-gradient(135deg, oklch(30% 0.022 265), oklch(20% 0.020 265)); border:1px solid var(--ink-500); display:flex; align-items:flex-end; padding:10px; }
+    .pay-info { display:flex; flex-direction:column; gap:4px; }
+    .pay-info__num { font-family:var(--font-mono); font-size:var(--fs-h3); color:var(--ink-100); letter-spacing:0.05em; }
+    .pay-info__meta { font-size:var(--fs-small); color:var(--ink-400); font-family:var(--font-mono); }
+
+    /* Invoices */
+    .invoice-table { width:100%; border-collapse:collapse; }
+    .invoice-table th { text-align:left; font-family:var(--font-mono); font-size:var(--fs-tiny); text-transform:uppercase; letter-spacing:var(--tracking-eyebrow); color:var(--ink-400); font-weight:500; padding:var(--space-3) var(--space-4); border-bottom:1px solid oklch(100% 0 0 / 0.06); }
+    .invoice-table td { padding:var(--space-4); font-size:var(--fs-small); color:var(--ink-200); border-bottom:1px solid oklch(100% 0 0 / 0.04); transition: background var(--dur-fast) var(--ease-standard); }
+    .invoice-table tr:last-child td { border-bottom:0; }
+    .invoice-table tbody tr:hover td { background:oklch(100% 0 0 / 0.025); }
+    .invoice-table td.mono { color:var(--ink-100); }
+    .invoice-table .invoice-dl { display:inline-flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:var(--r-sm); color:var(--ink-300); transition: background var(--dur-fast) var(--ease-standard), color var(--dur-fast) var(--ease-standard); }
+    .invoice-table .invoice-dl:hover { background:oklch(78% 0.175 168 / 0.10); color:var(--mint-300); }
+    .invoice-wrap { padding:var(--space-3); overflow-x:auto; }
+
+    .footnote { font-size:var(--fs-small); color:var(--ink-400); text-align:center; max-width:60ch; margin:var(--space-6) auto 0; line-height:1.6; }
+  </style>
 </head>
-<body data-theme="ivory">
-  <a class="skip-link" href="#main">Skip to content</a>
+<body data-page="billing">
+  <div class="aurora-bg" aria-hidden="true">
+    <div class="aurora-bg__blob aurora-bg__blob--1"></div>
+    <div class="aurora-bg__blob aurora-bg__blob--2"></div>
+    <div class="aurora-bg__blob aurora-bg__blob--3"></div>
+    <div class="aurora-bg__blob aurora-bg__blob--4"></div>
+    <div class="aurora-bg__grain"></div>
+    <div class="aurora-bg__vignette"></div>
+  </div>
 
-  <div data-include="header"></div>
+  <div class="app-shell">
+    <div data-include="/partials/sidebar.html"></div>
 
-  <main id="main">
-
-    <!-- 1. PAGE HEADER -->
-    <section class="page-head" aria-labelledby="pricing-h1">
-      <div class="container">
-        <div class="page-head__body" data-reveal>
-          <p class="page-head__eyebrow">Pricing</p>
-          <h1 id="pricing-h1" class="page-head__title">Three plans. One philosophy.</h1>
-          <hr class="page-head__sep" aria-hidden="true">
-          <p class="page-head__lede">Free is free forever. Pro pays once a month. Founders pays once.</p>
+    <main class="main">
+      <header class="topbar" data-pfc-topbar>
+        <div class="topbar__breadcrumb">
+          <span>Account</span>
+          <span class="topbar__breadcrumb-sep" aria-hidden="true">/</span>
+          <span class="topbar__breadcrumb-current">Billing</span>
         </div>
-      </div>
-    </section>
-
-    <!-- 2. THREE-TIER PRICING GRID -->
-    <section class="pricing" aria-label="Plans">
-      <div class="container">
-        <div class="pricing-grid">
-
-          <!-- FREE -->
-          <article class="tier" aria-labelledby="tier-free-name" data-reveal>
-            <p id="tier-free-name" class="tier__name">Free</p>
-            <p class="tier__price">
-              <span class="tier__price-currency mono">$</span><span class="tier__price-amount mono">0</span>
-              <span class="tier__price-cadence">forever</span>
-            </p>
-            <p class="tier__price-alt">No card. No expiry. No upsell.</p>
-            <ul class="tier__list">
-              <li>Net worth forecast</li>
-              <li>Debt-free date</li>
-              <li>3 goals</li>
-              <li>10 Sage messages per month</li>
-              <li>Export everything (CSV, JSON, PDF)</li>
-            </ul>
-            <a href="/auth.html" class="btn btn--ghost btn--lg tier__cta">Open a free forecast</a>
-          </article>
-
-          <!-- PRO (featured) -->
-          <article class="tier tier--featured" aria-labelledby="tier-pro-name" data-reveal data-delay="1">
-            <span class="tier__chip" aria-label="Most chosen plan">Most chosen</span>
-            <p id="tier-pro-name" class="tier__name">Pro</p>
-            <p class="tier__price">
-              <span class="tier__price-currency mono">$</span><span class="tier__price-amount mono">9</span>
-              <span class="tier__price-cadence">/ month</span>
-            </p>
-            <p class="tier__price-alt">or <span class="mono">$69</span> a year, billed once. Saves <span class="mono">$39</span>.</p>
-            <ul class="tier__list">
-              <li>Everything in Free</li>
-              <li>Unlimited scenarios</li>
-              <li>Salary calculator</li>
-              <li>Recurring radar</li>
-              <li>200 Sage messages per month</li>
-              <li>Printable report card</li>
-              <li>Plain-text monthly digest</li>
-            </ul>
-            <a href="/auth.html" class="btn btn--primary btn--lg tier__cta">Start Pro</a>
-          </article>
-
-          <!-- FOUNDERS -->
-          <article class="tier" aria-labelledby="tier-founders-name" data-reveal data-delay="2">
-            <p id="tier-founders-name" class="tier__name">Founders Lifetime</p>
-            <p class="tier__price">
-              <span class="tier__price-currency mono">$</span><span class="tier__price-amount mono">149</span>
-              <span class="tier__price-cadence">once</span>
-            </p>
-            <p class="tier__subtext"><span class="mono">500</span> seats. <span class="mono">312</span> claimed.</p>
-            <ul class="tier__list">
-              <li>All Pro features, forever</li>
-              <li>No renewal, no subscription</li>
-              <li>Direct line to the methodology desk</li>
-              <li>Voting on roadmap items</li>
-              <li>Early access to scenario-stacking and the property module</li>
-            </ul>
-            <a href="/auth.html" class="btn btn--ghost btn--lg tier__cta">Claim a seat</a>
-          </article>
-
+        <div class="topbar__title"><h1>Billing</h1></div>
+        <div class="topbar__actions">
+          <button type="button" class="btn btn--ghost btn--sm">Invoices</button>
         </div>
+      </header>
+
+      <div class="main__content">
+
+        <!-- Plan hero -->
+        <section class="section">
+          <article class="card card--glass plan-hero" data-reveal>
+            <div class="plan-hero__left">
+              <div class="plan-hero__chips">
+                <span class="chip chip--pro">PRO</span>
+                <span class="chip chip--neutral">Monthly</span>
+              </div>
+              <div class="plan-hero__price mono"><span data-kpi="price">$9</span><small>/ month</small></div>
+              <div class="plan-hero__meta">Next billing <strong>Jun 14, 2026</strong> · Visa ending <strong>4242</strong></div>
+            </div>
+            <div class="plan-hero__right">
+              <button type="button" class="save-pill">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M5 10l7-7 7 7"/></svg>
+                Switch to annual · save 36%
+              </button>
+              <button type="button" class="btn btn--primary" data-magnetic>Manage plan</button>
+            </div>
+          </article>
+        </section>
+
+        <!-- Plan comparison -->
+        <section class="section">
+          <header class="section__header">
+            <div>
+              <span class="eyebrow">01 · Compare</span>
+              <h2 class="section__title">All three plans</h2>
+              <p class="section__lede">Pro covers most people. Founders unlocks unlimited devices and direct line to the team.</p>
+            </div>
+          </header>
+
+          <div class="plans">
+            <article class="card card--glass plan-card" data-reveal>
+              <div class="plan-card__head">
+                <div>
+                  <div class="plan-card__name">Free</div>
+                  <div class="plan-card__price">$0<small> forever</small></div>
+                </div>
+              </div>
+              <ul class="plan-card__features">
+                <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg>Local-only, one device</li>
+                <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg>3 goals, 1 scenario at a time</li>
+                <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg>Basic forecasts, 12 months</li>
+                <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg>CSV export</li>
+              </ul>
+              <div class="plan-card__cta"><button type="button" class="btn btn--ghost btn--sm" style="width:100%;">Downgrade</button></div>
+            </article>
+
+            <article class="card card--glass plan-card plan-card--current" data-reveal>
+              <div class="plan-card__head">
+                <div>
+                  <div class="plan-card__name">Pro</div>
+                  <div class="plan-card__price">$9<small>/ mo</small></div>
+                </div>
+                <span class="chip chip--positive"><span class="chip__dot"></span>Current</span>
+              </div>
+              <ul class="plan-card__features">
+                <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg>Encrypted sync, up to 3 devices</li>
+                <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg>Unlimited goals and scenarios</li>
+                <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg>10-year forecasts, milestone tracking</li>
+                <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg>Sage insights, weekly digest</li>
+                <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg>Priority email support</li>
+              </ul>
+              <div class="plan-card__cta"><button type="button" class="btn btn--ghost btn--sm" style="width:100%;" disabled>Your plan</button></div>
+            </article>
+
+            <article class="card card--glass plan-card plan-card--founder" data-reveal>
+              <div class="plan-card__head">
+                <div>
+                  <div class="plan-card__name">Founders Lifetime</div>
+                  <div class="plan-card__price">$199<small> once</small></div>
+                </div>
+                <span class="chip chip--lavender"><span class="chip__dot"></span>247 seats left</span>
+              </div>
+              <ul class="plan-card__features">
+                <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg>Everything in Pro, forever</li>
+                <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg>Unlimited devices</li>
+                <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg>Direct line to the founders</li>
+                <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg>Early access to every release</li>
+                <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg>Name in the credits</li>
+              </ul>
+              <div class="plan-card__cta"><button type="button" class="btn btn--primary btn--sm" style="width:100%;">Become a founder</button></div>
+            </article>
+          </div>
+        </section>
+
+        <!-- Payment method -->
+        <section class="section">
+          <header class="section__header">
+            <div>
+              <span class="eyebrow">02 · How you pay</span>
+              <h2 class="section__title">Payment method</h2>
+            </div>
+          </header>
+
+          <article class="card card--glass pay-card" data-reveal>
+            <div class="pay-visual" aria-hidden="true">
+              <!-- Visa wordmark in SVG, stroke 1.5 / 18px in spirit -->
+              <svg width="44" height="14" viewBox="0 0 44 14" fill="none" aria-hidden="true">
+                <path d="M14.5 1L11 13H7.5L4 1h3.5l2 8 2-8h3z" fill="var(--ink-100)"/>
+                <path d="M16 13l2.5-12h3l-2.5 12h-3z" fill="var(--ink-100)"/>
+                <path d="M28 1.3c-.6-.2-1.5-.5-2.7-.5-3 0-5.1 1.5-5.1 3.7 0 1.6 1.5 2.5 2.7 3 1.2.6 1.6 1 1.6 1.5 0 .8-1 1.2-2 1.2-1.3 0-2-.2-3.1-.7l-.4-.2-.5 2.7c.8.4 2.2.7 3.7.7 3.2 0 5.3-1.5 5.3-3.8 0-1.3-.8-2.3-2.6-3.1-1.1-.5-1.7-.8-1.7-1.4 0-.5.6-1 1.9-1 1.1 0 1.9.2 2.5.5l.3.1.5-2.7z" fill="var(--ink-100)"/>
+                <path d="M37 1h-2.5c-.8 0-1.4.2-1.7 1L28 13h3.2s.5-1.4.6-1.7h3.9l.4 1.7H39l-2-12zm-3.6 7.8c.3-.7 1.2-3.2 1.2-3.2l.4-1 .2 1.1.7 3.2h-2.5z" fill="var(--ink-100)"/>
+              </svg>
+            </div>
+            <div class="pay-info">
+              <span class="pay-info__num">•••• •••• •••• 4242</span>
+              <span class="pay-info__meta">Visa · Expires 04/28 · Billing in USD</span>
+            </div>
+            <button type="button" class="btn btn--ghost">Update payment method</button>
+          </article>
+        </section>
+
+        <!-- Invoice history -->
+        <section class="section">
+          <header class="section__header">
+            <div>
+              <span class="eyebrow">03 · Receipts</span>
+              <h2 class="section__title">Invoice history</h2>
+            </div>
+            <a href="#" class="eyebrow" style="color:var(--mint-400);">Email all to me</a>
+          </header>
+
+          <article class="card card--glass" data-reveal>
+            <div class="invoice-wrap">
+              <table class="invoice-table">
+                <thead>
+                  <tr>
+                    <th>Date</th><th>Amount</th><th>Status</th><th>Invoice</th><th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="mono">May 14, 2026</td>
+                    <td class="mono">$9.00</td>
+                    <td><span class="chip chip--positive"><span class="chip__dot"></span>Paid</span></td>
+                    <td class="mono">INV-2026-005</td>
+                    <td style="text-align:right;"><a class="invoice-dl" href="#" aria-label="Download invoice"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M5 21h14"/></svg></a></td>
+                  </tr>
+                  <tr>
+                    <td class="mono">Apr 14, 2026</td>
+                    <td class="mono">$9.00</td>
+                    <td><span class="chip chip--positive"><span class="chip__dot"></span>Paid</span></td>
+                    <td class="mono">INV-2026-004</td>
+                    <td style="text-align:right;"><a class="invoice-dl" href="#" aria-label="Download invoice"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M5 21h14"/></svg></a></td>
+                  </tr>
+                  <tr>
+                    <td class="mono">Mar 14, 2026</td>
+                    <td class="mono">$9.00</td>
+                    <td><span class="chip chip--positive"><span class="chip__dot"></span>Paid</span></td>
+                    <td class="mono">INV-2026-003</td>
+                    <td style="text-align:right;"><a class="invoice-dl" href="#" aria-label="Download invoice"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M5 21h14"/></svg></a></td>
+                  </tr>
+                  <tr>
+                    <td class="mono">Feb 14, 2026</td>
+                    <td class="mono">$9.00</td>
+                    <td><span class="chip chip--positive"><span class="chip__dot"></span>Paid</span></td>
+                    <td class="mono">INV-2026-002</td>
+                    <td style="text-align:right;"><a class="invoice-dl" href="#" aria-label="Download invoice"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M5 21h14"/></svg></a></td>
+                  </tr>
+                  <tr>
+                    <td class="mono">Jan 14, 2026</td>
+                    <td class="mono">$9.00</td>
+                    <td><span class="chip chip--positive"><span class="chip__dot"></span>Paid</span></td>
+                    <td class="mono">INV-2026-001</td>
+                    <td style="text-align:right;"><a class="invoice-dl" href="#" aria-label="Download invoice"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M5 21h14"/></svg></a></td>
+                  </tr>
+                  <tr>
+                    <td class="mono">Dec 14, 2025</td>
+                    <td class="mono">$9.00</td>
+                    <td><span class="chip chip--positive"><span class="chip__dot"></span>Paid</span></td>
+                    <td class="mono">INV-2025-012</td>
+                    <td style="text-align:right;"><a class="invoice-dl" href="#" aria-label="Download invoice"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M5 21h14"/></svg></a></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+
+          <p class="footnote">Any paid charge is refundable within 30 days, no questions asked. Cancel any time from this page; you keep access through the end of the billing period.</p>
+        </section>
+
       </div>
-    </section>
+    </main>
+  </div>
 
-    <!-- 3. COMPARISON TABLE -->
-    <section class="compare" aria-labelledby="compare-title">
-      <div class="container">
-        <header class="compare__head" data-reveal>
-          <p class="eyebrow">What is included</p>
-          <h2 id="compare-title" class="compare__title">A full comparison.</h2>
-        </header>
-
-        <div class="compare__wrap" data-reveal>
-          <table class="compare__table" aria-describedby="compare-title">
-            <thead>
-              <tr>
-                <th scope="col">Feature</th>
-                <th scope="col" class="tier-col">Free</th>
-                <th scope="col" class="tier-col tier-col--featured">Pro</th>
-                <th scope="col" class="tier-col">Founders</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th scope="row">Net worth forecast (120 months)</th>
-                <td class="tier-col"><span class="compare__mark" aria-label="Included">&middot;</span></td>
-                <td class="tier-col tier-col--featured"><span class="compare__mark" aria-label="Included">&middot;</span></td>
-                <td class="tier-col"><span class="compare__mark" aria-label="Included">&middot;</span></td>
-              </tr>
-              <tr>
-                <th scope="row">Debt optimiser (avalanche &amp; snowball)</th>
-                <td class="tier-col"><span class="compare__mark">&middot;</span></td>
-                <td class="tier-col tier-col--featured"><span class="compare__mark">&middot;</span></td>
-                <td class="tier-col"><span class="compare__mark">&middot;</span></td>
-              </tr>
-              <tr>
-                <th scope="row">Cash forecast (12 months)</th>
-                <td class="tier-col"><span class="compare__mark">&middot;</span></td>
-                <td class="tier-col tier-col--featured"><span class="compare__mark">&middot;</span></td>
-                <td class="tier-col"><span class="compare__mark">&middot;</span></td>
-              </tr>
-              <tr>
-                <th scope="row">Goal tracking</th>
-                <td class="tier-col">3</td>
-                <td class="tier-col tier-col--featured">Unlimited</td>
-                <td class="tier-col">Unlimited</td>
-              </tr>
-              <tr>
-                <th scope="row">Recurring radar</th>
-                <td class="tier-col"><span class="compare__mark compare__mark--no" aria-label="Not included">&mdash;</span></td>
-                <td class="tier-col tier-col--featured"><span class="compare__mark">&middot;</span></td>
-                <td class="tier-col"><span class="compare__mark">&middot;</span></td>
-              </tr>
-              <tr>
-                <th scope="row">Scenarios</th>
-                <td class="tier-col"><span class="compare__mark compare__mark--no">&mdash;</span></td>
-                <td class="tier-col tier-col--featured">Unlimited</td>
-                <td class="tier-col">Unlimited</td>
-              </tr>
-              <tr>
-                <th scope="row">Salary calculator (US &amp; UK)</th>
-                <td class="tier-col"><span class="compare__mark compare__mark--no">&mdash;</span></td>
-                <td class="tier-col tier-col--featured"><span class="compare__mark">&middot;</span></td>
-                <td class="tier-col"><span class="compare__mark">&middot;</span></td>
-              </tr>
-              <tr>
-                <th scope="row">Sage AI (messages per month)</th>
-                <td class="tier-col">10</td>
-                <td class="tier-col tier-col--featured">200</td>
-                <td class="tier-col">200</td>
-              </tr>
-              <tr>
-                <th scope="row">Printable report card</th>
-                <td class="tier-col"><span class="compare__mark compare__mark--no">&mdash;</span></td>
-                <td class="tier-col tier-col--featured"><span class="compare__mark">&middot;</span></td>
-                <td class="tier-col"><span class="compare__mark">&middot;</span></td>
-              </tr>
-              <tr>
-                <th scope="row">Export (CSV, JSON, PDF)</th>
-                <td class="tier-col"><span class="compare__mark">&middot;</span></td>
-                <td class="tier-col tier-col--featured"><span class="compare__mark">&middot;</span></td>
-                <td class="tier-col"><span class="compare__mark">&middot;</span></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <!-- 4. FAQ -->
-    <section class="faq" aria-labelledby="faq-title">
-      <div class="container">
-        <header class="faq__head" data-reveal>
-          <p class="eyebrow">Questions</p>
-          <h2 id="faq-title" class="faq__title">Things people ask before signing up.</h2>
-        </header>
-
-        <div class="faq__grid">
-          <article class="faq__item panel--flat" data-reveal>
-            <h3 class="faq__q">Can I cancel anytime?</h3>
-            <p class="faq__a">Yes. Pro runs month-to-month or annually; cancellation is one click in your account and the subscription stops at the end of the current period. No phone call, no save offer, no retention flow. Your data remains accessible until the period ends, and exportable forever.</p>
-          </article>
-
-          <article class="faq__item panel--flat" data-reveal>
-            <h3 class="faq__q">What is the refund policy?</h3>
-            <p class="faq__a">Fourteen days, no questions. Email us and we return the charge in full. Applies to Pro monthly, Pro annual, and Founders. The number on the invoice is the number that goes back; we do not pro-rate or deduct a processing fee.</p>
-          </article>
-
-          <article class="faq__item panel--flat" data-reveal>
-            <h3 class="faq__q">What payment methods do you accept?</h3>
-            <p class="faq__a">Visa, Mastercard, American Express, and SEPA direct debit for European customers. Payments are processed by Stripe; we never see the card number. Receipts arrive by email immediately and the full invoice history is downloadable from your account.</p>
-          </article>
-
-          <article class="faq__item panel--flat" data-reveal>
-            <h3 class="faq__q">Is there a free trial?</h3>
-            <p class="faq__a">No trial, because there is a Free tier. Use the free forecast for as long as you like; upgrade when the Pro features become worth nine dollars a month. We would rather you take a year than be on a clock.</p>
-          </article>
-
-          <article class="faq__item panel--flat" data-reveal>
-            <h3 class="faq__q">Can I upgrade or change plans later?</h3>
-            <p class="faq__a">Yes. Move from Free to Pro at any time. Move from Pro monthly to Pro annual and we pro-rate the change. Move from Pro to Founders and we credit the unused portion of your subscription against the one-time price.</p>
-          </article>
-
-          <article class="faq__item panel--flat" data-reveal>
-            <h3 class="faq__q">What happens to my data if I cancel?</h3>
-            <p class="faq__a">Your forecast lives in your browser; we do not hold a server-side copy. Export to CSV or JSON before you go and you keep everything. Re-importing later is a single click and your account is reactivated where you left it.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- 5. CLOSING STATEMENT -->
-    <section class="closing" aria-label="Closing statement">
-      <div class="container">
-        <div class="closing__inner" data-reveal>
-          <p class="closing__quote">Pricing is published in full. We do not run paid ads, so the price reflects the cost, not the marketing budget.</p>
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-  <div data-include="footer"></div>
-
-  <script src="/static/js/partials.js"></script>
-  <script src="/static/js/reveal.js"></script>
+  <script src="/js/demo-data.js"></script>
+  <script src="/js/include.js"></script>
+  <script src="/js/motion.js"></script>
+  <script src="/js/charts.js"></script>
+  <script src="/js/app.js"></script>
+  <script>
+    document.addEventListener("pfc:partials-ready", function () {
+      var M = window.PFC_MOTION;
+      if (M && M.magnetic) document.querySelectorAll("[data-magnetic]").forEach(function (el) { M.magnetic(el, { strength: 0.18, radius: 70 }); });
+      if (M && M.revealOnScroll) M.revealOnScroll("[data-reveal]");
+    });
+  </script>
 </body>
 </html>

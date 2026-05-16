@@ -1,452 +1,447 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Recurring &mdash; ProFinanceCast</title>
-  <meta name="description" content="The monthly ledger. Recurring income on one side, recurring expenses on the other. Every row, every due date, every category.">
-  <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Recurring — ProFinanceCast</title>
+  <meta name="description" content="Every dollar that arrives and leaves on a schedule. Calendared and audited.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/css/tokens.css">
-  <link rel="stylesheet" href="/static/css/theme-ivory.css">
-  <link rel="stylesheet" href="/static/css/theme-emerald.css">
-  <link rel="stylesheet" href="/static/css/base.css">
-  <link rel="stylesheet" href="/static/css/components.css">
-  <link rel="stylesheet" href="/static/css/nav.css">
-  <link rel="stylesheet" href="/static/css/footer.css">
-  <link rel="stylesheet" href="/static/css/charts.css">
-  <link rel="stylesheet" href="/static/css/app.css">
-  <link rel="stylesheet" href="/static/css/recurring.css">
-</head>
-<body data-theme="emerald">
-  <a class="skip-link" href="#main">Skip to recurring ledger</a>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <style>
+    .topbar__title { display:flex; flex-direction:column; gap:2px; min-width:0; flex:1; padding-left:var(--space-6); border-left:1px solid var(--ink-500); margin-left:var(--space-4); }
+    .topbar__title h1 { font-size:1.0625rem; font-family:var(--font-body); font-weight:500; letter-spacing:-0.01em; color:var(--ink-100); line-height:1.2; }
 
-  <div data-include="header"></div>
-  <div data-include="banner"></div>
+    /* KPI hero */
+    .r-kpis { display:grid; grid-template-columns:repeat(3, 1fr); gap:var(--space-5); }
+    @media (max-width:780px){ .r-kpis { grid-template-columns:1fr; } }
+    .r-kpi { padding:var(--space-6); display:flex; flex-direction:column; gap:8px; }
+    .r-kpi__eyebrow { font-family:var(--font-mono); font-size:var(--fs-tiny); text-transform:uppercase; letter-spacing:var(--tracking-eyebrow); color:var(--ink-400); }
+    .r-kpi__val { font-family:var(--font-mono); font-size:var(--fs-mono-xl); color:var(--ink-100); font-variant-numeric:tabular-nums; letter-spacing:-0.02em; line-height:1; }
+    .r-kpi__val--pos { color:var(--mint-300); }
+    .r-kpi__foot { display:flex; align-items:center; gap:var(--space-2); }
+
+    /* Two-column */
+    .flows { display:grid; grid-template-columns: 1fr 1fr; gap:var(--space-5); }
+    @media (max-width:1000px){ .flows { grid-template-columns:1fr; } }
+    .flow-card { padding:var(--space-6) var(--space-6) var(--space-4); }
+    .flow-card__head { display:flex; align-items:baseline; justify-content:space-between; gap:var(--space-3); padding-bottom:var(--space-4); border-bottom:1px solid oklch(100% 0 0 / 0.06); margin-bottom:var(--space-2); }
+    .flow-card__title { font-family:var(--font-display); font-size:var(--fs-h2); color:var(--ink-100); font-weight:400; letter-spacing:-0.02em; }
+    .flow-card__title em { font-style:italic; color:var(--mint-400); }
+    .flow-card__sum { font-family:var(--font-mono); font-size:var(--fs-body); color:var(--ink-200); font-variant-numeric:tabular-nums; }
+
+    .flow-list { display:flex; flex-direction:column; }
+    .flow-row { display:grid; grid-template-columns: 36px 1fr auto 56px auto; gap:var(--space-4); align-items:center; padding:var(--space-4) 4px; border-bottom:1px solid oklch(100% 0 0 / 0.04); transition: background var(--dur-fast) var(--ease-standard); }
+    .flow-row:last-child { border-bottom:0; }
+    .flow-row:hover { background:oklch(100% 0 0 / 0.025); }
+    .flow-row__icon { width:32px; height:32px; border-radius:var(--r-sm); display:grid; place-items:center; background:oklch(100% 0 0 / 0.04); color:var(--ink-300); }
+    .flow-row__icon--in { background:oklch(78% 0.175 168 / 0.10); color:var(--mint-300); }
+    .flow-row__icon--out { background:oklch(74% 0.135 28 / 0.08); color:var(--coral-400); }
+    .flow-row__main { display:flex; flex-direction:column; gap:2px; min-width:0; }
+    .flow-row__name { font-size:var(--fs-small); color:var(--ink-100); font-weight:500; }
+    .flow-row__meta { font-size:var(--fs-tiny); color:var(--ink-400); font-family:var(--font-mono); }
+    .flow-row__cycle { font-family:var(--font-mono); font-size:var(--fs-tiny); padding:3px 8px; border-radius:var(--r-full); background:var(--ink-700); color:var(--ink-300); border:1px solid var(--ink-500); }
+    .flow-row__spark { width:56px; height:24px; }
+    .flow-row__amt { font-family:var(--font-mono); font-size:var(--fs-small); color:var(--ink-100); font-variant-numeric:tabular-nums; text-align:right; min-width:84px; }
+    .flow-row__amt--pos { color:var(--mint-300); }
+    .flow-row__amt--neg { color:var(--ink-100); }
+    @media (max-width:640px){ .flow-row { grid-template-columns: 28px 1fr auto; } .flow-row__cycle, .flow-row__spark { display:none; } }
+
+    /* Calendar strip */
+    .cal-card { padding:var(--space-8); }
+    .cal-card__head { display:flex; align-items:flex-end; justify-content:space-between; gap:var(--space-4); margin-bottom:var(--space-6); flex-wrap:wrap; }
+    .cal-card__title { font-family:var(--font-display); font-size:var(--fs-h2); color:var(--ink-100); font-weight:400; }
+    .cal-card__title em { font-style:italic; color:var(--mint-400); }
+    .cal-strip { display:grid; grid-template-columns:repeat(30, minmax(28px, 1fr)); gap:6px; }
+    @media (max-width:900px){ .cal-strip { grid-template-columns:repeat(15, 1fr); } }
+    .cal-day { aspect-ratio:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; padding:6px 4px; gap:4px; border:1px solid oklch(100% 0 0 / 0.06); border-radius:var(--r-sm); background:oklch(100% 0 0 / 0.02); cursor:default; position:relative; transition: border-color var(--dur-fast) var(--ease-standard), background var(--dur-fast) var(--ease-standard); }
+    .cal-day:hover { border-color:oklch(78% 0.175 168 / 0.40); background:oklch(100% 0 0 / 0.05); }
+    .cal-day__num { font-family:var(--font-mono); font-size:10px; color:var(--ink-300); font-variant-numeric:tabular-nums; }
+    .cal-day__dots { display:flex; gap:2px; margin-top:auto; padding-bottom:2px; }
+    .cal-day__dot { width:4px; height:4px; border-radius:var(--r-full); }
+    .cal-day__dot--in { background:var(--mint-400); }
+    .cal-day__dot--out { background:var(--coral-400); }
+    .cal-day--today { border-color:var(--mint-500); background:oklch(78% 0.175 168 / 0.08); }
+    .cal-day--today .cal-day__num { color:var(--mint-300); font-weight:600; }
+    .cal-tip { position:absolute; bottom:calc(100% + 6px); left:50%; transform:translateX(-50%); padding:8px 10px; background:var(--ink-700); border:1px solid var(--ink-500); border-radius:var(--r-sm); font-size:var(--fs-tiny); color:var(--ink-100); white-space:nowrap; box-shadow:var(--shadow-card); opacity:0; pointer-events:none; transition: opacity var(--dur-fast) var(--ease-standard); z-index:10; font-family:var(--font-mono); }
+    .cal-day:hover .cal-tip { opacity:1; }
+    .cal-legend { display:flex; gap:var(--space-4); font-family:var(--font-mono); font-size:var(--fs-tiny); color:var(--ink-400); text-transform:uppercase; letter-spacing:var(--tracking-eyebrow); }
+    .cal-legend span { display:inline-flex; align-items:center; gap:6px; }
+    .cal-legend i { width:8px; height:8px; border-radius:var(--r-full); display:inline-block; }
+
+    /* Audit card */
+    .audit { padding:var(--space-6); display:flex; flex-direction:column; gap:var(--space-4); margin-top:var(--space-5); }
+    .audit__head { display:flex; align-items:center; gap:var(--space-3); }
+    .audit__icon { width:36px; height:36px; border-radius:var(--r-sm); background:oklch(80% 0.140 75 / 0.12); color:var(--amber-400); display:grid; place-items:center; }
+    .audit__title { font-family:var(--font-display); font-size:var(--fs-h3); color:var(--ink-100); }
+    .audit__body { font-size:var(--fs-body); color:var(--ink-200); line-height:1.55; max-width:60ch; }
+    .audit__row { display:flex; gap:var(--space-3); align-items:center; flex-wrap:wrap; }
+    .audit__chip { padding:6px 12px; border:1px solid var(--ink-500); border-radius:var(--r-full); font-size:var(--fs-small); color:var(--ink-200); background:var(--ink-700); font-family:var(--font-mono); }
+    .audit__chip strong { color:var(--coral-400); font-weight:500; margin-left:8px; }
+  </style>
+</head>
+<body data-page="recurring">
+  <div class="aurora-bg" aria-hidden="true">
+    <div class="aurora-bg__blob aurora-bg__blob--1"></div>
+    <div class="aurora-bg__blob aurora-bg__blob--2"></div>
+    <div class="aurora-bg__blob aurora-bg__blob--3"></div>
+    <div class="aurora-bg__blob aurora-bg__blob--4"></div>
+    <div class="aurora-bg__grain"></div>
+    <div class="aurora-bg__vignette"></div>
+  </div>
 
   <div class="app-shell">
-    <div data-include="sidebar"></div>
+    <div data-include="/partials/sidebar.html"></div>
 
-    <main class="app-main" id="main">
-
-      <!-- 1 · PAGE HEAD -->
-      <header class="page-head" data-reveal>
-        <div class="page-head__body">
-          <p class="eyebrow page-head__eyebrow">
-            <span>Recurring radar</span>
-            <span class="page-head__sep" aria-hidden="true">&middot;</span>
-            <span class="mono">May 2026</span>
-          </p>
-          <h1 class="display display--md page-head__title">Everything that repeats.</h1>
-          <p class="page-head__lede">Income on the left rail, expenses on the right. The figures that don&rsquo;t need a decision &mdash; until one of them does.</p>
+    <main class="main">
+      <header class="topbar" data-pfc-topbar>
+        <div class="topbar__breadcrumb">
+          <span>Planning</span>
+          <span class="topbar__breadcrumb-sep" aria-hidden="true">/</span>
+          <span class="topbar__breadcrumb-current">Recurring</span>
         </div>
-        <div class="page-head__actions">
-          <a href="/settings.html" class="btn btn--ghost btn--sm">Edit cadence</a>
+        <div class="topbar__title"><h1>Recurring money</h1></div>
+        <div class="topbar__actions">
+          <button type="button" class="btn btn--primary btn--sm" data-magnetic>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+            Add recurring
+          </button>
         </div>
       </header>
 
-      <!-- 2 · MONTHLY SURPLUS SUMMARY -->
-      <section class="recurring-summary" aria-label="Monthly recurring summary" data-reveal>
-        <div class="recurring-summary__cell">
-          <p class="recurring-summary__label">Recurring income</p>
-          <p class="recurring-summary__value mono">+$8,020</p>
-          <p class="recurring-summary__foot">Two streams &middot; one salary, one freelance average</p>
-        </div>
-        <div class="recurring-summary__cell">
-          <p class="recurring-summary__label">Recurring expenses</p>
-          <p class="recurring-summary__value mono">&minus;$5,180</p>
-          <p class="recurring-summary__foot">Twelve rows &middot; housing, utilities, lifestyle</p>
-        </div>
-        <div class="recurring-summary__cell recurring-summary__cell--accent">
-          <p class="recurring-summary__label">Net before discretionary</p>
-          <p class="recurring-summary__value mono">+$2,840</p>
-          <p class="recurring-summary__foot">Before food out, travel, and the unplanned</p>
-        </div>
-      </section>
+      <div class="main__content">
 
-      <!-- 3 · TABS  (Income · Expenses) -->
-      <section class="recurring" aria-labelledby="ledger-h2" data-reveal>
-        <header class="recurring__head">
-          <div>
-            <p class="eyebrow">Ledger</p>
-            <h2 class="recurring__title" id="ledger-h2">Two columns, ranked by amount.</h2>
+        <!-- KPI hero -->
+        <section class="section">
+          <div class="r-kpis" data-reveal>
+            <article class="card card--glass r-kpi">
+              <span class="r-kpi__eyebrow">Monthly inflow</span>
+              <span class="r-kpi__val mono" data-count="7800" data-currency="USD">$0</span>
+              <div class="r-kpi__foot"><span class="chip"><span class="chip__dot"></span>4 sources</span></div>
+            </article>
+            <article class="card card--glass r-kpi">
+              <span class="r-kpi__eyebrow">Monthly outflow</span>
+              <span class="r-kpi__val mono" data-count="4200" data-currency="USD">$0</span>
+              <div class="r-kpi__foot"><span class="chip"><span class="chip__dot"></span>12 items</span></div>
+            </article>
+            <article class="card card--glass r-kpi">
+              <span class="r-kpi__eyebrow">Net recurring</span>
+              <span class="r-kpi__val r-kpi__val--pos mono">+<span data-count="3600" data-currency="USD">$0</span></span>
+              <div class="r-kpi__foot"><span class="chip chip--positive"><span class="chip__dot"></span>Surplus</span></div>
+            </article>
           </div>
-        </header>
+        </section>
 
-        <div class="recurring-tabs" role="tablist" aria-label="Recurring ledger">
-          <button
-            type="button"
-            class="recurring-tab is-active"
-            role="tab"
-            id="tab-income"
-            aria-selected="true"
-            aria-controls="panel-income"
-            data-rec-tab="income"
-          >
-            <span class="recurring-tab__label">Income</span>
-            <span class="recurring-tab__sub mono">+$8,020 / mo</span>
-          </button>
-          <button
-            type="button"
-            class="recurring-tab"
-            role="tab"
-            id="tab-expenses"
-            aria-selected="false"
-            aria-controls="panel-expenses"
-            tabindex="-1"
-            data-rec-tab="expenses"
-          >
-            <span class="recurring-tab__label">Expenses</span>
-            <span class="recurring-tab__sub mono">&minus;$5,180 / mo</span>
-          </button>
-        </div>
+        <!-- Two-column -->
+        <section class="section">
+          <div class="flows">
 
-        <!-- 3a · INCOME PANEL ----------------------------------------- -->
-        <div
-          class="recurring-panel"
-          role="tabpanel"
-          id="panel-income"
-          aria-labelledby="tab-income"
-        >
-          <div class="recurring-strip recurring-strip--income">
-            <div class="recurring-strip__stat">
-              <p class="recurring-strip__label">Streams</p>
-              <p class="recurring-strip__value mono">2</p>
-            </div>
-            <div class="recurring-strip__stat">
-              <p class="recurring-strip__label">Monthly total</p>
-              <p class="recurring-strip__value mono">+$8,020</p>
-            </div>
-            <div class="recurring-strip__stat">
-              <p class="recurring-strip__label">Next inflow</p>
-              <p class="recurring-strip__value mono">25 May 2026</p>
-            </div>
+            <!-- INFLOWS -->
+            <article class="card card--glass flow-card" data-reveal>
+              <header class="flow-card__head">
+                <h2 class="flow-card__title"><em>Inflows</em></h2>
+                <span class="flow-card__sum">$7,800 / mo</span>
+              </header>
+              <div class="flow-list" data-reveal-stagger>
+
+                <div class="flow-row" style="--i:0;">
+                  <span class="flow-row__icon flow-row__icon--in"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M8 15h3"/></svg></span>
+                  <div class="flow-row__main">
+                    <span class="flow-row__name">Primary salary · Acme Corp.</span>
+                    <span class="flow-row__meta">Next: 1st & 15th</span>
+                  </div>
+                  <span class="flow-row__cycle">Bi-weekly</span>
+                  <span class="flow-row__spark" data-spark="in-0"></span>
+                  <span class="flow-row__amt flow-row__amt--pos">+$7,200</span>
+                </div>
+
+                <div class="flow-row" style="--i:1;">
+                  <span class="flow-row__icon flow-row__icon--in"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l3 6 6 1-4.5 4.5L18 21l-6-3-6 3 1.5-6.5L3 10l6-1z"/></svg></span>
+                  <div class="flow-row__main">
+                    <span class="flow-row__name">Side consulting · Lumen Co.</span>
+                    <span class="flow-row__meta">Next: May 28</span>
+                  </div>
+                  <span class="flow-row__cycle">Monthly</span>
+                  <span class="flow-row__spark" data-spark="in-1"></span>
+                  <span class="flow-row__amt flow-row__amt--pos">+$480</span>
+                </div>
+
+                <div class="flow-row" style="--i:2;">
+                  <span class="flow-row__icon flow-row__icon--in"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17c3-2 5-2 7 0s5 4 11-3"/><path d="M14 4h7v7"/></svg></span>
+                  <div class="flow-row__main">
+                    <span class="flow-row__name">Dividends · brokerage</span>
+                    <span class="flow-row__meta">Next: Jun 10</span>
+                  </div>
+                  <span class="flow-row__cycle">Quarterly</span>
+                  <span class="flow-row__spark" data-spark="in-2"></span>
+                  <span class="flow-row__amt flow-row__amt--pos">+$96</span>
+                </div>
+
+                <div class="flow-row" style="--i:3;">
+                  <span class="flow-row__icon flow-row__icon--in"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 12h6M12 9v6"/></svg></span>
+                  <div class="flow-row__main">
+                    <span class="flow-row__name">High-yield savings interest</span>
+                    <span class="flow-row__meta">Next: 1st of month</span>
+                  </div>
+                  <span class="flow-row__cycle">Monthly</span>
+                  <span class="flow-row__spark" data-spark="in-3"></span>
+                  <span class="flow-row__amt flow-row__amt--pos">+$24</span>
+                </div>
+
+              </div>
+            </article>
+
+            <!-- OUTFLOWS -->
+            <article class="card card--glass flow-card" data-reveal>
+              <header class="flow-card__head">
+                <h2 class="flow-card__title"><em>Outflows</em></h2>
+                <span class="flow-card__sum">$4,200 / mo</span>
+              </header>
+              <div class="flow-list" data-reveal-stagger>
+
+                <div class="flow-row" style="--i:0;">
+                  <span class="flow-row__icon flow-row__icon--out"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M10 22v-7h4v7"/></svg></span>
+                  <div class="flow-row__main"><span class="flow-row__name">Rent · Lyon Apartments</span><span class="flow-row__meta">Next: Jun 1</span></div>
+                  <span class="flow-row__cycle">Monthly</span>
+                  <span class="flow-row__spark" data-spark="out-0"></span>
+                  <span class="flow-row__amt">−$1,850</span>
+                </div>
+
+                <div class="flow-row" style="--i:1;">
+                  <span class="flow-row__icon flow-row__icon--out"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M11 18h2"/></svg></span>
+                  <div class="flow-row__main"><span class="flow-row__name">Phone · Mint Mobile</span><span class="flow-row__meta">Next: May 24</span></div>
+                  <span class="flow-row__cycle">Monthly</span>
+                  <span class="flow-row__spark" data-spark="out-1"></span>
+                  <span class="flow-row__amt">−$32</span>
+                </div>
+
+                <div class="flow-row" style="--i:2;">
+                  <span class="flow-row__icon flow-row__icon--out"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h8l-1 8 10-12h-8z"/></svg></span>
+                  <div class="flow-row__main"><span class="flow-row__name">Utilities · Con Ed</span><span class="flow-row__meta">Next: Jun 5</span></div>
+                  <span class="flow-row__cycle">Monthly</span>
+                  <span class="flow-row__spark" data-spark="out-2"></span>
+                  <span class="flow-row__amt">−$148</span>
+                </div>
+
+                <div class="flow-row" style="--i:3;">
+                  <span class="flow-row__icon flow-row__icon--out"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12a7 7 0 1 1 14 0 7 7 0 0 1-14 0z"/><path d="M2 12h3M19 12h3M12 2v3M12 19v3"/></svg></span>
+                  <div class="flow-row__main"><span class="flow-row__name">Internet · Verizon Fios</span><span class="flow-row__meta">Next: Jun 8</span></div>
+                  <span class="flow-row__cycle">Monthly</span>
+                  <span class="flow-row__spark" data-spark="out-3"></span>
+                  <span class="flow-row__amt">−$70</span>
+                </div>
+
+                <div class="flow-row" style="--i:4;">
+                  <span class="flow-row__icon flow-row__icon--out"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 11l3 3 5-6"/></svg></span>
+                  <div class="flow-row__main"><span class="flow-row__name">Spotify Premium Family</span><span class="flow-row__meta">Next: May 28</span></div>
+                  <span class="flow-row__cycle">Monthly</span>
+                  <span class="flow-row__spark" data-spark="out-4"></span>
+                  <span class="flow-row__amt">−$17</span>
+                </div>
+
+                <div class="flow-row" style="--i:5;">
+                  <span class="flow-row__icon flow-row__icon--out"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M7 20h10"/></svg></span>
+                  <div class="flow-row__main"><span class="flow-row__name">Netflix · Standard</span><span class="flow-row__meta">Next: May 22</span></div>
+                  <span class="flow-row__cycle">Monthly</span>
+                  <span class="flow-row__spark" data-spark="out-5"></span>
+                  <span class="flow-row__amt">−$16</span>
+                </div>
+
+                <div class="flow-row" style="--i:6;">
+                  <span class="flow-row__icon flow-row__icon--out"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5v14"/></svg></span>
+                  <div class="flow-row__main"><span class="flow-row__name">Apple One</span><span class="flow-row__meta">Next: Jun 11</span></div>
+                  <span class="flow-row__cycle">Monthly</span>
+                  <span class="flow-row__spark" data-spark="out-6"></span>
+                  <span class="flow-row__amt">−$20</span>
+                </div>
+
+                <div class="flow-row" style="--i:7;">
+                  <span class="flow-row__icon flow-row__icon--out"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h16l-1 10H5z"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></span>
+                  <div class="flow-row__main"><span class="flow-row__name">Equinox · gym membership</span><span class="flow-row__meta">Next: Jun 1</span></div>
+                  <span class="flow-row__cycle">Monthly</span>
+                  <span class="flow-row__spark" data-spark="out-7"></span>
+                  <span class="flow-row__amt">−$245</span>
+                </div>
+
+                <div class="flow-row" style="--i:8;">
+                  <span class="flow-row__icon flow-row__icon--out"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg></span>
+                  <div class="flow-row__main"><span class="flow-row__name">Renter's insurance · Lemonade</span><span class="flow-row__meta">Next: Jun 15</span></div>
+                  <span class="flow-row__cycle">Monthly</span>
+                  <span class="flow-row__spark" data-spark="out-8"></span>
+                  <span class="flow-row__amt">−$22</span>
+                </div>
+
+                <div class="flow-row" style="--i:9;">
+                  <span class="flow-row__icon flow-row__icon--out"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 1 18 0 9 9 0 0 1-18 0z"/><path d="M9 12h6"/></svg></span>
+                  <div class="flow-row__main"><span class="flow-row__name">Health insurance · supplemental</span><span class="flow-row__meta">Next: Jun 1</span></div>
+                  <span class="flow-row__cycle">Monthly</span>
+                  <span class="flow-row__spark" data-spark="out-9"></span>
+                  <span class="flow-row__amt">−$184</span>
+                </div>
+
+                <div class="flow-row" style="--i:10;">
+                  <span class="flow-row__icon flow-row__icon--out"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 16l3-8h8l3 8"/><circle cx="8" cy="17" r="2"/><circle cx="16" cy="17" r="2"/></svg></span>
+                  <div class="flow-row__main"><span class="flow-row__name">Car payment · Civic</span><span class="flow-row__meta">Next: Jun 22</span></div>
+                  <span class="flow-row__cycle">Monthly</span>
+                  <span class="flow-row__spark" data-spark="out-10"></span>
+                  <span class="flow-row__amt">−$312</span>
+                </div>
+
+                <div class="flow-row" style="--i:11;">
+                  <span class="flow-row__icon flow-row__icon--out"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 14h3"/></svg></span>
+                  <div class="flow-row__main"><span class="flow-row__name">Groceries · Misfits Market</span><span class="flow-row__meta">Next: May 21</span></div>
+                  <span class="flow-row__cycle">Weekly</span>
+                  <span class="flow-row__spark" data-spark="out-11"></span>
+                  <span class="flow-row__amt">−$320</span>
+                </div>
+
+              </div>
+            </article>
+
           </div>
+        </section>
 
-          <ul class="recurring-list" role="list">
-            <li class="recurring-row recurring-row--income">
-              <div class="recurring-row__cell recurring-row__cell--name">
-                <p class="recurring-row__title">Salary</p>
-                <p class="recurring-row__sub">Day-job &middot; net pay after withholding</p>
+        <!-- Calendar -->
+        <section class="section">
+          <article class="card card--glass cal-card" data-reveal>
+            <header class="cal-card__head">
+              <div>
+                <h2 class="cal-card__title">Next <em>thirty days</em></h2>
+                <p class="section__lede" style="margin-top:var(--space-2);">Hover a day to see what's posting.</p>
               </div>
-              <div class="recurring-row__cell recurring-row__cell--amount">
-                <p class="recurring-row__amount mono">+$7,400</p>
+              <div class="cal-legend">
+                <span><i style="background:var(--mint-400);"></i>Inflow</span>
+                <span><i style="background:var(--coral-400);"></i>Outflow</span>
               </div>
-              <div class="recurring-row__cell recurring-row__cell--cadence">
-                <p class="recurring-row__cadence">Monthly</p>
-                <p class="recurring-row__when mono">25 May 2026</p>
-              </div>
-              <div class="recurring-row__cell recurring-row__cell--chip">
-                <span class="recurring-chip recurring-chip--income">Salary</span>
-              </div>
-            </li>
+            </header>
+            <div class="cal-strip" id="cal-strip"></div>
+          </article>
+        </section>
 
-            <li class="recurring-row recurring-row--income">
-              <div class="recurring-row__cell recurring-row__cell--name">
-                <p class="recurring-row__title">Freelance</p>
-                <p class="recurring-row__sub">Twelve-month moving average</p>
-              </div>
-              <div class="recurring-row__cell recurring-row__cell--amount">
-                <p class="recurring-row__amount mono">+$620</p>
-              </div>
-              <div class="recurring-row__cell recurring-row__cell--cadence">
-                <p class="recurring-row__cadence">Monthly avg</p>
-                <p class="recurring-row__when mono">Variable</p>
-              </div>
-              <div class="recurring-row__cell recurring-row__cell--chip">
-                <span class="recurring-chip recurring-chip--income">Freelance</span>
-              </div>
-            </li>
-          </ul>
-        </div>
-
-        <!-- 3b · EXPENSES PANEL --------------------------------------- -->
-        <div
-          class="recurring-panel is-hidden"
-          role="tabpanel"
-          id="panel-expenses"
-          aria-labelledby="tab-expenses"
-          hidden
-        >
-          <div class="recurring-strip recurring-strip--expenses">
-            <div class="recurring-strip__stat">
-              <p class="recurring-strip__label">Rows</p>
-              <p class="recurring-strip__value mono">12</p>
+        <!-- Subscription audit -->
+        <section class="section">
+          <article class="card card--glass audit" data-reveal>
+            <header class="audit__head">
+              <span class="audit__icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+              </span>
+              <h3 class="audit__title">Subscriptions analysis</h3>
+            </header>
+            <p class="audit__body">You have <strong style="color:var(--coral-400);">three subscriptions</strong> you haven't opened in 30 or more days. Total: $54.94 per month.</p>
+            <div class="audit__row">
+              <span class="audit__chip">Apple One <strong>$19.95</strong></span>
+              <span class="audit__chip">Notion AI <strong>$10.00</strong></span>
+              <span class="audit__chip">Headspace <strong>$24.99</strong></span>
+              <a href="#" class="btn btn--ghost btn--sm" style="margin-left:auto;">
+                Review
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </a>
             </div>
-            <div class="recurring-strip__stat">
-              <p class="recurring-strip__label">Monthly total</p>
-              <p class="recurring-strip__value mono">&minus;$5,180</p>
-            </div>
-            <div class="recurring-strip__stat">
-              <p class="recurring-strip__label">Next due</p>
-              <p class="recurring-strip__value mono">15 May 2026</p>
-            </div>
-          </div>
+          </article>
+        </section>
 
-          <ul class="recurring-list" role="list">
-
-            <li class="recurring-row">
-              <div class="recurring-row__cell recurring-row__cell--name">
-                <p class="recurring-row__title">Rent</p>
-                <p class="recurring-row__sub">One-bedroom, lease renews in November</p>
-              </div>
-              <div class="recurring-row__cell recurring-row__cell--amount">
-                <p class="recurring-row__amount mono">&minus;$1,800</p>
-              </div>
-              <div class="recurring-row__cell recurring-row__cell--cadence">
-                <p class="recurring-row__cadence">Monthly</p>
-                <p class="recurring-row__when mono">01 Jun 2026</p>
-              </div>
-              <div class="recurring-row__cell recurring-row__cell--chip">
-                <span class="recurring-chip recurring-chip--housing">Housing</span>
-              </div>
-            </li>
-
-            <li class="recurring-row">
-              <div class="recurring-row__cell recurring-row__cell--name">
-                <p class="recurring-row__title">Groceries</p>
-                <p class="recurring-row__sub">Average across the year, household of one</p>
-              </div>
-              <div class="recurring-row__cell recurring-row__cell--amount">
-                <p class="recurring-row__amount mono">&minus;$640</p>
-              </div>
-              <div class="recurring-row__cell recurring-row__cell--cadence">
-                <p class="recurring-row__cadence">Monthly</p>
-                <p class="recurring-row__when mono">Rolling</p>
-              </div>
-              <div class="recurring-row__cell recurring-row__cell--chip">
-                <span class="recurring-chip recurring-chip--food">Food</span>
-              </div>
-            </li>
-
-            <li class="recurring-row">
-              <div class="recurring-row__cell recurring-row__cell--name">
-                <p class="recurring-row__title">Health insurance</p>
-                <p class="recurring-row__sub">Employer plan, employee share</p>
-              </div>
-              <div class="recurring-row__cell recurring-row__cell--amount">
-                <p class="recurring-row__amount mono">&minus;$380</p>
-              </div>
-              <div class="recurring-row__cell recurring-row__cell--cadence">
-                <p class="recurring-row__cadence">Monthly</p>
-                <p class="recurring-row__when mono">25 May 2026</p>
-              </div>
-              <div class="recurring-row__cell recurring-row__cell--chip">
-                <span class="recurring-chip recurring-chip--insurance">Insurance</span>
-              </div>
-            </li>
-
-            <li class="recurring-row">
-              <div class="recurring-row__cell recurring-row__cell--name">
-                <p class="recurring-row__title">Utilities</p>
-                <p class="recurring-row__sub">Electric, gas, water &middot; rolled into one line</p>
-              </div>
-              <div class="recurring-row__cell recurring-row__cell--amount">
-                <p class="recurring-row__amount mono">&minus;$220</p>
-              </div>
-              <div class="recurring-row__cell recurring-row__cell--cadence">
-                <p class="recurring-row__cadence">Monthly</p>
-                <p class="recurring-row__when mono">15 May 2026</p>
-              </div>
-              <div class="recurring-row__cell recurring-row__cell--chip">
-                <span class="recurring-chip recurring-chip--utilities">Utilities</span>
-              </div>
-            </li>
-
-            <li class="recurring-row">
-              <div class="recurring-row__cell recurring-row__cell--name">
-                <p class="recurring-row__title">Transit</p>
-                <p class="recurring-row__sub">Monthly pass &middot; no car</p>
-              </div>
-              <div class="recurring-row__cell recurring-row__cell--amount">
-                <p class="recurring-row__amount mono">&minus;$140</p>
-              </div>
-              <div class="recurring-row__cell recurring-row__cell--cadence">
-                <p class="recurring-row__cadence">Monthly</p>
-                <p class="recurring-row__when mono">01 Jun 2026</p>
-              </div>
-              <div class="recurring-row__cell recurring-row__cell--chip">
-                <span class="recurring-chip recurring-chip--transit">Transit</span>
-              </div>
-            </li>
-
-            <li class="recurring-row">
-              <div class="recurring-row__cell recurring-row__cell--name">
-                <p class="recurring-row__title">Subscriptions</p>
-                <p class="recurring-row__sub">Music, streaming, two productivity tools, one news</p>
-              </div>
-              <div class="recurring-row__cell recurring-row__cell--amount">
-                <p class="recurring-row__amount mono">&minus;$147</p>
-              </div>
-              <div class="recurring-row__cell recurring-row__cell--cadence">
-                <p class="recurring-row__cadence">Monthly</p>
-                <p class="recurring-row__when mono">12 May 2026</p>
-              </div>
-              <div class="recurring-row__cell recurring-row__cell--chip">
-                <span class="recurring-chip recurring-chip--leisure">Subscriptions</span>
-              </div>
-            </li>
-
-            <li class="recurring-row">
-              <div class="recurring-row__cell recurring-row__cell--name">
-                <p class="recurring-row__title">Internet</p>
-                <p class="recurring-row__sub">Home broadband &middot; gigabit fiber</p>
-              </div>
-              <div class="recurring-row__cell recurring-row__cell--amount">
-                <p class="recurring-row__amount mono">&minus;$72</p>
-              </div>
-              <div class="recurring-row__cell recurring-row__cell--cadence">
-                <p class="recurring-row__cadence">Monthly</p>
-                <p class="recurring-row__when mono">18 May 2026</p>
-              </div>
-              <div class="recurring-row__cell recurring-row__cell--chip">
-                <span class="recurring-chip recurring-chip--utilities">Utilities</span>
-              </div>
-            </li>
-
-            <li class="recurring-row">
-              <div class="recurring-row__cell recurring-row__cell--name">
-                <p class="recurring-row__title">Phone</p>
-                <p class="recurring-row__sub">Single line, unlimited domestic</p>
-              </div>
-              <div class="recurring-row__cell recurring-row__cell--amount">
-                <p class="recurring-row__amount mono">&minus;$45</p>
-              </div>
-              <div class="recurring-row__cell recurring-row__cell--cadence">
-                <p class="recurring-row__cadence">Monthly</p>
-                <p class="recurring-row__when mono">22 May 2026</p>
-              </div>
-              <div class="recurring-row__cell recurring-row__cell--chip">
-                <span class="recurring-chip recurring-chip--utilities">Utilities</span>
-              </div>
-            </li>
-
-            <li class="recurring-row">
-              <div class="recurring-row__cell recurring-row__cell--name">
-                <p class="recurring-row__title">Gym membership</p>
-                <p class="recurring-row__sub">Local studio, month-to-month</p>
-              </div>
-              <div class="recurring-row__cell recurring-row__cell--amount">
-                <p class="recurring-row__amount mono">&minus;$38</p>
-              </div>
-              <div class="recurring-row__cell recurring-row__cell--cadence">
-                <p class="recurring-row__cadence">Monthly</p>
-                <p class="recurring-row__when mono">28 May 2026</p>
-              </div>
-              <div class="recurring-row__cell recurring-row__cell--chip">
-                <span class="recurring-chip recurring-chip--wellness">Wellness</span>
-              </div>
-            </li>
-
-            <li class="recurring-row">
-              <div class="recurring-row__cell recurring-row__cell--name">
-                <p class="recurring-row__title">Renters insurance</p>
-                <p class="recurring-row__sub">Annual policy, billed each May</p>
-              </div>
-              <div class="recurring-row__cell recurring-row__cell--amount">
-                <p class="recurring-row__amount mono">&minus;$28</p>
-              </div>
-              <div class="recurring-row__cell recurring-row__cell--cadence">
-                <p class="recurring-row__cadence">Annual / 12</p>
-                <p class="recurring-row__when mono">15 May 2026</p>
-              </div>
-              <div class="recurring-row__cell recurring-row__cell--chip">
-                <span class="recurring-chip recurring-chip--insurance">Insurance</span>
-              </div>
-            </li>
-
-            <li class="recurring-row">
-              <div class="recurring-row__cell recurring-row__cell--name">
-                <p class="recurring-row__title">Cloud storage</p>
-                <p class="recurring-row__sub">2 TB plan &middot; photos and backups</p>
-              </div>
-              <div class="recurring-row__cell recurring-row__cell--amount">
-                <p class="recurring-row__amount mono">&minus;$10</p>
-              </div>
-              <div class="recurring-row__cell recurring-row__cell--cadence">
-                <p class="recurring-row__cadence">Monthly</p>
-                <p class="recurring-row__when mono">06 Jun 2026</p>
-              </div>
-              <div class="recurring-row__cell recurring-row__cell--chip">
-                <span class="recurring-chip recurring-chip--leisure">Subscriptions</span>
-              </div>
-            </li>
-
-            <li class="recurring-row">
-              <div class="recurring-row__cell recurring-row__cell--name">
-                <p class="recurring-row__title">Charitable giving</p>
-                <p class="recurring-row__sub">One recipient, set in November</p>
-              </div>
-              <div class="recurring-row__cell recurring-row__cell--amount">
-                <p class="recurring-row__amount mono">&minus;$1,660 / yr</p>
-              </div>
-              <div class="recurring-row__cell recurring-row__cell--cadence">
-                <p class="recurring-row__cadence">Annual</p>
-                <p class="recurring-row__when mono">15 Nov 2026</p>
-              </div>
-              <div class="recurring-row__cell recurring-row__cell--chip">
-                <span class="recurring-chip recurring-chip--giving">Giving</span>
-              </div>
-            </li>
-
-          </ul>
-        </div>
-      </section>
-
+      </div>
     </main>
   </div>
 
-  <div data-include="footer"></div>
-
-  <script src="/static/js/partials.js"></script>
-  <script src="/static/js/demo-data.js"></script>
-  <script src="/static/js/charts.js"></script>
-  <script src="/static/js/reveal.js"></script>
+  <script src="/js/demo-data.js"></script>
+  <script src="/js/include.js"></script>
+  <script src="/js/motion.js"></script>
+  <script src="/js/charts.js"></script>
+  <script src="/js/app.js"></script>
   <script>
-    /* Tab switcher: Income / Expenses. Single source of truth for active
-       state is aria-selected; classes follow. Honors keyboard ARIA pattern. */
-    (function () {
-      'use strict';
-      var tabs   = Array.prototype.slice.call(document.querySelectorAll('[data-rec-tab]'));
-      var panels = {
-        income:   document.getElementById('panel-income'),
-        expenses: document.getElementById('panel-expenses')
-      };
-      if (!tabs.length) return;
+    document.addEventListener("pfc:partials-ready", function () {
+      var M = window.PFC_MOTION;
+      var C = window.PFC_CHARTS;
 
-      function activate(key) {
-        tabs.forEach(function (t) {
-          var on = t.getAttribute('data-rec-tab') === key;
-          t.setAttribute('aria-selected', String(on));
-          t.tabIndex = on ? 0 : -1;
-          t.classList.toggle('is-active', on);
-        });
-        Object.keys(panels).forEach(function (k) {
-          var p = panels[k];
-          if (!p) return;
-          var on = k === key;
-          p.classList.toggle('is-hidden', !on);
-          if (on) p.removeAttribute('hidden');
-          else p.setAttribute('hidden', '');
-        });
-      }
-      tabs.forEach(function (t, i) {
-        t.addEventListener('click', function () {
-          activate(t.getAttribute('data-rec-tab'));
-          t.focus();
-        });
-        t.addEventListener('keydown', function (e) {
-          if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
-          e.preventDefault();
-          var dir = e.key === 'ArrowRight' ? 1 : -1;
-          var next = tabs[(i + dir + tabs.length) % tabs.length];
-          activate(next.getAttribute('data-rec-tab'));
-          next.focus();
-        });
+      // KPI countUp
+      document.querySelectorAll("[data-count]").forEach(function (el) {
+        var val = +el.getAttribute("data-count");
+        var currency = el.getAttribute("data-currency") || undefined;
+        var io = new IntersectionObserver(function (es) {
+          es.forEach(function (e) {
+            if (e.isIntersecting) {
+              io.unobserve(el);
+              if (M && M.countUp) M.countUp(el, val, { currency: currency, decimals: 0, duration: 1200 });
+              else el.textContent = (currency ? "$" : "") + val.toLocaleString();
+            }
+          });
+        }, { threshold: 0.4 });
+        io.observe(el);
       });
-    })();
+
+      // Sparklines for each row — small variance lines
+      function fakeSpark(seed, len) {
+        var arr = [], v = 0.5;
+        for (var i = 0; i < len; i++) { v += Math.sin(i * 1.1 + seed) * 0.08 + 0.03; arr.push(Math.max(0.1, v)); }
+        return arr;
+      }
+      setTimeout(function () {
+        document.querySelectorAll("[data-spark]").forEach(function (el, i) {
+          var key = el.getAttribute("data-spark");
+          var color = key.indexOf("in") === 0 ? "var(--mint-400)" : "var(--coral-400)";
+          if (C && C.sparkline) C.sparkline(el, fakeSpark(i * 3 + 5, 14), { height: 24, stroke: color, fill: false });
+        });
+      }, 400);
+
+      // Build 30-day calendar with deterministic event placement
+      (function buildCal() {
+        var strip = document.getElementById("cal-strip");
+        if (!strip) return;
+        var todayIdx = 0;
+        // Events keyed by day offset (0..29)
+        var events = {
+          0: [{ kind: "out", label: "Spotify · $17" }],
+          1: [{ kind: "in", label: "Salary · $3,600" }, { kind: "out", label: "Rent · $1,850" }],
+          5: [{ kind: "out", label: "Utilities · $148" }],
+          6: [{ kind: "out", label: "Netflix · $16" }],
+          8: [{ kind: "out", label: "Internet · $70" }],
+          11: [{ kind: "out", label: "Apple One · $20" }],
+          12: [{ kind: "in", label: "Side gig · $480" }],
+          14: [{ kind: "out", label: "Renter's insurance · $22" }],
+          15: [{ kind: "in", label: "Salary · $3,600" }, { kind: "out", label: "Health insurance · $184" }],
+          18: [{ kind: "out", label: "Groceries · $80" }],
+          21: [{ kind: "out", label: "Car payment · $312" }],
+          23: [{ kind: "out", label: "Phone · $32" }],
+          25: [{ kind: "out", label: "Groceries · $80" }],
+          28: [{ kind: "in", label: "Dividends · $96" }],
+        };
+        var monthDays = ["May 16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","Jun 1","2","3","4","5","6","7","8","9","10","11","12","13","14"];
+        for (var i = 0; i < 30; i++) {
+          var day = document.createElement("div");
+          day.className = "cal-day" + (i === todayIdx ? " cal-day--today" : "");
+          var num = document.createElement("span");
+          num.className = "cal-day__num";
+          num.textContent = monthDays[i].length > 3 ? monthDays[i] : monthDays[i];
+          day.appendChild(num);
+          var dots = document.createElement("span");
+          dots.className = "cal-day__dots";
+          (events[i] || []).forEach(function (ev) {
+            var d = document.createElement("span");
+            d.className = "cal-day__dot cal-day__dot--" + ev.kind;
+            dots.appendChild(d);
+          });
+          day.appendChild(dots);
+          if (events[i]) {
+            var tip = document.createElement("span");
+            tip.className = "cal-tip";
+            tip.textContent = events[i].map(function (e) { return e.label; }).join(" · ");
+            day.appendChild(tip);
+          }
+          strip.appendChild(day);
+        }
+      })();
+
+      if (M && M.magnetic) document.querySelectorAll("[data-magnetic]").forEach(function (el) { M.magnetic(el, { strength: 0.18, radius: 70 }); });
+      if (M && M.revealOnScroll) {
+        M.revealOnScroll("[data-reveal]");
+        M.revealOnScroll("[data-reveal-stagger]", { stagger: 0, threshold: 0.1 });
+      }
+    });
   </script>
 </body>
 </html>
