@@ -1,367 +1,341 @@
-<!doctype html>
-<html lang="en" data-theme="dark">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Net worth — ProFinanceCast</title>
-  <meta name="description" content="Your full financial picture — assets, liabilities, and a 10-year forecast.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
-  <link rel="stylesheet" href="/css/tokens.css">
-  <link rel="stylesheet" href="/css/base.css">
-  <link rel="stylesheet" href="/css/components.css">
-  <link rel="stylesheet" href="/css/layout.css">
-  <style>
-    .topbar__title { display:flex; flex-direction:column; gap:2px; min-width:0; flex:1; padding-left:var(--space-6); border-left:1px solid var(--ink-500); margin-left:var(--space-4); }
-    .topbar__title h1 { font-size:1.0625rem; font-family:var(--font-body); font-weight:500; letter-spacing:-0.01em; color:var(--ink-100); line-height:1.2; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#F7F4ED">
+<title>Net worth — ProFinanceCast</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="/css/pfc-tokens.css">
+<link rel="stylesheet" href="/css/pfc-base.css">
+<link rel="stylesheet" href="/css/pfc-components.css">
+<link rel="stylesheet" href="/css/pfc-layout.css">
+<style>
+  .page-stack { display: flex; flex-direction: column; gap: var(--space-7); padding-top: var(--space-5); }
 
-    /* Hero */
-    .nw-hero { display:grid; grid-template-columns:1.5fr 1fr; gap:var(--space-10); align-items:center; }
-    .nw-hero__big { font-family:var(--font-mono); font-size:var(--fs-display-xl); line-height:0.95; color:var(--ink-100); font-variant-numeric:tabular-nums; letter-spacing:var(--tracking-mono); }
-    .nw-hero__spark { height:60px; margin-top:var(--space-5); }
-    .nw-hero__chips { display:flex; gap:var(--space-2); margin-top:var(--space-4); }
-    @media (max-width: 900px){ .nw-hero { grid-template-columns:1fr; } }
+  /* Verdict */
+  .verdict { display: grid; grid-template-columns: auto 1fr; gap: var(--space-6); align-items: end; max-width: 100%; }
+  @media (max-width: 768px) { .verdict { grid-template-columns: 1fr; align-items: start; } }
+  .verdict__main { display: flex; flex-direction: column; gap: var(--space-3); }
+  .verdict__eyebrow { font-family: var(--font-body); font-size: var(--type-meta); font-weight: 500; letter-spacing: var(--track-meta); text-transform: uppercase; color: var(--ink-3); }
+  .verdict__number { font-family: var(--font-display); font-size: var(--type-display-xl); line-height: 1; letter-spacing: var(--track-display); color: var(--ink-1); font-variant-numeric: tabular-nums; }
+  .verdict__caption { font-size: var(--type-body-lg); color: var(--ink-2); line-height: var(--lead-body); max-width: 60ch; }
+  .verdict__spark { width: 200px; height: 56px; }
+  .verdict__spark path { fill: none; stroke: var(--accent); stroke-width: 1.5; }
 
-    /* Assets vs Liabilities — split with floating net */
-    .split { position:relative; display:grid; grid-template-columns:1fr 1fr; gap:var(--space-10); }
-    .split::before { content:""; position:absolute; left:50%; top:0; bottom:0; width:1px; background:linear-gradient(180deg, transparent, var(--ink-500) 20%, var(--ink-500) 80%, transparent); transform:translateX(-50%); }
-    .split__net { position:absolute; left:50%; top:50%; transform:translate(-50%, -50%); padding:var(--space-3) var(--space-5); background:var(--ink-800); border:1px solid var(--mint-500); border-radius:var(--r-full); font-family:var(--font-mono); display:flex; flex-direction:column; align-items:center; gap:2px; box-shadow:0 0 0 6px var(--ink-900), var(--shadow-aurora); white-space:nowrap; z-index:2; }
-    .split__net-label { font-size:var(--fs-tiny); text-transform:uppercase; letter-spacing:var(--tracking-eyebrow); color:var(--ink-400); }
-    .split__net-val { font-size:1.125rem; color:var(--ink-100); }
-    @media (max-width: 900px){ .split { grid-template-columns:1fr; } .split::before, .split__net { display:none; } }
+  .section-title { font-family: var(--font-body); font-size: var(--type-meta); font-weight: 500; letter-spacing: var(--track-meta); text-transform: uppercase; color: var(--ink-3); margin-bottom: var(--space-4); display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); }
+  .range-tabs { display: inline-flex; gap: var(--space-1); }
+  .range-tab { background: transparent; border: 1px solid var(--ink-5); color: var(--ink-3); padding: 4px 10px; border-radius: var(--radius-1); font-family: var(--font-mono); font-size: var(--type-meta); cursor: pointer; transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out); }
+  .range-tab.is-on { background: var(--accent-wash); color: var(--accent); border-color: var(--accent-wash); }
 
-    .line-list { display:flex; flex-direction:column; gap:1px; background:var(--ink-500); border-radius:var(--r-md); overflow:hidden; border:1px solid var(--ink-500); }
-    .line-list__head { display:grid; grid-template-columns:1.4fr 1fr 1fr; gap:var(--space-3); padding:var(--space-3) var(--space-5); background:var(--ink-800); color:var(--ink-400); font-family:var(--font-mono); font-size:var(--fs-tiny); text-transform:uppercase; letter-spacing:var(--tracking-eyebrow); }
-    .line-list__row { display:grid; grid-template-columns:1.4fr 1fr 1fr; gap:var(--space-3); padding:var(--space-4) var(--space-5); background:var(--ink-700); align-items:center; font-size:var(--fs-small); }
-    .line-list__row:hover { background:var(--ink-600); }
-    .line-list__name { display:flex; align-items:center; gap:var(--space-3); color:var(--ink-100); }
-    .line-list__name svg { width:18px; height:18px; opacity:0.7; color:var(--mint-400); }
-    .line-list__row--neg .line-list__name svg { color:var(--coral-400); }
-    .line-list__spark { height:24px; min-width:60px; }
+  .chart-wrap { background: var(--canvas-raised); border-radius: var(--radius-3); box-shadow: var(--shadow-1); padding: var(--space-5); }
+  .nw-chart { width: 100%; height: 360px; display: block; }
 
-    /* Milestones timeline */
-    .milestones { position:relative; padding:var(--space-8) 0 var(--space-4); }
-    .milestones__line { position:absolute; left:0; right:0; top:50%; height:1px; background:linear-gradient(90deg, transparent, var(--mint-500) 10%, var(--mint-500) 90%, transparent); }
-    .milestones__items { position:relative; display:grid; grid-template-columns:repeat(6, 1fr); }
-    .milestone { position:relative; display:flex; flex-direction:column; align-items:center; gap:var(--space-3); padding:0 var(--space-2); }
-    .milestone__date { font-family:var(--font-mono); font-size:var(--fs-tiny); color:var(--ink-400); margin-bottom:var(--space-4); }
-    .milestone__dot { width:14px; height:14px; border-radius:50%; background:var(--mint-500); border:3px solid var(--ink-900); box-shadow:0 0 0 4px oklch(78% 0.175 168 / 0.15); position:relative; z-index:2; transition:transform var(--dur-fast) var(--ease-standard), box-shadow var(--dur-fast) var(--ease-standard); }
-    .milestone:hover .milestone__dot { transform:scale(1.15); box-shadow:0 0 0 6px oklch(78% 0.175 168 / 0.30); }
-    .milestone__label { font-size:var(--fs-small); color:var(--ink-200); text-align:center; margin-top:var(--space-4); max-width:14ch; }
-    .milestone__tooltip { position:absolute; bottom:calc(100% + 4px); left:50%; transform:translateX(-50%) translateY(4px); padding:6px 10px; background:var(--ink-600); border:1px solid var(--ink-500); border-radius:var(--r-sm); font-family:var(--font-mono); font-size:var(--fs-tiny); color:var(--ink-100); opacity:0; pointer-events:none; transition:opacity var(--dur-fast) var(--ease-standard); white-space:nowrap; }
-    .milestone:hover .milestone__tooltip { opacity:1; transform:translateX(-50%); }
-    @media (max-width: 900px){ .milestones__items { grid-template-columns:repeat(2, 1fr); gap:var(--space-6); } .milestones__line { display:none; } }
+  /* Detail split */
+  .nw-detail { display: grid; grid-template-columns: 1fr 1px 1fr; gap: var(--space-6); align-items: start; position: relative; }
+  @media (max-width: 900px) { .nw-detail { grid-template-columns: 1fr; } .nw-detail__divider { display: none; } }
+  .nw-detail__divider { background: var(--ink-5); height: 100%; min-height: 280px; position: relative; }
+  .nw-detail__pill {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    background: var(--canvas); border: 1px solid var(--ink-5); border-radius: 999px;
+    padding: 6px 14px; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: var(--type-body-sm); color: var(--ink-1);
+    white-space: nowrap; box-shadow: var(--shadow-1);
+  }
+  .nw-col__title { font-family: var(--font-body); font-size: var(--type-meta); font-weight: 500; letter-spacing: var(--track-meta); text-transform: uppercase; color: var(--ink-3); margin-bottom: var(--space-3); }
 
-    .quick-actions { display:grid; grid-template-columns:1fr 1fr; gap:var(--space-4); }
-    .quick-actions .btn { padding:var(--space-5); justify-content:flex-start; height:auto; }
-    @media (max-width: 700px){ .quick-actions { grid-template-columns:1fr; } }
+  .action-row { display: flex; justify-content: flex-end; }
+  @media (max-width: 640px) { .action-row .pfc-button { width: 100%; } }
 
-    .alloc-grid { display:grid; grid-template-columns:1fr 1fr; gap:var(--space-8); align-items:center; }
-    @media (max-width: 900px){ .alloc-grid { grid-template-columns:1fr; } }
-    .alloc-legend { display:flex; flex-direction:column; gap:var(--space-4); }
-    .alloc-legend__row { display:grid; grid-template-columns:14px 1fr auto auto; gap:var(--space-3); align-items:center; font-size:var(--fs-small); }
-    .alloc-legend__swatch { width:10px; height:10px; border-radius:3px; }
-  </style>
+  /* Milestones timeline */
+  .milestones { padding-top: var(--space-5); border-top: 1px solid var(--ink-5); }
+  .milestones__title { font-family: var(--font-body); font-size: var(--type-meta); font-weight: 500; letter-spacing: var(--track-meta); text-transform: uppercase; color: var(--ink-3); margin-bottom: var(--space-5); }
+  .milestones__track { position: relative; height: 1px; background: var(--ink-5); margin: var(--space-6) var(--space-5); }
+  .milestones__node { position: absolute; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; gap: var(--space-3); top: 0; }
+  .milestones__dot { width: 9px; height: 9px; border-radius: 50%; background: var(--accent); }
+  .milestones__label { font-size: var(--type-body-sm); color: var(--ink-1); white-space: nowrap; }
+  .milestones__date { font-family: var(--font-mono); font-size: var(--type-meta); color: var(--ink-3); white-space: nowrap; }
+  .milestones__node--above { flex-direction: column-reverse; transform: translate(-50%, calc(-100% + 4px)); }
+  @media (max-width: 768px) {
+    .milestones__track { display: flex; flex-direction: column; height: auto; background: none; gap: var(--space-3); margin: 0; }
+    .milestones__node, .milestones__node--above { position: static; transform: none; flex-direction: row; gap: var(--space-3); align-items: baseline; }
+  }
+</style>
 </head>
 <body data-page="net-worth">
-  <div class="aurora-bg" aria-hidden="true">
-    <div class="aurora-bg__blob aurora-bg__blob--1"></div>
-    <div class="aurora-bg__blob aurora-bg__blob--2"></div>
-    <div class="aurora-bg__blob aurora-bg__blob--3"></div>
-    <div class="aurora-bg__blob aurora-bg__blob--4"></div>
-    <div class="aurora-bg__grain"></div>
-    <div class="aurora-bg__vignette"></div>
-  </div>
 
-  <div class="app-shell">
-    <div data-include="/partials/sidebar.html"></div>
+<div class="app-shell">
+  <div data-include="/partials/sidebar.html"></div>
 
-    <main class="main">
-      <header class="topbar" data-pfc-topbar>
-        <div class="topbar__breadcrumb">
-          <span>Overview</span>
-          <span class="topbar__breadcrumb-sep" aria-hidden="true">/</span>
-          <span class="topbar__breadcrumb-current">Net worth</span>
-        </div>
-        <div class="topbar__title">
-          <h1>Your net worth · <span class="mono">$87,420</span></h1>
-        </div>
-        <div class="topbar__actions">
-          <button type="button" class="btn btn--ghost btn--sm">Export</button>
-          <button type="button" class="btn btn--primary btn--sm">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
-            Add account
-          </button>
-        </div>
-      </header>
+  <div class="app-content">
+    <div data-include="/partials/topbar.html"></div>
 
-      <div class="main__content">
+    <main class="app-main">
+      <div class="page-stack" data-reveal-stagger>
 
-        <!-- ============================ HERO ============================ -->
-        <section class="section">
-          <article class="card card--glass card--pad-xl" data-reveal>
-            <div class="nw-hero">
-              <div>
-                <span class="eyebrow">Current net worth</span>
-                <div class="nw-hero__big" id="nw-big" style="margin-top:var(--space-3);">$0</div>
-                <div class="nw-hero__chips">
-                  <span class="chip chip--positive"><span class="chip__dot"></span>+12.4% YoY</span>
-                  <span class="chip">+$4,280 · 3 mo</span>
-                  <span class="chip">As of May 16</span>
-                </div>
-              </div>
-              <div>
-                <span class="eyebrow">24-month trend</span>
-                <div class="nw-hero__spark" id="nw-hero-spark"></div>
-              </div>
-            </div>
-          </article>
+        <!-- ROW 1 — VERDICT -->
+        <section class="verdict">
+          <div class="verdict__main">
+            <div class="verdict__eyebrow">Net worth, today</div>
+            <div class="verdict__number mono tabular">$87,420</div>
+            <p class="verdict__caption">Up <span class="mono tabular">12%</span> over twelve months. <span class="mono tabular">$51,200</span> a year ago.</p>
+          </div>
+          <svg class="verdict__spark" viewBox="0 0 200 56" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M0 46 L18 42 L36 44 L54 38 L72 36 L90 30 L108 32 L126 24 L144 22 L162 16 L180 14 L200 10"/>
+          </svg>
         </section>
 
-        <!-- ============================ FORECAST ============================ -->
-        <section class="section" data-reveal>
-          <header class="section__header">
+        <!-- ROW 2 — EVIDENCE -->
+        <section>
+          <div class="section-title">
+            <span>Evidence. Twelve months past, sixty months ahead.</span>
+            <div class="range-tabs" role="tablist" aria-label="Forecast range">
+              <button type="button" class="range-tab" data-range="1Y">1Y</button>
+              <button type="button" class="range-tab is-on" data-range="5Y">5Y</button>
+              <button type="button" class="range-tab" data-range="10Y">10Y</button>
+            </div>
+          </div>
+          <div class="chart-wrap">
+            <svg class="nw-chart" id="nw-chart" viewBox="0 0 920 360" preserveAspectRatio="none" role="img" aria-label="Net worth past and projected">
+              <!-- gridlines -->
+              <g stroke="var(--ink-5)" stroke-width="1">
+                <line x1="50" y1="40"  x2="900" y2="40"/>
+                <line x1="50" y1="110" x2="900" y2="110"/>
+                <line x1="50" y1="180" x2="900" y2="180"/>
+                <line x1="50" y1="250" x2="900" y2="250"/>
+                <line x1="50" y1="320" x2="900" y2="320"/>
+              </g>
+              <g font-family="JetBrains Mono" font-size="10" fill="var(--ink-3)">
+                <text x="0" y="44">$600k</text>
+                <text x="0" y="114">$450k</text>
+                <text x="0" y="184">$300k</text>
+                <text x="0" y="254">$150k</text>
+                <text x="0" y="324">$0</text>
+                <text x="50"  y="345">-12mo</text>
+                <text x="220" y="345">Now</text>
+                <text x="430" y="345">+24mo</text>
+                <text x="650" y="345">+48mo</text>
+                <text x="870" y="345">+60mo</text>
+              </g>
+
+              <!-- forecast fill (tinted) -->
+              <path id="nw-fill" d="" fill="var(--accent-wash)" opacity="0.55"></path>
+
+              <!-- continuous line: past faded, forecast oxblood -->
+              <path id="nw-line-past" d="" fill="none" stroke="var(--ink-4)" stroke-width="1.5" stroke-linecap="round"></path>
+              <path id="nw-line-future" d="" fill="none" stroke="var(--accent)" stroke-width="1.75" stroke-linecap="round"></path>
+
+              <!-- Now marker -->
+              <g id="nw-now-marker">
+                <line x1="220" y1="40" x2="220" y2="320" stroke="var(--ink-2)" stroke-width="1" stroke-dasharray="3 3"/>
+                <text x="226" y="52" font-family="Inter Tight" font-size="11" fill="var(--ink-2)" letter-spacing="0.06em">Now</text>
+              </g>
+            </svg>
+          </div>
+        </section>
+
+        <!-- ROW 3 — DETAIL: Assets / Liabilities editorial split -->
+        <section>
+          <div class="section-title">Detail. The composition.</div>
+          <div class="nw-detail">
             <div>
-              <span class="eyebrow">01 · Forecast curve</span>
-              <h2 class="section__title">Where you're headed</h2>
-              <p class="section__lede">Your trajectory at your current savings rate. Past values are faded; the future is mint.</p>
+              <div class="nw-col__title">Assets</div>
+              <dl class="pfc-dl">
+                <div><dt>Cash &amp; savings</dt><dd>$12,400</dd></div>
+                <div><dt>Investments</dt><dd>$48,600</dd></div>
+                <div><dt>Real estate</dt><dd>$0</dd></div>
+                <div><dt>Vehicles</dt><dd>$14,200</dd></div>
+                <div><dt>Other</dt><dd>$2,100</dd></div>
+              </dl>
             </div>
-            <div class="tab-bar" role="tablist" aria-label="Range">
-              <button class="tab" role="tab" aria-selected="false" data-range="12">1Y</button>
-              <button class="tab" role="tab" aria-selected="true" data-range="60">5Y</button>
-              <button class="tab" role="tab" aria-selected="false" data-range="120">10Y</button>
-            </div>
-          </header>
-          <article class="card card--glass card--pad-lg">
-            <div id="forecast-chart" style="width:100%;height:280px;"></div>
-          </article>
-        </section>
 
-        <!-- ============================ SPLIT ============================ -->
-        <section class="section" data-reveal>
-          <header class="section__header">
+            <div class="nw-detail__divider" aria-hidden="true"></div>
+
             <div>
-              <span class="eyebrow">02 · Composition</span>
-              <h2 class="section__title">Assets &amp; liabilities</h2>
-              <p class="section__lede">Every dollar you own, and every dollar you owe.</p>
+              <div class="nw-col__title">Liabilities</div>
+              <dl class="pfc-dl">
+                <div><dt>Credit cards</dt><dd>$2,180</dd></div>
+                <div><dt>Student loans</dt><dd>$0</dd></div>
+                <div><dt>Auto loans</dt><dd>$11,200</dd></div>
+                <div><dt>Mortgage</dt><dd>$0</dd></div>
+              </dl>
             </div>
-          </header>
-          <article class="card card--bordered" style="padding:var(--space-8); border:1px solid var(--ink-500); background:oklch(100% 0 0 / 0.02);">
-            <div class="split">
-              <div>
-                <header class="row row--between" style="margin-bottom:var(--space-4);">
-                  <span class="eyebrow" style="color:var(--mint-400);">Assets</span>
-                  <span class="mono" style="color:var(--ink-100);" id="assets-total">$0</span>
-                </header>
-                <div class="line-list" id="assets-list"></div>
-              </div>
-              <div>
-                <header class="row row--between" style="margin-bottom:var(--space-4);">
-                  <span class="eyebrow" style="color:var(--coral-400);">Liabilities</span>
-                  <span class="mono" style="color:var(--ink-100);" id="liabs-total">$0</span>
-                </header>
-                <div class="line-list" id="liabs-list"></div>
-              </div>
-              <div class="split__net">
-                <span class="split__net-label">Net</span>
-                <span class="split__net-val mono" id="split-net">$0</span>
-              </div>
-            </div>
-          </article>
+
+            <div class="nw-detail__pill" aria-label="Net worth">Net = $87,420</div>
+          </div>
         </section>
 
-        <!-- ============================ ALLOCATION ============================ -->
-        <section class="section" data-reveal>
-          <header class="section__header">
-            <div>
-              <span class="eyebrow">03 · Allocation</span>
-              <h2 class="section__title">Asset mix</h2>
-            </div>
-          </header>
-          <article class="card card--glass card--pad-lg">
-            <div class="alloc-grid">
-              <div id="alloc-donut" style="width:240px;height:240px;justify-self:center;"></div>
-              <div class="alloc-legend" id="alloc-legend"></div>
-            </div>
-          </article>
+        <!-- ROW 4 — ACTION -->
+        <section class="action-row">
+          <button type="button" class="pfc-button pfc-button--primary">Update balances</button>
         </section>
 
-        <!-- ============================ MILESTONES ============================ -->
-        <section class="section" data-reveal>
-          <header class="section__header">
-            <div>
-              <span class="eyebrow">04 · The road here</span>
-              <h2 class="section__title">Milestones</h2>
+        <!-- Milestones -->
+        <section class="milestones">
+          <div class="milestones__title">Five milestones, looking back</div>
+          <div class="milestones__track" id="milestones-track">
+            <div class="milestones__node" style="left:8%;">
+              <span class="milestones__dot"></span>
+              <span class="milestones__label">First $10K</span>
+              <span class="milestones__date">Mar 2021</span>
             </div>
-          </header>
-          <article class="card card--glass card--pad-lg">
-            <div class="milestones">
-              <div class="milestones__line"></div>
-              <div class="milestones__items" id="milestones-items">
-                <!-- Injected -->
-              </div>
+            <div class="milestones__node milestones__node--above" style="left:28%;">
+              <span class="milestones__dot"></span>
+              <span class="milestones__label">Paid off credit card</span>
+              <span class="milestones__date">Aug 2022</span>
             </div>
-          </article>
-        </section>
-
-        <!-- ============================ QUICK ACTIONS ============================ -->
-        <section class="section" data-reveal>
-          <div class="quick-actions">
-            <button class="card card--glass card--interactive" style="text-align:left;cursor:pointer;">
-              <div class="row row--gap-md" style="gap:var(--space-4);">
-                <span style="width:44px;height:44px;border-radius:var(--r-md);background:oklch(78% 0.175 168 / 0.12);display:grid;place-items:center;color:var(--mint-400);">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
-                </span>
-                <div>
-                  <div style="color:var(--ink-100);font-weight:500;">Add an asset</div>
-                  <div class="muted" style="font-size:var(--fs-small);">Cash, brokerage, real estate, vehicles</div>
-                </div>
-              </div>
-            </button>
-            <button class="card card--glass card--interactive" style="text-align:left;cursor:pointer;">
-              <div class="row row--gap-md" style="gap:var(--space-4);">
-                <span style="width:44px;height:44px;border-radius:var(--r-md);background:oklch(74% 0.135 28 / 0.12);display:grid;place-items:center;color:var(--coral-400);">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg>
-                </span>
-                <div>
-                  <div style="color:var(--ink-100);font-weight:500;">Add a liability</div>
-                  <div class="muted" style="font-size:var(--fs-small);">Mortgage, loans, credit cards</div>
-                </div>
-              </div>
-            </button>
+            <div class="milestones__node" style="left:50%;">
+              <span class="milestones__dot"></span>
+              <span class="milestones__label">Hit $50K</span>
+              <span class="milestones__date">Jan 2024</span>
+            </div>
+            <div class="milestones__node milestones__node--above" style="left:72%;">
+              <span class="milestones__dot"></span>
+              <span class="milestones__label">Started Roth</span>
+              <span class="milestones__date">Jun 2024</span>
+            </div>
+            <div class="milestones__node" style="left:92%;">
+              <span class="milestones__dot"></span>
+              <span class="milestones__label">First index fund</span>
+              <span class="milestones__date">Oct 2025</span>
+            </div>
           </div>
         </section>
 
       </div>
     </main>
   </div>
+</div>
 
-  <script src="/js/demo-data.js"></script>
-  <script src="/js/include.js"></script>
-  <script src="/js/motion.js"></script>
-  <script src="/js/charts.js"></script>
-  <script src="/js/app.js"></script>
-  <script>
-    (function () {
-      const D = window.PFC_DATA, M = window.PFC_MOTION, C = window.PFC_CHARTS;
+<nav class="bottom-tabs" aria-label="Primary mobile" data-include="/partials/bottom-tabs.html"></nav>
 
-      const assets = [
-        { name: "Cash & checking",  type: "Cash",        value: 14820, spark: [10,11,12,11,13,14,15] },
-        { name: "Brokerage (taxable)", type: "Investments", value: 38640, spark: [22,24,28,30,33,36,38] },
-        { name: "Retirement (401k + Roth)", type: "Investments", value: 52410, spark: [30,33,36,40,44,48,52] },
-        { name: "Vehicles",         type: "Vehicles",    value: 12800, spark: [16,15,14,14,13,13,12] },
-        { name: "Other",            type: "Other",       value:  4870, spark: [4,4,5,5,5,5,5] },
-      ];
-      const liabs = [
-        { name: "Chase Sapphire",      type: "Credit card",  value: 4280,  spark: [9,8,7,7,6,5,4] },
-        { name: "Federal Student Loan",type: "Student loan", value: 18460, spark: [24,23,22,21,20,19,18] },
-        { name: "Auto loan (Civic)",   type: "Auto loan",    value: 9120,  spark: [14,13,12,11,11,10,9] },
-        { name: "Mortgage",            type: "Mortgage",     value: 0,     spark: [0,0,0,0,0,0,0] },
-      ];
+<script src="/js/pfc-include.js"></script>
+<script>
+(function () {
+  "use strict";
 
-      const assetIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18l5-6 4 3 7-9"/><path d="M14 6h5v5"/></svg>`;
-      const liabIcon  = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 6l-5 6-4-3-7 9"/><path d="M10 18H5v-5"/></svg>`;
+  window.PFC = window.PFC || {};
+  window.PFC.setTopbar = window.PFC.setTopbar || function (cfg) {
+    var t = document.querySelector('[data-slot="title"]');
+    var s = document.querySelector('[data-slot="subtitle"]');
+    var a = document.querySelector('[data-slot="actions"]');
+    if (t && cfg.title) t.textContent = cfg.title;
+    if (s && cfg.subtitle) s.textContent = cfg.subtitle;
+    if (a && cfg.actions) a.innerHTML = cfg.actions;
+  };
 
-      function fmt(n) { return M.formatNumber(n, { currency: "USD", decimals: 0 }); }
+  function markActive() {
+    var page = document.body.getAttribute("data-page");
+    document.querySelectorAll(".app-sidebar__item").forEach(function (el) {
+      if (el.getAttribute("data-page") === page) { el.classList.add("is-active"); el.setAttribute("aria-current", "page"); }
+    });
+  }
 
-      function renderList(rootId, rows, totalId, isLiab) {
-        const root = document.getElementById(rootId);
-        root.innerHTML = `<div class="line-list__head"><span>Account</span><span>Balance</span><span style="text-align:right;">Trend</span></div>` +
-          rows.map((r, i) => `
-            <div class="line-list__row ${isLiab ? "line-list__row--neg" : ""}">
-              <div class="line-list__name">${isLiab ? liabIcon : assetIcon}<span>${r.name}</span><span class="chip chip--neutral">${r.type}</span></div>
-              <span class="mono" style="color:var(--ink-100);">${fmt(r.value)}</span>
-              <div class="line-list__spark" data-spark="${rootId}-${i}"></div>
-            </div>`).join("");
-        const total = rows.reduce((s, r) => s + r.value, 0);
-        document.getElementById(totalId).textContent = fmt(total);
-
-        rows.forEach((r, i) => {
-          const el = root.querySelector(`[data-spark="${rootId}-${i}"]`);
-          if (el && r.spark && r.spark.some(v => v > 0)) {
-            C.sparkline(el, r.spark, { height: 24, stroke: isLiab ? "var(--coral-400)" : "var(--mint-400)", strokeWidth: 1.5, fill: false });
-          }
-        });
-        return total;
-      }
-
-      function renderForecast(months) {
-        const past = D.netWorth.history.slice(-12).map((d, i) => ({ label: `-${12 - i}mo`, value: d.value }));
-        const future = D.forecast.months.slice(0, months).map((d, i) => ({ label: d.label, value: d.value }));
-        const combined = past.concat(future);
-        C.areaChart(document.getElementById("forecast-chart"), combined, {
-          height: 280,
-          currency: "USD",
-          ariaLabel: "Net worth over time",
-        });
-      }
-
-      function renderMilestones() {
-        const items = [
-          { date: "2023 Q2", label: "First $10K saved", val: 10240 },
-          { date: "2023 Q4", label: "Paid off credit card", val: 18760 },
-          { date: "2024 Q1", label: "Hit $50K net worth", val: 51200 },
-          { date: "2024 Q3", label: "Started Roth IRA", val: 64480 },
-          { date: "2025 Q1", label: "First index fund", val: 73200 },
-          { date: "2026 Q2", label: "Crossed $87K", val: 87420 },
-        ];
-        const root = document.getElementById("milestones-items");
-        root.innerHTML = items.map(m => `
-          <div class="milestone">
-            <div class="milestone__date">${m.date}</div>
-            <div class="milestone__dot" aria-hidden="true">
-              <div class="milestone__tooltip">${fmt(m.val)}</div>
-            </div>
-            <div class="milestone__label">${m.label}</div>
-          </div>`).join("");
-      }
-
-      function renderAllocation() {
-        const segs = [
-          { label: "Cash",        value: 14820, color: "var(--mint-500)" },
-          { label: "Stocks",      value: 91050, color: "var(--lavender-500)" },
-          { label: "Real estate", value: 0,     color: "var(--coral-500)" },
-          { label: "Vehicles",    value: 12800, color: "var(--amber-400)" },
-          { label: "Other",       value: 4870,  color: "var(--ink-400)" },
-        ].filter(s => s.value > 0);
-        const total = segs.reduce((s, x) => s + x.value, 0);
-        C.donut(document.getElementById("alloc-donut"), segs, {
-          size: 240, thickness: 24,
-          centerValue: M.formatNumber(total, { currency: "USD", decimals: 0, compact: true }),
-          centerLabel: "Total assets",
-        });
-        document.getElementById("alloc-legend").innerHTML = segs.map(s => `
-          <div class="alloc-legend__row">
-            <span class="alloc-legend__swatch" style="background:${s.color};"></span>
-            <span style="color:var(--ink-200);">${s.label}</span>
-            <span class="mono" style="color:var(--ink-100);">${fmt(s.value)}</span>
-            <span class="mono muted">${((s.value / total) * 100).toFixed(0)}%</span>
-          </div>`).join("");
-      }
-
-      document.addEventListener("pfc:partials-ready", () => {
-        M.countUp(document.getElementById("nw-big"), D.netWorth.current, { currency: "USD", decimals: 0 });
-        C.sparkline(document.getElementById("nw-hero-spark"), D.netWorth.history.map(d => d.value), { height: 60, stroke: "var(--mint-400)" });
-
-        setTimeout(() => renderForecast(60), 300);
-
-        document.querySelectorAll('[data-range]').forEach(btn => {
-          btn.addEventListener("click", () => {
-            document.querySelectorAll('[data-range]').forEach(b => b.setAttribute("aria-selected", "false"));
-            btn.setAttribute("aria-selected", "true");
-            renderForecast(+btn.dataset.range);
-          });
-        });
-
-        const a = renderList("assets-list", assets, "assets-total", false);
-        const l = renderList("liabs-list",  liabs,  "liabs-total",  true);
-        document.getElementById("split-net").textContent = fmt(a - l);
-
-        renderAllocation();
-        renderMilestones();
+  function reveal() {
+    var groups = document.querySelectorAll("[data-reveal-stagger]");
+    groups.forEach(function (g) {
+      Array.prototype.slice.call(g.children).forEach(function (child, i) {
+        var delay = Math.min(i, 6) * 60;
+        setTimeout(function () { child.classList.add("is-revealed"); }, delay);
       });
-    })();
-  </script>
+    });
+    document.querySelectorAll("[data-reveal]").forEach(function (el) { el.classList.add("is-revealed"); });
+  }
+
+  /* Build one continuous series: 12 past + 60 forecast.
+     Past = real history with shallow growth. Forecast = compounding @ 11%/yr. */
+  function buildSeries(forecastMonths) {
+    var pastMonths = 12;
+    var pastStart = 51200;
+    var now = 87420;
+    var past = [];
+    for (var i = 0; i <= pastMonths; i++) {
+      var t = i / pastMonths;
+      // smooth interpolation past → now with small wobble
+      var base = pastStart + (now - pastStart) * (t * t * (3 - 2 * t));
+      past.push(base);
+    }
+    var future = [now];
+    var rate = 0.11 / 12;
+    var contrib = 1640;
+    var v = now;
+    for (var j = 1; j <= forecastMonths; j++) {
+      v = v * (1 + rate) + contrib;
+      future.push(v);
+    }
+    return { past: past, future: future, max: future[future.length - 1] * 1.05 };
+  }
+
+  function buildPaths(series) {
+    var xPastStart = 50, xNow = 220, xEnd = 900;
+    var yTop = 40, yBot = 320;
+    var max = series.max;
+    var pastN = series.past.length - 1;
+    var futN  = series.future.length - 1;
+
+    var pastPts = series.past.map(function (val, i) {
+      var x = xPastStart + (i / pastN) * (xNow - xPastStart);
+      var y = yTop + (1 - val / max) * (yBot - yTop);
+      return [x, y];
+    });
+    var futPts = series.future.map(function (val, i) {
+      var x = xNow + (i / futN) * (xEnd - xNow);
+      var y = yTop + (1 - val / max) * (yBot - yTop);
+      return [x, y];
+    });
+
+    function poly(pts) {
+      return pts.map(function (p, i) { return (i === 0 ? "M" : "L") + p[0].toFixed(1) + " " + p[1].toFixed(1); }).join(" ");
+    }
+
+    var pastD = poly(pastPts);
+    var futD = poly(futPts);
+    var futFill = futD + " L" + futPts[futPts.length - 1][0].toFixed(1) + " " + yBot + " L" + xNow + " " + yBot + " Z";
+    return { past: pastD, future: futD, fill: futFill };
+  }
+
+  function drawChart(rangeKey) {
+    var months = rangeKey === "1Y" ? 12 : rangeKey === "10Y" ? 120 : 60;
+    var series = buildSeries(months);
+    var paths = buildPaths(series);
+    document.getElementById("nw-line-past").setAttribute("d", paths.past);
+    document.getElementById("nw-line-future").setAttribute("d", paths.future);
+    document.getElementById("nw-fill").setAttribute("d", paths.fill);
+  }
+
+  function init() {
+    markActive();
+
+    window.PFC.setTopbar({
+      title: "Net worth",
+      subtitle: "Up $9,800 this year. Six hundred twelve by 2036.",
+      actions:
+        '<button type="button" class="pfc-button pfc-button--ghost">+ Add asset</button>' +
+        '<button type="button" class="pfc-button pfc-button--ghost">+ Add liability</button>' +
+        '<button type="button" class="pfc-button pfc-button--primary">Sync</button>'
+    });
+
+    drawChart("5Y");
+    document.querySelectorAll(".range-tab").forEach(function (b) {
+      b.addEventListener("click", function () {
+        document.querySelectorAll(".range-tab").forEach(function (x) { x.classList.remove("is-on"); });
+        b.classList.add("is-on");
+        drawChart(b.getAttribute("data-range"));
+      });
+    });
+
+    requestAnimationFrame(reveal);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () {
+      document.addEventListener("pfc:partials-ready", init, { once: true });
+    });
+  } else {
+    document.addEventListener("pfc:partials-ready", init, { once: true });
+  }
+})();
+</script>
 </body>
 </html>

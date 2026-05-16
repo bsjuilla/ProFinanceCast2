@@ -1,305 +1,226 @@
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#F7F4ED" />
   <title>Money journal — ProFinanceCast</title>
-  <meta name="description" content="A quiet place to write five lines about money. Patterns surface over time.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
-  <link rel="stylesheet" href="/css/tokens.css">
-  <link rel="stylesheet" href="/css/base.css">
-  <link rel="stylesheet" href="/css/components.css">
-  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;1,9..144,400&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/pfc-tokens.css" />
+  <link rel="stylesheet" href="/css/pfc-base.css" />
+  <link rel="stylesheet" href="/css/pfc-layout.css" />
+  <link rel="stylesheet" href="/css/pfc-components.css" />
   <style>
-    .topbar__title { display:flex; flex-direction:column; gap:2px; min-width:0; flex:1; padding-left:var(--space-6); border-left:1px solid var(--ink-500); margin-left:var(--space-4); }
-    .topbar__title h1 { font-size:1.0625rem; font-family:var(--font-body); font-weight:500; letter-spacing:-0.01em; color:var(--ink-100); line-height:1.2; }
+    .util-main { max-width: var(--prose-max); margin: 0 auto; padding-top: var(--space-5); padding-bottom: var(--space-8); }
 
-    /* Hero KPI strip */
-    .j-kpis { display:grid; grid-template-columns:repeat(3, 1fr); gap:var(--space-5); }
-    @media (max-width:780px){ .j-kpis { grid-template-columns:1fr; } }
-    .j-kpi { padding:var(--space-5) var(--space-6); display:flex; flex-direction:column; gap:6px; }
-    .j-kpi__eyebrow { font-family:var(--font-mono); font-size:var(--fs-tiny); text-transform:uppercase; letter-spacing:var(--tracking-eyebrow); color:var(--ink-400); }
-    .j-kpi__val { font-family:var(--font-mono); font-size:var(--fs-mono-lg); color:var(--ink-100); font-variant-numeric:tabular-nums; letter-spacing:-0.01em; }
-    .j-kpi__val .unit { font-size:0.55em; color:var(--ink-400); margin-left:6px; }
+    /* Editor panel */
+    .editor-panel { padding: var(--space-5); }
+    .editor-placeholder { font-family: var(--font-display); font-style: italic; font-weight: 400; font-size: var(--type-display-sm); letter-spacing: var(--track-display); color: var(--ink-3); margin-bottom: var(--space-3); line-height: 1.2; }
+    .editor-textarea { width: 100%; min-height: 200px; font-family: var(--font-body); font-size: var(--type-body); color: var(--ink-1); background: transparent; border: 0; outline: none; resize: vertical; line-height: var(--lead-body); padding: 0; }
+    .editor-textarea::placeholder { color: var(--ink-4); }
+    .editor-meta { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); margin-top: var(--space-5); flex-wrap: wrap; }
 
-    /* Editor card */
-    .editor { padding:var(--space-8); display:flex; flex-direction:column; gap:var(--space-5); }
-    .editor__textarea { width:100%; min-height:200px; background:transparent; border:0; color:var(--ink-100); font-family:var(--font-display); font-style:italic; font-size:var(--fs-h2); font-weight:300; line-height:1.4; letter-spacing:-0.01em; resize:none; outline:none; }
-    .editor__textarea::placeholder { color:var(--ink-400); font-style:italic; }
-    .editor__bar { display:flex; align-items:center; gap:var(--space-4); justify-content:space-between; padding-top:var(--space-5); border-top:1px solid oklch(100% 0 0 / 0.06); flex-wrap:wrap; }
-    .mood-chips { display:flex; gap:var(--space-2); flex-wrap:wrap; }
-    .mood-chip { padding:6px 12px; border:1px solid var(--ink-500); background:transparent; border-radius:var(--r-full); font-size:var(--fs-small); color:var(--ink-300); cursor:pointer; transition: border-color var(--dur-fast) var(--ease-standard), color var(--dur-fast) var(--ease-standard), background var(--dur-fast) var(--ease-standard); }
-    .mood-chip:hover { color:var(--ink-100); border-color:var(--ink-400); }
-    .mood-chip[aria-pressed="true"] { background:oklch(78% 0.175 168 / 0.10); color:var(--mint-300); border-color:oklch(78% 0.175 168 / 0.35); }
+    .mood-group { display: inline-flex; gap: var(--space-2); flex-wrap: wrap; }
+    .mood-pill { padding: 6px 14px; font-size: var(--type-body-sm); color: var(--ink-2); background: transparent; border: 1px solid var(--ink-4); border-radius: 999px; cursor: pointer; transition: color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out); }
+    .mood-pill:hover { color: var(--ink-1); border-color: var(--ink-3); }
+    .mood-pill[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); background: var(--accent-wash); }
 
-    /* Entries list */
-    .entries { display:flex; flex-direction:column; gap:var(--space-5); }
-    .entry { padding:var(--space-6) var(--space-8); display:flex; flex-direction:column; gap:var(--space-3); cursor:pointer; transition: transform var(--dur-base) var(--ease-standard), border-color var(--dur-base) var(--ease-standard); }
-    .entry:hover { transform:translateY(-2px); border-color:oklch(78% 0.175 168 / 0.30); }
-    .entry__date { font-family:var(--font-mono); font-size:var(--fs-tiny); text-transform:uppercase; letter-spacing:var(--tracking-eyebrow); color:var(--mint-400); }
-    .entry__title { font-family:var(--font-display); font-style:italic; font-weight:400; font-size:var(--fs-h2); color:var(--ink-100); line-height:1.2; letter-spacing:-0.015em; }
-    .entry__preview { font-size:var(--fs-body); color:var(--ink-300); line-height:1.6; max-width:62ch; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
-    .entry__foot { display:flex; align-items:center; gap:var(--space-3); padding-top:var(--space-3); border-top:1px solid oklch(100% 0 0 / 0.05); font-family:var(--font-mono); font-size:var(--fs-tiny); color:var(--ink-400); text-transform:uppercase; letter-spacing:var(--tracking-eyebrow); }
-    .entry__foot .chip { text-transform:none; letter-spacing:0.02em; }
+    /* Past entries */
+    .entries { margin-top: var(--space-7); }
+    .entry { padding: var(--space-6) 0; border-top: 1px solid var(--ink-5); }
+    .entry__date { font-size: var(--type-meta); letter-spacing: var(--track-meta); text-transform: uppercase; color: var(--ink-3); margin-bottom: var(--space-3); }
+    .entry__headline { font-family: var(--font-display); font-weight: 400; font-size: var(--type-display-sm); line-height: 1.2; letter-spacing: var(--track-display); color: var(--ink-1); margin-bottom: var(--space-3); }
+    .entry__body { color: var(--ink-1); font-size: var(--type-body); line-height: var(--lead-body); }
+    .entry__body p + p { margin-top: var(--space-3); }
+    .entry__meta { display: flex; align-items: center; gap: var(--space-3); margin-top: var(--space-4); font-size: var(--type-meta); color: var(--ink-3); }
+    .entry__meta-mood { color: var(--accent); letter-spacing: var(--track-meta); text-transform: uppercase; font-weight: 500; }
 
-    /* Mood timeline */
-    .mood-card { padding:var(--space-8); }
-    .mood-card__head { display:flex; align-items:flex-end; justify-content:space-between; gap:var(--space-4); flex-wrap:wrap; margin-bottom:var(--space-6); }
-    .mood-card__title { font-family:var(--font-display); font-size:var(--fs-h2); color:var(--ink-100); }
-    .mood-card__title em { font-style:italic; color:var(--mint-400); }
-    .mood-svg { width:100%; height:120px; display:block; }
-    .mood-axis { display:flex; justify-content:space-between; margin-top:var(--space-3); font-family:var(--font-mono); font-size:var(--fs-tiny); color:var(--ink-400); }
-    .mood-tag { position:absolute; transform:translate(-50%, -100%); padding:4px 8px; border-radius:var(--r-full); background:var(--ink-700); border:1px solid var(--ink-500); font-size:var(--fs-tiny); color:var(--ink-200); white-space:nowrap; pointer-events:none; }
-    .mood-wrap { position:relative; }
+    /* The ONLY italic use product-wide */
+    .pull-quote { margin: var(--space-5) 0; padding: var(--space-2) 0 var(--space-2) var(--space-4); border-left: 2px solid var(--accent); font-family: var(--font-display); font-style: italic; font-weight: 400; font-size: clamp(1.5rem, 2.6vw, 2.0rem); line-height: 1.3; color: var(--ink-1); letter-spacing: var(--track-display); }
+
+    /* Sparkline */
+    .sparkline-wrap { padding: var(--space-6) 0 0; border-top: 1px solid var(--ink-5); margin-top: var(--space-6); }
+    .sparkline-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: var(--space-3); }
+    .sparkline-title { font-size: var(--type-meta); letter-spacing: var(--track-meta); text-transform: uppercase; color: var(--ink-3); }
+    .sparkline-caption { font-size: var(--type-meta); color: var(--ink-3); }
+    .sparkline-svg { width: 100%; height: 60px; }
   </style>
 </head>
 <body data-page="journal">
-  <div class="aurora-bg" aria-hidden="true">
-    <div class="aurora-bg__blob aurora-bg__blob--1"></div>
-    <div class="aurora-bg__blob aurora-bg__blob--2"></div>
-    <div class="aurora-bg__blob aurora-bg__blob--3"></div>
-    <div class="aurora-bg__blob aurora-bg__blob--4"></div>
-    <div class="aurora-bg__grain"></div>
-    <div class="aurora-bg__vignette"></div>
-  </div>
-
   <div class="app-shell">
     <div data-include="/partials/sidebar.html"></div>
 
-    <main class="main">
-      <header class="topbar" data-pfc-topbar>
-        <div class="topbar__breadcrumb">
-          <span>Notes</span>
-          <span class="topbar__breadcrumb-sep" aria-hidden="true">/</span>
-          <span class="topbar__breadcrumb-current">Journal</span>
-        </div>
-        <div class="topbar__title"><h1>Money journal</h1></div>
-        <div class="topbar__actions">
-          <button type="button" class="btn btn--primary btn--sm" data-magnetic>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
-            New entry
-          </button>
-        </div>
-      </header>
+    <div class="app-content">
+      <div data-include="/partials/topbar.html"></div>
 
-      <div class="main__content">
+      <main class="app-main">
+        <div class="util-main" data-reveal-stagger>
 
-        <!-- KPI strip -->
-        <section class="section">
-          <div class="j-kpis" data-reveal>
-            <article class="card card--glass j-kpi">
-              <span class="j-kpi__eyebrow">Entries this month</span>
-              <span class="j-kpi__val mono" data-count="14">0</span>
-            </article>
-            <article class="card card--glass j-kpi">
-              <span class="j-kpi__eyebrow">Current streak</span>
-              <span class="j-kpi__val mono"><span data-count="8">0</span><span class="unit">days</span></span>
-            </article>
-            <article class="card card--glass j-kpi">
-              <span class="j-kpi__eyebrow">Words written</span>
-              <span class="j-kpi__val mono" data-count="4210">0</span>
-            </article>
-          </div>
-        </section>
-
-        <!-- Editor -->
-        <section class="section">
-          <article class="card card--glass editor" data-reveal>
-            <textarea class="editor__textarea" placeholder="What did money mean today?"></textarea>
-            <div class="editor__bar">
-              <div class="mood-chips" role="group" aria-label="Mood">
-                <button type="button" class="mood-chip">Confident</button>
-                <button type="button" class="mood-chip" aria-pressed="true">Steady</button>
-                <button type="button" class="mood-chip">Hopeful</button>
-                <button type="button" class="mood-chip">Anxious</button>
-                <button type="button" class="mood-chip">Frustrated</button>
+          <!-- Editor -->
+          <section class="pfc-panel editor-panel">
+            <div class="editor-placeholder">What did money mean today?</div>
+            <textarea class="editor-textarea" rows="8" placeholder="Start typing. One paragraph is enough."></textarea>
+            <div class="editor-meta">
+              <div class="mood-group" role="group" aria-label="Mood">
+                <button type="button" class="mood-pill" aria-pressed="false">Confident</button>
+                <button type="button" class="mood-pill" aria-pressed="false">Anxious</button>
+                <button type="button" class="mood-pill" aria-pressed="false">Hopeful</button>
+                <button type="button" class="mood-pill" aria-pressed="false">Frustrated</button>
+                <button type="button" class="mood-pill" aria-pressed="true">Steady</button>
               </div>
-              <button type="button" class="btn btn--primary">Save entry</button>
+              <button type="button" class="pfc-button pfc-button--primary">Save entry</button>
             </div>
-          </article>
-        </section>
+          </section>
 
-        <!-- Past entries -->
-        <section class="section">
-          <header class="section__header">
-            <div>
-              <span class="eyebrow">02 · Recently</span>
-              <h2 class="section__title">Last few entries</h2>
-            </div>
-            <a href="#" class="eyebrow" style="color:var(--mint-400);">All entries</a>
-          </header>
-
+          <!-- Past entries -->
           <div class="entries">
-            <article class="card card--glass entry" data-reveal>
-              <span class="entry__date">May 15, 2026 · Thursday</span>
-              <h3 class="entry__title">"Paid off the credit card. The relief was quieter than I expected."</h3>
-              <p class="entry__preview">Eighteen months of weighing every coffee against the balance, and the moment it cleared I just felt blank. No fireworks. Maybe that's what discipline costs and gives back.</p>
-              <div class="entry__foot">
-                <span class="chip chip--positive"><span class="chip__dot"></span>Steady</span>
-                <span>·</span>
-                <span>4 min read</span>
+            <article class="entry">
+              <div class="entry__date">May 15, 2026</div>
+              <h2 class="entry__headline">Paid the quarterly tax bill without flinching.</h2>
+              <div class="entry__body">
+                <p>The number was almost exactly what the forecaster predicted in February. There is a strange relief in being correct about something boring. I moved the remainder into the brokerage account and closed the laptop.</p>
+                <p>Last year this same payment kept me awake for three nights. This year I knew the number in advance, set the money aside in March, and the transfer took forty seconds.</p>
+              </div>
+              <div class="entry__meta">
+                <span class="entry__meta-mood">Steady</span>
+                <span>&middot;</span>
+                <span><span class="mono tabular">2</span> min read</span>
               </div>
             </article>
 
-            <article class="card card--glass entry" data-reveal>
-              <span class="entry__date">May 13, 2026 · Tuesday</span>
-              <h3 class="entry__title">"The Iceland trip is starting to feel real."</h3>
-              <p class="entry__preview">Hit $1,920 of $4,800. Halfway is the part that decides whether something happens. Booked the hostel in Reykjavík as a kind of contract with myself.</p>
-              <div class="entry__foot">
-                <span class="chip" style="background:oklch(78% 0.175 168 / 0.12); color:var(--mint-300); border-color:oklch(78% 0.175 168 / 0.35);"><span class="chip__dot"></span>Hopeful</span>
-                <span>·</span>
-                <span>2 min read</span>
+            <article class="entry">
+              <div class="entry__date">May 12, 2026</div>
+              <h2 class="entry__headline">Cancelled the second streaming service.</h2>
+              <div class="entry__body">
+                <p>Reviewed the recurring page on Sunday. Three subscriptions had not been opened in thirty days. One was a meditation app I bought during a difficult week in November. Cancelled it. The difficult week is over.</p>
+              </div>
+              <div class="entry__meta">
+                <span class="entry__meta-mood">Confident</span>
+                <span>&middot;</span>
+                <span><span class="mono tabular">1</span> min read</span>
               </div>
             </article>
 
-            <article class="card card--glass entry" data-reveal>
-              <span class="entry__date">May 11, 2026 · Sunday</span>
-              <h3 class="entry__title">"Why do I keep saying yes to dinners I can't really afford?"</h3>
-              <p class="entry__preview">Third dinner this week. Each one feels like maintenance of the friendship. None of them feel like a decision I made on purpose. Need to learn the word "next time."</p>
-              <div class="entry__foot">
-                <span class="chip chip--negative"><span class="chip__dot"></span>Frustrated</span>
-                <span>·</span>
-                <span>5 min read</span>
+            <article class="entry">
+              <div class="entry__date">May 09, 2026</div>
+              <h2 class="entry__headline">A small bonus arrived and I almost spent it.</h2>
+              <div class="entry__body">
+                <p>The first instinct was a new lens. The second instinct was a long weekend away. Neither was a bad idea. But I opened the goals page and saw the down-payment target needed exactly this much. The lens can wait until autumn.</p>
+                <blockquote class="pull-quote">Money is mostly a question of what you do in the first ten minutes after it arrives.</blockquote>
+                <p>I have learned that the right answer is almost always to do nothing for a week. The instincts that look most urgent on Tuesday look quite ordinary by the following Monday.</p>
+              </div>
+              <div class="entry__meta">
+                <span class="entry__meta-mood">Hopeful</span>
+                <span>&middot;</span>
+                <span><span class="mono tabular">3</span> min read</span>
               </div>
             </article>
 
-            <article class="card card--glass entry" data-reveal>
-              <span class="entry__date">May 09, 2026 · Friday</span>
-              <h3 class="entry__title">"Got the raise. It changes less than I thought it would."</h3>
-              <p class="entry__preview">Twelve percent. Real, lasting, on paper. But the version of me who needed it last year already adapted. The new money is going straight to the down payment and that feels right.</p>
-              <div class="entry__foot">
-                <span class="chip"><span class="chip__dot"></span>Confident</span>
-                <span>·</span>
-                <span>3 min read</span>
+            <article class="entry">
+              <div class="entry__date">May 06, 2026</div>
+              <h2 class="entry__headline">The grocery bill went up again.</h2>
+              <div class="entry__body">
+                <p>Fourth consecutive month. The forecaster picked it up two weeks ago and adjusted the annual figure by three hundred dollars. Not enough to panic. Enough to notice.</p>
+              </div>
+              <div class="entry__meta">
+                <span class="entry__meta-mood">Frustrated</span>
+                <span>&middot;</span>
+                <span><span class="mono tabular">1</span> min read</span>
               </div>
             </article>
 
-            <article class="card card--glass entry" data-reveal>
-              <span class="entry__date">May 06, 2026 · Tuesday</span>
-              <h3 class="entry__title">"Forecasting ten years out feels like writing a letter to a stranger."</h3>
-              <p class="entry__preview">Spent an hour with the cash forecast. The 2036 number is so abstract it stopped meaning anything. The 2027 number is what scares me, in a useful way.</p>
-              <div class="entry__foot">
-                <span class="chip" style="background:oklch(80% 0.140 75 / 0.12); color:var(--amber-400); border-color:oklch(80% 0.140 75 / 0.35);"><span class="chip__dot"></span>Anxious</span>
-                <span>·</span>
-                <span>6 min read</span>
+            <article class="entry">
+              <div class="entry__date">May 02, 2026</div>
+              <h2 class="entry__headline">Forty-two months until the mortgage is paid.</h2>
+              <div class="entry__body">
+                <p>Ran the debt optimizer this morning. If the extra two hundred a month holds, the last payment lands in November 2029. That is forty-two months from now. The math has not changed since Tuesday.</p>
+              </div>
+              <div class="entry__meta">
+                <span class="entry__meta-mood">Confident</span>
+                <span>&middot;</span>
+                <span><span class="mono tabular">2</span> min read</span>
               </div>
             </article>
 
-            <article class="card card--glass entry" data-reveal>
-              <span class="entry__date">May 03, 2026 · Saturday</span>
-              <h3 class="entry__title">"Subscription audit: cancelled four, kept two."</h3>
-              <p class="entry__preview">$46 a month back. Not life-changing. But the act of pruning felt like cleaning a desk. Less software watching me, less mental overhead.</p>
-              <div class="entry__foot">
-                <span class="chip chip--positive"><span class="chip__dot"></span>Steady</span>
-                <span>·</span>
-                <span>2 min read</span>
+            <article class="entry">
+              <div class="entry__date">Apr 28, 2026</div>
+              <h2 class="entry__headline">First entry. Bought the founders tier.</h2>
+              <div class="entry__body">
+                <p>The product opens with a soft serif and a single oxblood mark and asks four questions. I answered them in two minutes. The forecast it returned was within fifty dollars of the one I keep in a spreadsheet at work.</p>
+                <p>That is enough evidence to start writing things down.</p>
+              </div>
+              <div class="entry__meta">
+                <span class="entry__meta-mood">Hopeful</span>
+                <span>&middot;</span>
+                <span><span class="mono tabular">2</span> min read</span>
               </div>
             </article>
           </div>
-        </section>
 
-        <!-- Mood timeline -->
-        <section class="section">
-          <article class="card card--glass mood-card" data-reveal>
-            <header class="mood-card__head">
-              <div>
-                <h2 class="mood-card__title">Mood over <em>thirty days</em></h2>
-                <p class="section__lede" style="margin-top:var(--space-2);">Steady on average. One dip, one peak. Patterns surface over months.</p>
-              </div>
-              <span class="chip chip--neutral">Last 30 days</span>
-            </header>
-
-            <div class="mood-wrap" id="mood-wrap">
-              <svg class="mood-svg" id="mood-svg" viewBox="0 0 600 120" preserveAspectRatio="none" aria-label="Mood timeline">
-                <defs>
-                  <linearGradient id="moodGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stop-color="oklch(78% 0.175 168 / 0.35)"/>
-                    <stop offset="100%" stop-color="oklch(78% 0.175 168 / 0)"/>
-                  </linearGradient>
-                </defs>
-                <path id="mood-fill" d="" fill="url(#moodGrad)"/>
-                <path id="mood-line" d="" fill="none" stroke="var(--mint-400)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
-              </svg>
+          <!-- Mood timeline sparkline -->
+          <div class="sparkline-wrap">
+            <div class="sparkline-head">
+              <span class="sparkline-title">Mood &middot; last 30 days</span>
+              <span class="sparkline-caption">Steady &rarr; Confident, trending up.</span>
             </div>
-            <div class="mood-axis">
-              <span>Apr 16</span><span>Apr 23</span><span>Apr 30</span><span>May 07</span><span>May 14</span>
-            </div>
-          </article>
-        </section>
+            <svg class="sparkline-svg" viewBox="0 0 600 60" preserveAspectRatio="none" aria-label="Mood trend sparkline">
+              <path d="M0,42 L20,38 L40,44 L60,40 L80,48 L100,50 L120,42 L140,36 L160,38 L180,30 L200,34 L220,28 L240,32 L260,26 L280,30 L300,24 L320,20 L340,28 L360,22 L380,18 L400,24 L420,16 L440,20 L460,14 L480,18 L500,12 L520,16 L540,10 L560,14 L580,8 L600,12"
+                fill="none" stroke="oklch(0.42 0.14 25)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </div>
 
-      </div>
-    </main>
+        </div>
+      </main>
+
+      <div data-include="/partials/bottom-tabs.html"></div>
+    </div>
   </div>
 
-  <script src="/js/demo-data.js"></script>
-  <script src="/js/include.js"></script>
-  <script src="/js/motion.js"></script>
-  <script src="/js/charts.js"></script>
-  <script src="/js/app.js"></script>
+  <script src="/js/pfc-include.js"></script>
   <script>
+    window.PFC = window.PFC || {};
+    PFC.setTopbar = function (opts) {
+      var t = document.querySelector('[data-slot="title"]');
+      var s = document.querySelector('[data-slot="subtitle"]');
+      var a = document.querySelector('[data-slot="actions"]');
+      if (t && opts.title) t.textContent = opts.title;
+      if (s && opts.subtitle) s.textContent = opts.subtitle;
+      if (a && typeof opts.actions === "string") a.innerHTML = opts.actions;
+    };
     document.addEventListener("pfc:partials-ready", function () {
-      var M = window.PFC_MOTION;
-
-      // KPI countUp
-      document.querySelectorAll("[data-count]").forEach(function (el) {
-        var val = +el.getAttribute("data-count");
-        var io = new IntersectionObserver(function (es) {
-          es.forEach(function (e) {
-            if (e.isIntersecting) {
-              io.unobserve(el);
-              if (M && M.countUp) M.countUp(el, val, { decimals: 0, duration: 1100 });
-              else el.textContent = val.toLocaleString();
-            }
-          });
-        }, { threshold: 0.4 });
-        io.observe(el);
+      PFC.setTopbar({
+        title: "Money journal",
+        subtitle: "Eight days of notes. Three thousand four hundred words.",
+        actions: '<a href="#" class="pfc-button pfc-button--primary">+ New entry</a>'
       });
-
-      // Mood chip toggle (single-select)
-      document.querySelectorAll(".mood-chip").forEach(function (c) {
-        c.addEventListener("click", function () {
-          document.querySelectorAll(".mood-chip").forEach(function (x) { x.removeAttribute("aria-pressed"); });
-          c.setAttribute("aria-pressed", "true");
-        });
+      var page = document.body.getAttribute("data-page");
+      document.querySelectorAll('.app-sidebar__item').forEach(function (el) {
+        if (el.getAttribute('data-page') === page) el.setAttribute('aria-current', 'page');
       });
-
-      // Mood timeline path (30 points across 600 wide)
-      (function buildMood() {
-        var data = [3,3,4,3,2,3,3,4,4,3,2,1,2,3,3,4,4,3,3,4,5,4,3,4,4,5,5,4,4,5];
-        var W = 600, H = 120, pad = 8;
-        var max = 5, min = 1;
-        var step = (W - pad * 2) / (data.length - 1);
-        var pts = data.map(function (v, i) {
-          var x = pad + i * step;
-          var y = pad + (H - pad * 2) * (1 - (v - min) / (max - min));
-          return [x, y];
-        });
-        var line = "M " + pts.map(function (p) { return p[0].toFixed(1) + " " + p[1].toFixed(1); }).join(" L ");
-        var fill = line + " L " + pts[pts.length - 1][0].toFixed(1) + " " + H + " L " + pts[0][0].toFixed(1) + " " + H + " Z";
-        document.getElementById("mood-line").setAttribute("d", line);
-        document.getElementById("mood-fill").setAttribute("d", fill);
-
-        // Tag the peak and trough
-        var wrap = document.getElementById("mood-wrap");
-        function tag(idx, label, accent) {
-          var p = pts[idx];
-          var t = document.createElement("span");
-          t.className = "mood-tag";
-          t.textContent = label;
-          t.style.left = ((p[0] / W) * 100) + "%";
-          t.style.top = ((p[1] / H) * 100) + "%";
-          if (accent === "neg") { t.style.color = "var(--coral-400)"; t.style.borderColor = "oklch(74% 0.135 28 / 0.35)"; }
-          if (accent === "pos") { t.style.color = "var(--mint-300)"; t.style.borderColor = "oklch(78% 0.175 168 / 0.35)"; }
-          wrap.appendChild(t);
+      document.querySelectorAll('.bottom-tabs__item').forEach(function (el) {
+        if (el.getAttribute('data-page') === page) el.setAttribute('aria-current', 'page');
+      });
+      document.querySelectorAll('[data-reveal-stagger]').forEach(function (host) {
+        var kids = host.children;
+        for (var i = 0; i < kids.length; i++) {
+          (function (el, idx) {
+            setTimeout(function () { el.classList.add('is-revealed'); }, Math.min(idx, 5) * 60);
+          })(kids[i], i);
         }
-        tag(11, "Frustrated", "neg");
-        tag(25, "Confident", "pos");
-      })();
-
-      if (M && M.magnetic) document.querySelectorAll("[data-magnetic]").forEach(function (el) { M.magnetic(el, { strength: 0.18, radius: 70 }); });
-      if (M && M.revealOnScroll) M.revealOnScroll("[data-reveal]");
+      });
+      document.querySelectorAll('[data-reveal]').forEach(function (el) { el.classList.add('is-revealed'); });
+      // Mood single-select
+      var moodGroup = document.querySelector('.mood-group');
+      if (moodGroup) {
+        moodGroup.addEventListener('click', function (e) {
+          var b = e.target.closest('.mood-pill');
+          if (!b) return;
+          moodGroup.querySelectorAll('.mood-pill').forEach(function (p) { p.setAttribute('aria-pressed', 'false'); });
+          b.setAttribute('aria-pressed', 'true');
+        });
+      }
     });
   </script>
 </body>

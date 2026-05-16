@@ -1,504 +1,369 @@
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#F7F4ED" />
   <title>Settings — ProFinanceCast</title>
-  <meta name="description" content="Account, preferences, privacy, data. Quiet controls for a calm tool.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
-  <link rel="stylesheet" href="/css/tokens.css">
-  <link rel="stylesheet" href="/css/base.css">
-  <link rel="stylesheet" href="/css/components.css">
-  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/pfc-tokens.css" />
+  <link rel="stylesheet" href="/css/pfc-base.css" />
+  <link rel="stylesheet" href="/css/pfc-layout.css" />
+  <link rel="stylesheet" href="/css/pfc-components.css" />
   <style>
-    /* settings — utility surface, lighter than dashboard */
-    .topbar__title { display:flex; flex-direction:column; gap:2px; min-width:0; flex:1; padding-left:var(--space-6); border-left:1px solid var(--ink-500); margin-left:var(--space-4); }
-    .topbar__title h1 { font-size:1.0625rem; font-family:var(--font-body); font-weight:500; letter-spacing:-0.01em; color:var(--ink-100); line-height:1.2; }
+    /* Settings-specific: prose-constrained main, hairline section pattern */
+    .util-main { max-width: var(--prose-max); margin: 0 auto; padding-top: var(--space-5); padding-bottom: var(--space-8); }
+    .util-section { padding: var(--space-6) 0; border-top: 1px solid var(--ink-5); }
+    .util-section:first-of-type { border-top: 0; padding-top: 0; }
+    .util-section__head { margin-bottom: var(--space-5); }
+    .util-section__title { font-family: var(--font-display); font-weight: 400; font-size: var(--type-display-sm); letter-spacing: var(--track-display); color: var(--ink-1); line-height: 1.15; }
+    .util-section__sub { color: var(--ink-3); font-size: var(--type-body-sm); margin-top: var(--space-2); }
+    .util-stack { display: flex; flex-direction: column; gap: var(--space-4); }
 
-    .settings { display:grid; grid-template-columns: 240px 1fr; gap:var(--space-10); align-items:flex-start; }
-    @media (max-width:900px){ .settings { grid-template-columns:1fr; gap:var(--space-6); } }
+    /* Profile header */
+    .profile-head { display: flex; align-items: center; gap: var(--space-4); margin-bottom: var(--space-5); }
+    .profile-head__avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--accent-wash); color: var(--accent); font-family: var(--font-mono); font-size: var(--type-body-sm); font-weight: 500; display: flex; align-items: center; justify-content: center; }
+    .profile-head__name { font-size: var(--type-body); color: var(--ink-1); font-weight: 500; }
+    .profile-head__meta { font-size: var(--type-meta); color: var(--ink-3); margin-top: 2px; }
 
-    .settings-nav { position:sticky; top: calc(var(--topbar-h) + var(--space-6)); display:flex; flex-direction:column; gap:2px; padding:var(--space-3); background:oklch(20% 0.020 265 / 0.55); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid oklch(100% 0 0 / 0.06); border-radius:var(--r-lg); }
-    .settings-nav__btn { display:flex; align-items:center; gap:var(--space-3); padding:9px var(--space-3); font-size:var(--fs-small); color:var(--ink-300); border-radius:var(--r-sm); text-align:left; transition: background var(--dur-fast) var(--ease-standard), color var(--dur-fast) var(--ease-standard); cursor:pointer; }
-    .settings-nav__btn:hover { background:oklch(100% 0 0 / 0.04); color:var(--ink-100); }
-    .settings-nav__btn[aria-selected="true"] { background:oklch(78% 0.175 168 / 0.10); color:var(--mint-300); }
-    .settings-nav__btn svg { width:16px; height:16px; opacity:.85; flex-shrink:0; }
+    /* Toggle row */
+    .toggle-row { display: grid; grid-template-columns: 1fr auto; align-items: start; gap: var(--space-4); padding: var(--space-3) 0; border-top: 1px solid var(--ink-5); }
+    .toggle-row:first-child { border-top: 0; padding-top: 0; }
+    .toggle-row__label { color: var(--ink-1); font-size: var(--type-body-sm); font-weight: 500; }
+    .toggle-row__sub { color: var(--ink-3); font-size: var(--type-meta); margin-top: 2px; line-height: 1.45; }
 
-    .settings-pane { display:flex; flex-direction:column; gap:var(--space-8); min-width:0; }
-    .settings-section { display:none; flex-direction:column; gap:var(--space-6); }
-    .settings-section.is-active { display:flex; }
-    .settings-section__head { display:flex; flex-direction:column; gap:6px; }
-    .settings-section__eyebrow { font-family:var(--font-mono); font-size:var(--fs-tiny); text-transform:uppercase; letter-spacing:var(--tracking-eyebrow); color:var(--mint-400); }
-    .settings-section__title { font-family:var(--font-display); font-size:var(--fs-display-sm); font-weight:400; letter-spacing:var(--tracking-display); color:var(--ink-100); line-height:1.05; }
-    .settings-section__title em { font-style:italic; color:var(--mint-400); font-weight:400; }
-    .settings-section__lede { font-size:var(--fs-small); color:var(--ink-400); max-width:60ch; }
+    /* Inline action row (Data) */
+    .data-row { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: var(--space-4); padding: var(--space-3) 0; border-top: 1px solid var(--ink-5); }
+    .data-row:first-child { border-top: 0; padding-top: 0; }
+    .data-row__label { color: var(--ink-1); font-size: var(--type-body-sm); font-weight: 500; }
+    .data-row__sub { color: var(--ink-3); font-size: var(--type-meta); margin-top: 2px; }
 
-    /* Profile */
-    .profile-head { display:flex; gap:var(--space-6); align-items:center; padding-bottom:var(--space-6); border-bottom:1px solid oklch(100% 0 0 / 0.06); margin-bottom:var(--space-2); }
-    .profile-avatar { width:84px; height:84px; border-radius:var(--r-full); display:grid; place-items:center; font-family:var(--font-display); font-size:2rem; color:var(--ink-900); background:linear-gradient(135deg, var(--mint-500), var(--lavender-500)); flex-shrink:0; }
-    .profile-head__meta { display:flex; flex-direction:column; gap:4px; }
-    .profile-head__name { font-family:var(--font-display); font-size:var(--fs-h2); color:var(--ink-100); }
-    .profile-head__sub { font-size:var(--fs-small); color:var(--ink-400); }
-    .profile-head__sub .mono { color:var(--ink-200); }
-
-    .form-grid { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:var(--space-5); }
-    @media (max-width:680px){ .form-grid { grid-template-columns:1fr; } }
-    .form-grid--full { grid-template-columns:1fr; }
-    .form-actions { display:flex; gap:var(--space-3); justify-content:flex-end; padding-top:var(--space-4); border-top:1px solid oklch(100% 0 0 / 0.06); }
-
-    /* Toggle rows (privacy, notifications) */
-    .toggle-rows { display:flex; flex-direction:column; }
-    .toggle-row-x { display:grid; grid-template-columns:1fr auto; gap:var(--space-5); align-items:center; padding:var(--space-5) 0; border-top:1px solid oklch(100% 0 0 / 0.05); }
-    .toggle-row-x:first-child { border-top:0; padding-top:0; }
-    .toggle-row-x:last-child { padding-bottom:0; }
-    .toggle-row-x__main { display:flex; flex-direction:column; gap:4px; min-width:0; }
-    .toggle-row-x__label { font-size:var(--fs-body); font-weight:500; color:var(--ink-100); }
-    .toggle-row-x__hint { font-size:var(--fs-small); color:var(--ink-400); line-height:1.5; }
-
-    /* Preferences */
-    .pref-row { display:grid; grid-template-columns:1fr auto; gap:var(--space-5); align-items:center; padding:var(--space-4) 0; border-top:1px solid oklch(100% 0 0 / 0.05); }
-    .pref-row:first-child { border-top:0; padding-top:0; }
-    .pref-row__main { display:flex; flex-direction:column; gap:2px; }
-    .pref-row__label { font-size:var(--fs-body); font-weight:500; color:var(--ink-100); }
-    .pref-row__hint { font-size:var(--fs-small); color:var(--ink-400); }
-    .pref-segmented { display:inline-flex; padding:3px; background:var(--ink-800); border:1px solid var(--ink-500); border-radius:var(--r-md); gap:2px; }
-    .pref-segmented button { padding:7px 14px; font-size:var(--fs-small); color:var(--ink-400); border-radius:calc(var(--r-md) - 4px); cursor:pointer; transition: background var(--dur-fast) var(--ease-standard), color var(--dur-fast) var(--ease-standard); font-weight:500; }
-    .pref-segmented button:hover { color:var(--ink-200); }
-    .pref-segmented button[aria-selected="true"] { background:var(--ink-600); color:var(--ink-100); }
-
-    /* Data section */
-    .data-grid { display:grid; grid-template-columns:repeat(3, 1fr); gap:var(--space-5); }
-    @media (max-width:900px){ .data-grid { grid-template-columns:1fr; } }
-    .data-card { padding:var(--space-6); display:flex; flex-direction:column; gap:var(--space-3); cursor:pointer; transition: border-color var(--dur-fast) var(--ease-standard), transform var(--dur-base) var(--ease-standard); }
-    .data-card:hover { border-color:var(--mint-500); transform:translateY(-2px); }
-    .data-card--danger:hover { border-color:var(--coral-500); }
-    .data-card__icon { width:36px; height:36px; border-radius:var(--r-sm); display:grid; place-items:center; background:oklch(78% 0.175 168 / 0.10); color:var(--mint-400); }
-    .data-card--danger .data-card__icon { background:oklch(74% 0.135 28 / 0.10); color:var(--coral-400); }
-    .data-card__title { font-size:var(--fs-body); font-weight:500; color:var(--ink-100); }
-    .data-card__hint { font-size:var(--fs-small); color:var(--ink-400); line-height:1.5; }
-    .data-card__cta { margin-top:auto; font-family:var(--font-mono); font-size:var(--fs-tiny); text-transform:uppercase; letter-spacing:var(--tracking-eyebrow); color:var(--mint-400); display:inline-flex; align-items:center; gap:6px; transition: gap var(--dur-fast) var(--ease-standard); }
-    .data-card:hover .data-card__cta { gap:10px; }
-    .data-card--danger .data-card__cta { color:var(--coral-400); }
+    /* Pill toggle group (motion, format) */
+    .pill-group { display: inline-flex; gap: 0; border: 1px solid var(--ink-4); border-radius: var(--radius-2); overflow: hidden; }
+    .pill-group__btn { padding: 8px 14px; font-size: var(--type-body-sm); color: var(--ink-2); background: transparent; border: 0; border-right: 1px solid var(--ink-5); cursor: pointer; transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out); }
+    .pill-group__btn:last-child { border-right: 0; }
+    .pill-group__btn:hover { background: var(--canvas-sunk); color: var(--ink-1); }
+    .pill-group__btn[aria-pressed="true"] { background: var(--accent-wash); color: var(--accent); }
 
     /* Connected accounts empty state */
-    .connected-empty { padding:var(--space-10); text-align:center; display:flex; flex-direction:column; gap:var(--space-3); align-items:center; }
-    .connected-empty__icon { width:48px; height:48px; border-radius:var(--r-md); display:grid; place-items:center; background:oklch(78% 0.175 168 / 0.10); color:var(--mint-400); margin-bottom:var(--space-2); }
-    .connected-empty__title { font-family:var(--font-display); font-size:var(--fs-h3); color:var(--ink-100); }
-    .connected-empty__body { font-size:var(--fs-small); color:var(--ink-300); max-width:42ch; line-height:1.6; }
-    .connected-empty__link { font-family:var(--font-mono); font-size:var(--fs-tiny); text-transform:uppercase; letter-spacing:var(--tracking-eyebrow); color:var(--mint-400); display:inline-flex; align-items:center; gap:6px; margin-top:var(--space-2); transition: gap var(--dur-fast) var(--ease-standard); }
-    .connected-empty__link:hover { gap:10px; color:var(--mint-300); }
+    .empty-prose { color: var(--ink-2); font-size: var(--type-body-sm); line-height: var(--lead-body); }
+    .empty-prose__link { color: var(--accent); font-weight: 500; }
+    .empty-prose__link:hover { color: var(--accent-hover); }
 
     /* Danger zone */
-    .danger-card { padding:var(--space-6); border-color:oklch(74% 0.135 28 / 0.40); background:oklch(74% 0.135 28 / 0.04); display:flex; gap:var(--space-5); align-items:center; justify-content:space-between; flex-wrap:wrap; }
-    .danger-card__main { display:flex; flex-direction:column; gap:4px; min-width:0; }
-    .danger-card__title { font-family:var(--font-display); font-size:var(--fs-h3); color:var(--ink-100); }
-    .danger-card__hint { font-size:var(--fs-small); color:var(--ink-300); max-width:50ch; }
-    .btn--danger { background:transparent; border-color:var(--coral-500); color:var(--coral-400); }
-    .btn--danger:hover { background:oklch(74% 0.135 28 / 0.10); color:var(--coral-400); border-color:var(--coral-400); }
+    .util-section--danger .util-section__title { color: var(--ink-1); }
+    .danger-button { color: var(--accent); font-weight: 600; font-size: var(--type-body-sm); background: transparent; border: 0; padding: 10px 0; cursor: pointer; transition: color var(--dur-fast) var(--ease-out); }
+    .danger-button:hover { color: var(--accent-hover); }
+
+    /* Theme note */
+    .theme-locked { display: flex; align-items: baseline; gap: var(--space-3); padding: var(--space-3) var(--space-4); background: var(--canvas-sunk); border-radius: var(--radius-2); }
+    .theme-locked__name { color: var(--ink-1); font-weight: 500; font-size: var(--type-body-sm); }
+    .theme-locked__note { color: var(--ink-3); font-size: var(--type-meta); }
+
+    .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+    @media (max-width: 600px) { .field-grid { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body data-page="settings">
-  <div class="aurora-bg" aria-hidden="true">
-    <div class="aurora-bg__blob aurora-bg__blob--1"></div>
-    <div class="aurora-bg__blob aurora-bg__blob--2"></div>
-    <div class="aurora-bg__blob aurora-bg__blob--3"></div>
-    <div class="aurora-bg__blob aurora-bg__blob--4"></div>
-    <div class="aurora-bg__grain"></div>
-    <div class="aurora-bg__vignette"></div>
-  </div>
-
   <div class="app-shell">
     <div data-include="/partials/sidebar.html"></div>
 
-    <main class="main">
-      <header class="topbar" data-pfc-topbar>
-        <div class="topbar__breadcrumb">
-          <span>Account</span>
-          <span class="topbar__breadcrumb-sep" aria-hidden="true">/</span>
-          <span class="topbar__breadcrumb-current">Settings</span>
-        </div>
-        <div class="topbar__title"><h1>Settings</h1></div>
-        <div class="topbar__actions">
-          <button type="button" class="btn btn--ghost btn--sm">Discard changes</button>
-        </div>
-      </header>
+    <div class="app-content">
+      <div data-include="/partials/topbar.html"></div>
 
-      <div class="main__content">
-        <div class="settings" data-reveal>
+      <main class="app-main">
+        <div class="util-main" data-reveal-stagger>
 
-          <!-- Left rail -->
-          <nav class="settings-nav" aria-label="Settings sections">
-            <button class="settings-nav__btn" data-tab="profile" aria-selected="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
-              Profile
-            </button>
-            <button class="settings-nav__btn" data-tab="preferences">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h10M4 18h16"/><circle cx="16" cy="12" r="2"/></svg>
-              Preferences
-            </button>
-            <button class="settings-nav__btn" data-tab="privacy">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg>
-              Privacy
-            </button>
-            <button class="settings-nav__btn" data-tab="data">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg>
-              Data
-            </button>
-            <button class="settings-nav__btn" data-tab="connected">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.1 0l3-3a5 5 0 0 0-7.1-7.1L11.5 4.5"/><path d="M14 11a5 5 0 0 0-7.1 0l-3 3a5 5 0 0 0 7.1 7.1l1.5-1.5"/></svg>
-              Connected accounts
-            </button>
-            <button class="settings-nav__btn" data-tab="notifications">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10 21a2 2 0 0 0 4 0"/></svg>
-              Notifications
-            </button>
-            <button class="settings-nav__btn" data-tab="danger">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18h.01"/></svg>
-              Danger zone
-            </button>
-          </nav>
-
-          <!-- Right pane -->
-          <div class="settings-pane">
-
-            <!-- PROFILE (default visible) -->
-            <section class="settings-section is-active" data-section="profile">
-              <div class="settings-section__head">
-                <span class="settings-section__eyebrow">01 · Identity</span>
-                <h2 class="settings-section__title">Your <em>profile</em></h2>
-                <p class="settings-section__lede">The basics. Used for greetings, currency formatting, and not much else.</p>
+          <!-- 1. Profile -->
+          <section class="util-section">
+            <header class="util-section__head">
+              <h2 class="util-section__title">Profile</h2>
+              <p class="util-section__sub">The name, currency, and clock the rest of the product runs on.</p>
+            </header>
+            <div class="profile-head">
+              <div class="profile-head__avatar" aria-hidden="true">A</div>
+              <div>
+                <div class="profile-head__name">Alex Morgan</div>
+                <div class="profile-head__meta">alex.morgan@hey.com</div>
               </div>
-
-              <article class="card card--glass card--pad-lg">
-                <div class="profile-head">
-                  <div class="profile-avatar">A</div>
-                  <div class="profile-head__meta">
-                    <div class="profile-head__name">Alex Morgan</div>
-                    <div class="profile-head__sub">Member since <span class="mono">Sep 2024</span> · <span class="mono">Pro plan</span></div>
-                  </div>
+            </div>
+            <div class="util-stack">
+              <div class="field-grid">
+                <div class="pfc-field">
+                  <label class="pfc-field__label" for="s-name">Display name</label>
+                  <input class="pfc-input" id="s-name" type="text" value="Alex Morgan" />
                 </div>
-
-                <div class="form-grid">
-                  <div class="field field--float">
-                    <input class="input" id="prof-name" type="text" placeholder=" " value="Alex Morgan">
-                    <label class="field__label" for="prof-name">Full name</label>
-                  </div>
-                  <div class="field field--float">
-                    <input class="input" id="prof-email" type="email" placeholder=" " value="alex@morgan.studio">
-                    <label class="field__label" for="prof-email">Email address</label>
-                  </div>
-                  <div class="field">
-                    <label class="field__label" for="prof-currency">Currency</label>
-                    <select class="select" id="prof-currency">
-                      <option>USD — US Dollar</option>
-                      <option>EUR — Euro</option>
-                      <option>GBP — Pound Sterling</option>
-                      <option>JPY — Japanese Yen</option>
-                      <option>CAD — Canadian Dollar</option>
-                    </select>
-                  </div>
-                  <div class="field">
-                    <label class="field__label" for="prof-country">Country</label>
-                    <select class="select" id="prof-country">
-                      <option>United States</option>
-                      <option>United Kingdom</option>
-                      <option>Canada</option>
-                      <option>Germany</option>
-                      <option>Japan</option>
-                    </select>
-                  </div>
-                  <div class="field">
-                    <label class="field__label" for="prof-tz">Timezone</label>
-                    <select class="select" id="prof-tz">
-                      <option>America/New_York (UTC-5)</option>
-                      <option>America/Los_Angeles (UTC-8)</option>
-                      <option>Europe/London (UTC+0)</option>
-                      <option>Europe/Berlin (UTC+1)</option>
-                      <option>Asia/Tokyo (UTC+9)</option>
-                    </select>
-                  </div>
-                  <div class="field">
-                    <label class="field__label" for="prof-lang">Display name</label>
-                    <input class="input" id="prof-lang" type="text" value="Alex">
-                    <span class="field__hint">Used in greetings. Doesn't have to match your full name.</span>
-                  </div>
+                <div class="pfc-field">
+                  <label class="pfc-field__label" for="s-email">Email</label>
+                  <input class="pfc-input" id="s-email" type="email" value="alex.morgan@hey.com" />
                 </div>
-
-                <div class="form-actions">
-                  <button type="button" class="btn btn--ghost">Cancel</button>
-                  <button type="button" class="btn btn--primary" data-magnetic>Save changes</button>
-                </div>
-              </article>
-            </section>
-
-            <!-- PREFERENCES -->
-            <section class="settings-section" data-section="preferences">
-              <div class="settings-section__head">
-                <span class="settings-section__eyebrow">02 · Feel</span>
-                <h2 class="settings-section__title">Preferences</h2>
-                <p class="settings-section__lede">Small choices that shape how the app feels every day.</p>
               </div>
-
-              <article class="card card--glass card--pad-lg">
-                <div class="pref-row">
-                  <div class="pref-row__main">
-                    <span class="pref-row__label">Theme</span>
-                    <span class="pref-row__hint">Dark is the default. Auto follows your system.</span>
-                  </div>
-                  <div class="pref-segmented" role="tablist">
-                    <button aria-selected="true">Dark</button>
-                    <button>Auto</button>
-                  </div>
-                </div>
-                <div class="pref-row">
-                  <div class="pref-row__main">
-                    <span class="pref-row__label">Motion</span>
-                    <span class="pref-row__hint">Reduce respects your OS preference automatically.</span>
-                  </div>
-                  <div class="pref-segmented" role="tablist">
-                    <button aria-selected="true">Full</button>
-                    <button>Reduced</button>
-                  </div>
-                </div>
-                <div class="pref-row">
-                  <div class="pref-row__main">
-                    <span class="pref-row__label">Number format</span>
-                    <span class="pref-row__hint">Affects thousands separator and decimal mark.</span>
-                  </div>
-                  <div class="pref-segmented" role="tablist">
-                    <button aria-selected="true">US · 1,234.56</button>
-                    <button>EU · 1.234,56</button>
-                  </div>
-                </div>
-                <div class="pref-row">
-                  <div class="pref-row__main">
-                    <span class="pref-row__label">Language</span>
-                    <span class="pref-row__hint">Interface language. More coming soon.</span>
-                  </div>
-                  <select class="select" style="width:auto;min-width:180px;">
-                    <option>English (US)</option>
-                    <option>English (UK)</option>
-                    <option>Deutsch</option>
-                    <option>Français</option>
-                    <option>日本語</option>
+              <div class="field-grid">
+                <div class="pfc-field">
+                  <label class="pfc-field__label" for="s-currency">Currency</label>
+                  <select class="pfc-select" id="s-currency">
+                    <option>USD &mdash; United States Dollar</option>
+                    <option>EUR &mdash; Euro</option>
+                    <option>GBP &mdash; Pound Sterling</option>
+                    <option>JPY &mdash; Japanese Yen</option>
                   </select>
                 </div>
-              </article>
-            </section>
-
-            <!-- PRIVACY -->
-            <section class="settings-section" data-section="privacy">
-              <div class="settings-section__head">
-                <span class="settings-section__eyebrow">03 · What we see</span>
-                <h2 class="settings-section__title">Privacy</h2>
-                <p class="settings-section__lede">All calculations run in your browser. You decide what, if anything, leaves the device.</p>
-              </div>
-
-              <article class="card card--glass card--pad-lg">
-                <div class="toggle-rows">
-                  <div class="toggle-row-x">
-                    <div class="toggle-row-x__main">
-                      <span class="toggle-row-x__label">Anonymous analytics</span>
-                      <span class="toggle-row-x__hint">Aggregate usage counts. No financial figures, no identifiers.</span>
-                    </div>
-                    <label class="toggle"><input type="checkbox" class="toggle__input" checked><span class="toggle__slider"></span></label>
-                  </div>
-                  <div class="toggle-row-x">
-                    <div class="toggle-row-x__main">
-                      <span class="toggle-row-x__label">Error reports</span>
-                      <span class="toggle-row-x__hint">Crash traces help us fix bugs. Scrubbed of any user content.</span>
-                    </div>
-                    <label class="toggle"><input type="checkbox" class="toggle__input" checked><span class="toggle__slider"></span></label>
-                  </div>
-                  <div class="toggle-row-x">
-                    <div class="toggle-row-x__main">
-                      <span class="toggle-row-x__label">Product update emails</span>
-                      <span class="toggle-row-x__hint">Quarterly digest of what shipped. Unsubscribe anytime.</span>
-                    </div>
-                    <label class="toggle"><input type="checkbox" class="toggle__input"><span class="toggle__slider"></span></label>
-                  </div>
-                  <div class="toggle-row-x">
-                    <div class="toggle-row-x__main">
-                      <span class="toggle-row-x__label">Public profile</span>
-                      <span class="toggle-row-x__hint">Let others find you by handle. Off by default.</span>
-                    </div>
-                    <label class="toggle"><input type="checkbox" class="toggle__input"><span class="toggle__slider"></span></label>
-                  </div>
+                <div class="pfc-field">
+                  <label class="pfc-field__label" for="s-country">Country</label>
+                  <select class="pfc-select" id="s-country">
+                    <option>United States</option>
+                    <option>United Kingdom</option>
+                    <option>Germany</option>
+                    <option>Japan</option>
+                  </select>
                 </div>
-              </article>
-            </section>
-
-            <!-- DATA -->
-            <section class="settings-section" data-section="data">
-              <div class="settings-section__head">
-                <span class="settings-section__eyebrow">04 · Yours to take</span>
-                <h2 class="settings-section__title">Your data</h2>
-                <p class="settings-section__lede">Export or wipe at any time. Everything is stored locally.</p>
               </div>
-
-              <div class="data-grid">
-                <article class="card card--glass data-card">
-                  <span class="data-card__icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h14l3 3v13H4z"/><path d="M8 12h8M8 16h5"/></svg></span>
-                  <div>
-                    <div class="data-card__title">Export to CSV</div>
-                    <div class="data-card__hint">Transactions, goals, debts, snapshots. Opens in any spreadsheet.</div>
-                  </div>
-                  <span class="data-card__cta">Download <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-                </article>
-                <article class="card card--glass data-card">
-                  <span class="data-card__icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4h4l4 4v12H8z"/><path d="M14 4v4h4"/><path d="M11 13l-2 2 2 2M13 13l2 2-2 2"/></svg></span>
-                  <div>
-                    <div class="data-card__title">Export to JSON</div>
-                    <div class="data-card__hint">Full snapshot, machine-readable. Re-import to any device.</div>
-                  </div>
-                  <span class="data-card__cta">Download <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-                </article>
-                <article class="card card--glass data-card data-card--danger">
-                  <span class="data-card__icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M5 6l1 14h12l1-14"/></svg></span>
-                  <div>
-                    <div class="data-card__title">Wipe all local data</div>
-                    <div class="data-card__hint">Removes every byte from this browser. Cannot be undone.</div>
-                  </div>
-                  <span class="data-card__cta">Wipe <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-                </article>
+              <div class="pfc-field">
+                <label class="pfc-field__label" for="s-tz">Timezone</label>
+                <select class="pfc-select" id="s-tz">
+                  <option>America/New_York (GMT-4)</option>
+                  <option>Europe/London (GMT+1)</option>
+                  <option>Asia/Tokyo (GMT+9)</option>
+                </select>
+                <span class="pfc-field__helper">Used for daily streaks and recurring schedules.</span>
               </div>
-            </section>
+            </div>
+          </section>
 
-            <!-- CONNECTED ACCOUNTS -->
-            <section class="settings-section" data-section="connected">
-              <div class="settings-section__head">
-                <span class="settings-section__eyebrow">05 · Optional</span>
-                <h2 class="settings-section__title">Connected accounts</h2>
-              </div>
-
-              <article class="card card--glass connected-empty">
-                <span class="connected-empty__icon">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.1 0l3-3a5 5 0 0 0-7.1-7.1L11.5 4.5"/><path d="M14 11a5 5 0 0 0-7.1 0l-3 3a5 5 0 0 0 7.1 7.1l1.5-1.5"/></svg>
-                </span>
-                <h3 class="connected-empty__title">Connect a bank? You don't have to.</h3>
-                <p class="connected-empty__body">ProFinanceCast works completely offline. Add accounts only if you want auto-sync. Your numbers stay just as private either way.</p>
-                <a href="#" class="connected-empty__link">Read the privacy promise <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-              </article>
-            </section>
-
-            <!-- NOTIFICATIONS -->
-            <section class="settings-section" data-section="notifications">
-              <div class="settings-section__head">
-                <span class="settings-section__eyebrow">06 · How we ping you</span>
-                <h2 class="settings-section__title">Notifications</h2>
-                <p class="settings-section__lede">All optional. None are urgent enough to interrupt you.</p>
-              </div>
-
-              <article class="card card--glass card--pad-lg">
-                <div class="toggle-rows">
-                  <div class="toggle-row-x">
-                    <div class="toggle-row-x__main">
-                      <span class="toggle-row-x__label">Goal milestones reached</span>
-                      <span class="toggle-row-x__hint">When a goal hits 25, 50, 75, 100%.</span>
-                    </div>
-                    <label class="toggle"><input type="checkbox" class="toggle__input" checked><span class="toggle__slider"></span></label>
-                  </div>
-                  <div class="toggle-row-x">
-                    <div class="toggle-row-x__main">
-                      <span class="toggle-row-x__label">Monthly summary</span>
-                      <span class="toggle-row-x__hint">Three-paragraph rundown on the first of each month.</span>
-                    </div>
-                    <label class="toggle"><input type="checkbox" class="toggle__input" checked><span class="toggle__slider"></span></label>
-                  </div>
-                  <div class="toggle-row-x">
-                    <div class="toggle-row-x__main">
-                      <span class="toggle-row-x__label">Recurring charge due</span>
-                      <span class="toggle-row-x__hint">Three days before a recurring item posts.</span>
-                    </div>
-                    <label class="toggle"><input type="checkbox" class="toggle__input"><span class="toggle__slider"></span></label>
-                  </div>
-                  <div class="toggle-row-x">
-                    <div class="toggle-row-x__main">
-                      <span class="toggle-row-x__label">Sage finds something new</span>
-                      <span class="toggle-row-x__hint">Insight or opportunity flagged with high confidence.</span>
-                    </div>
-                    <label class="toggle"><input type="checkbox" class="toggle__input" checked><span class="toggle__slider"></span></label>
-                  </div>
-                  <div class="toggle-row-x">
-                    <div class="toggle-row-x__main">
-                      <span class="toggle-row-x__label">Cash forecast warning</span>
-                      <span class="toggle-row-x__hint">If projected balance dips below your safety floor.</span>
-                    </div>
-                    <label class="toggle"><input type="checkbox" class="toggle__input" checked><span class="toggle__slider"></span></label>
-                  </div>
-                  <div class="toggle-row-x">
-                    <div class="toggle-row-x__main">
-                      <span class="toggle-row-x__label">Weekly journal nudge</span>
-                      <span class="toggle-row-x__hint">A gentle Sunday prompt to write five lines.</span>
-                    </div>
-                    <label class="toggle"><input type="checkbox" class="toggle__input"><span class="toggle__slider"></span></label>
-                  </div>
+          <!-- 2. Preferences -->
+          <section class="util-section">
+            <header class="util-section__head">
+              <h2 class="util-section__title">Preferences</h2>
+              <p class="util-section__sub">How the product looks, moves, and counts.</p>
+            </header>
+            <div class="util-stack">
+              <div class="pfc-field">
+                <label class="pfc-field__label">Theme</label>
+                <div class="theme-locked">
+                  <span class="theme-locked__name">Atelier light</span>
+                  <span class="theme-locked__note">Dark mode is a different product. Not coming.</span>
                 </div>
-              </article>
-            </section>
-
-            <!-- DANGER -->
-            <section class="settings-section" data-section="danger">
-              <div class="settings-section__head">
-                <span class="settings-section__eyebrow">07 · Last resort</span>
-                <h2 class="settings-section__title">Danger zone</h2>
               </div>
-
-              <article class="card danger-card">
-                <div class="danger-card__main">
-                  <h3 class="danger-card__title">Delete account</h3>
-                  <p class="danger-card__hint">This permanently removes your local data, plan, and any synced backups. No going back.</p>
+              <div class="pfc-field">
+                <label class="pfc-field__label">Motion</label>
+                <div class="pill-group" role="group" aria-label="Motion preference">
+                  <button type="button" class="pill-group__btn" aria-pressed="true">Full</button>
+                  <button type="button" class="pill-group__btn" aria-pressed="false">Reduced</button>
+                  <button type="button" class="pill-group__btn" aria-pressed="false">Off</button>
                 </div>
-                <button type="button" class="btn btn--danger">Delete account</button>
-              </article>
-            </section>
+              </div>
+              <div class="pfc-field">
+                <label class="pfc-field__label">Number format</label>
+                <div class="pill-group" role="group" aria-label="Number format">
+                  <button type="button" class="pill-group__btn" aria-pressed="true"><span class="mono tabular">1,234.56</span></button>
+                  <button type="button" class="pill-group__btn" aria-pressed="false"><span class="mono tabular">1.234,56</span></button>
+                </div>
+              </div>
+              <div class="pfc-field">
+                <label class="pfc-field__label" for="s-lang">Language</label>
+                <select class="pfc-select" id="s-lang">
+                  <option>English</option>
+                  <option>Deutsch</option>
+                  <option>Français</option>
+                  <option>Español</option>
+                  <option>日本語</option>
+                </select>
+              </div>
+            </div>
+          </section>
 
-          </div>
+          <!-- 3. Privacy -->
+          <section class="util-section">
+            <header class="util-section__head">
+              <h2 class="util-section__title">Privacy</h2>
+              <p class="util-section__sub">What leaves your device. The defaults are conservative.</p>
+            </header>
+            <div>
+              <div class="toggle-row">
+                <div>
+                  <div class="toggle-row__label">Anonymous analytics</div>
+                  <div class="toggle-row__sub">Page views and click paths. No numbers from your forecasts.</div>
+                </div>
+                <label class="pfc-toggle"><input type="checkbox" checked /><span class="pfc-toggle__track"></span><span class="pfc-toggle__thumb"></span></label>
+              </div>
+              <div class="toggle-row">
+                <div>
+                  <div class="toggle-row__label">Error reports</div>
+                  <div class="toggle-row__sub">Sends a stack trace if the page crashes. Helps us fix the crash.</div>
+                </div>
+                <label class="pfc-toggle"><input type="checkbox" checked /><span class="pfc-toggle__track"></span><span class="pfc-toggle__thumb"></span></label>
+              </div>
+              <div class="toggle-row">
+                <div>
+                  <div class="toggle-row__label">Marketing emails</div>
+                  <div class="toggle-row__sub">One email a month. Product changes only. Never a discount.</div>
+                </div>
+                <label class="pfc-toggle"><input type="checkbox" /><span class="pfc-toggle__track"></span><span class="pfc-toggle__thumb"></span></label>
+              </div>
+              <div class="toggle-row">
+                <div>
+                  <div class="toggle-row__label">Public profile</div>
+                  <div class="toggle-row__sub">Lets other users find you by email. Off by default.</div>
+                </div>
+                <label class="pfc-toggle"><input type="checkbox" /><span class="pfc-toggle__track"></span><span class="pfc-toggle__thumb"></span></label>
+              </div>
+            </div>
+          </section>
+
+          <!-- 4. Data -->
+          <section class="util-section">
+            <header class="util-section__head">
+              <h2 class="util-section__title">Data</h2>
+              <p class="util-section__sub">Your numbers are yours. Take them with you or wipe them clean.</p>
+            </header>
+            <div>
+              <div class="data-row">
+                <div>
+                  <div class="data-row__label">Export as CSV</div>
+                  <div class="data-row__sub">All accounts, all entries, all forecasts. Opens in any spreadsheet.</div>
+                </div>
+                <a href="#" class="pfc-button pfc-button--ghost">Download</a>
+              </div>
+              <div class="data-row">
+                <div>
+                  <div class="data-row__label">Export as JSON</div>
+                  <div class="data-row__sub">For developers and other apps. Full schema, no compression.</div>
+                </div>
+                <a href="#" class="pfc-button pfc-button--ghost">Download</a>
+              </div>
+              <div class="data-row">
+                <div>
+                  <div class="data-row__label">Wipe everything</div>
+                  <div class="data-row__sub">Removes all entries, forecasts, and journal pages. Keeps the account.</div>
+                </div>
+                <button type="button" class="danger-button">Wipe data</button>
+              </div>
+            </div>
+          </section>
+
+          <!-- 5. Connected accounts -->
+          <section class="util-section">
+            <header class="util-section__head">
+              <h2 class="util-section__title">Connected accounts</h2>
+              <p class="util-section__sub">Or rather, the absence of them.</p>
+            </header>
+            <p class="empty-prose">ProFinanceCast does not connect to bank accounts. Numbers are typed or imported from CSV. We never see, store, or transmit a banking password. <a href="#" class="empty-prose__link">Read the privacy promise &rarr;</a></p>
+          </section>
+
+          <!-- 6. Notifications -->
+          <section class="util-section">
+            <header class="util-section__head">
+              <h2 class="util-section__title">Notifications</h2>
+              <p class="util-section__sub">What we tell you, and when.</p>
+            </header>
+            <div>
+              <div class="toggle-row">
+                <div>
+                  <div class="toggle-row__label">Weekly summary</div>
+                  <div class="toggle-row__sub">Sent every Sunday. One paragraph, no charts.</div>
+                </div>
+                <label class="pfc-toggle"><input type="checkbox" checked /><span class="pfc-toggle__track"></span><span class="pfc-toggle__thumb"></span></label>
+              </div>
+              <div class="toggle-row">
+                <div>
+                  <div class="toggle-row__label">Goal milestones</div>
+                  <div class="toggle-row__sub">When you hit twenty-five, fifty, seventy-five, and one hundred percent.</div>
+                </div>
+                <label class="pfc-toggle"><input type="checkbox" checked /><span class="pfc-toggle__track"></span><span class="pfc-toggle__thumb"></span></label>
+              </div>
+              <div class="toggle-row">
+                <div>
+                  <div class="toggle-row__label">Forecast deviations</div>
+                  <div class="toggle-row__sub">When real spending diverges from the forecast by more than ten percent.</div>
+                </div>
+                <label class="pfc-toggle"><input type="checkbox" checked /><span class="pfc-toggle__track"></span><span class="pfc-toggle__thumb"></span></label>
+              </div>
+              <div class="toggle-row">
+                <div>
+                  <div class="toggle-row__label">Recurring charges</div>
+                  <div class="toggle-row__sub">A day-before reminder for any recurring outflow over fifty dollars.</div>
+                </div>
+                <label class="pfc-toggle"><input type="checkbox" /><span class="pfc-toggle__track"></span><span class="pfc-toggle__thumb"></span></label>
+              </div>
+              <div class="toggle-row">
+                <div>
+                  <div class="toggle-row__label">Streak nudges</div>
+                  <div class="toggle-row__sub">A quiet ping if you are about to break a journaling streak.</div>
+                </div>
+                <label class="pfc-toggle"><input type="checkbox" /><span class="pfc-toggle__track"></span><span class="pfc-toggle__thumb"></span></label>
+              </div>
+              <div class="toggle-row">
+                <div>
+                  <div class="toggle-row__label">Product changelog</div>
+                  <div class="toggle-row__sub">In-app notification on each release. About once every two weeks.</div>
+                </div>
+                <label class="pfc-toggle"><input type="checkbox" checked /><span class="pfc-toggle__track"></span><span class="pfc-toggle__thumb"></span></label>
+              </div>
+            </div>
+          </section>
+
+          <!-- 7. Danger zone -->
+          <section class="util-section util-section--danger">
+            <header class="util-section__head">
+              <h2 class="util-section__title">Danger zone</h2>
+              <p class="util-section__sub">Delete account, wipe all data, leave permanently.</p>
+            </header>
+            <button type="button" class="danger-button">Delete account</button>
+          </section>
+
         </div>
-      </div>
-    </main>
+      </main>
+
+      <div data-include="/partials/bottom-tabs.html"></div>
+    </div>
   </div>
 
-  <script src="/js/demo-data.js"></script>
-  <script src="/js/include.js"></script>
-  <script src="/js/motion.js"></script>
-  <script src="/js/charts.js"></script>
-  <script src="/js/app.js"></script>
+  <script src="/js/pfc-include.js"></script>
   <script>
+    window.PFC = window.PFC || {};
+    PFC.setTopbar = function (opts) {
+      var t = document.querySelector('[data-slot="title"]');
+      var s = document.querySelector('[data-slot="subtitle"]');
+      var a = document.querySelector('[data-slot="actions"]');
+      if (t && opts.title) t.textContent = opts.title;
+      if (s && opts.subtitle) s.textContent = opts.subtitle;
+      if (a && typeof opts.actions === "string") a.innerHTML = opts.actions;
+    };
     document.addEventListener("pfc:partials-ready", function () {
-      var M = window.PFC_MOTION;
-
-      // Tab switching
-      var navBtns = document.querySelectorAll(".settings-nav__btn");
-      var sections = document.querySelectorAll(".settings-section");
-      navBtns.forEach(function (btn) {
-        btn.addEventListener("click", function () {
-          var tab = btn.getAttribute("data-tab");
-          navBtns.forEach(function (b) { b.removeAttribute("aria-selected"); });
-          btn.setAttribute("aria-selected", "true");
-          sections.forEach(function (s) { s.classList.toggle("is-active", s.getAttribute("data-section") === tab); });
+      PFC.setTopbar({
+        title: "Settings",
+        subtitle: "Account, preferences, data, and the danger zone.",
+        actions: ""
+      });
+      // mark sidebar active
+      var page = document.body.getAttribute("data-page");
+      document.querySelectorAll('.app-sidebar__item').forEach(function (el) {
+        if (el.getAttribute('data-page') === page) el.setAttribute('aria-current', 'page');
+      });
+      document.querySelectorAll('.bottom-tabs__item').forEach(function (el) {
+        if (el.getAttribute('data-page') === page) el.setAttribute('aria-current', 'page');
+      });
+      // reveal-stagger (60ms per child, cap 6)
+      document.querySelectorAll('[data-reveal-stagger]').forEach(function (host) {
+        var kids = host.children;
+        for (var i = 0; i < kids.length; i++) {
+          (function (el, idx) {
+            setTimeout(function () { el.classList.add('is-revealed'); }, Math.min(idx, 5) * 60);
+          })(kids[i], i);
+        }
+      });
+      document.querySelectorAll('[data-reveal]').forEach(function (el) { el.classList.add('is-revealed'); });
+      // pill-group single-select
+      document.querySelectorAll('.pill-group').forEach(function (grp) {
+        grp.addEventListener('click', function (e) {
+          var btn = e.target.closest('.pill-group__btn');
+          if (!btn) return;
+          grp.querySelectorAll('.pill-group__btn').forEach(function (b) { b.setAttribute('aria-pressed', 'false'); });
+          btn.setAttribute('aria-pressed', 'true');
         });
       });
-
-      // Segmented control toggles
-      document.querySelectorAll(".pref-segmented").forEach(function (group) {
-        group.querySelectorAll("button").forEach(function (b) {
-          b.addEventListener("click", function () {
-            group.querySelectorAll("button").forEach(function (x) { x.removeAttribute("aria-selected"); });
-            b.setAttribute("aria-selected", "true");
-          });
-        });
-      });
-
-      // Magnetic on primary
-      if (M && M.magnetic) {
-        document.querySelectorAll("[data-magnetic]").forEach(function (el) {
-          M.magnetic(el, { strength: 0.18, radius: 70 });
-        });
-      }
-      if (M && M.revealOnScroll) M.revealOnScroll("[data-reveal]");
     });
   </script>
 </body>

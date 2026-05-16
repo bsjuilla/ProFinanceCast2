@@ -1,792 +1,481 @@
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#F7F4ED" />
   <title>Scenarios — ProFinanceCast</title>
-  <meta name="description" content="What if you took the raise, bought the house, quit at 40 — side-by-side scenario comparison." />
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
-
-  <link rel="stylesheet" href="/css/tokens.css">
-  <link rel="stylesheet" href="/css/base.css">
-  <link rel="stylesheet" href="/css/components.css">
-  <link rel="stylesheet" href="/css/layout.css">
-
+  <link rel="icon" href="/assets/favicon.svg" />
+  <link rel="stylesheet" href="/css/pfc-tokens.css" />
+  <link rel="stylesheet" href="/css/pfc-base.css" />
+  <link rel="stylesheet" href="/css/pfc-layout.css" />
+  <link rel="stylesheet" href="/css/pfc-components.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
-    /* ===========================================================
-     * Scenarios — page-local styles. BEM, no !important.
-     * =========================================================== */
+    .pfc-row { padding: var(--space-6) 0; border-top: 1px solid var(--ink-5); }
+    .pfc-row:first-of-type { border-top: 0; padding-top: var(--space-5); }
+    .pfc-eyebrow-row { display: flex; align-items: baseline; gap: var(--space-3); margin-bottom: var(--space-3); }
 
-    .topbar { height: auto; min-height: var(--topbar-h); padding-block: 14px; }
-    .greet { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-    .greet__eyebrow {
-      font-family: var(--font-mono); font-size: var(--fs-tiny);
-      text-transform: uppercase; letter-spacing: var(--tracking-eyebrow);
-      color: var(--ink-400);
-    }
-    .greet__title {
-      font-family: var(--font-display);
-      font-size: clamp(1.15rem, 0.4vw + 1rem, 1.4rem);
-      font-weight: 500; color: var(--ink-100);
-      letter-spacing: -0.015em; line-height: 1.1;
-    }
-    .greet__title em { font-style: italic; color: var(--mint-400); font-weight: 400; }
-
-    /* ---------- Scenario tabs (horizontal scrolling pills) ---------- */
-    .scn-tabs {
-      display: flex; gap: var(--space-3);
-      overflow-x: auto; padding-bottom: var(--space-2);
-      scrollbar-width: none;
-      margin-bottom: var(--space-8);
-    }
-    .scn-tabs::-webkit-scrollbar { display: none; }
-    .scn-tab {
-      flex-shrink: 0;
-      display: inline-flex; align-items: center; gap: var(--space-2);
-      padding: 0.625rem 1.125rem;
-      background: oklch(24% 0.022 265 / 0.55);
-      border: 1px solid oklch(100% 0 0 / 0.07);
-      border-radius: var(--r-full);
-      font-family: var(--font-body);
-      font-size: var(--fs-small);
-      color: var(--ink-200);
-      cursor: pointer;
-      transition: all var(--dur-fast) var(--ease-standard);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-    }
-    .scn-tab:hover {
-      border-color: oklch(78% 0.175 168 / 0.30);
-      color: var(--ink-100);
-    }
-    .scn-tab--active {
-      border-color: var(--mint-500);
-      color: var(--mint-300);
-      background: oklch(78% 0.175 168 / 0.10);
-      box-shadow: 0 0 0 1px var(--mint-500), 0 8px 28px -10px var(--mint-glow);
-    }
-    .scn-tab__dot {
-      width: 6px; height: 6px; border-radius: var(--r-full);
-      background: var(--ink-500);
-    }
-    .scn-tab--active .scn-tab__dot {
-      background: var(--mint-500);
-      box-shadow: 0 0 8px var(--mint-glow);
-    }
-
-    /* ---------- Diff hero ---------- */
-    .diff-card { padding: var(--space-10) var(--space-8); }
-    .diff-card__head {
-      display: flex; align-items: baseline; justify-content: space-between;
-      margin-bottom: var(--space-8); gap: var(--space-4); flex-wrap: wrap;
-    }
-    .diff-card__title {
-      font-family: var(--font-display);
-      font-size: var(--fs-display-sm); font-weight: 400;
-      color: var(--ink-100); letter-spacing: -0.025em; line-height: 1.05;
-    }
-    .diff-card__title em { font-style: italic; color: var(--ink-300); font-weight: 300; }
-    .diff-card__horizon {
-      font-family: var(--font-mono); font-size: var(--fs-tiny);
-      text-transform: uppercase; letter-spacing: var(--tracking-eyebrow);
-      color: var(--ink-400);
-    }
-
-    .diff-row {
+    /* Verdict: two numbers + oxblood arrow */
+    .verdict-diff {
       display: grid;
       grid-template-columns: 1fr auto 1fr;
-      gap: var(--space-6);
       align-items: center;
+      gap: var(--space-6);
+      padding: var(--space-5) 0 var(--space-3);
     }
-    @media (max-width: 900px) {
-      .diff-row { grid-template-columns: 1fr; text-align: center; }
+    .verdict-diff__cell { display: flex; flex-direction: column; gap: var(--space-3); }
+    .verdict-diff__cell--left  { align-items: flex-end; text-align: right; }
+    .verdict-diff__cell--right { align-items: flex-start; text-align: left; }
+    .verdict-diff__eyebrow {
+      font-size: var(--type-meta);
+      font-weight: 500;
+      letter-spacing: var(--track-meta);
+      text-transform: uppercase;
+      color: var(--ink-3);
     }
-    .diff-side {
-      display: flex; flex-direction: column; gap: var(--space-3);
-    }
-    .diff-side--right { text-align: right; }
-    @media (max-width: 900px) { .diff-side--right { text-align: center; } }
-    .diff-side__eyebrow {
-      font-family: var(--font-mono); font-size: var(--fs-tiny);
-      text-transform: uppercase; letter-spacing: var(--tracking-eyebrow);
-      color: var(--ink-400);
-    }
-    .diff-side__value {
+    .verdict-diff__num {
       font-family: var(--font-mono);
-      font-size: clamp(2.5rem, 4vw + 1rem, 4.5rem);
-      font-weight: 500; line-height: 1.0;
-      letter-spacing: -0.025em;
       font-variant-numeric: tabular-nums;
+      font-weight: 400;
+      letter-spacing: -0.04em;
+      font-size: clamp(3rem, 7vw, 6.4rem);
+      line-height: 0.95;
     }
-    .diff-side--base .diff-side__value { color: var(--ink-300); opacity: 0.7; }
-    .diff-side--active .diff-side__value { color: var(--ink-100); }
-    .diff-side__label { font-size: var(--fs-small); color: var(--ink-400); }
-    .diff-side--active .diff-side__label { color: var(--mint-300); }
-
-    .diff-delta {
-      display: flex; flex-direction: column; align-items: center; gap: var(--space-2);
-      padding: 0 var(--space-4);
+    .verdict-diff__num--base   { color: var(--ink-3); }
+    .verdict-diff__num--active { color: var(--ink-1); }
+    .verdict-diff__arrow {
+      font-size: clamp(2rem, 4vw, 3.4rem);
+      color: var(--accent);
+      line-height: 1;
+      transform: translateY(-2px);
     }
-    .diff-delta__arrow {
-      width: 40px; height: 40px;
-      display: grid; place-items: center;
-      border-radius: var(--r-full);
-      background: oklch(78% 0.175 168 / 0.12);
-      color: var(--mint-300);
+    .verdict-diff__caption {
+      grid-column: 1 / -1;
+      text-align: center;
+      font-size: var(--type-body-lg);
+      color: var(--ink-2);
+      max-width: 64ch;
+      margin: var(--space-4) auto 0;
     }
-    .diff-delta__value {
-      font-family: var(--font-mono);
-      font-size: clamp(1.5rem, 1.6vw + 0.8rem, 2.25rem);
-      font-weight: 600;
-      color: var(--mint-400);
-      font-variant-numeric: tabular-nums;
-      letter-spacing: -0.02em;
-    }
-    .diff-delta__pct {
-      font-family: var(--font-mono); font-size: var(--fs-tiny);
-      color: var(--mint-300); text-transform: uppercase;
-      letter-spacing: var(--tracking-eyebrow);
+    @media (max-width: 720px) {
+      .verdict-diff { grid-template-columns: 1fr; text-align: left; gap: var(--space-4); }
+      .verdict-diff__cell--left, .verdict-diff__cell--right { align-items: flex-start; text-align: left; }
+      .verdict-diff__arrow { display: none; }
     }
 
-    /* ---------- Comparison chart ---------- */
-    .cmp-card { padding: var(--space-8); }
-    .cmp-card__head {
-      display: flex; align-items: baseline; justify-content: space-between;
-      margin-bottom: var(--space-6); gap: var(--space-4); flex-wrap: wrap;
+    /* Evidence chart */
+    .scenario-chart-shell { position: relative; }
+    .scenario-svg { width: 100%; height: 380px; display: block; }
+    .scenario-legend {
+      display: flex; gap: var(--space-5); margin-top: var(--space-3);
+      font-size: var(--type-meta); color: var(--ink-3);
+      letter-spacing: var(--track-meta); text-transform: uppercase;
     }
-    .cmp-card__title {
-      font-family: var(--font-display);
-      font-size: var(--fs-h2); font-weight: 400; color: var(--ink-100);
-      letter-spacing: -0.02em;
-    }
-    .cmp-card__title em { font-style: italic; color: var(--mint-400); font-weight: 400; }
-    .cmp-card__legend {
-      display: flex; gap: var(--space-5);
-      font-family: var(--font-mono); font-size: var(--fs-tiny);
-      text-transform: uppercase; letter-spacing: var(--tracking-eyebrow);
-      color: var(--ink-400);
-    }
-    .cmp-card__legend span { display: inline-flex; align-items: center; gap: 6px; }
-    .cmp-card__sw { width: 16px; height: 3px; border-radius: 2px; }
-    .cmp-chart-wrap { position: relative; height: 320px; }
+    .scenario-legend__swatch { display: inline-block; width: 18px; height: 2px; vertical-align: middle; margin-right: 8px; }
+    .scenario-legend__swatch--base { background: var(--ink-4); }
+    .scenario-legend__swatch--active { background: var(--accent); }
 
-    /* ---------- Assumption sliders ---------- */
-    .sliders-card { padding: var(--space-8); }
-    .sliders-card__head {
-      margin-bottom: var(--space-8);
+    /* Scenario picker — pill tabs */
+    .scenario-picker {
+      display: flex; flex-wrap: wrap; gap: var(--space-2);
+      margin-bottom: var(--space-5);
     }
-    .sliders-card__title {
-      font-family: var(--font-display);
-      font-size: var(--fs-h2); font-weight: 400; color: var(--ink-100);
-      letter-spacing: -0.02em;
-    }
-    .sliders-card__title em { font-style: italic; color: var(--mint-400); font-weight: 400; }
-    .sliders-card__sub {
-      font-size: var(--fs-small); color: var(--ink-400); margin-top: 6px;
-    }
-    .sliders-grid {
-      display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-8) var(--space-10);
-    }
-    @media (max-width: 800px) { .sliders-grid { grid-template-columns: 1fr; gap: var(--space-6); } }
-
-    .slider {
-      display: flex; flex-direction: column; gap: var(--space-3);
-    }
-    .slider__head {
-      display: flex; align-items: baseline; justify-content: space-between;
-    }
-    .slider__label { font-size: var(--fs-small); color: var(--ink-200); font-weight: 500; }
-    .slider__value {
-      font-family: var(--font-mono);
-      font-size: var(--fs-mono-md); font-weight: 500;
-      color: var(--mint-300); font-variant-numeric: tabular-nums;
-      letter-spacing: -0.01em;
-    }
-    .slider__input {
-      -webkit-appearance: none; appearance: none;
-      width: 100%; height: 6px;
-      background: var(--ink-600);
-      border-radius: var(--r-full);
-      outline: none;
+    .scenario-tab {
+      font-family: var(--font-body);
+      font-size: var(--type-body-sm);
+      font-weight: 500;
+      color: var(--ink-2);
+      padding: 8px 16px;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      background: transparent;
       cursor: pointer;
+      transition:
+        color var(--dur-fast) var(--ease-out),
+        border-color var(--dur-fast) var(--ease-out),
+        background-color var(--dur-fast) var(--ease-out);
     }
-    .slider__input::-webkit-slider-thumb {
-      -webkit-appearance: none; appearance: none;
-      width: 22px; height: 22px;
-      border-radius: var(--r-full);
-      background: var(--mint-500);
-      border: 3px solid var(--ink-900);
-      box-shadow: 0 0 0 1px var(--mint-500), 0 4px 14px -2px var(--mint-glow);
-      cursor: grab;
-      transition: transform var(--dur-fast) var(--ease-standard);
-    }
-    .slider__input::-webkit-slider-thumb:hover { transform: scale(1.15); }
-    .slider__input::-moz-range-thumb {
-      width: 22px; height: 22px;
-      border-radius: var(--r-full);
-      background: var(--mint-500);
-      border: 3px solid var(--ink-900);
-      box-shadow: 0 0 0 1px var(--mint-500), 0 4px 14px -2px var(--mint-glow);
-      cursor: grab;
-    }
-    .slider__scale {
-      display: flex; justify-content: space-between;
-      font-family: var(--font-mono); font-size: 10px; color: var(--ink-500);
-      margin-top: 2px;
+    .scenario-tab:hover { color: var(--ink-1); background: var(--canvas-sunk); }
+    .scenario-tab.is-active {
+      color: var(--accent);
+      border-color: var(--accent);
+      background: transparent;
     }
 
-    /* ---------- Outcome KPI cards ---------- */
-    .outcome-grid {
-      display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-5);
+    /* Sliders grid */
+    .scenario-sliders {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: var(--space-5) var(--space-6);
+      padding-top: var(--space-4);
+      border-top: 1px solid var(--ink-5);
     }
-    @media (max-width: 1024px) { .outcome-grid { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 540px)  { .outcome-grid { grid-template-columns: 1fr; } }
-
-    .outcome {
-      padding: var(--space-6);
-      background: oklch(24% 0.022 265 / 0.55);
-      backdrop-filter: blur(16px) saturate(140%);
-      -webkit-backdrop-filter: blur(16px) saturate(140%);
-      border: 1px solid oklch(100% 0 0 / 0.07);
-      border-radius: var(--r-lg);
-      transition: transform var(--dur-base) var(--ease-standard),
-                  border-color var(--dur-base) var(--ease-standard);
+    .scenario-slider__head {
+      display: flex; align-items: baseline; justify-content: space-between;
+      margin-bottom: var(--space-2);
     }
-    .outcome:hover { transform: translateY(-2px); border-color: oklch(78% 0.175 168 / 0.35); }
-    .outcome__eyebrow {
-      font-family: var(--font-mono); font-size: var(--fs-tiny);
-      text-transform: uppercase; letter-spacing: var(--tracking-eyebrow);
-      color: var(--ink-400);
-      display: block; margin-bottom: var(--space-4);
+    .scenario-slider__label {
+      font-size: var(--type-label);
+      font-weight: 500;
+      color: var(--ink-2);
+      letter-spacing: var(--track-body);
     }
-    .outcome__value {
+    .scenario-slider__value {
       font-family: var(--font-mono);
-      font-size: clamp(1.75rem, 1.6vw + 0.9rem, 2.5rem);
-      font-weight: 500; line-height: 1.0;
-      letter-spacing: -0.02em; color: var(--ink-100);
       font-variant-numeric: tabular-nums;
-      margin-bottom: var(--space-3);
-    }
-    .outcome__delta {
-      font-family: var(--font-mono); font-size: var(--fs-tiny);
-      color: var(--mint-400); text-transform: uppercase; letter-spacing: var(--tracking-eyebrow);
+      font-size: var(--type-body-sm);
+      color: var(--ink-1);
     }
 
-    .sec-header { margin-bottom: var(--space-6); }
-    .sec-title {
-      font-family: var(--font-display);
-      font-size: var(--fs-h2); font-weight: 400; color: var(--ink-100);
-      letter-spacing: -0.02em; line-height: 1.1;
-    }
-    .sec-title em { font-style: italic; color: var(--ink-300); font-weight: 300; }
-    .sec-sub { font-size: var(--fs-small); color: var(--ink-400); margin-top: 4px; }
-
-    .foot-strip {
-      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
-      gap: var(--space-4); padding: var(--space-5) var(--space-2);
-      margin-top: var(--space-12);
-      border-top: 1px solid oklch(100% 0 0 / 0.05);
-      font-family: var(--font-mono); font-size: var(--fs-tiny); color: var(--ink-400);
-    }
-    .foot-strip__dot {
-      width: 5px; height: 5px; border-radius: var(--r-full);
-      background: var(--mint-500); box-shadow: 0 0 8px var(--mint-glow);
-      display: inline-block; margin-right: 8px;
+    /* Actions */
+    .action-row { display: flex; justify-content: flex-end; gap: var(--space-3); padding-top: var(--space-5); }
+    @media (max-width: 768px) {
+      .action-row { flex-direction: column; }
+      .action-row .pfc-button { width: 100%; }
     }
   </style>
 </head>
+
 <body data-page="scenarios">
-
-  <div class="aurora-bg" aria-hidden="true">
-    <div class="aurora-bg__blob aurora-bg__blob--1"></div>
-    <div class="aurora-bg__blob aurora-bg__blob--2"></div>
-    <div class="aurora-bg__blob aurora-bg__blob--3"></div>
-    <div class="aurora-bg__blob aurora-bg__blob--4"></div>
-    <div class="aurora-bg__grain"></div>
-    <div class="aurora-bg__vignette"></div>
-  </div>
-
   <div class="app-shell">
     <div data-include="/partials/sidebar.html"></div>
 
-    <main class="main">
+    <div class="app-content">
       <div data-include="/partials/topbar.html"></div>
 
-      <div class="main__content">
+      <main class="app-main" role="main">
+        <div class="page-section page-section--app" data-reveal-stagger>
 
-        <!-- ============================================================
-             SECTION 1 — Scenario tabs
-             ============================================================ -->
-        <section class="section" aria-label="Scenario selector">
-          <div class="scn-tabs" role="tablist" data-scn-tabs>
-            <button class="scn-tab" role="tab" data-scn="base"><span class="scn-tab__dot"></span>Base case</button>
-            <button class="scn-tab scn-tab--active" role="tab" aria-selected="true" data-scn="raise"><span class="scn-tab__dot"></span>20% raise</button>
-            <button class="scn-tab" role="tab" data-scn="house"><span class="scn-tab__dot"></span>House at year 3</button>
-            <button class="scn-tab" role="tab" data-scn="quit40"><span class="scn-tab__dot"></span>Quit at 40</button>
-            <button class="scn-tab" role="tab" data-scn="kids"><span class="scn-tab__dot"></span>Kids</button>
-            <button class="scn-tab" role="tab" data-scn="custom"><span class="scn-tab__dot"></span>Custom</button>
-          </div>
-        </section>
-
-        <!-- ============================================================
-             SECTION 2 — Diff hero
-             ============================================================ -->
-        <section class="section" aria-labelledby="diff-heading" style="margin-bottom: var(--space-12);">
-          <article class="card card--glass diff-card" data-reveal>
-            <header class="diff-card__head">
-              <h2 id="diff-heading" class="diff-card__title">Net worth at <em>year ten</em></h2>
-              <span class="diff-card__horizon">120-month projection</span>
-            </header>
-
-            <div class="diff-row">
-              <div class="diff-side diff-side--base">
-                <span class="diff-side__eyebrow">Base case</span>
-                <div class="diff-side__value mono" data-base-value data-value="612400" data-currency="USD" data-decimals="0">$0</div>
-                <span class="diff-side__label">If nothing changes</span>
+          <!-- Row 1: VERDICT (diff variation) -->
+          <section class="pfc-row" aria-labelledby="verdict-h">
+            <div class="pfc-eyebrow-row">
+              <span class="eyebrow" id="verdict-h">The difference</span>
+              <span class="eyebrow" style="color: var(--ink-4);">Ten-year projection</span>
+            </div>
+            <div class="verdict-diff">
+              <div class="verdict-diff__cell verdict-diff__cell--left">
+                <span class="verdict-diff__eyebrow">Base case</span>
+                <span class="verdict-diff__num verdict-diff__num--base mono tabular" id="verdictBase">$612,400</span>
               </div>
-
-              <div class="diff-delta">
-                <div class="diff-delta__arrow" aria-hidden="true">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-                </div>
-                <div class="diff-delta__value mono" data-delta-value data-value="169700" data-currency="USD" data-decimals="0">+$0</div>
-                <span class="diff-delta__pct" data-delta-pct>+27.7%</span>
+              <span class="verdict-diff__arrow" aria-hidden="true">→</span>
+              <div class="verdict-diff__cell verdict-diff__cell--right">
+                <span class="verdict-diff__eyebrow" id="verdictActiveLabel">20% raise at year 2</span>
+                <span class="verdict-diff__num verdict-diff__num--active mono tabular" id="verdictActive">$782,100</span>
               </div>
+              <p class="verdict-diff__caption">
+                Net difference:
+                <span class="mono tabular" id="verdictDelta">+$169,700</span>.
+                Compounded over ten years from a 20% raise applied to your monthly savings.
+              </p>
+            </div>
+          </section>
 
-              <div class="diff-side diff-side--active diff-side--right">
-                <span class="diff-side__eyebrow" data-active-name>20% raise</span>
-                <div class="diff-side__value mono" data-active-value data-value="782100" data-currency="USD" data-decimals="0">$0</div>
-                <span class="diff-side__label">Promotion accepted Q1 next year</span>
+          <!-- Row 2: EVIDENCE -->
+          <section class="pfc-row" aria-labelledby="evidence-h">
+            <div class="pfc-eyebrow-row">
+              <span class="eyebrow" id="evidence-h">The evidence</span>
+              <span class="eyebrow" style="color: var(--ink-4);">Dashed: base. Solid: active. Tint: diff.</span>
+            </div>
+            <div class="scenario-chart-shell">
+              <svg id="scenarioChart" class="scenario-svg" viewBox="0 0 1200 380" preserveAspectRatio="none" aria-label="Ten-year scenario comparison"></svg>
+              <div class="scenario-legend">
+                <span><span class="scenario-legend__swatch scenario-legend__swatch--base"></span>Base case</span>
+                <span><span class="scenario-legend__swatch scenario-legend__swatch--active"></span>Active scenario</span>
               </div>
             </div>
-          </article>
-        </section>
+          </section>
 
-        <!-- ============================================================
-             SECTION 3 — Comparison chart
-             ============================================================ -->
-        <section class="section" aria-labelledby="cmp-heading" style="margin-bottom: var(--space-12);">
-          <article class="card card--glass cmp-card" data-reveal>
-            <header class="cmp-card__head">
-              <h2 id="cmp-heading" class="cmp-card__title">Side by <em>side</em></h2>
-              <div class="cmp-card__legend">
-                <span><span class="cmp-card__sw" style="background:var(--ink-400);"></span>Base</span>
-                <span><span class="cmp-card__sw" style="background:var(--mint-500);"></span>Scenario</span>
-                <span><span class="cmp-card__sw" style="background:var(--mint-500);opacity:.18;height:8px;"></span>Difference</span>
-              </div>
-            </header>
-            <div class="cmp-chart-wrap" data-cmp-chart></div>
-          </article>
-        </section>
-
-        <!-- ============================================================
-             SECTION 4 — Sliders
-             ============================================================ -->
-        <section class="section" aria-labelledby="slid-heading" style="margin-bottom: var(--space-12);">
-          <article class="card card--glass sliders-card" data-reveal>
-            <header class="sliders-card__head">
-              <h2 id="slid-heading" class="sliders-card__title">Drag to <em>rewrite the future</em></h2>
-              <p class="sliders-card__sub">Five assumptions. Chart updates as you move.</p>
-            </header>
-            <div class="sliders-grid">
-
-              <div class="slider">
-                <div class="slider__head">
-                  <span class="slider__label">Income growth · annual</span>
-                  <span class="slider__value mono" data-out="growth">5.0%</span>
-                </div>
-                <input class="slider__input" type="range" min="0" max="15" value="5" step="0.5" data-input="growth">
-                <div class="slider__scale"><span>0%</span><span>15%</span></div>
-              </div>
-
-              <div class="slider">
-                <div class="slider__head">
-                  <span class="slider__label">Savings rate</span>
-                  <span class="slider__value mono" data-out="savings">21%</span>
-                </div>
-                <input class="slider__input" type="range" min="5" max="50" value="21" step="1" data-input="savings">
-                <div class="slider__scale"><span>5%</span><span>50%</span></div>
-              </div>
-
-              <div class="slider">
-                <div class="slider__head">
-                  <span class="slider__label">Inflation</span>
-                  <span class="slider__value mono" data-out="inflation">2.8%</span>
-                </div>
-                <input class="slider__input" type="range" min="0" max="8" value="2.8" step="0.1" data-input="inflation">
-                <div class="slider__scale"><span>0%</span><span>8%</span></div>
-              </div>
-
-              <div class="slider">
-                <div class="slider__head">
-                  <span class="slider__label">Expected return · invested</span>
-                  <span class="slider__value mono" data-out="return">7.2%</span>
-                </div>
-                <input class="slider__input" type="range" min="1" max="12" value="7.2" step="0.1" data-input="return">
-                <div class="slider__scale"><span>1%</span><span>12%</span></div>
-              </div>
-
-              <div class="slider">
-                <div class="slider__head">
-                  <span class="slider__label">Retirement age</span>
-                  <span class="slider__value mono" data-out="retire">62</span>
-                </div>
-                <input class="slider__input" type="range" min="45" max="70" value="62" step="1" data-input="retire">
-                <div class="slider__scale"><span>45</span><span>70</span></div>
-              </div>
-
+          <!-- Row 3: DETAIL — picker + sliders -->
+          <section class="pfc-row" aria-labelledby="detail-h">
+            <div class="pfc-eyebrow-row">
+              <span class="eyebrow" id="detail-h">Assumptions</span>
+              <span class="eyebrow" style="color: var(--ink-4);">Sliders recompute the chart live</span>
             </div>
-          </article>
-        </section>
 
-        <!-- ============================================================
-             SECTION 5 — Outcome KPIs
-             ============================================================ -->
-        <section class="section" aria-labelledby="out-heading" style="margin-bottom: var(--space-8);">
-          <header class="sec-header">
-            <h2 id="out-heading" class="sec-title">If you ran with <em>this version</em></h2>
-            <p class="sec-sub">Four headline outcomes, recalculated on the fly.</p>
-          </header>
-          <div class="outcome-grid" data-reveal-stagger>
+            <div class="scenario-picker" role="tablist" aria-label="Scenario presets">
+              <button class="scenario-tab" type="button" role="tab" data-scenario="base">Base case</button>
+              <button class="scenario-tab is-active" type="button" role="tab" aria-selected="true" data-scenario="raise">20% raise</button>
+              <button class="scenario-tab" type="button" role="tab" data-scenario="house">House at year 3</button>
+              <button class="scenario-tab" type="button" role="tab" data-scenario="quit">Quit at 40</button>
+              <button class="scenario-tab" type="button" role="tab" data-scenario="kids">Kids</button>
+              <button class="scenario-tab" type="button" role="tab" data-scenario="custom">Custom</button>
+            </div>
 
-            <article class="outcome" style="--i:0;">
-              <span class="outcome__eyebrow">Retire at</span>
-              <div class="outcome__value mono" data-out-value data-value="58" data-suffix="">0</div>
-              <span class="outcome__delta" data-out-delta>4 years earlier</span>
-            </article>
+            <div class="scenario-sliders">
+              <div class="scenario-field">
+                <div class="scenario-slider__head">
+                  <label class="scenario-slider__label" for="sl-income">Income growth</label>
+                  <span class="scenario-slider__value mono tabular" id="vl-income">4.0%</span>
+                </div>
+                <input class="pfc-slider" type="range" id="sl-income" min="0" max="10" step="0.5" value="4" />
+              </div>
+              <div class="scenario-field">
+                <div class="scenario-slider__head">
+                  <label class="scenario-slider__label" for="sl-savings">Savings rate</label>
+                  <span class="scenario-slider__value mono tabular" id="vl-savings">32%</span>
+                </div>
+                <input class="pfc-slider" type="range" id="sl-savings" min="5" max="60" step="1" value="32" />
+              </div>
+              <div class="scenario-field">
+                <div class="scenario-slider__head">
+                  <label class="scenario-slider__label" for="sl-inflation">Inflation</label>
+                  <span class="scenario-slider__value mono tabular" id="vl-inflation">2.5%</span>
+                </div>
+                <input class="pfc-slider" type="range" id="sl-inflation" min="0" max="8" step="0.1" value="2.5" />
+              </div>
+              <div class="scenario-field">
+                <div class="scenario-slider__head">
+                  <label class="scenario-slider__label" for="sl-return">Real return</label>
+                  <span class="scenario-slider__value mono tabular" id="vl-return">5.8%</span>
+                </div>
+                <input class="pfc-slider" type="range" id="sl-return" min="0" max="12" step="0.1" value="5.8" />
+              </div>
+              <div class="scenario-field">
+                <div class="scenario-slider__head">
+                  <label class="scenario-slider__label" for="sl-retire">Retirement age</label>
+                  <span class="scenario-slider__value mono tabular" id="vl-retire">62</span>
+                </div>
+                <input class="pfc-slider" type="range" id="sl-retire" min="45" max="75" step="1" value="62" />
+              </div>
+            </div>
+          </section>
 
-            <article class="outcome" style="--i:1;">
-              <span class="outcome__eyebrow">Net worth at 65</span>
-              <div class="outcome__value mono" data-out-value data-value="2840000" data-currency="USD" data-decimals="0">$0</div>
-              <span class="outcome__delta">+$612K vs base</span>
-            </article>
+          <!-- Row 4: ACTION -->
+          <section class="pfc-row" aria-labelledby="action-h">
+            <span class="visually-hidden" id="action-h">Save scenario</span>
+            <div class="action-row">
+              <button class="pfc-button pfc-button--ghost" type="button">Compare two</button>
+              <button class="pfc-button pfc-button--primary" type="button">Save this scenario</button>
+            </div>
+          </section>
 
-            <article class="outcome" style="--i:2;">
-              <span class="outcome__eyebrow">Years of expenses covered</span>
-              <div class="outcome__value mono" data-out-value data-value="38" data-suffix=" yr">0</div>
-              <span class="outcome__delta">+9 years of runway</span>
-            </article>
-
-            <article class="outcome" style="--i:3;">
-              <span class="outcome__eyebrow">Lifetime tax paid</span>
-              <div class="outcome__value mono" data-out-value data-value="486200" data-currency="USD" data-decimals="0">$0</div>
-              <span class="outcome__delta">+$84K bracket bump</span>
-            </article>
-
-          </div>
-        </section>
-
-        <div class="foot-strip">
-          <div><span class="foot-strip__dot" aria-hidden="true"></span>Scenarios run locally. Projections compounded monthly. Past returns are not future returns.</div>
-          <div>Recomputed · live</div>
         </div>
-
-      </div>
-    </main>
+      </main>
+    </div>
   </div>
 
-  <script src="/js/include.js"></script>
-  <script src="/js/motion.js"></script>
-  <script src="/js/charts.js"></script>
-  <script src="/js/demo-data.js"></script>
-  <script src="/js/app.js"></script>
+  <div data-include="/partials/bottom-tabs.html"></div>
 
+  <script src="/js/pfc-include.js"></script>
+  <script src="/js/pfc-app.js"></script>
   <script>
-    document.addEventListener("pfc:partials-ready", function () {
-      var D = window.PFC_DATA;
-      var M = window.PFC_MOTION;
-      var C = window.PFC_CHARTS;
-      if (!D || !M || !C) return;
-
-      M.pageTransition();
-
-      /* ---- Topbar ---- */
-      (function injectTopbar() {
-        var crumb = document.querySelector('[data-slot="breadcrumb"]');
-        var actions = document.querySelector('.topbar__actions');
-        if (!crumb || !actions) return;
-        crumb.innerHTML =
-          '<div class="greet">' +
-            '<span class="greet__eyebrow">Planning / Scenarios</span>' +
-            '<span class="greet__title">What if <em>you</em>...</span>' +
-          '</div>';
-
-        var newBtn = document.createElement("button");
-        newBtn.type = "button";
-        newBtn.className = "btn btn--primary btn--sm";
-        newBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg><span>New scenario</span>';
-        newBtn.addEventListener("click", function () { window.PFC && PFC.toast("Scenario builder coming soon", "info", { duration: 1800 }); });
-        var searchBtn = actions.querySelector(".topbar__search");
-        if (searchBtn && searchBtn.nextSibling) actions.insertBefore(newBtn, searchBtn.nextSibling);
-        else actions.appendChild(newBtn);
-        if (M.magnetic) M.magnetic(newBtn, { strength: 0.20, radius: 80 });
-      })();
-
-      /* ---- KPI countUps ---- */
-      function runCountUp(el) {
-        if (!el) return;
-        var val = parseFloat(el.getAttribute("data-value"));
-        var currency = el.getAttribute("data-currency") || undefined;
-        var decimals = parseInt(el.getAttribute("data-decimals") || "0", 10);
-        var suffix = el.getAttribute("data-suffix") || "";
-        M.countUp(el, val, { currency: currency, decimals: decimals, duration: 1200 });
-        if (suffix) setTimeout(function () { el.textContent = el.textContent + suffix; }, 1260);
-      }
-
-      document.querySelectorAll("[data-base-value],[data-active-value],[data-delta-value],[data-out-value]").forEach(function (el) {
-        var io = new IntersectionObserver(function (entries) {
-          entries.forEach(function (e) {
-            if (e.isIntersecting) { io.unobserve(el); runCountUp(el); }
-          });
-        }, { threshold: 0.4 });
-        io.observe(el);
+    window.PFC_PAGE_INIT = function () {
+      PFC.setTopbar({
+        title: "Scenarios",
+        subtitle: "What-if planner. Compare any scenario against your base case.",
+        actions: '<button class="pfc-button pfc-button--primary" type="button">+ New scenario</button>'
       });
 
-      /* ---- Scenario presets ---- */
-      var SCENARIOS = {
-        base:   { name: "Base case",      growth: 4.0, savings: 21, inflation: 2.8, ret: 7.2, retire: 65, mult: 1.00 },
-        raise:  { name: "20% raise",      growth: 6.0, savings: 24, inflation: 2.8, ret: 7.2, retire: 62, mult: 1.28 },
-        house:  { name: "House at year 3",growth: 4.5, savings: 14, inflation: 2.8, ret: 6.8, retire: 64, mult: 0.86 },
-        quit40: { name: "Quit at 40",     growth: 0.0, savings: 32, inflation: 2.8, ret: 7.5, retire: 55, mult: 0.72 },
-        kids:   { name: "Kids",           growth: 5.0, savings: 12, inflation: 3.2, ret: 6.8, retire: 67, mult: 0.78 },
-        custom: { name: "Custom",         growth: 5.0, savings: 21, inflation: 2.8, ret: 7.2, retire: 62, mult: 1.10 },
+      var svg = document.getElementById("scenarioChart");
+      var W = 1200, H = 380;
+      var padL = 64, padR = 24, padT = 28, padB = 38;
+      var innerW = W - padL - padR, innerH = H - padT - padB;
+      var ns = "http://www.w3.org/2000/svg";
+
+      function el(name, attrs) {
+        var n = document.createElementNS(ns, name);
+        for (var k in attrs) if (attrs.hasOwnProperty(k)) n.setAttribute(k, attrs[k]);
+        return n;
+      }
+
+      function project(opts) {
+        opts = opts || {};
+        var bal = 28000;
+        var contribution = (opts.savingsRate || 0.32) * 5600;
+        var r = (opts.realReturn || 0.058) / 12;
+        var growthMo = Math.pow(1 + (opts.incomeGrowth || 0.04), 1 / 12) - 1;
+        var raiseMo = opts.raiseAtMonth;
+        var raisePct = opts.raisePct || 0;
+        var data = [];
+        for (var i = 0; i < 120; i++) {
+          var c = contribution * Math.pow(1 + growthMo, i);
+          if (raiseMo != null && i >= raiseMo) c = c * (1 + raisePct);
+          bal = bal * (1 + r) + c;
+          data.push(Math.round(bal));
+        }
+        return data;
+      }
+
+      var presets = {
+        base:   { incomeGrowth: 0.04, savingsRate: 0.32, realReturn: 0.058 },
+        raise:  { incomeGrowth: 0.04, savingsRate: 0.32, realReturn: 0.058, raiseAtMonth: 24, raisePct: 0.20, label: "20% raise at year 2" },
+        house:  { incomeGrowth: 0.04, savingsRate: 0.22, realReturn: 0.058, label: "House at year 3" },
+        quit:   { incomeGrowth: 0.04, savingsRate: 0.45, realReturn: 0.058, label: "Quit at 40" },
+        kids:   { incomeGrowth: 0.04, savingsRate: 0.20, realReturn: 0.052, label: "Kids" },
+        custom: { incomeGrowth: 0.04, savingsRate: 0.32, realReturn: 0.058, label: "Custom" }
       };
 
-      /* ---- Comparison chart (dual area) ---- */
-      var chartWrap = document.querySelector("[data-cmp-chart]");
-      var BASE_SERIES = [];
-      var baseVal = D.netWorth.current;
-      for (var i = 0; i <= 120; i++) {
-        BASE_SERIES.push({ label: "+" + i + "mo", value: Math.round(baseVal * Math.pow(1.038, i / 12) + i * 90) });
+      var current = "raise";
+      var base = project(presets.base);
+      var active = project(presets[current]);
+
+      function pathFor(series, max) {
+        var step = innerW / (series.length - 1);
+        var d = "";
+        series.forEach(function (v, i) {
+          var x = padL + step * i;
+          var y = padT + innerH - (v / max) * innerH;
+          d += (i === 0 ? "M" : "L") + x.toFixed(2) + " " + y.toFixed(2) + " ";
+        });
+        return d.trim();
       }
 
-      function buildComparisonChart(scn) {
-        if (!chartWrap) return;
-        var W = chartWrap.clientWidth || 800;
-        var H = 320;
-        var PAD = { t: 20, r: 16, b: 36, l: 16 };
-        var innerW = W - PAD.l - PAD.r;
-        var innerH = H - PAD.t - PAD.b;
-        var n = BASE_SERIES.length;
-
-        // Scenario series
-        var scnSeries = BASE_SERIES.map(function (p, i) {
-          var t = i / n;
-          var bend = 1 + (scn.mult - 1) * Math.pow(t, 0.85);
-          return { label: p.label, value: Math.round(p.value * bend) };
+      function areaBetween(a, b, max) {
+        var step = innerW / (a.length - 1);
+        var d = "";
+        a.forEach(function (v, i) {
+          var x = padL + step * i;
+          var y = padT + innerH - (v / max) * innerH;
+          d += (i === 0 ? "M" : "L") + x.toFixed(2) + " " + y.toFixed(2) + " ";
         });
-
-        var allVals = BASE_SERIES.map(function (p) { return p.value; }).concat(scnSeries.map(function (p) { return p.value; }));
-        var minV = Math.min.apply(null, allVals);
-        var maxV = Math.max.apply(null, allVals);
-        var range = maxV - minV || 1;
-        var stepX = innerW / (n - 1);
-
-        function toPts(series) {
-          return series.map(function (p, i) {
-            return [
-              PAD.l + i * stepX,
-              PAD.t + innerH - ((p.value - minV) / range) * innerH
-            ];
-          });
+        for (var i = b.length - 1; i >= 0; i--) {
+          var x = padL + step * i;
+          var y = padT + innerH - (b[i] / max) * innerH;
+          d += "L" + x.toFixed(2) + " " + y.toFixed(2) + " ";
         }
-        function smoothPath(points) {
-          if (points.length < 2) return "";
-          var d = "M " + points[0][0] + "," + points[0][1];
-          for (var i = 0; i < points.length - 1; i++) {
-            var p0 = points[i - 1] || points[i];
-            var p1 = points[i];
-            var p2 = points[i + 1];
-            var p3 = points[i + 2] || p2;
-            var c1x = p1[0] + (p2[0] - p0[0]) / 6;
-            var c1y = p1[1] + (p2[1] - p0[1]) / 6;
-            var c2x = p2[0] - (p3[0] - p1[0]) / 6;
-            var c2y = p2[1] - (p3[1] - p1[1]) / 6;
-            d += " C " + c1x + "," + c1y + " " + c2x + "," + c2y + " " + p2[0] + "," + p2[1];
-          }
-          return d;
-        }
+        d += "Z";
+        return d;
+      }
 
-        var basePts = toPts(BASE_SERIES);
-        var scnPts = toPts(scnSeries);
+      function render() {
+        svg.innerHTML = "";
+        var max = Math.max.apply(null, base.concat(active)) * 1.05;
 
-        chartWrap.innerHTML = "";
-        var NS = "http://www.w3.org/2000/svg";
-        function mk(t, a) { var e = document.createElementNS(NS, t); Object.entries(a).forEach(function (kv) { e.setAttribute(kv[0], kv[1]); }); return e; }
-        var svg = mk("svg", { viewBox: "0 0 " + W + " " + H, width: "100%", height: String(H), "aria-label": "Base vs scenario projection" });
-
-        // Defs
-        var defs = mk("defs", {});
-        var grad = mk("linearGradient", { id: "cmp-grad", x1: "0", x2: "0", y1: "0", y2: "1" });
-        grad.appendChild(mk("stop", { offset: "0%", "stop-color": "var(--mint-500)", "stop-opacity": "0.45" }));
-        grad.appendChild(mk("stop", { offset: "100%", "stop-color": "var(--mint-500)", "stop-opacity": "0" }));
-        defs.appendChild(grad);
-        var diffGrad = mk("linearGradient", { id: "cmp-diff", x1: "0", x2: "0", y1: "0", y2: "1" });
-        diffGrad.appendChild(mk("stop", { offset: "0%", "stop-color": "var(--mint-400)", "stop-opacity": "0.22" }));
-        diffGrad.appendChild(mk("stop", { offset: "100%", "stop-color": "var(--mint-400)", "stop-opacity": "0.04" }));
-        defs.appendChild(diffGrad);
-        svg.appendChild(defs);
-
-        // Gridlines
+        /* Gridlines (4) */
         for (var g = 0; g <= 4; g++) {
-          var y = PAD.t + (innerH / 4) * g;
-          svg.appendChild(mk("line", {
-            x1: PAD.l, x2: W - PAD.r, y1: y, y2: y,
-            stroke: "var(--ink-600)", "stroke-width": "1",
-            "stroke-dasharray": "2 4", opacity: "0.35"
+          var y = padT + (innerH / 4) * g;
+          svg.appendChild(el("line", {
+            x1: padL, x2: W - padR, y1: y, y2: y,
+            stroke: "var(--ink-5)", "stroke-width": 1, "shape-rendering": "crispEdges"
           }));
+          var v = Math.round((max - (max / 4) * g) / 1000);
+          var lbl = el("text", {
+            x: padL - 10, y: y + 4, "text-anchor": "end",
+            "font-family": "var(--font-mono)", "font-size": 10, fill: "var(--ink-3)"
+          });
+          lbl.textContent = "$" + v + "k";
+          svg.appendChild(lbl);
         }
 
-        // Diff area between base and scenario (only where scn > base)
-        var diffPath = "M " + basePts[0][0] + "," + basePts[0][1];
-        for (var k = 1; k < basePts.length; k++) diffPath += " L " + basePts[k][0] + "," + basePts[k][1];
-        for (var j = scnPts.length - 1; j >= 0; j--) diffPath += " L " + scnPts[j][0] + "," + scnPts[j][1];
-        diffPath += " Z";
-        svg.appendChild(mk("path", { d: diffPath, fill: "url(#cmp-diff)" }));
+        /* X labels — years */
+        for (var yr = 0; yr <= 10; yr += 2) {
+          var x = padL + (innerW / 10) * yr;
+          var lbl2 = el("text", {
+            x: x, y: H - 14, "text-anchor": "middle",
+            "font-family": "var(--font-body)", "font-size": 10,
+            "letter-spacing": "0.08em", fill: "var(--ink-3)"
+          });
+          lbl2.textContent = "Y" + yr;
+          svg.appendChild(lbl2);
+        }
 
-        // Scenario area fill
-        var scnLinePath = smoothPath(scnPts);
-        var scnAreaPath = scnLinePath +
-          " L " + scnPts[scnPts.length - 1][0] + "," + (PAD.t + innerH) +
-          " L " + scnPts[0][0] + "," + (PAD.t + innerH) + " Z";
-        svg.appendChild(mk("path", { d: scnAreaPath, fill: "url(#cmp-grad)" }));
+        /* Diff area (tinted) */
+        var areaD = areaBetween(active, base, max);
+        svg.appendChild(el("path", {
+          d: areaD, fill: "var(--accent-wash)", opacity: 0.55
+        }));
 
-        // Base line (faded, dashed)
-        var basePath = smoothPath(basePts);
-        var baseLine = mk("path", {
-          d: basePath, fill: "none",
-          stroke: "var(--ink-400)", "stroke-width": "1.5",
-          "stroke-dasharray": "4 4", opacity: "0.7"
+        /* Base — dashed faded line */
+        svg.appendChild(el("path", {
+          d: pathFor(base, max),
+          fill: "none",
+          stroke: "var(--ink-4)",
+          "stroke-width": 1.5,
+          "stroke-dasharray": "4 4"
+        }));
+
+        /* Active — solid oxblood */
+        var p = el("path", {
+          d: pathFor(active, max),
+          fill: "none",
+          stroke: "var(--accent)",
+          "stroke-width": 2,
+          "stroke-linecap": "round"
         });
-        svg.appendChild(baseLine);
+        svg.appendChild(p);
 
-        // Scenario line
-        var scnLine = mk("path", {
-          d: scnLinePath, fill: "none",
-          stroke: "var(--mint-400)", "stroke-width": "2.4",
-          "stroke-linecap": "round", "stroke-linejoin": "round"
-        });
-        svg.appendChild(scnLine);
-
-        // Animate
-        if (!M.isReduced()) {
+        /* Tween in: stroke-dasharray reveal */
+        var len = p.getTotalLength ? p.getTotalLength() : 1200;
+        var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (!reduced) {
+          p.style.strokeDasharray = len + " " + len;
+          p.style.strokeDashoffset = len;
           requestAnimationFrame(function () {
-            var len = scnLine.getTotalLength();
-            scnLine.style.strokeDasharray = len;
-            scnLine.style.strokeDashoffset = len;
-            scnLine.style.transition = "stroke-dashoffset 1100ms var(--ease-standard)";
-            requestAnimationFrame(function () { scnLine.style.strokeDashoffset = "0"; });
+            p.style.transition = "stroke-dashoffset 560ms cubic-bezier(0.45, 0, 0.15, 1)";
+            p.style.strokeDashoffset = 0;
           });
         }
-
-        // X-axis labels (every 24 months)
-        for (var x = 0; x < BASE_SERIES.length; x += 24) {
-          var tx = mk("text", {
-            x: PAD.l + x * stepX, y: H - 12,
-            "text-anchor": x === 0 ? "start" : (x >= BASE_SERIES.length - 12 ? "end" : "middle"),
-            "font-family": "var(--font-mono)", "font-size": "10",
-            fill: "var(--ink-400)"
-          });
-          tx.textContent = x === 0 ? "Now" : "Yr " + Math.round(x / 12);
-          svg.appendChild(tx);
-        }
-
-        chartWrap.appendChild(svg);
       }
 
-      buildComparisonChart(SCENARIOS.raise);
+      function fmtMoney(n) {
+        return "$" + Math.round(n).toLocaleString();
+      }
 
-      /* ---- Tab interactivity ---- */
-      var tabs = document.querySelectorAll("[data-scn-tabs] .scn-tab");
+      function updateVerdict() {
+        var bEnd = base[base.length - 1];
+        var aEnd = active[active.length - 1];
+        var delta = aEnd - bEnd;
+        var sign = delta >= 0 ? "+" : "−";
+        document.getElementById("verdictBase").textContent = fmtMoney(bEnd);
+        document.getElementById("verdictActive").textContent = fmtMoney(aEnd);
+        document.getElementById("verdictDelta").textContent = sign + "$" + Math.abs(delta).toLocaleString();
+        document.getElementById("verdictActiveLabel").textContent =
+          (presets[current].label || "Custom scenario").toUpperCase();
+      }
+
+      function recompute() {
+        var opts = {
+          incomeGrowth: parseFloat(document.getElementById("sl-income").value) / 100,
+          savingsRate: parseFloat(document.getElementById("sl-savings").value) / 100,
+          realReturn: parseFloat(document.getElementById("sl-return").value) / 100
+        };
+        if (current === "raise") { opts.raiseAtMonth = 24; opts.raisePct = 0.20; opts.label = "20% raise at year 2"; }
+        else if (current === "house") { opts.savingsRate = Math.min(opts.savingsRate, 0.22); opts.label = "House at year 3"; }
+        else if (current === "quit") { opts.savingsRate = Math.max(opts.savingsRate, 0.40); opts.label = "Quit at 40"; }
+        else if (current === "kids") { opts.savingsRate = Math.min(opts.savingsRate, 0.22); opts.label = "Kids"; }
+        else if (current === "base") { opts.label = "Base case"; }
+        else { opts.label = "Custom"; }
+        presets[current] = opts;
+        active = project(opts);
+        render();
+        updateVerdict();
+      }
+
+      /* Slider value labels */
+      var sliderMap = {
+        "sl-income":    function (v) { return v + "%"; },
+        "sl-savings":   function (v) { return v + "%"; },
+        "sl-inflation": function (v) { return v + "%"; },
+        "sl-return":    function (v) { return v + "%"; },
+        "sl-retire":    function (v) { return v; }
+      };
+      Object.keys(sliderMap).forEach(function (id) {
+        var input = document.getElementById(id);
+        var out = document.getElementById("vl-" + id.replace("sl-", ""));
+        input.addEventListener("input", function () {
+          out.textContent = sliderMap[id](input.value);
+          recompute();
+        });
+      });
+
+      /* Tabs */
+      var tabs = document.querySelectorAll(".scenario-tab");
       tabs.forEach(function (t) {
         t.addEventListener("click", function () {
-          tabs.forEach(function (x) { x.classList.remove("scn-tab--active"); x.removeAttribute("aria-selected"); });
-          t.classList.add("scn-tab--active"); t.setAttribute("aria-selected", "true");
-          var key = t.getAttribute("data-scn");
-          var scn = SCENARIOS[key];
-          if (!scn) return;
-          // Update diff header values
-          updateDiffHero(scn);
-          // Update chart
-          buildComparisonChart(scn);
-          // Update sliders
-          syncSlidersTo(scn);
+          tabs.forEach(function (x) { x.classList.remove("is-active"); x.removeAttribute("aria-selected"); });
+          t.classList.add("is-active");
+          t.setAttribute("aria-selected", "true");
+          current = t.getAttribute("data-scenario");
+          recompute();
         });
       });
 
-      function updateDiffHero(scn) {
-        var baseV = D.netWorth.tenYearForecast; // 612,400
-        var actV = Math.round(baseV * scn.mult);
-        var delta = actV - baseV;
-        var pct = (delta / baseV) * 100;
-        var nameEl = document.querySelector("[data-active-name]");
-        if (nameEl) nameEl.textContent = scn.name;
-        var actEl = document.querySelector("[data-active-value]");
-        var delEl = document.querySelector("[data-delta-value]");
-        var pctEl = document.querySelector("[data-delta-pct]");
-        if (actEl) M.countUp(actEl, actV, { currency: "USD", decimals: 0, duration: 700 });
-        if (delEl) {
-          var sign = delta >= 0 ? "+" : "−";
-          M.countUp(delEl, Math.abs(delta), { currency: "USD", decimals: 0, duration: 700 });
-          setTimeout(function () { delEl.textContent = sign + delEl.textContent; }, 740);
-        }
-        if (pctEl) pctEl.textContent = (pct >= 0 ? "+" : "") + pct.toFixed(1) + "%";
-      }
-
-      /* ---- Sliders ---- */
-      var inputs = document.querySelectorAll("[data-input]");
-      function fmtSlider(key, v) {
-        if (key === "growth" || key === "savings" || key === "inflation" || key === "return") return v + "%";
-        if (key === "retire") return String(Math.round(v));
-        return String(v);
-      }
-      function syncSlidersTo(scn) {
-        var map = { growth: scn.growth, savings: scn.savings, inflation: scn.inflation, "return": scn.ret, retire: scn.retire };
-        inputs.forEach(function (inp) {
-          var key = inp.getAttribute("data-input");
-          if (map[key] !== undefined) {
-            inp.value = map[key];
-            var out = document.querySelector('[data-out="' + key + '"]');
-            if (out) out.textContent = fmtSlider(key, map[key]);
-          }
-        });
-      }
-      var liveTimer = null;
-      inputs.forEach(function (inp) {
-        inp.addEventListener("input", function () {
-          var key = inp.getAttribute("data-input");
-          var out = document.querySelector('[data-out="' + key + '"]');
-          if (out) out.textContent = fmtSlider(key, parseFloat(inp.value));
-          // Debounced chart recompute using current slider values as a custom scenario
-          clearTimeout(liveTimer);
-          liveTimer = setTimeout(function () {
-            var growth = parseFloat(document.querySelector('[data-input="growth"]').value);
-            var savings = parseFloat(document.querySelector('[data-input="savings"]').value);
-            var ret = parseFloat(document.querySelector('[data-input="return"]').value);
-            // Cheap composite multiplier from sliders
-            var mult = 1 + (growth - 4) * 0.05 + (savings - 21) * 0.012 + (ret - 7.2) * 0.07;
-            buildComparisonChart({ mult: Math.max(0.5, Math.min(1.9, mult)) });
-          }, 90);
-        });
-      });
-
-      M.revealOnScroll("[data-reveal]");
-      M.revealOnScroll("[data-reveal-stagger]", { stagger: 0, threshold: 0.1 });
-
-      // Resize redraw
-      var rTimer = null;
-      window.addEventListener("resize", function () {
-        clearTimeout(rTimer);
-        rTimer = setTimeout(function () {
-          var active = document.querySelector(".scn-tab--active");
-          var key = active ? active.getAttribute("data-scn") : "raise";
-          buildComparisonChart(SCENARIOS[key] || SCENARIOS.raise);
-        }, 180);
-      });
-    });
+      render();
+      updateVerdict();
+    };
   </script>
 </body>
 </html>

@@ -1,232 +1,188 @@
-<!doctype html>
-<html lang="en" data-theme="dark">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Salary calculator — ProFinanceCast</title>
-  <meta name="description" content="Calculate your take-home pay across 80+ countries.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
-  <link rel="stylesheet" href="/css/tokens.css">
-  <link rel="stylesheet" href="/css/base.css">
-  <link rel="stylesheet" href="/css/components.css">
-  <link rel="stylesheet" href="/css/layout.css">
-  <style>
-    .topbar__title { display:flex; flex-direction:column; gap:2px; min-width:0; flex:1; padding-left:var(--space-6); border-left:1px solid var(--ink-500); margin-left:var(--space-4); }
-    .topbar__title h1 { font-size:1.0625rem; font-family:var(--font-body); font-weight:500; letter-spacing:-0.01em; color:var(--ink-100); line-height:1.2; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#F7F4ED">
+<title>Salary calculator — ProFinanceCast</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="/css/pfc-tokens.css">
+<link rel="stylesheet" href="/css/pfc-base.css">
+<link rel="stylesheet" href="/css/pfc-components.css">
+<link rel="stylesheet" href="/css/pfc-layout.css">
+<style>
+  .calc { display: grid; grid-template-columns: 40% 60%; gap: var(--space-6); padding-top: var(--space-5); align-items: start; }
+  @media (max-width: 1024px) { .calc { grid-template-columns: 1fr; } }
 
-    /* Hero result */
-    .salary-hero { display:grid; grid-template-columns:1.5fr 1fr; gap:var(--space-10); align-items:center; }
-    .salary-hero__big { font-family:var(--font-mono); font-size:var(--fs-display-xl); line-height:0.95; color:var(--ink-100); font-variant-numeric:tabular-nums; letter-spacing:var(--tracking-mono); }
-    .salary-hero__mini { display:grid; grid-template-columns:1fr; gap:var(--space-5); padding-left:var(--space-6); border-left:1px solid var(--ink-500); }
-    .mini-kpi { display:flex; flex-direction:column; gap:4px; }
-    .mini-kpi__label { font-family:var(--font-mono); font-size:var(--fs-tiny); text-transform:uppercase; letter-spacing:var(--tracking-eyebrow); color:var(--ink-400); }
-    .mini-kpi__val { font-family:var(--font-mono); font-size:var(--fs-mono-md); color:var(--ink-100); font-variant-numeric:tabular-nums; }
-    @media (max-width: 900px){ .salary-hero { grid-template-columns:1fr; } .salary-hero__mini { padding-left:0; border-left:0; border-top:1px solid var(--ink-500); padding-top:var(--space-5); } }
+  .calc__inputs { display: flex; flex-direction: column; gap: var(--space-5); }
+  .field-row { display: flex; align-items: flex-end; gap: var(--space-3); }
+  .field-row .pfc-field { flex: 1; }
+  .field-row .pfc-kbd { margin-bottom: 12px; }
 
-    /* Inputs row */
-    .inputs-row { display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:var(--space-4); }
-    @media (max-width: 1024px){ .inputs-row { grid-template-columns:repeat(2, 1fr); } }
-    @media (max-width: 600px){ .inputs-row { grid-template-columns:1fr; } }
+  .pill-toggles { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+  .pill-toggle { background: transparent; color: var(--accent); border: 1px solid var(--ink-5); padding: 6px 12px; border-radius: 999px; font-size: var(--type-label); font-weight: 500; cursor: pointer; transition: background-color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out); }
+  .pill-toggle.is-on { background: var(--accent-wash); border-color: var(--accent-wash); }
 
-    /* Tax breakdown */
-    .breakdown { display:grid; grid-template-columns:1.4fr 1fr; gap:var(--space-6); }
-    @media (max-width: 900px){ .breakdown { grid-template-columns:1fr; } }
+  .calc__output { background: var(--canvas-raised); border-radius: var(--radius-3); box-shadow: var(--shadow-1); padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-5); }
+  .output__eyebrow { font-family: var(--font-body); font-size: var(--type-meta); font-weight: 500; letter-spacing: var(--track-meta); text-transform: uppercase; color: var(--ink-3); }
+  .output__big { font-family: var(--font-mono); font-variant-numeric: tabular-nums; letter-spacing: var(--track-mono); font-size: var(--type-display-xl); line-height: 1; color: var(--ink-1); display: flex; align-items: baseline; gap: 4px; }
+  .output__big .sym { font-weight: 500; color: var(--ink-3); font-size: 0.55em; }
+  .output__caption { font-size: var(--type-body); color: var(--ink-2); line-height: var(--lead-body); max-width: 56ch; }
 
-    .stacked-bar { height:28px; width:100%; display:flex; border-radius:var(--r-md); overflow:hidden; border:1px solid var(--ink-500); }
-    .stacked-bar__seg { display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:var(--fs-tiny); color:var(--ink-900); font-weight:600; transition:flex var(--dur-slow) var(--ease-standard); white-space:nowrap; overflow:hidden; }
-    .stacked-bar__legend { display:flex; flex-direction:column; gap:var(--space-3); margin-top:var(--space-5); }
-    .stacked-bar__legend-row { display:grid; grid-template-columns:14px 1fr auto auto; gap:var(--space-3); align-items:center; font-size:var(--fs-small); }
-    .stacked-bar__swatch { width:10px; height:10px; border-radius:3px; }
+  .stacked-bar { display: flex; width: 100%; height: 14px; border-radius: 4px; overflow: hidden; background: var(--canvas-sunk); }
+  .stacked-bar > div { height: 100%; transition: width var(--dur-base) var(--ease-out); }
 
-    /* Comparison */
-    .compare-grid { display:grid; grid-template-columns:repeat(3, 1fr); gap:var(--space-4); }
-    @media (max-width: 900px){ .compare-grid { grid-template-columns:1fr; } }
-    .compare-card { padding:var(--space-5); display:flex; flex-direction:column; gap:var(--space-3); }
-    .compare-card__val { font-family:var(--font-mono); font-size:1.5rem; color:var(--ink-100); }
-    .compare-card__bar { position:relative; height:6px; background:var(--ink-600); border-radius:var(--r-full); overflow:hidden; }
-    .compare-card__bar::before { content:""; position:absolute; inset:0; background:linear-gradient(90deg, var(--mint-500), var(--lavender-500), var(--coral-500)); opacity:0.55; }
-    .compare-card__dot { position:absolute; top:50%; width:12px; height:12px; border-radius:50%; background:var(--ink-100); border:2px solid var(--ink-900); transform:translate(-50%, -50%); box-shadow:0 0 0 3px var(--mint-500); }
-  </style>
+  .legend { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-2) var(--space-4); margin-top: var(--space-3); }
+  .legend__item { display: flex; align-items: center; gap: var(--space-2); font-size: var(--type-meta); color: var(--ink-3); }
+  .legend__swatch { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
+  .chart-mini { width: 100%; height: 160px; display: block; }
+  .chart-mini__title { font-family: var(--font-body); font-size: var(--type-meta); font-weight: 500; letter-spacing: var(--track-meta); text-transform: uppercase; color: var(--ink-3); margin-bottom: var(--space-3); }
+
+  .compare { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-5); padding-top: var(--space-6); border-top: 1px solid var(--ink-5); margin-top: var(--space-6); }
+  @media (max-width: 768px) { .compare { grid-template-columns: 1fr; } }
+  .compare__cell { display: flex; flex-direction: column; gap: var(--space-2); }
+  .compare__label { font-size: var(--type-meta); color: var(--ink-3); letter-spacing: var(--track-meta); text-transform: uppercase; font-weight: 500; }
+  .compare__value { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: var(--type-body-lg); color: var(--ink-1); }
+  .compare__bar { position: relative; height: 1px; background: var(--ink-5); margin-top: 6px; }
+  .compare__dot { position: absolute; top: -4px; width: 9px; height: 9px; border-radius: 50%; background: var(--accent); transform: translateX(-50%); }
+</style>
 </head>
 <body data-page="salary-calculator">
-  <div class="aurora-bg" aria-hidden="true">
-    <div class="aurora-bg__blob aurora-bg__blob--1"></div>
-    <div class="aurora-bg__blob aurora-bg__blob--2"></div>
-    <div class="aurora-bg__blob aurora-bg__blob--3"></div>
-    <div class="aurora-bg__blob aurora-bg__blob--4"></div>
-    <div class="aurora-bg__grain"></div>
-    <div class="aurora-bg__vignette"></div>
-  </div>
 
-  <div class="app-shell">
-    <div data-include="/partials/sidebar.html"></div>
+<div class="app-shell">
+  <div data-include="/partials/sidebar.html"></div>
 
-    <main class="main">
-      <header class="topbar" data-pfc-topbar>
-        <div class="topbar__breadcrumb">
-          <span>Tools</span>
-          <span class="topbar__breadcrumb-sep" aria-hidden="true">/</span>
-          <span class="topbar__breadcrumb-current">Salary calculator</span>
-        </div>
-        <div class="topbar__title">
-          <h1>Take-home pay across <span class="mono">80+</span> countries</h1>
-        </div>
-        <div class="topbar__actions">
-          <button type="button" class="btn btn--ghost btn--sm">Share</button>
-          <button type="button" class="btn btn--primary btn--sm">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
-            Save scenario
-          </button>
-        </div>
-      </header>
+  <div class="app-content">
+    <div data-include="/partials/topbar.html"></div>
 
-      <div class="main__content">
+    <main class="app-main">
+      <div class="calc" data-reveal-stagger>
 
-        <!-- ============================ HERO RESULT ============================ -->
-        <section class="section">
-          <article class="card card--glass card--pad-xl" data-reveal>
-            <div class="salary-hero">
-              <div>
-                <span class="eyebrow">After tax · monthly</span>
-                <div class="salary-hero__big" id="hero-takehome" style="margin-top:var(--space-3);">$0</div>
-                <p class="muted" style="margin-top:var(--space-3);">United States · Single filer · Paid monthly</p>
-              </div>
-              <div class="salary-hero__mini">
-                <div class="mini-kpi">
-                  <span class="mini-kpi__label">Gross / yr</span>
-                  <span class="mini-kpi__val" id="hero-gross">$0</span>
-                </div>
-                <div class="mini-kpi">
-                  <span class="mini-kpi__label">Tax / yr</span>
-                  <span class="mini-kpi__val" id="hero-tax">$0</span>
-                </div>
-                <div class="mini-kpi">
-                  <span class="mini-kpi__label">Take-home rate</span>
-                  <span class="mini-kpi__val" id="hero-pct">0%</span>
-                </div>
-              </div>
+        <!-- LEFT -- inputs -->
+        <section class="calc__inputs">
+
+          <div class="field-row">
+            <div class="pfc-field">
+              <label class="pfc-field__label" for="gross">Gross annual</label>
+              <input class="pfc-input mono tabular" type="text" id="gross" value="$93,600" inputmode="decimal">
+              <span class="pfc-field__helper">Pre-tax compensation, currency follows country.</span>
             </div>
-          </article>
-        </section>
+            <span class="pfc-kbd">G</span>
+          </div>
 
-        <!-- ============================ INPUTS ============================ -->
-        <section class="section" data-reveal>
-          <header class="section__header">
-            <div>
-              <span class="eyebrow">01 · Inputs</span>
-              <h2 class="section__title">Tell us about your pay</h2>
-              <p class="section__lede">Numbers recompute live as you type.</p>
-            </div>
-          </header>
-          <div class="inputs-row">
-            <label class="field">
-              <span class="field__label">Gross salary (annual)</span>
-              <input type="number" class="input input--mono" id="in-gross" value="93600" min="0" step="1000" inputmode="numeric">
-            </label>
-            <label class="field">
-              <span class="field__label">Pay frequency</span>
-              <select class="select" id="in-freq">
-                <option value="12">Monthly</option>
-                <option value="26" selected>Bi-weekly</option>
-                <option value="52">Weekly</option>
-                <option value="24">Semi-monthly</option>
+          <div class="field-row">
+            <div class="pfc-field">
+              <label class="pfc-field__label" for="freq">Pay frequency</label>
+              <select class="pfc-select" id="freq">
+                <option value="monthly" selected>Monthly</option>
+                <option value="biweekly">Bi-weekly</option>
+                <option value="weekly">Weekly</option>
               </select>
-            </label>
-            <label class="field">
-              <span class="field__label">Country</span>
-              <select class="select" id="in-country">
-                <option value="US" selected>United States</option>
-                <option value="UK">United Kingdom</option>
-                <option value="CA">Canada</option>
+            </div>
+            <span class="pfc-kbd">F</span>
+          </div>
+
+          <div class="field-row">
+            <div class="pfc-field">
+              <label class="pfc-field__label" for="country">Country</label>
+              <select class="pfc-select" id="country">
+                <option value="US">United States</option>
+                <option value="UK" selected>United Kingdom</option>
                 <option value="DE">Germany</option>
-                <option value="AU">Australia</option>
                 <option value="SG">Singapore</option>
-                <option value="JP">Japan</option>
-                <option value="IN">India</option>
+                <option value="AU">Australia</option>
               </select>
-            </label>
-            <label class="field">
-              <span class="field__label">Filing status</span>
-              <select class="select" id="in-status">
-                <option value="single" selected>Single</option>
-                <option value="married">Married filing jointly</option>
-                <option value="hoh">Head of household</option>
+            </div>
+            <span class="pfc-kbd">C</span>
+          </div>
+
+          <div class="field-row">
+            <div class="pfc-field">
+              <label class="pfc-field__label" for="filing">Filing status</label>
+              <select class="pfc-select" id="filing">
+                <option>Single</option>
+                <option>Married, filing jointly</option>
+                <option>Married, filing separately</option>
+                <option>Head of household</option>
               </select>
-            </label>
-          </div>
-        </section>
-
-        <!-- ============================ BREAKDOWN ============================ -->
-        <section class="section" data-reveal>
-          <header class="section__header">
-            <div>
-              <span class="eyebrow">02 · Where it goes</span>
-              <h2 class="section__title">Tax breakdown</h2>
             </div>
-          </header>
-          <div class="breakdown">
-            <article class="card card--glass card--pad-lg">
-              <div class="stacked-bar" id="stacked-bar" aria-label="Tax composition"></div>
-              <div class="stacked-bar__legend" id="stacked-legend"></div>
-            </article>
-            <article class="card card--glass card--pad-lg" style="display:grid;place-items:center;">
-              <div id="donut-tax" style="width:220px;height:220px;"></div>
-            </article>
+            <span class="pfc-kbd">S</span>
           </div>
-        </section>
 
-        <!-- ============================ 12 MONTH ============================ -->
-        <section class="section" data-reveal>
-          <header class="section__header">
-            <div>
-              <span class="eyebrow">03 · The year ahead</span>
-              <h2 class="section__title">Monthly take-home</h2>
-              <p class="section__lede">Bi-weekly pay creates two "3-paycheck" months — visible as taller bars.</p>
+          <div class="pfc-field">
+            <label class="pfc-field__label">Extras</label>
+            <div class="pill-toggles" role="group" aria-label="Optional pre-tax extras">
+              <button type="button" class="pill-toggle is-on" data-extra="pension">Pension contribution</button>
+              <button type="button" class="pill-toggle" data-extra="health">Health premium</button>
+              <button type="button" class="pill-toggle" data-extra="401k">401k</button>
             </div>
-          </header>
-          <article class="card card--glass card--pad-lg">
-            <div id="monthly-bars"></div>
-          </article>
-        </section>
-
-        <!-- ============================ COMPARISON ============================ -->
-        <section class="section" data-reveal>
-          <header class="section__header">
-            <div>
-              <span class="eyebrow">04 · Benchmarks</span>
-              <h2 class="section__title">How does this compare?</h2>
-            </div>
-          </header>
-          <div class="compare-grid">
-            <article class="card card--glass compare-card">
-              <span class="eyebrow">Top 10% · US</span>
-              <span class="compare-card__val mono">$216,400</span>
-              <div class="compare-card__bar"><span class="compare-card__dot" style="left:30%;"></span></div>
-              <span class="muted" style="font-size:var(--fs-small);">You sit in the top 38%</span>
-            </article>
-            <article class="card card--glass compare-card">
-              <span class="eyebrow">Median · US</span>
-              <span class="compare-card__val mono">$59,540</span>
-              <div class="compare-card__bar"><span class="compare-card__dot" style="left:62%;"></span></div>
-              <span class="muted" style="font-size:var(--fs-small);">+57% above national median</span>
-            </article>
-            <article class="card card--glass compare-card">
-              <span class="eyebrow">Your role · range</span>
-              <span class="compare-card__val mono">$78k — $124k</span>
-              <div class="compare-card__bar"><span class="compare-card__dot" style="left:48%;"></span></div>
-              <span class="muted" style="font-size:var(--fs-small);">Mid-band for senior product</span>
-            </article>
+            <span class="pfc-field__helper">Pre-tax deductions applied before income tax calculation.</span>
           </div>
+
         </section>
 
-        <!-- ============================ CAVEAT ============================ -->
-        <section class="section" data-reveal>
-          <div style="padding:var(--space-5) var(--space-6);background:transparent;border:1px dashed var(--ink-500);border-radius:var(--r-md);color:var(--ink-400);font-size:var(--fs-small);display:flex;gap:var(--space-3);align-items:flex-start;">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg>
-            <div>
-              Our tax library covers Americas, EU, and APAC — 80+ jurisdictions. Figures are illustrative; consult a licensed tax advisor before filing.
+        <!-- RIGHT -- live output -->
+        <section class="calc__output">
+          <div>
+            <div class="output__eyebrow">Take-home pay</div>
+            <div class="output__big"><span class="sym">$</span><span data-takehome>5,538</span></div>
+            <p class="output__caption" style="margin-top: var(--space-3);">After income tax, social security, and standard deductions. UK PAYE basic rate.</p>
+          </div>
+
+          <div>
+            <div class="stacked-bar" id="stacked-bar">
+              <div data-seg="take" style="width:71%; background: var(--accent);"></div>
+              <div data-seg="tax" style="width:18%; background: var(--ink-3);"></div>
+              <div data-seg="soc" style="width:8%;  background: var(--ink-4);"></div>
+              <div data-seg="oth" style="width:3%;  background: var(--ink-5);"></div>
+            </div>
+            <div class="legend">
+              <div class="legend__item"><span class="legend__swatch" style="background:var(--accent);"></span>Take-home <span class="mono tabular" style="margin-left:auto;" data-amt="take">$5,538</span></div>
+              <div class="legend__item"><span class="legend__swatch" style="background:var(--ink-3);"></span>Income tax <span class="mono tabular" style="margin-left:auto;" data-amt="tax">$1,404</span></div>
+              <div class="legend__item"><span class="legend__swatch" style="background:var(--ink-4);"></span>National insurance <span class="mono tabular" style="margin-left:auto;" data-amt="soc">$624</span></div>
+              <div class="legend__item"><span class="legend__swatch" style="background:var(--ink-5);"></span>Other deductions <span class="mono tabular" style="margin-left:auto;" data-amt="oth">$234</span></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="chart-mini__title">12 months of take-home</div>
+            <svg class="chart-mini" viewBox="0 0 480 160" preserveAspectRatio="none" role="img" aria-label="Monthly take-home pay bar chart">
+              <g stroke="var(--ink-5)" stroke-width="1">
+                <line x1="0" y1="40"  x2="480" y2="40"/>
+                <line x1="0" y1="80"  x2="480" y2="80"/>
+                <line x1="0" y1="120" x2="480" y2="120"/>
+              </g>
+              <g id="month-bars" fill="var(--accent)"></g>
+              <g font-family="JetBrains Mono" font-size="9" fill="var(--ink-3)">
+                <text x="0"   y="155">Jan</text>
+                <text x="80"  y="155">Mar</text>
+                <text x="160" y="155">May</text>
+                <text x="240" y="155">Jul</text>
+                <text x="320" y="155">Sep</text>
+                <text x="400" y="155">Nov</text>
+              </g>
+            </svg>
+          </div>
+
+          <!-- comparison strip -->
+          <div class="compare">
+            <div class="compare__cell">
+              <span class="compare__label">Top 10% in UK</span>
+              <span class="compare__value">$8,400/mo</span>
+              <div class="compare__bar"><span class="compare__dot" style="left:90%;"></span></div>
+            </div>
+            <div class="compare__cell">
+              <span class="compare__label">Median in UK</span>
+              <span class="compare__value">$3,180/mo</span>
+              <div class="compare__bar"><span class="compare__dot" style="left:42%;"></span></div>
+            </div>
+            <div class="compare__cell">
+              <span class="compare__label">Your role range</span>
+              <span class="compare__value">$4,800 &ndash; $6,400</span>
+              <div class="compare__bar"><span class="compare__dot" style="left:68%;"></span></div>
             </div>
           </div>
         </section>
@@ -234,119 +190,187 @@
       </div>
     </main>
   </div>
+</div>
 
-  <script src="/js/demo-data.js"></script>
-  <script src="/js/include.js"></script>
-  <script src="/js/motion.js"></script>
-  <script src="/js/charts.js"></script>
-  <script src="/js/app.js"></script>
-  <script>
-    (function () {
-      const M = window.PFC_MOTION, C = window.PFC_CHARTS;
+<nav class="bottom-tabs" aria-label="Primary mobile" data-include="/partials/bottom-tabs.html"></nav>
 
-      // Simplified US federal + state + FICA — illustrative only.
-      function calcUS(gross, status) {
-        const stdDed = status === "married" ? 29200 : 14600;
-        const taxable = Math.max(0, gross - stdDed);
-        // 2024 single brackets (simplified)
-        const brackets = status === "married"
-          ? [[23200, 0.10], [94300, 0.12], [201050, 0.22], [383900, 0.24], [487450, 0.32], [731200, 0.35], [Infinity, 0.37]]
-          : [[11600, 0.10], [47150, 0.12], [100525, 0.22], [191950, 0.24], [243725, 0.32], [609350, 0.35], [Infinity, 0.37]];
-        let fed = 0, prev = 0;
-        for (const [cap, rate] of brackets) {
-          if (taxable > cap) { fed += (cap - prev) * rate; prev = cap; }
-          else { fed += (taxable - prev) * rate; break; }
-        }
-        const state = gross * 0.045; // illustrative blended state
-        const social = Math.min(gross, 168600) * 0.062 + gross * 0.0145;
-        return { fed, state, social, take: gross - fed - state - social };
+<script src="/js/pfc-include.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  window.PFC = window.PFC || {};
+  window.PFC.setTopbar = window.PFC.setTopbar || function (cfg) {
+    var t = document.querySelector('[data-slot="title"]');
+    var s = document.querySelector('[data-slot="subtitle"]');
+    var a = document.querySelector('[data-slot="actions"]');
+    if (t && cfg.title) t.textContent = cfg.title;
+    if (s && cfg.subtitle) s.textContent = cfg.subtitle;
+    if (a && cfg.actions) a.innerHTML = cfg.actions;
+  };
+
+  function markActive() {
+    var page = document.body.getAttribute("data-page");
+    document.querySelectorAll(".app-sidebar__item").forEach(function (el) {
+      if (el.getAttribute("data-page") === page) {
+        el.classList.add("is-active"); el.setAttribute("aria-current", "page");
       }
+    });
+  }
 
-      // Multi-country factors (illustrative).
-      const countryFactor = { US: 1.0, UK: 0.95, CA: 1.05, DE: 1.18, AU: 1.0, SG: 0.78, JP: 0.95, IN: 0.85 };
-
-      let lastTake = 0;
-
-      function recompute(animate) {
-        const gross = +document.getElementById("in-gross").value || 0;
-        const freq = +document.getElementById("in-freq").value || 12;
-        const country = document.getElementById("in-country").value;
-        const status = document.getElementById("in-status").value;
-        const baseUS = calcUS(gross, status);
-        const factor = countryFactor[country] || 1.0;
-        const fed = baseUS.fed * factor;
-        const state = baseUS.state * factor * 0.9;
-        const social = baseUS.social * factor;
-        const take = Math.max(0, gross - fed - state - social);
-        const monthlyTake = take / 12;
-        const pct = gross > 0 ? take / gross : 0;
-
-        // Hero
-        const heroEl = document.getElementById("hero-takehome");
-        if (animate) M.countUp(heroEl, monthlyTake, { currency: "USD", decimals: 0 });
-        else heroEl.textContent = M.formatNumber(monthlyTake, { currency: "USD", decimals: 0 });
-        document.getElementById("hero-gross").textContent = M.formatNumber(gross, { currency: "USD", decimals: 0 });
-        document.getElementById("hero-tax").textContent = M.formatNumber(fed + state + social, { currency: "USD", decimals: 0 });
-        document.getElementById("hero-pct").textContent = M.formatNumber(pct, { percent: true, decimals: 0 });
-
-        lastTake = take;
-
-        // Stacked bar
-        const segs = [
-          { label: "Take-home", value: take,   color: "var(--mint-500)" },
-          { label: "Federal",   value: fed,    color: "var(--lavender-500)" },
-          { label: "State",     value: state,  color: "var(--coral-500)" },
-          { label: "Social/Medicare", value: social, color: "var(--amber-400)" },
-        ];
-        const totalSeg = segs.reduce((s, x) => s + x.value, 0) || 1;
-        const bar = document.getElementById("stacked-bar");
-        bar.innerHTML = "";
-        segs.forEach(s => {
-          const seg = document.createElement("div");
-          const w = (s.value / totalSeg) * 100;
-          seg.className = "stacked-bar__seg";
-          seg.style.flex = `0 0 ${w}%`;
-          seg.style.background = s.color;
-          if (w > 8) seg.textContent = `${w.toFixed(0)}%`;
-          bar.appendChild(seg);
-        });
-        const legend = document.getElementById("stacked-legend");
-        legend.innerHTML = segs.map(s => `
-          <div class="stacked-bar__legend-row">
-            <span class="stacked-bar__swatch" style="background:${s.color};"></span>
-            <span style="color:var(--ink-200);">${s.label}</span>
-            <span class="mono" style="color:var(--ink-100);">${M.formatNumber(s.value, { currency: "USD", decimals: 0 })}</span>
-            <span class="mono muted">${((s.value / totalSeg) * 100).toFixed(0)}%</span>
-          </div>`).join("");
-
-        // Donut
-        C.donut(document.getElementById("donut-tax"), segs, {
-          size: 220, thickness: 22,
-          centerValue: M.formatNumber(pct, { percent: true, decimals: 0 }),
-          centerLabel: "Take-home",
-        });
-
-        // Monthly bars — bi-weekly creates 2 "3-check" months
-        const data = [];
-        const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-        for (let i = 0; i < 12; i++) {
-          let v = monthlyTake;
-          if (freq === 26 && (i === 2 || i === 8)) v = monthlyTake * 1.5; // 3-paycheck months
-          if (freq === 52 && i === 4) v = monthlyTake * 1.25;
-          data.push({ label: monthNames[i], value: Math.round(v) });
-        }
-        C.barChart(document.getElementById("monthly-bars"), data, { currency: "USD", rowHeight: 30, gap: 6 });
-      }
-
-      document.addEventListener("pfc:partials-ready", () => {
-        ["in-gross", "in-freq", "in-country", "in-status"].forEach(id => {
-          document.getElementById(id).addEventListener("input", () => recompute(false));
-          document.getElementById(id).addEventListener("change", () => recompute(false));
-        });
-        // Initial: animate counters
-        setTimeout(() => recompute(true), 200);
+  function reveal() {
+    var groups = document.querySelectorAll("[data-reveal-stagger]");
+    groups.forEach(function (g) {
+      Array.prototype.slice.call(g.children).forEach(function (child, i) {
+        var delay = Math.min(i, 6) * 60;
+        setTimeout(function () { child.classList.add("is-revealed"); }, delay);
       });
-    })();
-  </script>
+    });
+    document.querySelectorAll("[data-reveal]").forEach(function (el) { el.classList.add("is-revealed"); });
+  }
+
+  function tweenNumber(el, from, to, fmt, dur) {
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      el.textContent = fmt(to); return;
+    }
+    var start = performance.now(), d = dur || 320;
+    function ease(t) { return 1 - Math.pow(1 - t, 4); }
+    function frame(now) {
+      var t = Math.min(1, (now - start) / d);
+      var v = from + (to - from) * ease(t);
+      el.textContent = fmt(v);
+      if (t < 1) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  function fmtMoney(v) {
+    return Math.round(v).toLocaleString("en-US");
+  }
+
+  /* Simplified tax model -- per-country effective rates ------------------- */
+  var COUNTRY_RATES = {
+    US: { tax: 0.22, soc: 0.0765, other: 0.03 },
+    UK: { tax: 0.18, soc: 0.08,   other: 0.03 },
+    DE: { tax: 0.28, soc: 0.20,   other: 0.02 },
+    SG: { tax: 0.07, soc: 0.20,   other: 0.01 },
+    AU: { tax: 0.21, soc: 0.10,   other: 0.02 }
+  };
+
+  var state = {
+    gross: 93600,
+    freq: "monthly",
+    country: "UK",
+    extras: { pension: true, health: false, "401k": false }
+  };
+
+  function parseGross(s) {
+    var n = parseFloat(String(s).replace(/[^0-9.]/g, ""));
+    return isNaN(n) ? 0 : n;
+  }
+
+  function recompute() {
+    var r = COUNTRY_RATES[state.country] || COUNTRY_RATES.UK;
+    var extraDeduct = 0;
+    if (state.extras.pension) extraDeduct += 0.05;
+    if (state.extras.health)  extraDeduct += 0.015;
+    if (state.extras["401k"]) extraDeduct += 0.04;
+
+    var preTax = state.gross * (1 - extraDeduct);
+    var tax = preTax * r.tax;
+    var soc = preTax * r.soc;
+    var other = preTax * r.other;
+    var take = preTax - tax - soc - other;
+
+    var divisor = state.freq === "weekly" ? 52 : state.freq === "biweekly" ? 26 : 12;
+    var perPeriod = {
+      take:  take / divisor,
+      tax:   tax / divisor,
+      soc:   soc / divisor,
+      other: other / divisor
+    };
+    var totalPeriod = perPeriod.take + perPeriod.tax + perPeriod.soc + perPeriod.other;
+
+    /* Update big number */
+    var bigEl = document.querySelector("[data-takehome]");
+    if (bigEl) {
+      var cur = parseFloat(bigEl.textContent.replace(/[^0-9.]/g, "")) || 0;
+      tweenNumber(bigEl, cur, perPeriod.take, fmtMoney);
+    }
+
+    /* Stacked bar widths */
+    var bar = document.getElementById("stacked-bar");
+    if (bar) {
+      bar.querySelector('[data-seg="take"]').style.width  = (perPeriod.take / totalPeriod * 100).toFixed(1) + "%";
+      bar.querySelector('[data-seg="tax"]').style.width   = (perPeriod.tax / totalPeriod * 100).toFixed(1) + "%";
+      bar.querySelector('[data-seg="soc"]').style.width   = (perPeriod.soc / totalPeriod * 100).toFixed(1) + "%";
+      bar.querySelector('[data-seg="oth"]').style.width   = (perPeriod.other / totalPeriod * 100).toFixed(1) + "%";
+    }
+
+    /* Legend amounts */
+    document.querySelector('[data-amt="take"]').textContent = "$" + fmtMoney(perPeriod.take);
+    document.querySelector('[data-amt="tax"]').textContent  = "$" + fmtMoney(perPeriod.tax);
+    document.querySelector('[data-amt="soc"]').textContent  = "$" + fmtMoney(perPeriod.soc);
+    document.querySelector('[data-amt="oth"]').textContent  = "$" + fmtMoney(perPeriod.other);
+
+    /* 12-month bars (slight variance, biweekly bumps months 3 & 9) */
+    var bars = document.getElementById("month-bars");
+    if (bars) {
+      bars.innerHTML = "";
+      var monthly = take / 12;
+      for (var i = 0; i < 12; i++) {
+        var bump = 1.0;
+        if (state.freq === "biweekly" && (i === 2 || i === 8)) bump = 1.5;
+        var v = monthly * bump;
+        var maxV = monthly * 1.6;
+        var h = Math.max(4, (v / maxV) * 120);
+        var x = i * 40 + 8;
+        var y = 140 - h;
+        bars.insertAdjacentHTML("beforeend",
+          '<rect x="' + x + '" y="' + y + '" width="24" height="' + h + '" rx="1"></rect>');
+      }
+    }
+  }
+
+  function init() {
+    markActive();
+
+    window.PFC.setTopbar({
+      title: "Salary calculator",
+      subtitle: "Take-home pay across 80+ countries. Tax library current to 2026.",
+      actions: '<button type="button" class="pfc-button pfc-button--primary">Save this calculation</button>'
+    });
+
+    document.getElementById("gross").addEventListener("input", function (e) {
+      state.gross = parseGross(e.target.value); recompute();
+    });
+    document.getElementById("freq").addEventListener("change", function (e) {
+      state.freq = e.target.value; recompute();
+    });
+    document.getElementById("country").addEventListener("change", function (e) {
+      state.country = e.target.value; recompute();
+    });
+    document.querySelectorAll(".pill-toggle").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var k = btn.getAttribute("data-extra");
+        state.extras[k] = !state.extras[k];
+        btn.classList.toggle("is-on", state.extras[k]);
+        recompute();
+      });
+    });
+
+    recompute();
+    requestAnimationFrame(reveal);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () {
+      document.addEventListener("pfc:partials-ready", init, { once: true });
+    });
+  } else {
+    document.addEventListener("pfc:partials-ready", init, { once: true });
+  }
+})();
+</script>
 </body>
 </html>

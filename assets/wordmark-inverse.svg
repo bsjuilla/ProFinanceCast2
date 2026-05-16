@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 56" role="img" aria-label="ProFinanceCast">
+  <title>ProFinanceCast</title>
+  <style>
+    .wm {
+      font-family: "Fraunces", Georgia, serif;
+      font-weight: 400;
+      font-size: 40px;
+      font-variation-settings: "opsz" 144, "SOFT" 50, "WONK" 0;
+      letter-spacing: -0.022em;
+      fill: #E8E2D2;
+    }
+  </style>
+  <text x="0" y="40" class="wm">ProFinanceCast</text>
+</svg>

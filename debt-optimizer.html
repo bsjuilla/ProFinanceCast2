@@ -1,401 +1,351 @@
-<!doctype html>
-<html lang="en" data-theme="dark">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Debt optimizer — ProFinanceCast</title>
-  <meta name="description" content="Plan an avalanche or snowball payoff. Watch your debt-free date move in real time.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
-  <link rel="stylesheet" href="/css/tokens.css">
-  <link rel="stylesheet" href="/css/base.css">
-  <link rel="stylesheet" href="/css/components.css">
-  <link rel="stylesheet" href="/css/layout.css">
-  <style>
-    /* ---------- DEBT OPTIMIZER — page-local ---------- */
-    .topbar__title { display:flex; flex-direction:column; gap:2px; min-width:0; flex:1; padding-left:var(--space-6); border-left:1px solid var(--ink-500); margin-left:var(--space-4); }
-    .topbar__title h1 { font-size:1.0625rem; font-family:var(--font-body); font-weight:500; letter-spacing:-0.01em; color:var(--ink-100); line-height:1.2; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#F7F4ED">
+<title>Debt optimizer — ProFinanceCast</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="/css/pfc-tokens.css">
+<link rel="stylesheet" href="/css/pfc-base.css">
+<link rel="stylesheet" href="/css/pfc-components.css">
+<link rel="stylesheet" href="/css/pfc-layout.css">
+<style>
+  /* Page-local styles ------------------------------------------------------- */
+  .page-stack { display: flex; flex-direction: column; gap: var(--space-7); padding-top: var(--space-5); }
+  .verdict { display: flex; flex-direction: column; gap: var(--space-3); max-width: 72ch; }
+  .verdict__eyebrow { font-family: var(--font-body); font-size: var(--type-meta); font-weight: 500; letter-spacing: var(--track-meta); text-transform: uppercase; color: var(--ink-3); }
+  .verdict__number { font-family: var(--font-display); font-size: var(--type-display-xl); line-height: 1; letter-spacing: var(--track-display); color: var(--ink-1); font-feature-settings: "tnum" 1; font-variant-numeric: tabular-nums; }
+  .verdict__caption { font-size: var(--type-body-lg); color: var(--ink-2); line-height: var(--lead-body); max-width: 60ch; }
 
-    .kpi-strip { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:var(--space-6); }
-    .kpi-strip .card { padding:var(--space-8); }
-    @media (max-width: 900px){ .kpi-strip { grid-template-columns:1fr; } }
+  .evidence { display: grid; grid-template-columns: 2fr 1fr; gap: var(--space-6); align-items: stretch; }
+  @media (max-width: 1024px) { .evidence { grid-template-columns: 1fr; } }
+  .chart-wrap { background: var(--canvas-raised); border-radius: var(--radius-3); box-shadow: var(--shadow-1); padding: var(--space-5); display: flex; flex-direction: column; gap: var(--space-3); min-height: 380px; }
+  .chart-wrap__title { font-family: var(--font-body); font-size: var(--type-meta); font-weight: 500; letter-spacing: var(--track-meta); text-transform: uppercase; color: var(--ink-3); }
+  .chart-wrap svg { width: 100%; height: 320px; display: block; }
 
-    .strategy { display:grid; grid-template-columns:1fr 1fr; gap:var(--space-4); }
-    .strategy__tile { position:relative; padding:var(--space-6); background:var(--ink-700); border:1px solid var(--ink-500); border-radius:var(--r-lg); cursor:pointer; text-align:left; display:flex; flex-direction:column; gap:var(--space-3); transition:border-color var(--dur-base) var(--ease-standard), background var(--dur-base) var(--ease-standard), box-shadow var(--dur-base) var(--ease-standard); }
-    .strategy__tile:hover { border-color:var(--ink-400); }
-    .strategy__tile[aria-pressed="true"] { border-color:var(--mint-500); background:oklch(78% 0.175 168 / 0.06); box-shadow:var(--shadow-aurora); }
-    .strategy__tile-name { font-family:var(--font-display); font-size:1.5rem; color:var(--ink-100); letter-spacing:var(--tracking-display); }
-    .strategy__tile-desc { font-size:var(--fs-small); color:var(--ink-400); }
-    .strategy__tile-icon { width:36px; height:36px; border-radius:var(--r-sm); background:oklch(100% 0 0 / 0.04); display:grid; place-items:center; color:var(--mint-400); }
-    .strategy__tile[aria-pressed="true"] .strategy__tile-icon { background:oklch(78% 0.175 168 / 0.14); }
-    @media (max-width: 720px){ .strategy { grid-template-columns:1fr; } }
+  .slide-panel { display: flex; flex-direction: column; gap: var(--space-4); padding: var(--space-5); background: var(--canvas-sunk); border-radius: var(--radius-3); }
+  .slide-panel__label { font-family: var(--font-body); font-size: var(--type-meta); font-weight: 500; letter-spacing: var(--track-meta); text-transform: uppercase; color: var(--ink-3); }
+  .slide-panel__value { font-family: var(--font-mono); font-variant-numeric: tabular-nums; letter-spacing: var(--track-mono); font-size: var(--type-display-md); line-height: 1; color: var(--ink-1); }
+  .slide-panel__scale { display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: var(--type-meta); color: var(--ink-3); }
+  .slide-panel__hint { font-size: var(--type-meta); color: var(--ink-3); line-height: 1.5; }
 
-    .compare { display:grid; grid-template-columns:1fr auto 1fr; gap:var(--space-6); align-items:center; margin-top:var(--space-6); padding:var(--space-5) var(--space-6); background:oklch(100% 0 0 / 0.03); border:1px solid var(--ink-500); border-radius:var(--r-md); }
-    .compare__col { display:flex; flex-direction:column; gap:4px; }
-    .compare__col[data-active="false"] { opacity:0.55; }
-    .compare__label { font-family:var(--font-mono); font-size:var(--fs-tiny); text-transform:uppercase; letter-spacing:var(--tracking-eyebrow); color:var(--ink-400); }
-    .compare__val { font-family:var(--font-mono); font-size:1.125rem; color:var(--ink-100); font-variant-numeric:tabular-nums; }
-    .compare__vs { font-family:var(--font-display); color:var(--ink-400); font-style:italic; }
+  .section-title { font-family: var(--font-body); font-size: var(--type-meta); font-weight: 500; letter-spacing: var(--track-meta); text-transform: uppercase; color: var(--ink-3); margin-bottom: var(--space-4); }
 
-    .timeline-wrap { position:relative; }
-    .timeline-wrap__milestone { position:absolute; right:8%; top:50%; transform:translateY(-50%); display:flex; align-items:center; gap:var(--space-2); padding:6px 10px; background:var(--ink-800); border:1px solid var(--mint-500); border-radius:var(--r-full); font-family:var(--font-mono); font-size:var(--fs-tiny); color:var(--mint-300); white-space:nowrap; }
-    .timeline-wrap__milestone::before { content:""; width:8px; height:8px; border-radius:50%; background:var(--mint-500); box-shadow:0 0 0 4px oklch(78% 0.175 168 / 0.25); }
+  .action-row { display: flex; justify-content: flex-end; gap: var(--space-3); align-items: center; }
+  @media (max-width: 640px) { .action-row { justify-content: stretch; flex-direction: column-reverse; } .action-row .pfc-button { width: 100%; } }
 
-    .debt-list { display:grid; gap:1px; background:var(--ink-500); border:1px solid var(--ink-500); border-radius:var(--r-md); overflow:hidden; }
-    .debt-list__head, .debt-list__row { display:grid; grid-template-columns:1.6fr 1fr 1fr 1fr 1.4fr; gap:var(--space-4); padding:var(--space-4) var(--space-5); background:var(--ink-700); align-items:center; font-size:var(--fs-small); }
-    .debt-list__head { background:var(--ink-800); color:var(--ink-400); font-family:var(--font-mono); font-size:var(--fs-tiny); text-transform:uppercase; letter-spacing:var(--tracking-eyebrow); cursor:default; }
-    .debt-list__head button { color:inherit; font:inherit; text-transform:inherit; letter-spacing:inherit; text-align:left; display:inline-flex; align-items:center; gap:4px; }
-    .debt-list__head button:hover { color:var(--ink-200); }
-    .debt-list__row:hover { background:var(--ink-600); }
-    .debt-list__name { display:flex; flex-direction:column; gap:4px; color:var(--ink-100); font-weight:500; }
-    .debt-list__progress { display:flex; flex-direction:column; gap:6px; }
-    .debt-list__progress small { font-family:var(--font-mono); font-size:var(--fs-tiny); color:var(--ink-400); }
-    @media (max-width: 900px){ .debt-list__head { display:none; } .debt-list__row { grid-template-columns:1fr 1fr; gap:var(--space-3); } }
-
-    .extra-pay { display:grid; grid-template-columns:1fr 1.4fr; gap:var(--space-10); align-items:center; }
-    .extra-pay__amount { font-family:var(--font-mono); font-size:var(--fs-mono-xl); color:var(--ink-100); line-height:1; }
-    .extra-pay__label { font-family:var(--font-mono); font-size:var(--fs-tiny); text-transform:uppercase; letter-spacing:var(--tracking-eyebrow); color:var(--mint-400); }
-    .extra-pay__hint { color:var(--ink-400); font-size:var(--fs-small); margin-top:var(--space-3); max-width:36ch; }
-    .extra-pay__slider-wrap { display:flex; flex-direction:column; gap:var(--space-4); }
-    .extra-pay__ticks { display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:var(--fs-tiny); color:var(--ink-400); }
-    @media (max-width: 900px){ .extra-pay { grid-template-columns:1fr; gap:var(--space-6); } }
-
-    .methodology { padding:var(--space-5) var(--space-6); background:transparent; border:1px dashed var(--ink-500); border-radius:var(--r-md); color:var(--ink-400); font-size:var(--fs-small); display:flex; gap:var(--space-3); align-items:flex-start; }
-    .methodology svg { flex-shrink:0; color:var(--ink-400); margin-top:2px; }
-  </style>
+  .foot-note { font-size: var(--type-meta); color: var(--ink-3); padding-top: var(--space-4); border-top: 1px solid var(--ink-5); }
+  .foot-note a { color: var(--accent); }
+</style>
 </head>
 <body data-page="debt-optimizer">
-  <div class="aurora-bg" aria-hidden="true">
-    <div class="aurora-bg__blob aurora-bg__blob--1"></div>
-    <div class="aurora-bg__blob aurora-bg__blob--2"></div>
-    <div class="aurora-bg__blob aurora-bg__blob--3"></div>
-    <div class="aurora-bg__blob aurora-bg__blob--4"></div>
-    <div class="aurora-bg__grain"></div>
-    <div class="aurora-bg__vignette"></div>
-  </div>
 
-  <div class="app-shell">
-    <div data-include="/partials/sidebar.html"></div>
+<div class="app-shell">
+  <div data-include="/partials/sidebar.html"></div>
 
-    <main class="main">
-      <header class="topbar" data-pfc-topbar>
-        <div class="topbar__breadcrumb">
-          <span>Tools</span>
-          <span class="topbar__breadcrumb-sep" aria-hidden="true">/</span>
-          <span class="topbar__breadcrumb-current">Debt optimizer</span>
-        </div>
-        <div class="topbar__title">
-          <h1>Become debt-free in <span class="mono" data-bind="months-headline">18</span> months</h1>
-        </div>
-        <div class="topbar__actions">
-          <button type="button" class="btn btn--ghost btn--sm">Reset</button>
-          <button type="button" class="btn btn--primary btn--sm" data-action="save-strategy">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 5h12l2 2v12H5z"/><path d="M8 5v5h7V5M8 19v-6h8v6"/></svg>
-            Save strategy
-          </button>
-        </div>
-      </header>
+  <div class="app-content">
+    <div data-include="/partials/topbar.html"></div>
 
-      <div class="main__content">
+    <main class="app-main">
+      <div class="page-stack" data-reveal-stagger>
 
-        <!-- ============================ HERO KPI ============================ -->
-        <section class="section">
-          <div class="kpi-strip" data-reveal>
-            <article class="card card--glass">
-              <div class="kpi">
-                <span class="kpi__eyebrow">Total debt</span>
-                <span class="kpi__value mono" data-kpi="total-debt">$0</span>
-                <span class="kpi__meta">Across 3 accounts</span>
-              </div>
-            </article>
-            <article class="card card--glass">
-              <div class="kpi">
-                <span class="kpi__eyebrow">Months to freedom</span>
-                <span class="kpi__value mono" data-kpi="months">0</span>
-                <span class="kpi__meta">
-                  <span class="chip chip--positive"><span class="chip__dot"></span>On track</span>
-                </span>
-              </div>
-            </article>
-            <article class="card card--glass">
-              <div class="kpi">
-                <span class="kpi__eyebrow">Interest saved · avalanche</span>
-                <span class="kpi__value mono" data-kpi="saved">$0</span>
-                <span class="kpi__meta">vs. paying minimums only</span>
-              </div>
-            </article>
+        <!-- ROW 1 — VERDICT -->
+        <section class="verdict">
+          <div class="verdict__eyebrow">The verdict</div>
+          <div class="verdict__number mono tabular" data-verdict-months>42 months</div>
+          <p class="verdict__caption">Until your last balance hits zero. With <span class="mono tabular">$270</span> extra a month, that drops to <span class="mono tabular" data-verdict-with-extra>28</span>.</p>
+        </section>
+
+        <!-- ROW 2 — EVIDENCE -->
+        <section class="evidence">
+          <div class="chart-wrap">
+            <div class="chart-wrap__title">Payoff timeline. Total balance over time.</div>
+            <svg id="payoff-chart" viewBox="0 0 720 320" preserveAspectRatio="none" role="img" aria-label="Payoff timeline chart">
+              <!-- gridlines -->
+              <g stroke="var(--ink-5)" stroke-width="1">
+                <line x1="40" y1="40"  x2="700" y2="40"/>
+                <line x1="40" y1="110" x2="700" y2="110"/>
+                <line x1="40" y1="180" x2="700" y2="180"/>
+                <line x1="40" y1="250" x2="700" y2="250"/>
+                <line x1="40" y1="290" x2="700" y2="290"/>
+              </g>
+              <!-- axis labels -->
+              <g font-family="JetBrains Mono" font-size="10" fill="var(--ink-3)">
+                <text x="0" y="44">$36k</text>
+                <text x="0" y="114">$27k</text>
+                <text x="0" y="184">$18k</text>
+                <text x="0" y="254">$9k</text>
+                <text x="0" y="294">$0</text>
+                <text x="40"  y="310">M0</text>
+                <text x="200" y="310">M12</text>
+                <text x="360" y="310">M24</text>
+                <text x="520" y="310">M36</text>
+                <text x="680" y="310">M48</text>
+              </g>
+              <!-- tinted fill (oxblood wash) -->
+              <path id="payoff-fill" d="" fill="var(--accent-wash)" opacity="0.6"></path>
+              <!-- main oxblood line -->
+              <path id="payoff-line" d="" fill="none" stroke="var(--accent)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"></path>
+              <!-- debt-free vertical marker -->
+              <g id="payoff-marker">
+                <line x1="600" y1="40" x2="600" y2="290" stroke="var(--ink-2)" stroke-width="1" stroke-dasharray="3 3"/>
+                <text x="606" y="52" font-family="Inter Tight" font-size="11" fill="var(--ink-2)" letter-spacing="0.06em">Debt-free</text>
+              </g>
+            </svg>
           </div>
+
+          <aside class="slide-panel">
+            <div class="slide-panel__label">Extra monthly payment</div>
+            <div class="slide-panel__value"><span style="color:var(--ink-3);font-weight:500;">$</span><span data-extra-value>270</span></div>
+            <input type="range" id="extra-slider" class="pfc-slider" min="0" max="1000" step="10" value="270" aria-label="Extra monthly payment in dollars">
+            <div class="slide-panel__scale"><span>$0</span><span>$500</span><span>$1,000</span></div>
+            <p class="slide-panel__hint">Drag to see the timeline redraw. Numbers tween over 320ms. Slider applies on top of the minimum payment for every debt, allocated by the avalanche rule (highest APR first).</p>
+          </aside>
         </section>
 
-        <!-- ============================ STRATEGY ============================ -->
-        <section class="section" data-reveal>
-          <header class="section__header">
-            <div>
-              <span class="eyebrow">01 · Strategy</span>
-              <h2 class="section__title">Choose your payoff order</h2>
-              <p class="section__lede">Avalanche kills the highest-APR debt first — mathematically optimal. Snowball clears the smallest balance first — psychologically rewarding.</p>
-            </div>
-          </header>
-
-          <div class="card card--glass card--pad-lg">
-            <div class="strategy" role="radiogroup" aria-label="Payoff strategy">
-              <button class="strategy__tile" role="radio" aria-pressed="true" data-strategy="avalanche">
-                <span class="strategy__tile-icon" aria-hidden="true">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19h16"/><path d="M6 16l3-6 3 4 3-8 3 6"/></svg>
-                </span>
-                <span class="strategy__tile-name">Avalanche</span>
-                <span class="strategy__tile-desc">Highest APR first. Saves the most interest over the life of your debt.</span>
-              </button>
-              <button class="strategy__tile" role="radio" aria-pressed="false" data-strategy="snowball">
-                <span class="strategy__tile-icon" aria-hidden="true">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="16" r="4"/><circle cx="15" cy="10" r="3"/><circle cx="19" cy="6" r="2"/></svg>
-                </span>
-                <span class="strategy__tile-name">Snowball</span>
-                <span class="strategy__tile-desc">Smallest balance first. Builds momentum with quick wins.</span>
-              </button>
-            </div>
-
-            <div class="compare" aria-live="polite">
-              <div class="compare__col" data-active="true" data-compare="avalanche">
-                <span class="compare__label">Avalanche</span>
-                <span class="compare__val">$4,127 saved · 18 mo</span>
-              </div>
-              <span class="compare__vs">vs</span>
-              <div class="compare__col" data-active="false" data-compare="snowball">
-                <span class="compare__label">Snowball</span>
-                <span class="compare__val">$3,890 saved · 19 mo</span>
-              </div>
-            </div>
-          </div>
+        <!-- ROW 3 — DETAIL -->
+        <section>
+          <div class="section-title">Detail. Your debts, ordered by avalanche priority.</div>
+          <table class="pfc-table">
+            <thead>
+              <tr>
+                <th>Debt</th>
+                <th class="pfc-table__num">Balance</th>
+                <th class="pfc-table__num">APR</th>
+                <th class="pfc-table__num">Min payment</th>
+                <th class="pfc-table__num">Months to clear</th>
+              </tr>
+            </thead>
+            <tbody id="debt-tbody">
+              <tr>
+                <td>Citi Visa</td>
+                <td class="pfc-table__num">$8,420</td>
+                <td class="pfc-table__num">22.40%</td>
+                <td class="pfc-table__num">$210</td>
+                <td class="pfc-table__num">18</td>
+              </tr>
+              <tr>
+                <td>Chase Sapphire</td>
+                <td class="pfc-table__num">$4,180</td>
+                <td class="pfc-table__num">19.99%</td>
+                <td class="pfc-table__num">$110</td>
+                <td class="pfc-table__num">22</td>
+              </tr>
+              <tr>
+                <td>SoFi personal</td>
+                <td class="pfc-table__num">$11,600</td>
+                <td class="pfc-table__num">11.50%</td>
+                <td class="pfc-table__num">$285</td>
+                <td class="pfc-table__num">33</td>
+              </tr>
+              <tr>
+                <td>Auto loan</td>
+                <td class="pfc-table__num">$12,800</td>
+                <td class="pfc-table__num">6.20%</td>
+                <td class="pfc-table__num">$340</td>
+                <td class="pfc-table__num">42</td>
+              </tr>
+            </tbody>
+          </table>
         </section>
 
-        <!-- ============================ TIMELINE ============================ -->
-        <section class="section" data-reveal>
-          <header class="section__header">
-            <div>
-              <span class="eyebrow">02 · Projection</span>
-              <h2 class="section__title">Payoff timeline</h2>
-              <p class="section__lede">Combined balance across all debts, month by month, until the last dollar is cleared.</p>
-            </div>
-            <div class="tab-bar" role="tablist" aria-label="Range">
-              <button class="tab" role="tab" aria-selected="false">12mo</button>
-              <button class="tab" role="tab" aria-selected="true">All</button>
-            </div>
-          </header>
-          <article class="card card--glass card--pad-lg">
-            <div class="timeline-wrap">
-              <div id="payoff-chart" style="width:100%;height:260px;"></div>
-              <div class="timeline-wrap__milestone" aria-hidden="true">Debt-free · <span data-bind="months-headline">18</span>mo</div>
-            </div>
-          </article>
+        <!-- ROW 4 — ACTION -->
+        <section class="action-row">
+          <button type="button" class="pfc-button pfc-button--ghost">Reset to defaults</button>
+          <button type="button" class="pfc-button pfc-button--primary">Apply this strategy</button>
         </section>
 
-        <!-- ============================ DEBT LIST ============================ -->
-        <section class="section" data-reveal>
-          <header class="section__header">
-            <div>
-              <span class="eyebrow">03 · Accounts</span>
-              <h2 class="section__title">Your debts</h2>
-            </div>
-          </header>
-          <article class="card card--bordered" style="padding:0;border:0;">
-            <div class="debt-list" id="debt-list">
-              <div class="debt-list__head">
-                <button data-sort="name">Account <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 5l3-3 3 3M3 7l3 3 3-3"/></svg></button>
-                <button data-sort="balance">Balance</button>
-                <button data-sort="apr">APR</button>
-                <button data-sort="min">Min payment</button>
-                <button data-sort="progress">Paid down</button>
-              </div>
-              <!-- rows injected by JS -->
-            </div>
-          </article>
-        </section>
-
-        <!-- ============================ EXTRA PAYMENT ============================ -->
-        <section class="section" data-reveal>
-          <header class="section__header">
-            <div>
-              <span class="eyebrow">04 · The lever</span>
-              <h2 class="section__title">Add an extra payment</h2>
-              <p class="section__lede">Drag the slider. Watch your debt-free date and total interest move in real time.</p>
-            </div>
-          </header>
-          <article class="card card--glass card--pad-xl">
-            <div class="extra-pay">
-              <div>
-                <span class="extra-pay__label">Extra monthly payment</span>
-                <div class="extra-pay__amount" id="extra-amount">$0</div>
-                <p class="extra-pay__hint">Every additional dollar above the minimum compounds into months shaved off your timeline.</p>
-              </div>
-              <div class="extra-pay__slider-wrap">
-                <input type="range" min="0" max="1000" step="10" value="0" class="slider" id="extra-slider" aria-label="Extra monthly payment in dollars">
-                <div class="extra-pay__ticks">
-                  <span>$0</span><span>$250</span><span>$500</span><span>$750</span><span>$1,000</span>
-                </div>
-              </div>
-            </div>
-          </article>
-        </section>
-
-        <!-- ============================ METHODOLOGY ============================ -->
-        <section class="section" data-reveal>
-          <div class="methodology">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg>
-            <div>
-              Numbers are illustrative. Methodology: monthly compounding interest, constant monthly payments equal to the minimum plus the extra-payment allocation rolled forward when each debt clears.
-              <a href="#" style="margin-left:6px;">Read full methodology &rarr;</a>
-            </div>
-          </div>
-        </section>
+        <p class="foot-note">Compound interest with constant monthly payments. Real terms (post-inflation). <a href="/methodology.html">Methodology &rarr;</a></p>
 
       </div>
     </main>
   </div>
+</div>
 
-  <script src="/js/demo-data.js"></script>
-  <script src="/js/include.js"></script>
-  <script src="/js/motion.js"></script>
-  <script src="/js/charts.js"></script>
-  <script src="/js/app.js"></script>
-  <script>
-    // ---------- Debt optimizer logic ----------
-    (function () {
-      const D = window.PFC_DATA;
-      const M = window.PFC_MOTION;
-      const C = window.PFC_CHARTS;
+<nav class="bottom-tabs" aria-label="Primary mobile" data-include="/partials/bottom-tabs.html"></nav>
 
-      // --- State ---
-      let strategy = "avalanche";
-      let extra = 0;
+<script src="/js/pfc-include.js"></script>
 
-      // --- Helpers ---
-      function fmt(n, opts) { return M.formatNumber(n, Object.assign({ currency: "USD", decimals: 0 }, opts || {})); }
+<script>
+/* Page-local interactivity. Self-contained so the page works without
+   the optional pfc-app/pfc-motion bundles. ---------------------------------- */
+(function () {
+  "use strict";
 
-      // Simulate amortization: order debts by strategy, snowball extra payments forward.
-      function simulate(debts, monthlyExtra, strat) {
-        const list = debts.map(d => ({ ...d }));
-        list.sort((a, b) => strat === "avalanche" ? b.apr - a.apr : a.balance - b.balance);
-        let balances = list.map(d => d.balance);
-        const aprs = list.map(d => d.apr);
-        const mins = list.map(d => d.minPayment);
-        let month = 0, totalInterest = 0;
-        const history = [balances.reduce((a, b) => a + b, 0)];
-        let extraAvail = monthlyExtra;
-        while (balances.some(b => b > 0.5) && month < 600) {
-          let extraThisMonth = extraAvail;
-          for (let i = 0; i < balances.length; i++) {
-            if (balances[i] <= 0) continue;
-            const interest = balances[i] * (aprs[i] / 12);
-            totalInterest += interest;
-            let pay = mins[i];
-            balances[i] = balances[i] + interest - pay;
-            if (balances[i] < 0) { extraThisMonth += -balances[i]; balances[i] = 0; }
-          }
-          // Apply extra to the first non-zero (priority) account
-          for (let i = 0; i < balances.length && extraThisMonth > 0; i++) {
-            if (balances[i] <= 0) continue;
-            const pay = Math.min(balances[i], extraThisMonth);
-            balances[i] -= pay; extraThisMonth -= pay;
-          }
-          month++;
-          history.push(Math.max(0, balances.reduce((a, b) => a + b, 0)));
+  /* Topbar setter -- compatible with PFC.setTopbar({title, subtitle, actions}) */
+  window.PFC = window.PFC || {};
+  window.PFC.setTopbar = window.PFC.setTopbar || function (cfg) {
+    var t = document.querySelector('[data-slot="title"]');
+    var s = document.querySelector('[data-slot="subtitle"]');
+    var a = document.querySelector('[data-slot="actions"]');
+    if (t && cfg.title) t.textContent = cfg.title;
+    if (s && cfg.subtitle) s.textContent = cfg.subtitle;
+    if (a && cfg.actions) a.innerHTML = cfg.actions;
+  };
+
+  /* Mark active sidebar item by data-page */
+  function markActive() {
+    var page = document.body.getAttribute("data-page");
+    document.querySelectorAll(".app-sidebar__item").forEach(function (el) {
+      if (el.getAttribute("data-page") === page) {
+        el.classList.add("is-active");
+        el.setAttribute("aria-current", "page");
+      }
+    });
+  }
+
+  /* Reveal-stagger: cascade is-revealed across direct children */
+  function revealStagger() {
+    var groups = document.querySelectorAll("[data-reveal-stagger]");
+    groups.forEach(function (g) {
+      var children = Array.prototype.slice.call(g.children);
+      children.forEach(function (child, i) {
+        var delay = Math.min(i, 6) * 60;
+        setTimeout(function () { child.classList.add("is-revealed"); }, delay);
+      });
+    });
+    document.querySelectorAll("[data-reveal]").forEach(function (el) {
+      el.classList.add("is-revealed");
+    });
+  }
+
+  /* Number tween -- tabular figures, no layout shift */
+  function tweenNumber(el, from, to, suffix, dur) {
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      el.textContent = Math.round(to) + (suffix || "");
+      return;
+    }
+    var start = performance.now();
+    var d = dur || 320;
+    function ease(t) { return 1 - Math.pow(1 - t, 4); }
+    function frame(now) {
+      var t = Math.min(1, (now - start) / d);
+      var v = from + (to - from) * ease(t);
+      el.textContent = Math.round(v) + (suffix || "");
+      if (t < 1) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  /* Payoff timeline math.
+     For each debt, monthly: balance += balance * (apr/12); balance -= payment.
+     Avalanche: extra goes to highest APR with balance > 0. ----------------- */
+  var debts = [
+    { name: "Citi Visa",       balance: 8420,  apr: 0.2240, min: 210 },
+    { name: "Chase Sapphire",  balance: 4180,  apr: 0.1999, min: 110 },
+    { name: "SoFi personal",   balance: 11600, apr: 0.1150, min: 285 },
+    { name: "Auto loan",       balance: 12800, apr: 0.0620, min: 340 }
+  ];
+
+  function simulate(extra) {
+    var d = debts.map(function (x) { return { apr: x.apr, balance: x.balance, min: x.min }; });
+    var totals = [d.reduce(function (s, x) { return s + x.balance; }, 0)];
+    var month = 0;
+    var maxMonths = 120;
+    while (month < maxMonths) {
+      // accrue interest
+      d.forEach(function (x) { if (x.balance > 0) x.balance += x.balance * (x.apr / 12); });
+      // minimum payments
+      d.forEach(function (x) {
+        if (x.balance > 0) {
+          var p = Math.min(x.min, x.balance);
+          x.balance -= p;
         }
-        return { months: month, totalInterest, history };
-      }
+      });
+      // extra to highest APR with balance
+      var ex = extra;
+      var byApr = d.slice().sort(function (a, b) { return b.apr - a.apr; });
+      byApr.forEach(function (x) {
+        if (ex > 0 && x.balance > 0) {
+          var p = Math.min(ex, x.balance);
+          x.balance -= p;
+          ex -= p;
+        }
+      });
+      var total = d.reduce(function (s, x) { return s + Math.max(0, x.balance); }, 0);
+      totals.push(total);
+      month++;
+      if (total <= 0.5) break;
+    }
+    return { totals: totals, months: totals.length - 1 };
+  }
 
-      // Baseline: minimums only
-      const minOnly = simulate(D.debts, 0, "avalanche");
+  /* Build SVG path for line + fill */
+  function buildPath(totals) {
+    var w = 660, h = 250, x0 = 40, y0 = 40;
+    var max = totals[0] || 1;
+    var n = Math.max(totals.length - 1, 1);
+    var pts = totals.map(function (v, i) {
+      var x = x0 + (i / n) * w;
+      var y = y0 + (1 - v / max) * h;
+      return [x, y];
+    });
+    var line = pts.map(function (p, i) { return (i === 0 ? "M" : "L") + p[0].toFixed(1) + " " + p[1].toFixed(1); }).join(" ");
+    var fill = line + " L" + pts[pts.length - 1][0].toFixed(1) + " " + (y0 + h).toFixed(1) + " L" + x0 + " " + (y0 + h).toFixed(1) + " Z";
+    return { line: line, fill: fill, markerX: pts[pts.length - 1][0] };
+  }
 
-      function recompute() {
-        const r = simulate(D.debts, extra, strategy);
-        const saved = Math.max(0, minOnly.totalInterest - r.totalInterest);
-        // Update KPIs (without animating each tiny drag)
-        document.querySelectorAll('[data-kpi="months"]').forEach(el => el.textContent = r.months);
-        document.querySelectorAll('[data-bind="months-headline"]').forEach(el => el.textContent = r.months);
-        document.querySelectorAll('[data-kpi="saved"]').forEach(el => el.textContent = fmt(saved));
-        // Redraw chart
-        const chart = document.getElementById("payoff-chart");
-        const points = r.history.map((v, i) => ({ label: `Mo ${i}`, value: v }));
-        C.areaChart(chart, points, { height: 260, currency: "USD", ariaLabel: "Total debt balance over time" });
-      }
+  function updateChart(extra) {
+    var sim = simulate(extra);
+    var paths = buildPath(sim.totals);
+    var lineEl = document.getElementById("payoff-line");
+    var fillEl = document.getElementById("payoff-fill");
+    var marker = document.getElementById("payoff-marker");
+    if (lineEl) lineEl.setAttribute("d", paths.line);
+    if (fillEl) fillEl.setAttribute("d", paths.fill);
+    if (marker) {
+      var line = marker.querySelector("line");
+      var text = marker.querySelector("text");
+      var mx = Math.min(Math.max(paths.markerX, 60), 690);
+      line.setAttribute("x1", mx); line.setAttribute("x2", mx);
+      text.setAttribute("x", mx + 6);
+    }
+    // verdict tween
+    var verdictEl = document.querySelector("[data-verdict-months]");
+    if (verdictEl) {
+      var current = parseInt(verdictEl.textContent, 10) || sim.months;
+      tweenNumber(verdictEl, current, sim.months, " months");
+    }
+  }
 
-      // --- Initial KPIs (animated) ---
-      const totalDebt = D.debts.reduce((s, d) => s + d.balance, 0);
-      const baseline = simulate(D.debts, 0, "avalanche");
-      const savedBase = Math.max(0, minOnly.totalInterest - baseline.totalInterest); // ~0; show literature value instead
-      document.addEventListener("pfc:partials-ready", initAfterBoot);
-      function initAfterBoot() {
-        M.countUp(document.querySelector('[data-kpi="total-debt"]'), totalDebt, { currency: "USD", decimals: 0 });
-        M.countUp(document.querySelector('[data-kpi="months"]'), baseline.months, { decimals: 0 });
-        M.countUp(document.querySelector('[data-kpi="saved"]'), D.debtStrategy.interestSaved, { currency: "USD", decimals: 0 });
-        document.querySelectorAll('[data-bind="months-headline"]').forEach(el => el.textContent = baseline.months);
-        // Wait for reveal so chart container has width
-        setTimeout(recompute, 600);
-        renderDebtList();
-        bindStrategy();
-        bindSlider();
-      }
+  function init() {
+    markActive();
 
-      // --- Strategy tiles ---
-      function bindStrategy() {
-        const tiles = document.querySelectorAll(".strategy__tile");
-        tiles.forEach(t => t.addEventListener("click", () => {
-          tiles.forEach(x => x.setAttribute("aria-pressed", "false"));
-          t.setAttribute("aria-pressed", "true");
-          strategy = t.dataset.strategy;
-          document.querySelectorAll('[data-compare]').forEach(c => c.dataset.active = c.dataset.compare === strategy ? "true" : "false");
-          recompute();
-        }));
-      }
+    window.PFC.setTopbar({
+      title: "Debt optimizer",
+      subtitle: "Avalanche method. Forty-two months to clear.",
+      actions:
+        '<button type="button" class="pfc-button pfc-button--ghost">Switch to Snowball</button>' +
+        '<button type="button" class="pfc-button pfc-button--primary">Save strategy</button>'
+    });
 
-      // --- Slider ---
-      function bindSlider() {
-        const slider = document.getElementById("extra-slider");
-        const out = document.getElementById("extra-amount");
-        let pending = null;
-        slider.addEventListener("input", () => {
-          extra = +slider.value;
-          out.textContent = fmt(extra);
-          if (pending) cancelAnimationFrame(pending);
-          pending = requestAnimationFrame(recompute);
-        });
-      }
+    // initial draw with default extra of 270
+    updateChart(270);
 
-      // --- Debt list ---
-      function renderDebtList() {
-        const root = document.getElementById("debt-list");
-        const typeLabel = { "credit-card": "Credit card", "student-loan": "Student loan", "car-loan": "Auto loan" };
-        // Sort by APR descending by default
-        const rows = [...D.debts].sort((a, b) => b.apr - a.apr);
-        // Use original balances as "starting" (illustrative)
-        const startingByName = {
-          "Chase Sapphire": 6200,
-          "Federal Student Loan": 22400,
-          "Auto loan (Civic)": 14800,
-        };
-        const html = rows.map(d => {
-          const start = startingByName[d.name] || d.balance * 1.4;
-          const paidPct = Math.max(0, Math.min(100, ((start - d.balance) / start) * 100));
-          return `
-            <div class="debt-list__row">
-              <div class="debt-list__name">
-                <span>${d.name}</span>
-                <span class="chip chip--neutral" style="align-self:flex-start;">${typeLabel[d.type] || d.type}</span>
-              </div>
-              <span class="mono" style="color:var(--ink-100);">${fmt(d.balance)}</span>
-              <span class="mono" style="color:${d.apr > 0.15 ? 'var(--coral-400)' : 'var(--ink-200)'};">${(d.apr * 100).toFixed(2)}%</span>
-              <span class="mono" style="color:var(--ink-200);">${fmt(d.minPayment)}/mo</span>
-              <div class="debt-list__progress">
-                <div class="progress progress--sm"><div class="progress__bar" style="width:${paidPct.toFixed(1)}%"></div></div>
-                <small>${paidPct.toFixed(0)}% paid down</small>
-              </div>
-            </div>`;
-        }).join("");
-        root.insertAdjacentHTML("beforeend", html);
-      }
-    })();
-  </script>
+    var slider = document.getElementById("extra-slider");
+    var valueEl = document.querySelector("[data-extra-value]");
+    if (slider) {
+      slider.addEventListener("input", function () {
+        var v = parseInt(slider.value, 10);
+        if (valueEl) valueEl.textContent = v;
+        updateChart(v);
+      });
+    }
+
+    requestAnimationFrame(revealStagger);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () {
+      document.addEventListener("pfc:partials-ready", init, { once: true });
+    });
+  } else {
+    document.addEventListener("pfc:partials-ready", init, { once: true });
+  }
+})();
+</script>
 </body>
 </html>

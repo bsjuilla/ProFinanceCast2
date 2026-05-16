@@ -1,1300 +1,1029 @@
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Dashboard — ProFinanceCast</title>
-  <meta name="description" content="Your financial overview, projected ten years out. Calm focus, calculated in your browser." />
+  <meta name="theme-color" content="#F7F4ED" />
+  <title>Dashboard · ProFinanceCast</title>
+  <meta name="description" content="Forty-two months until debt-free. The math has not changed since Tuesday." />
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
-
-  <link rel="stylesheet" href="/css/tokens.css">
-  <link rel="stylesheet" href="/css/base.css">
-  <link rel="stylesheet" href="/css/components.css">
-  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/pfc-tokens.css" />
+  <link rel="stylesheet" href="/css/pfc-base.css" />
+  <link rel="stylesheet" href="/css/pfc-components.css" />
+  <link rel="stylesheet" href="/css/pfc-layout.css" />
 
   <style>
-    /* ===========================================================
-     * Dashboard-only styles. All BEM, no !important.
-     * Lives only here; nothing leaks to other pages.
-     * ===========================================================*/
+    /* =========================================================================
+       Dashboard-only composition. Foundation tokens carry every value.
+       Nothing here re-declares a color, radius, or duration.
+       ========================================================================= */
 
-    /* ---------- TOPBAR EXTENSION (greeting + slotted actions) --- */
-    .topbar { height: auto; min-height: var(--topbar-h); padding-block: 14px; }
-    .greet {
-      display: flex; flex-direction: column; gap: 2px; min-width: 0;
+    .dash {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-7);
+      max-width: var(--app-max);
+      margin: 0 auto;
+      width: 100%;
     }
-    .greet__eyebrow {
-      font-family: var(--font-mono);
-      font-size: var(--fs-tiny);
-      text-transform: uppercase;
-      letter-spacing: var(--tracking-eyebrow);
-      color: var(--ink-400);
+
+    /* ---- Row 1 — THE VERDICT --------------------------------------------- */
+    .verdict {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: end;
+      gap: var(--space-5);
+      padding-top: var(--space-4);
     }
-    .greet__title {
+
+    .verdict__eyebrow {
+      grid-column: 1 / -1;
+      margin-bottom: var(--space-4);
+    }
+
+    .verdict__number {
       font-family: var(--font-display);
-      font-size: clamp(1.15rem, 0.4vw + 1rem, 1.4rem);
-      font-weight: 500;
-      color: var(--ink-100);
-      letter-spacing: -0.015em;
-      line-height: 1.1;
-    }
-    .greet__title em { font-style: italic; color: var(--mint-400); font-weight: 400; }
-    .bell-dot {
-      position: relative;
-    }
-    .bell-dot::after {
-      content: ""; position: absolute;
-      top: 9px; right: 10px;
-      width: 7px; height: 7px;
-      border-radius: var(--r-full);
-      background: var(--mint-500);
-      border: 2px solid var(--ink-900);
-    }
-
-    /* ---------- HERO KPI ROW ------------------------------------ */
-    .kpi-row { display: grid; gap: var(--space-5); grid-template-columns: repeat(4, minmax(0, 1fr)); }
-    @media (max-width: 1100px) { .kpi-row { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 560px)  { .kpi-row { grid-template-columns: 1fr; } }
-
-    .kpi-card {
-      position: relative;
-      padding: var(--space-6);
-      background: oklch(24% 0.022 265 / 0.55);
-      backdrop-filter: blur(16px) saturate(140%);
-      -webkit-backdrop-filter: blur(16px) saturate(140%);
-      border: 1px solid oklch(100% 0 0 / 0.07);
-      border-radius: var(--r-lg);
-      box-shadow:
-        0 1px 0 0 oklch(100% 0 0 / 0.05) inset,
-        0 16px 40px -20px oklch(0% 0 0 / 0.55);
-      transition:
-        transform var(--dur-base) var(--ease-standard),
-        border-color var(--dur-base) var(--ease-standard),
-        box-shadow var(--dur-base) var(--ease-standard);
-      overflow: hidden;
-      isolation: isolate;
-    }
-    .kpi-card::before {
-      content: "";
-      position: absolute; inset: 0;
-      background: radial-gradient(120% 80% at 80% 0%, var(--mint-glow), transparent 55%);
-      opacity: 0;
-      transition: opacity var(--dur-base) var(--ease-standard);
-      pointer-events: none;
-      z-index: -1;
-    }
-    .kpi-card:hover {
-      transform: translateY(-2px) scale(1.005);
-      border-color: oklch(78% 0.175 168 / 0.45);
-      box-shadow:
-        0 1px 0 0 oklch(100% 0 0 / 0.08) inset,
-        0 24px 56px -18px oklch(0% 0 0 / 0.65),
-        0 0 0 1px oklch(78% 0.175 168 / 0.25),
-        0 8px 36px -8px var(--mint-glow);
-    }
-    .kpi-card:hover::before { opacity: 0.55; }
-
-    .kpi-card__head {
-      display: flex; align-items: center; justify-content: space-between; gap: var(--space-2);
-      margin-bottom: var(--space-3);
-    }
-    .kpi-card__eyebrow {
-      font-family: var(--font-mono);
-      font-size: var(--fs-tiny);
-      text-transform: uppercase;
-      letter-spacing: var(--tracking-eyebrow);
-      color: var(--ink-400);
-    }
-    .kpi-card__icon {
-      color: var(--mint-400);
-      opacity: 0.8;
-    }
-    .kpi-card__value {
-      font-family: var(--font-mono);
-      font-size: clamp(2rem, 1.4vw + 1.5rem, 3rem);
-      font-weight: 500;
-      line-height: 1.05;
-      letter-spacing: -0.015em;
-      color: var(--ink-100);
+      font-optical-sizing: auto;
+      font-weight: 400;
+      font-size: var(--type-display-xl);
+      line-height: var(--lead-display);
+      letter-spacing: var(--track-display);
+      color: var(--ink-1);
       font-variant-numeric: tabular-nums;
-      margin-bottom: var(--space-3);
-    }
-    .kpi-card__spark { height: 40px; width: 100%; margin-bottom: var(--space-3); }
-    .kpi-card__foot { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); }
-    .kpi-card__caption {
-      font-size: var(--fs-tiny);
-      color: var(--ink-400);
-      font-family: var(--font-mono);
+      font-feature-settings: "tnum" 1;
+      white-space: nowrap;
     }
 
-    /* ---------- BENTO ROW (forecast + insights) ----------------- */
-    .bento-feature {
+    .verdict__spark {
+      width: 180px;
+      height: 56px;
+      align-self: end;
+      margin-bottom: var(--space-4);
+    }
+
+    .verdict__caption {
+      grid-column: 1 / -1;
+      margin-top: var(--space-4);
+      font-size: var(--type-body-lg);
+      line-height: var(--lead-body);
+      color: var(--ink-2);
+      max-width: 64ch;
+    }
+
+    @media (max-width: 720px) {
+      .verdict { grid-template-columns: 1fr; align-items: start; }
+      .verdict__spark { width: 100%; margin-bottom: 0; }
+    }
+
+    /* ---- Row 2 — THE EVIDENCE -------------------------------------------- */
+    .evidence {
       display: grid;
       grid-template-columns: 2fr 1fr;
+      gap: var(--space-6);
+      align-items: start;
+    }
+
+    @media (max-width: 1000px) {
+      .evidence { grid-template-columns: 1fr; gap: var(--space-5); }
+    }
+
+    .chart-frame {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+      min-width: 0;
+    }
+
+    .chart-tabs {
+      display: flex;
       gap: var(--space-5);
-    }
-    @media (max-width: 1100px) { .bento-feature { grid-template-columns: 1fr; } }
-
-    .forecast-card { padding: var(--space-8); }
-    .forecast-card__head {
-      display: flex; align-items: flex-start; justify-content: space-between;
-      gap: var(--space-4); margin-bottom: var(--space-2); flex-wrap: wrap;
-    }
-    .forecast-card__title-block { display: flex; flex-direction: column; gap: 6px; }
-    .forecast-card__eyebrow {
-      font-family: var(--font-mono);
-      font-size: var(--fs-tiny);
-      text-transform: uppercase;
-      letter-spacing: var(--tracking-eyebrow);
-      color: var(--mint-400);
-    }
-    .forecast-card__title {
-      font-family: var(--font-display);
-      font-size: var(--fs-display-sm);
-      font-weight: 400;
-      color: var(--ink-100);
-      letter-spacing: -0.025em;
-      line-height: 1.05;
-    }
-    .forecast-card__title em { font-style: italic; color: var(--ink-200); font-weight: 300; }
-    .forecast-card__chart-wrap {
-      position: relative;
-      margin-top: var(--space-6);
-      margin-bottom: var(--space-6);
-    }
-    .forecast-card__xaxis {
-      display: flex; justify-content: space-between;
-      margin-top: var(--space-2);
-      font-family: var(--font-mono);
-      font-size: var(--fs-tiny);
-      color: var(--ink-400);
-    }
-    .milestones {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: var(--space-4);
-      padding-top: var(--space-6);
-      border-top: 1px solid oklch(100% 0 0 / 0.06);
-    }
-    @media (max-width: 720px) { .milestones { grid-template-columns: 1fr; } }
-    .milestone { display: flex; flex-direction: column; gap: 4px; }
-    .milestone__when {
-      font-family: var(--font-mono);
-      font-size: var(--fs-tiny);
-      text-transform: uppercase;
-      letter-spacing: var(--tracking-eyebrow);
-      color: var(--mint-400);
-    }
-    .milestone__label {
-      font-size: var(--fs-small);
-      color: var(--ink-200);
-      font-weight: 500;
-    }
-    .milestone__val {
-      font-family: var(--font-mono);
-      font-size: var(--fs-small);
-      color: var(--ink-400);
-      font-variant-numeric: tabular-nums;
+      border-bottom: 1px solid var(--ink-5);
     }
 
-    /* ---------- SAGE INSIGHTS ---------------------------------- */
-    .insights-card { padding: var(--space-6); display: flex; flex-direction: column; }
-    .insights-card__head {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: var(--space-6);
-    }
-    .insights-card__title {
-      font-family: var(--font-display);
-      font-size: var(--fs-h2);
-      font-weight: 400;
-      color: var(--ink-100);
-      letter-spacing: -0.02em;
-    }
-    .insights-card__title em { font-style: italic; color: var(--mint-400); font-weight: 400; }
-    .insights-stack {
-      display: flex; flex-direction: column;
-      flex: 1;
-    }
-    .insight {
-      padding: var(--space-5) 0;
-      display: grid;
-      grid-template-columns: 14px 1fr;
-      gap: var(--space-4);
-      border-top: 1px solid oklch(100% 0 0 / 0.06);
-    }
-    .insight:first-child { border-top: 0; padding-top: 0; }
-    .insight:last-child { padding-bottom: 0; }
-    .insight__dot {
-      width: 10px; height: 10px;
-      border-radius: var(--r-full);
-      background: var(--mint-500);
-      margin-top: 6px;
-      box-shadow: 0 0 0 3px oklch(78% 0.175 168 / 0.18);
-      position: relative;
-    }
-    .insight__dot::after {
-      content: ""; position: absolute; inset: -3px;
-      border-radius: var(--r-full);
-      border: 1.5px solid var(--mint-500);
-      animation: insight-pulse 2.4s var(--ease-standard) infinite;
-      pointer-events: none;
-    }
-    @media (prefers-reduced-motion: reduce) { .insight__dot::after { animation: none; } }
-    @keyframes insight-pulse {
-      0% { opacity: 0.8; transform: scale(1); }
-      100% { opacity: 0; transform: scale(2.2); }
-    }
-    .insight--watchout .insight__dot { background: var(--amber-400); box-shadow: 0 0 0 3px oklch(80% 0.140 75 / 0.18); }
-    .insight--watchout .insight__dot::after { border-color: var(--amber-400); }
-    .insight--win .insight__dot { background: var(--lavender-500); box-shadow: 0 0 0 3px oklch(72% 0.115 295 / 0.18); }
-    .insight--win .insight__dot::after { border-color: var(--lavender-500); }
-
-    .insight__title {
+    .chart-tab {
       font-family: var(--font-body);
-      font-size: var(--fs-body);
+      font-size: var(--type-label);
       font-weight: 500;
-      color: var(--ink-100);
-      line-height: 1.3;
-      margin-bottom: 6px;
+      color: var(--ink-3);
+      letter-spacing: var(--track-body);
+      background: transparent;
+      border: 0;
+      padding: var(--space-2) 0;
+      cursor: pointer;
+      position: relative;
+      transition: color var(--dur-fast) var(--ease-out);
     }
-    .insight__body {
-      font-size: var(--fs-small);
-      color: var(--ink-300);
-      line-height: 1.55;
-      margin-bottom: var(--space-3);
-    }
-    .insight__action {
-      font-family: var(--font-mono);
-      font-size: var(--fs-tiny);
-      text-transform: uppercase;
-      letter-spacing: var(--tracking-eyebrow);
-      color: var(--mint-400);
-      display: inline-flex; align-items: center; gap: 6px;
-      transition: gap var(--dur-fast) var(--ease-standard);
-    }
-    .insight__action:hover { gap: 10px; color: var(--mint-300); }
 
-    /* ---------- GOALS & DEBT ROW -------------------------------- */
-    .gd-row {
-      display: grid;
-      grid-template-columns: 1.2fr 1fr;
-      gap: var(--space-5);
+    .chart-tab::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -1px;
+      height: 1px;
+      background: var(--accent);
+      opacity: 0;
+      transition: opacity var(--dur-fast) var(--ease-out);
     }
-    @media (max-width: 1100px) { .gd-row { grid-template-columns: 1fr; } }
 
-    .panel { padding: var(--space-8); }
-    .panel__head {
-      display: flex; align-items: flex-start; justify-content: space-between;
-      gap: var(--space-4); margin-bottom: var(--space-6); flex-wrap: wrap;
+    .chart-tab:hover { color: var(--ink-1); }
+
+    .chart-tab.is-active {
+      color: var(--ink-1);
     }
-    .panel__title {
+    .chart-tab.is-active::after { opacity: 1; }
+
+    .chart-stage {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 8;
+      min-height: 320px;
+    }
+
+    .chart-stage svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    .chart-tooltip {
+      position: absolute;
+      transform: translate(-50%, -120%);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity var(--dur-fast) var(--ease-out);
+      z-index: 5;
+    }
+
+    .chart-tooltip.is-visible { opacity: 1; }
+
+    .chart-crosshair {
+      stroke: var(--ink-4);
+      stroke-width: 1;
+      stroke-dasharray: 2 3;
+      opacity: 0;
+      transition: opacity var(--dur-fast) var(--ease-out);
+    }
+
+    .chart-crosshair.is-visible { opacity: 1; }
+
+    .chart-dot {
+      fill: var(--accent);
+      opacity: 0;
+      transition: opacity var(--dur-fast) var(--ease-out);
+    }
+
+    .chart-dot.is-visible { opacity: 1; }
+
+    /* Right 1/3 — Sage observations ---------------------------------------- */
+    .sage {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+    }
+
+    .sage__title {
       font-family: var(--font-display);
-      font-size: var(--fs-h2);
       font-weight: 400;
-      color: var(--ink-100);
-      letter-spacing: -0.02em;
-      line-height: 1.1;
-    }
-    .panel__title em { font-style: italic; color: var(--mint-400); font-weight: 400; }
-    .panel__sub {
-      font-size: var(--fs-small);
-      color: var(--ink-400);
-      margin-top: 4px;
+      font-size: var(--type-display-sm);
+      line-height: 1.15;
+      letter-spacing: var(--track-display);
+      color: var(--ink-1);
     }
 
-    .goals-grid {
-      display: grid; grid-template-columns: repeat(4, 1fr);
-      gap: var(--space-5);
+    .sage__list {
+      display: flex;
+      flex-direction: column;
     }
-    @media (max-width: 720px) { .goals-grid { grid-template-columns: repeat(2, 1fr); } }
 
-    .goal-tile {
-      display: flex; flex-direction: column; align-items: center; text-align: center;
+    .sage__item {
+      display: grid;
+      grid-template-columns: 12px 1fr;
       gap: var(--space-3);
-      padding: var(--space-4) var(--space-2);
-      border-radius: var(--r-md);
-      transition: background var(--dur-fast) var(--ease-standard);
-    }
-    .goal-tile:hover { background: oklch(100% 0 0 / 0.03); }
-    .goal-tile__ring { width: 110px; height: 110px; }
-    .goal-tile__label {
-      font-size: var(--fs-small);
-      color: var(--ink-200);
-      font-weight: 500;
-      line-height: 1.25;
-    }
-    .goal-tile__amounts {
-      font-family: var(--font-mono);
-      font-size: var(--fs-tiny);
-      color: var(--ink-400);
-      font-variant-numeric: tabular-nums;
+      align-items: baseline;
+      padding: var(--space-3) 0;
+      border-top: 1px solid var(--ink-5);
+      font-size: var(--type-body-sm);
+      color: var(--ink-1);
+      line-height: var(--lead-body);
     }
 
-    /* Debt panel */
-    .debt-top {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      gap: var(--space-6);
-      align-items: center;
-      margin-bottom: var(--space-6);
-    }
-    @media (max-width: 540px) { .debt-top { grid-template-columns: 1fr; justify-items: center; text-align: center; } }
-    .debt-legend { display: flex; flex-direction: column; gap: var(--space-3); }
-    .debt-legend__item {
-      display: grid;
-      grid-template-columns: 10px 1fr auto;
-      align-items: center; gap: var(--space-3);
-      font-size: var(--fs-small);
-    }
-    .debt-legend__sw {
-      width: 10px; height: 10px;
-      border-radius: 3px;
-    }
-    .debt-legend__name { color: var(--ink-200); }
-    .debt-legend__val { font-family: var(--font-mono); color: var(--ink-100); font-variant-numeric: tabular-nums; }
-    .debt-bar-block {
-      padding-top: var(--space-5);
-      border-top: 1px solid oklch(100% 0 0 / 0.06);
-    }
-    .debt-bar-block__head {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: var(--space-4);
-    }
-    .debt-bar-block__title {
-      font-family: var(--font-mono);
-      font-size: var(--fs-tiny);
-      text-transform: uppercase;
-      letter-spacing: var(--tracking-eyebrow);
-      color: var(--ink-400);
-    }
-    .toggle-row { display: flex; align-items: center; gap: var(--space-3); font-size: var(--fs-small); color: var(--ink-300); }
+    .sage__item:last-child { border-bottom: 1px solid var(--ink-5); }
 
-    /* ---------- CASH FLOW SECTION ------------------------------- */
-    .cf-card { padding: var(--space-8); }
-    .cf-donuts {
-      display: grid; grid-template-columns: 1fr 1fr;
-      gap: var(--space-6);
-      margin-bottom: var(--space-8);
-      padding-bottom: var(--space-8);
-      border-bottom: 1px solid oklch(100% 0 0 / 0.06);
+    .sage__dot {
+      width: 4px;
+      height: 4px;
+      background: var(--accent);
+      display: inline-block;
+      transform: translateY(-3px);
+      margin-left: 4px;
     }
-    @media (max-width: 720px) { .cf-donuts { grid-template-columns: 1fr; } }
-    .cf-donut {
-      display: flex; align-items: center; gap: var(--space-6);
+
+    .sage__meta {
+      font-size: var(--type-meta);
+      color: var(--ink-3);
+      letter-spacing: var(--track-body);
     }
-    @media (max-width: 540px) { .cf-donut { flex-direction: column; text-align: center; } }
-    .cf-donut__chart { flex-shrink: 0; }
-    .cf-donut__info { display: flex; flex-direction: column; gap: var(--space-2); }
-    .cf-donut__eyebrow {
-      font-family: var(--font-mono);
-      font-size: var(--fs-tiny);
-      text-transform: uppercase;
-      letter-spacing: var(--tracking-eyebrow);
-      color: var(--ink-400);
+
+    /* ---- Row 3 — THE DETAIL ---------------------------------------------- */
+    .detail {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-5);
     }
-    .cf-donut__title {
+
+    .detail__title {
       font-family: var(--font-display);
-      font-size: var(--fs-h3);
-      color: var(--ink-100);
       font-weight: 400;
-      letter-spacing: -0.015em;
+      font-size: var(--type-display-sm);
+      line-height: 1.15;
+      letter-spacing: var(--track-display);
+      color: var(--ink-1);
     }
-    .cf-donut__legend { display: flex; flex-direction: column; gap: 6px; margin-top: var(--space-3); }
-    .cf-donut__leg {
-      display: grid; grid-template-columns: 8px 1fr auto;
-      align-items: center; gap: var(--space-3);
-      font-size: var(--fs-tiny);
-      color: var(--ink-300);
-    }
-    .cf-donut__sw { width: 8px; height: 8px; border-radius: 2px; }
-    .cf-donut__amt { font-family: var(--font-mono); color: var(--ink-100); font-variant-numeric: tabular-nums; }
 
-    .cf-bars { display: flex; flex-direction: column; gap: var(--space-3); }
-    .cf-bars__legend {
-      display: flex; gap: var(--space-6);
-      font-size: var(--fs-tiny);
-      color: var(--ink-400);
-      font-family: var(--font-mono);
+    .detail__grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-6);
+    }
+
+    @media (max-width: 900px) {
+      .detail__grid { grid-template-columns: 1fr; gap: var(--space-5); }
+    }
+
+    .detail__col-label {
+      font-size: var(--type-meta);
+      font-weight: 500;
+      letter-spacing: var(--track-meta);
       text-transform: uppercase;
-      letter-spacing: var(--tracking-eyebrow);
+      color: var(--ink-3);
       margin-bottom: var(--space-2);
     }
-    .cf-bars__legend span { display: inline-flex; align-items: center; gap: 6px; }
-    .cf-bars__sw { width: 9px; height: 9px; border-radius: 2px; }
-    .cf-bars__chart { display: grid; grid-template-columns: repeat(12, 1fr); gap: 8px; align-items: end; height: 180px; }
-    .cf-bars__col {
-      display: flex; flex-direction: column; align-items: center; gap: 6px; height: 100%;
-      justify-content: flex-end;
-    }
-    .cf-bars__pair { display: flex; align-items: flex-end; gap: 3px; height: 100%; width: 100%; justify-content: center; }
-    .cf-bars__bar {
-      width: 10px;
-      border-radius: 3px 3px 0 0;
-      transition: transform var(--dur-fast) var(--ease-standard);
-    }
-    .cf-bars__bar--income { background: var(--mint-500); }
-    .cf-bars__bar--expense { background: var(--coral-500); opacity: 0.85; }
-    .cf-bars__col:hover .cf-bars__bar { transform: scaleY(1.04); transform-origin: bottom; }
-    .cf-bars__mo {
-      font-family: var(--font-mono);
-      font-size: 10px;
-      color: var(--ink-400);
-      letter-spacing: 0.04em;
+
+    .detail .pfc-dl dt {
+      font-family: var(--font-body);
+      color: var(--ink-3);
+      font-size: var(--type-body-sm);
+      text-transform: none;
+      letter-spacing: var(--track-body);
     }
 
-    /* ---------- ACTIVITY FEED ----------------------------------- */
-    .activity-card { padding: var(--space-8) var(--space-6); }
-    .activity-card__head {
-      display: flex; align-items: baseline; justify-content: space-between;
-      padding: 0 var(--space-2);
-      margin-bottom: var(--space-4);
+    .detail .pfc-dl dd {
+      color: var(--ink-1);
     }
-    .activity-list { display: flex; flex-direction: column; }
-    .activity-row {
-      display: grid;
-      grid-template-columns: 36px 1fr auto 110px;
+
+    /* ---- Row 4 — THE ACTION ---------------------------------------------- */
+    .action {
+      display: flex;
       align-items: center;
+      justify-content: flex-end;
       gap: var(--space-4);
-      padding: var(--space-3) var(--space-2);
-      border-radius: var(--r-sm);
-      transition: background var(--dur-fast) var(--ease-standard);
+      flex-wrap: wrap;
     }
-    .activity-row + .activity-row { border-top: 1px solid oklch(100% 0 0 / 0.04); }
-    .activity-row:hover { background: oklch(100% 0 0 / 0.025); }
-    .activity-row__icon {
-      width: 32px; height: 32px;
-      display: grid; place-items: center;
-      border-radius: var(--r-sm);
-      background: oklch(100% 0 0 / 0.04);
-      color: var(--ink-300);
+
+    .action__caption {
+      font-size: var(--type-meta);
+      letter-spacing: var(--track-body);
+      color: var(--ink-3);
     }
-    .activity-row__icon--income { background: oklch(78% 0.175 168 / 0.10); color: var(--mint-300); }
-    .activity-row__icon--expense { background: oklch(100% 0 0 / 0.04); color: var(--ink-300); }
-    .activity-row__icon--transfer { background: oklch(72% 0.115 295 / 0.10); color: var(--lavender-400); }
-    .activity-row__main { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
-    .activity-row__label { font-size: var(--fs-small); color: var(--ink-100); font-weight: 500; }
-    .activity-row__cat { font-size: var(--fs-tiny); color: var(--ink-400); }
-    .activity-row__amt {
-      font-family: var(--font-mono);
-      font-size: var(--fs-small);
-      color: var(--ink-100);
-      font-variant-numeric: tabular-nums;
+
+    @media (max-width: 720px) {
+      .action {
+        justify-content: stretch;
+        flex-direction: column-reverse;
+        align-items: stretch;
+      }
+      .action .pfc-button { width: 100%; }
+      .action__caption { text-align: center; }
+    }
+
+    /* ---- Below — Recent activity ----------------------------------------- */
+    .activity {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+    }
+
+    .activity__title {
+      font-family: var(--font-display);
+      font-weight: 400;
+      font-size: var(--type-display-sm);
+      line-height: 1.15;
+      letter-spacing: var(--track-display);
+      color: var(--ink-1);
+    }
+
+    .activity__wrap {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    .activity .pfc-tag {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: var(--track-meta);
       font-weight: 500;
+      background: var(--canvas-sunk);
+      color: var(--ink-2);
     }
-    .activity-row__amt--neg { color: var(--ink-200); }
-    .activity-row__amt--pos { color: var(--mint-300); }
-    .activity-row__date {
+
+    .activity__amount {
       font-family: var(--font-mono);
-      font-size: var(--fs-tiny);
-      color: var(--ink-400);
+      font-variant-numeric: tabular-nums;
+      letter-spacing: var(--track-mono);
       text-align: right;
     }
-    @media (max-width: 640px) {
-      .activity-row { grid-template-columns: 28px 1fr auto; gap: var(--space-3); }
-      .activity-row__date { display: none; }
-    }
 
-    /* ---------- QUICK ACTIONS ----------------------------------- */
-    .qa-strip {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: var(--space-3);
-    }
-    @media (max-width: 1024px) { .qa-strip { grid-template-columns: repeat(3, 1fr); } }
-    @media (max-width: 560px)  { .qa-strip { grid-template-columns: repeat(2, 1fr); } }
-    .qa-tile {
-      display: flex; flex-direction: column; gap: var(--space-3);
-      padding: var(--space-5);
-      background: oklch(24% 0.022 265 / 0.45);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border: 1px solid oklch(100% 0 0 / 0.06);
-      border-radius: var(--r-md);
-      cursor: pointer;
-      transition:
-        background var(--dur-fast) var(--ease-standard),
-        border-color var(--dur-fast) var(--ease-standard),
-        transform var(--dur-base) var(--ease-standard);
-      text-align: left;
-      color: inherit;
-      will-change: transform;
-    }
-    .qa-tile:hover {
-      background: oklch(28% 0.025 265 / 0.55);
-      border-color: oklch(78% 0.175 168 / 0.30);
-    }
-    .qa-tile__icon {
-      width: 32px; height: 32px;
-      display: grid; place-items: center;
-      border-radius: var(--r-sm);
-      background: oklch(78% 0.175 168 / 0.10);
-      color: var(--mint-400);
-    }
-    .qa-tile__label {
-      font-size: var(--fs-small);
-      color: var(--ink-100);
-      font-weight: 500;
-      line-height: 1.3;
-    }
-    .qa-tile__sub {
-      font-size: var(--fs-tiny);
-      color: var(--ink-400);
-      line-height: 1.4;
-    }
+    .activity__amount--neg { color: var(--ink-3); }
 
-    /* ---------- FOOTER STRIP ------------------------------------ */
-    .foot-strip {
-      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
-      gap: var(--space-4);
-      padding: var(--space-5) var(--space-2);
-      margin-top: var(--space-12);
-      border-top: 1px solid oklch(100% 0 0 / 0.05);
+    .activity__date {
       font-family: var(--font-mono);
-      font-size: var(--fs-tiny);
-      color: var(--ink-400);
+      letter-spacing: var(--track-mono);
+      color: var(--ink-3);
+      white-space: nowrap;
     }
-    .foot-strip__row { display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap; }
-    .foot-strip__dot {
-      width: 5px; height: 5px;
-      border-radius: var(--r-full);
-      background: var(--mint-500);
-      box-shadow: 0 0 8px var(--mint-glow);
-    }
-    .foot-strip a { color: var(--ink-300); border-bottom: 1px dotted var(--ink-500); }
-    .foot-strip a:hover { color: var(--mint-300); border-bottom-color: var(--mint-500); }
 
-    /* ---------- SECTION HEADER POLISH (page-local) -------------- */
-    .sec-title {
-      font-family: var(--font-display);
-      font-size: var(--fs-h2);
-      font-weight: 400;
-      color: var(--ink-100);
-      letter-spacing: -0.02em;
-      line-height: 1.1;
+    .activity__footer {
+      border-top: 1px solid var(--ink-5);
+      padding-top: var(--space-3);
+      text-align: right;
     }
-    .sec-title em { font-style: italic; color: var(--ink-300); font-weight: 300; }
-    .sec-link {
-      font-family: var(--font-mono);
-      font-size: var(--fs-tiny);
-      text-transform: uppercase;
-      letter-spacing: var(--tracking-eyebrow);
-      color: var(--mint-400);
-      display: inline-flex; align-items: center; gap: 6px;
-      transition: gap var(--dur-fast) var(--ease-standard);
-    }
-    .sec-link:hover { gap: 10px; color: var(--mint-300); }
 
-    /* Stagger reveal — child indices set inline via style="--i:n" */
-    [data-reveal-stagger] > * {
-      opacity: 0;
-      transform: translateY(14px);
-      transition: opacity var(--dur-slow) var(--ease-standard), transform var(--dur-slow) var(--ease-standard);
-      transition-delay: calc(var(--i, 0) * 80ms);
+    .activity__footer a {
+      font-size: var(--type-body-sm);
+      color: var(--ink-2);
+      transition: color var(--dur-fast) var(--ease-out);
     }
-    [data-reveal-stagger].is-revealed > * {
-      opacity: 1;
-      transform: none;
+
+    .activity__footer a:hover { color: var(--accent); }
+    .activity__footer a::after {
+      content: " →";
+      color: var(--accent);
     }
-    @media (prefers-reduced-motion: reduce) {
-      [data-reveal-stagger] > * { opacity: 1; transform: none; }
+
+    /* Topbar action icons -------------------------------------------------- */
+    .app-topbar__actions .pfc-button svg {
+      width: 14px;
+      height: 14px;
+      stroke-width: 1.6;
     }
   </style>
 </head>
 <body data-page="dashboard">
 
-  <!-- Aurora background — fixed, behind everything -->
-  <div class="aurora-bg" aria-hidden="true">
-    <div class="aurora-bg__blob aurora-bg__blob--1"></div>
-    <div class="aurora-bg__blob aurora-bg__blob--2"></div>
-    <div class="aurora-bg__blob aurora-bg__blob--3"></div>
-    <div class="aurora-bg__blob aurora-bg__blob--4"></div>
-    <div class="aurora-bg__grain"></div>
-    <div class="aurora-bg__vignette"></div>
-  </div>
-
   <div class="app-shell">
-
-    <!-- Sidebar (partial) -->
     <div data-include="/partials/sidebar.html"></div>
 
-    <main class="main">
-
-      <!-- Topbar (partial — enhanced by JS below to inject greeting + actions) -->
+    <div class="app-content">
       <div data-include="/partials/topbar.html"></div>
 
-      <div class="main__content">
+      <main class="app-main">
+        <div class="dash" data-reveal-stagger>
 
-        <!-- ============================================================
-             SECTION 1 — Hero KPI row
-             ============================================================ -->
-        <section class="section" aria-labelledby="kpi-heading" style="margin-bottom: var(--space-12);">
-          <h2 id="kpi-heading" class="sr-only">Key indicators</h2>
-          <div class="kpi-row" data-reveal-stagger>
+          <!-- ============================================================
+               ROW 1 — THE VERDICT
+               ============================================================ -->
+          <section class="verdict" aria-labelledby="verdict-eyebrow">
+            <p class="eyebrow" id="verdict-eyebrow">Projected net worth · Ten years out</p>
 
-            <article class="kpi-card" style="--i:0;">
-              <div class="kpi-card__head">
-                <span class="kpi-card__eyebrow">Net worth</span>
-                <span class="kpi-card__icon" aria-hidden="true">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18l5-6 4 3 7-9"/><path d="M14 6h5v5"/></svg>
-                </span>
-              </div>
-              <div class="kpi-card__value mono" data-kpi-value data-value="87420" data-currency="USD" data-decimals="0">$0</div>
-              <div class="kpi-card__spark" data-kpi-spark="netWorth"></div>
-              <div class="kpi-card__foot">
-                <span class="chip chip--positive"><span class="chip__dot"></span>+4.9% / 3mo</span>
-                <span class="kpi-card__caption">vs $83.1K</span>
-              </div>
-            </article>
+            <div class="verdict__number mono tabular"
+                 data-tween-number
+                 data-tween-to="612400"
+                 data-tween-prefix="$"
+                 aria-live="polite">$0</div>
 
-            <article class="kpi-card" style="--i:1;">
-              <div class="kpi-card__head">
-                <span class="kpi-card__eyebrow">Monthly savings</span>
-                <span class="kpi-card__icon" aria-hidden="true">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M17 7a5 5 0 0 0-10 0c0 4 10 3 10 7a5 5 0 0 1-10 0"/></svg>
-                </span>
-              </div>
-              <div class="kpi-card__value mono" data-kpi-value data-value="1642" data-currency="USD" data-decimals="0">$0</div>
-              <div class="kpi-card__spark" data-kpi-spark="savings"></div>
-              <div class="kpi-card__foot">
-                <span class="chip chip--positive"><span class="chip__dot"></span>21% rate</span>
-                <span class="kpi-card__caption">12-mo high</span>
-              </div>
-            </article>
+            <svg class="verdict__spark"
+                 viewBox="0 0 180 56"
+                 preserveAspectRatio="none"
+                 role="img"
+                 aria-label="Ten-year net-worth trajectory"
+                 data-spark>
+              <path class="spark-line"
+                    fill="none"
+                    stroke="var(--accent)"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round" />
+            </svg>
 
-            <article class="kpi-card" style="--i:2;">
-              <div class="kpi-card__head">
-                <span class="kpi-card__eyebrow">Months to debt-free</span>
-                <span class="kpi-card__icon" aria-hidden="true">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-                </span>
-              </div>
-              <div class="kpi-card__value mono" data-kpi-value data-value="18" data-decimals="0" data-suffix=" mo">0 mo</div>
-              <div class="kpi-card__spark" data-kpi-spark="debtFree"></div>
-              <div class="kpi-card__foot">
-                <span class="chip chip--positive"><span class="chip__dot"></span>-3 mo</span>
-                <span class="kpi-card__caption">avalanche plan</span>
-              </div>
-            </article>
+            <p class="verdict__caption">
+              From <span class="mono tabular">$87,420</span> today. Compounding at 6% real. Assumes you keep saving <span class="mono tabular">$1,640</span> a month.
+            </p>
+          </section>
 
-            <article class="kpi-card" style="--i:3;">
-              <div class="kpi-card__head">
-                <span class="kpi-card__eyebrow">Health score</span>
-                <span class="kpi-card__icon" aria-hidden="true">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-4.5-7-11a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 6.5-7 11-7 11z" transform="translate(-2 0)"/></svg>
-                </span>
-              </div>
-              <div class="kpi-card__value mono" data-kpi-value data-value="78" data-decimals="0" data-suffix=" / 100">0 / 100</div>
-              <div class="kpi-card__spark" data-kpi-spark="health"></div>
-              <div class="kpi-card__foot">
-                <span class="chip chip--positive"><span class="chip__dot"></span>B+ grade</span>
-                <span class="kpi-card__caption">+4 pts / 90d</span>
-              </div>
-            </article>
+          <!-- ============================================================
+               ROW 2 — THE EVIDENCE
+               ============================================================ -->
+          <section class="evidence" aria-label="Net worth forecast">
 
-          </div>
-        </section>
-
-        <!-- ============================================================
-             SECTION 2 — Forecast + Insights
-             ============================================================ -->
-        <section class="section" aria-labelledby="forecast-heading" style="margin-bottom: var(--space-12);">
-          <div class="bento-feature">
-
-            <article class="card card--glass forecast-card" data-reveal>
-              <header class="forecast-card__head">
-                <div class="forecast-card__title-block">
-                  <span class="forecast-card__eyebrow">Projection</span>
-                  <h2 id="forecast-heading" class="forecast-card__title">Ten-year <em>forecast</em></h2>
-                </div>
-                <div class="tab-bar" role="tablist" aria-label="Forecast time range">
-                  <button class="tab" role="tab" data-range="12">1Y</button>
-                  <button class="tab" role="tab" data-range="60" aria-selected="true">5Y</button>
-                  <button class="tab" role="tab" data-range="120">10Y</button>
-                  <button class="tab" role="tab" data-range="all">All</button>
-                </div>
-              </header>
-
-              <div class="forecast-card__chart-wrap" data-forecast-chart></div>
-
-              <div class="forecast-card__xaxis" data-forecast-xaxis>
-                <span>Now</span>
-                <span>Yr 1</span>
-                <span>Yr 2</span>
-                <span>Yr 3</span>
-                <span>Yr 4</span>
-                <span>Yr 5</span>
+            <div class="chart-frame">
+              <div class="chart-tabs" role="tablist" aria-label="Time range">
+                <button class="chart-tab" role="tab" data-range="1">1Y</button>
+                <button class="chart-tab" role="tab" data-range="5">5Y</button>
+                <button class="chart-tab is-active" role="tab" aria-selected="true" data-range="10">10Y</button>
+                <button class="chart-tab" role="tab" data-range="all">All</button>
               </div>
 
-              <div class="milestones">
-                <div class="milestone">
-                  <span class="milestone__when">Month 9</span>
-                  <span class="milestone__label">Credit card paid off</span>
-                  <span class="milestone__val">$91,200</span>
-                </div>
-                <div class="milestone">
-                  <span class="milestone__when">Month 24</span>
-                  <span class="milestone__label">Emergency fund full</span>
-                  <span class="milestone__val">$109,800</span>
-                </div>
-                <div class="milestone">
-                  <span class="milestone__when">Month 42</span>
-                  <span class="milestone__label">House down payment</span>
-                  <span class="milestone__val">$132,600</span>
+              <div class="chart-stage" data-chart-stage>
+                <svg viewBox="0 0 800 400" preserveAspectRatio="none" data-area-chart aria-hidden="true">
+                  <g data-grid></g>
+                  <g data-axis-y></g>
+                  <g data-axis-x></g>
+                  <path data-area-fill fill="oklch(0.42 0.14 25 / 0.06)" />
+                  <path data-area-line
+                        fill="none"
+                        stroke="var(--accent)"
+                        stroke-width="1.75"
+                        stroke-linecap="round"
+                        stroke-linejoin="round" />
+                  <line class="chart-crosshair" data-crosshair x1="0" y1="0" x2="0" y2="400" />
+                  <circle class="chart-dot" data-dot r="3.5" />
+                  <rect data-hit fill="transparent" x="0" y="0" width="800" height="400" />
+                </svg>
+                <div class="pfc-tooltip chart-tooltip" data-tooltip>
+                  <span data-tooltip-label>Month 60</span>
+                  <span class="mono tabular" data-tooltip-value style="margin-left: 8px;">$0</span>
                 </div>
               </div>
-            </article>
+            </div>
 
-            <article class="card card--glass insights-card" data-reveal>
-              <header class="insights-card__head">
-                <h2 class="insights-card__title">From <em>Sage</em></h2>
-                <span class="chip chip--neutral">3 new</span>
-              </header>
-              <div class="insights-stack" data-insights></div>
-            </article>
+            <aside class="sage" aria-label="Sage observations">
+              <h2 class="sage__title">Sage observations</h2>
+              <div class="sage__list" data-sage-list></div>
+              <p class="sage__meta">Updated each Sunday. Math, not opinion.</p>
+            </aside>
+          </section>
 
-          </div>
-        </section>
+          <!-- ============================================================
+               ROW 3 — THE DETAIL
+               ============================================================ -->
+          <section class="detail" aria-labelledby="detail-title">
+            <h2 class="detail__title" id="detail-title">By the numbers</h2>
 
-        <!-- ============================================================
-             SECTION 3 — Goals + Debt
-             ============================================================ -->
-        <section class="section" aria-labelledby="goals-heading" style="margin-bottom: var(--space-12);">
-          <div class="gd-row">
-
-            <article class="card card--glass panel" data-reveal>
-              <header class="panel__head">
-                <div>
-                  <h2 id="goals-heading" class="panel__title">Goals <em>in flight</em></h2>
-                  <p class="panel__sub">Four active. Two finishing ahead of schedule.</p>
-                </div>
-                <a href="/goals.html" class="sec-link">All goals
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-                </a>
-              </header>
-
-              <div class="goals-grid" data-goals></div>
-            </article>
-
-            <article class="card card--glass panel" data-reveal>
-              <header class="panel__head">
-                <div>
-                  <h2 class="panel__title">Debt-free in <em>18 months</em></h2>
-                  <p class="panel__sub">Avalanche method, $980 / mo allocated.</p>
-                </div>
-              </header>
-
-              <div class="debt-top">
-                <div data-debt-donut></div>
-                <div class="debt-legend" data-debt-legend></div>
-              </div>
-
-              <div class="debt-bar-block">
-                <div class="debt-bar-block__head">
-                  <span class="debt-bar-block__title">Months remaining per debt</span>
-                  <label class="toggle-row">
-                    <span>Snowball</span>
-                    <span class="toggle">
-                      <input type="checkbox" class="toggle__input" aria-label="Switch to snowball method">
-                      <span class="toggle__slider"></span>
-                    </span>
-                  </label>
-                </div>
-                <div data-debt-bars></div>
-              </div>
-            </article>
-
-          </div>
-        </section>
-
-        <!-- ============================================================
-             SECTION 4 — Cash flow
-             ============================================================ -->
-        <section class="section" aria-labelledby="cf-heading" style="margin-bottom: var(--space-12);">
-          <article class="card card--glass cf-card" data-reveal>
-            <header class="panel__head">
+            <div class="detail__grid">
               <div>
-                <h2 id="cf-heading" class="panel__title">Monthly <em>cash flow</em></h2>
-                <p class="panel__sub">Income against expenses, broken down by category and over time.</p>
+                <div class="detail__col-label">Plan</div>
+                <dl class="pfc-dl">
+                  <div><dt>Income</dt><dd>$8,420 / mo</dd></div>
+                  <div><dt>Expenses</dt><dd>$5,180 / mo</dd></div>
+                  <div><dt>Savings rate</dt><dd>38.5%</dd></div>
+                  <div><dt>Emergency runway</dt><dd>4.6 months</dd></div>
+                </dl>
               </div>
-              <div class="tab-bar" role="tablist" aria-label="Cash flow window">
-                <button class="tab" role="tab" aria-selected="true">This month</button>
-                <button class="tab" role="tab">6-mo avg</button>
-                <button class="tab" role="tab">12-mo avg</button>
-              </div>
-            </header>
 
-            <div class="cf-donuts">
-              <div class="cf-donut">
-                <div class="cf-donut__chart" data-cf-income-donut></div>
-                <div class="cf-donut__info">
-                  <span class="cf-donut__eyebrow">Income · $7,800</span>
-                  <span class="cf-donut__title">Three sources</span>
-                  <div class="cf-donut__legend" data-cf-income-legend></div>
-                </div>
+              <div>
+                <div class="detail__col-label">Debt</div>
+                <dl class="pfc-dl">
+                  <div><dt>Total debt</dt><dd>$42,310</dd></div>
+                  <div><dt>Months to free</dt><dd>42</dd></div>
+                  <div><dt>Interest you'll pay</dt><dd>$6,847</dd></div>
+                  <div><dt>Method</dt><dd>Avalanche</dd></div>
+                </dl>
               </div>
-              <div class="cf-donut">
-                <div class="cf-donut__chart" data-cf-expense-donut></div>
-                <div class="cf-donut__info">
-                  <span class="cf-donut__eyebrow">Expenses · $4,218</span>
-                  <span class="cf-donut__title">Eight categories</span>
-                  <div class="cf-donut__legend" data-cf-expense-legend></div>
-                </div>
+
+              <div>
+                <div class="detail__col-label">Goals</div>
+                <dl class="pfc-dl">
+                  <div><dt>In flight</dt><dd>5</dd></div>
+                  <div><dt>On track</dt><dd>4 of 5</dd></div>
+                  <div><dt>Total saved</dt><dd>$18,920</dd></div>
+                  <div><dt>Largest goal</dt><dd>$24,000</dd></div>
+                </dl>
               </div>
             </div>
+          </section>
 
-            <div class="cf-bars">
-              <div class="cf-bars__legend">
-                <span><span class="cf-bars__sw" style="background:var(--mint-500);"></span>Income</span>
-                <span><span class="cf-bars__sw" style="background:var(--coral-500);opacity:.85;"></span>Expense</span>
-              </div>
-              <div class="cf-bars__chart" data-cf-bars></div>
+          <!-- ============================================================
+               ROW 4 — THE ACTION
+               ============================================================ -->
+          <section class="action" aria-label="Primary action">
+            <p class="action__caption">Test a raise, a house, an early retirement.</p>
+            <a href="/scenarios.html" class="pfc-button pfc-button--primary">
+              Run a scenario <span aria-hidden="true">→</span>
+            </a>
+          </section>
+
+          <hr class="hairline" />
+
+          <!-- ============================================================
+               RECENT ACTIVITY
+               ============================================================ -->
+          <section class="activity" aria-labelledby="activity-title">
+            <h2 class="activity__title" id="activity-title">Recent activity</h2>
+
+            <div class="activity__wrap">
+              <table class="pfc-table" data-activity-table>
+                <thead>
+                  <tr>
+                    <th scope="col">Date</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Category</th>
+                    <th scope="col" class="pfc-table__num">Amount</th>
+                  </tr>
+                </thead>
+                <tbody data-activity-body></tbody>
+              </table>
             </div>
-          </article>
-        </section>
 
-        <!-- ============================================================
-             SECTION 5 — Activity feed
-             ============================================================ -->
-        <section class="section" aria-labelledby="act-heading" style="margin-bottom: var(--space-12);">
-          <article class="card card--glass activity-card" data-reveal>
-            <header class="activity-card__head">
-              <h2 id="act-heading" class="sec-title">Recent <em>activity</em></h2>
-              <a href="/history.html" class="sec-link">View all
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-              </a>
-            </header>
-            <div class="activity-list" data-activity data-reveal-stagger></div>
-          </article>
-        </section>
+            <div class="activity__footer">
+              <a href="/history.html">View full history</a>
+            </div>
+          </section>
 
-        <!-- ============================================================
-             SECTION 6 — Quick actions
-             ============================================================ -->
-        <section class="section" aria-labelledby="qa-heading" style="margin-bottom: var(--space-8);">
-          <header class="section__header" style="margin-bottom: var(--space-4);">
-            <h2 id="qa-heading" class="sec-title">Pick something to <em>do</em></h2>
-          </header>
-          <div class="qa-strip" data-reveal-stagger>
-
-            <button type="button" class="qa-tile" style="--i:0;">
-              <span class="qa-tile__icon" aria-hidden="true">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="3"/><circle cx="17" cy="17" r="3"/><path d="M10 7h7v10"/></svg>
-              </span>
-              <span class="qa-tile__label">Run a scenario</span>
-              <span class="qa-tile__sub">Model a what-if</span>
-            </button>
-
-            <button type="button" class="qa-tile" style="--i:1;">
-              <span class="qa-tile__icon" aria-hidden="true">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg>
-              </span>
-              <span class="qa-tile__label">Add a goal</span>
-              <span class="qa-tile__sub">Track toward a number</span>
-            </button>
-
-            <button type="button" class="qa-tile" style="--i:2;">
-              <span class="qa-tile__icon" aria-hidden="true">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
-              </span>
-              <span class="qa-tile__label">Log a transaction</span>
-              <span class="qa-tile__sub">Cash or card, 10 sec</span>
-            </button>
-
-            <button type="button" class="qa-tile" style="--i:3;">
-              <span class="qa-tile__icon" aria-hidden="true">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M5 21h14"/></svg>
-              </span>
-              <span class="qa-tile__label">Export report</span>
-              <span class="qa-tile__sub">PDF or CSV</span>
-            </button>
-
-            <button type="button" class="qa-tile" style="--i:4;">
-              <span class="qa-tile__icon" aria-hidden="true">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3.5-7.1L21 3v6h-6"/></svg>
-              </span>
-              <span class="qa-tile__label">Talk to Sage</span>
-              <span class="qa-tile__sub">Ask anything</span>
-            </button>
-
-          </div>
-        </section>
-
-        <!-- Footer strip -->
-        <div class="foot-strip">
-          <div class="foot-strip__row">
-            <span class="foot-strip__dot" aria-hidden="true"></span>
-            <span>Calculations run in your browser. Nothing leaves the device.</span>
-          </div>
-          <div class="foot-strip__row">
-            <span>Last synced 2 min ago</span>
-            <span aria-hidden="true">·</span>
-            <a href="#">Methodology</a>
-            <span aria-hidden="true">·</span>
-            <a href="#">Changelog v2.4.1</a>
-          </div>
         </div>
+      </main>
 
-      </div>
-    </main>
+      <div data-include="/partials/bottom-tabs.html"></div>
+    </div>
   </div>
 
-  <!-- Scripts -->
-  <script src="/js/include.js"></script>
-  <script src="/js/motion.js"></script>
-  <script src="/js/charts.js"></script>
-  <script src="/js/demo-data.js"></script>
-  <script src="/js/app.js"></script>
+  <!-- =========================================================================
+       Foundation loader
+       ========================================================================= -->
+  <script src="/js/pfc-include.js"></script>
 
+  <!-- =========================================================================
+       Inline runtime — minimal foundation surface.
+       Provides: window.PFC.setTopbar, PFC_MOTION.tweenNumber, PFC_CHARTS (sparkline +
+       areaChart), PFC_DATA, reveal observer, chart-draw observer.
+       All respect prefers-reduced-motion via the base CSS + an explicit guard.
+       ========================================================================= -->
   <script>
-    /* ============================================================
-     * Dashboard boot — runs after partials are injected.
-     * ============================================================ */
-    document.addEventListener("pfc:partials-ready", function () {
-      var D = window.PFC_DATA;
-      var M = window.PFC_MOTION;
-      var C = window.PFC_CHARTS;
-      if (!D || !M || !C) return;
+  (function () {
+    "use strict";
 
-      /* ---- Greeting + topbar enhancement (replace breadcrumb slot) ---- */
-      (function injectTopbar() {
-        var crumb = document.querySelector('[data-slot="breadcrumb"]');
-        var actions = document.querySelector('.topbar__actions');
-        if (!crumb || !actions) return;
+    var REDUCED = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-        var hr = new Date().getHours();
-        var period = hr < 5 ? "Still up" : hr < 12 ? "Good morning" : hr < 18 ? "Good afternoon" : hr < 22 ? "Good evening" : "Late tonight";
-        var firstName = (D.profile.name || "Alex").split(" ")[0];
+    /* ----- Data --------------------------------------------------------- */
+    function buildForecast() {
+      // 120 monthly points: $87,420 → $612,400 with compound + monthly contribution.
+      var start = 87420;
+      var monthlyContribution = 1640;
+      var monthlyRate = Math.pow(1.06, 1 / 12) - 1;
+      var pts = [];
+      var v = start;
+      for (var i = 0; i <= 120; i++) {
+        pts.push({ month: i, value: Math.round(v) });
+        v = v * (1 + monthlyRate) + monthlyContribution;
+      }
+      return pts;
+    }
 
-        crumb.innerHTML =
-          '<div class="greet">' +
-            '<span class="greet__eyebrow">Overview</span>' +
-            '<span class="greet__title">' + period + ', <em>' + firstName + '</em></span>' +
-          '</div>';
+    var PFC_DATA = window.PFC_DATA = window.PFC_DATA || {
+      forecast10y: buildForecast(),
+      sageInsights: [
+        "Your savings rate has held above 35% for nine consecutive months.",
+        "The Citi card clears in November. Roll its $340 payment into the auto loan.",
+        "You are six weeks ahead of the emergency-fund target you set in January.",
+        "A 1% raise next April moves the debt-free date forward by three weeks."
+      ],
+      activity: [
+        { date: "May 14", desc: "Payroll deposit",            cat: "Income",     amt:  4210.00 },
+        { date: "May 13", desc: "Whole Foods",                cat: "Groceries",  amt:  -86.42 },
+        { date: "May 12", desc: "Citi card payment",          cat: "Debt",       amt:  -420.00 },
+        { date: "May 11", desc: "Vanguard transfer",          cat: "Savings",    amt: -1000.00 },
+        { date: "May 10", desc: "Pacific Gas & Electric",     cat: "Utilities",  amt:  -148.72 },
+        { date: "May 09", desc: "Sage subscription",          cat: "Software",   amt:   -12.00 },
+        { date: "May 08", desc: "Refund · Patagonia",         cat: "Refund",     amt:    78.50 },
+        { date: "May 07", desc: "Rent · 1422 Bryant",         cat: "Housing",    amt: -2950.00 },
+        { date: "May 06", desc: "Trader Joe's",               cat: "Groceries",  amt:   -64.18 },
+        { date: "May 05", desc: "Uber · airport",             cat: "Transport",  amt:   -42.80 },
+        { date: "May 04", desc: "Freelance · Mercer studio",  cat: "Income",     amt:   850.00 },
+        { date: "May 03", desc: "Auto loan payment",          cat: "Debt",       amt:  -385.00 }
+      ]
+    };
 
-        // Inject extra actions before the existing ghost buttons.
-        var addTx = document.createElement("button");
-        addTx.type = "button";
-        addTx.className = "btn btn--ghost btn--sm";
-        addTx.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg><span>Add transaction</span>';
-        addTx.addEventListener("click", function () { window.PFC && PFC.toast("Transaction form coming soon", "info", { duration: 1800 }); });
+    /* ----- PFC.setTopbar ----------------------------------------------- */
+    var PFC = window.PFC = window.PFC || {};
 
-        var newScn = document.createElement("button");
-        newScn.type = "button";
-        newScn.className = "btn btn--primary btn--sm";
-        newScn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg><span>New scenario</span>';
-        newScn.addEventListener("click", function () { window.PFC && PFC.toast("Scenario builder coming soon", "info", { duration: 1800 }); });
+    PFC.setTopbar = function (opts) {
+      var t = document.querySelector("[data-slot='title']");
+      var s = document.querySelector("[data-slot='subtitle']");
+      var a = document.querySelector("[data-slot='actions']");
+      if (t && opts.title)    t.textContent    = opts.title;
+      if (s && opts.subtitle) s.textContent    = opts.subtitle;
+      if (a && opts.actions)  a.innerHTML      = opts.actions;
+    };
 
-        // Add a mint dot to the notifications bell.
-        var bell = actions.querySelector('[aria-label="Notifications"]');
-        if (bell) bell.classList.add("bell-dot");
+    /* ----- PFC_MOTION.tweenNumber -------------------------------------- */
+    var PFC_MOTION = window.PFC_MOTION = window.PFC_MOTION || {};
 
-        // Insert addTx and newScn at the start of actions, after the search button.
-        var searchBtn = actions.querySelector(".topbar__search");
-        if (searchBtn && searchBtn.nextSibling) {
-          actions.insertBefore(addTx, searchBtn.nextSibling);
-          actions.insertBefore(newScn, addTx.nextSibling);
-        } else {
-          actions.appendChild(addTx);
-          actions.appendChild(newScn);
-        }
+    function easeData(t) {
+      // approximation of cubic-bezier(0.45, 0, 0.15, 1)
+      return t < 0.5
+        ? 4 * t * t * t
+        : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    }
 
-        // Apply magnetic to the new primary.
-        if (M.magnetic) M.magnetic(newScn, { strength: 0.20, radius: 80 });
-      })();
+    function fmtMoney(n, prefix) {
+      var sign = n < 0 ? "-" : "";
+      var abs = Math.abs(Math.round(n));
+      var s = abs.toString();
+      var out = "";
+      for (var i = s.length, j = 0; i > 0; i -= 3, j++) {
+        out = s.slice(Math.max(0, i - 3), i) + (j > 0 ? "," + out : "");
+      }
+      return sign + (prefix || "") + out;
+    }
 
-      /* ---- KPI countUps + sparklines ---- */
-      function generateSpark(direction, base, n) {
-        // deterministic noisy walk so it doesn't change between paints
-        var arr = [];
-        var v = base;
-        for (var i = 0; i < n; i++) {
-          var trend = direction === "up" ? 1 : direction === "down" ? -1 : 0;
-          var noise = Math.sin(i * 1.3 + base * 0.001) * base * 0.04;
-          v += (base * 0.012 * trend) + noise;
-          arr.push(Math.max(0, v));
-        }
-        return arr;
+    PFC_MOTION.tweenNumber = function (el, to, opts) {
+      opts = opts || {};
+      var duration = opts.duration || 560;
+      var prefix = opts.prefix || "";
+      var from = opts.from != null ? opts.from : 0;
+
+      if (REDUCED) {
+        el.textContent = fmtMoney(to, prefix);
+        return;
       }
 
-      var sparkData = {
-        netWorth: D.netWorth.history.map(function (p) { return p.value; }),
-        savings: generateSpark("up", 1200, 24),
-        debtFree: generateSpark("down", 32, 24),
-        health: generateSpark("up", 68, 24),
-      };
+      var start = null;
+      function step(ts) {
+        if (start === null) start = ts;
+        var t = Math.min(1, (ts - start) / duration);
+        var v = from + (to - from) * easeData(t);
+        el.textContent = fmtMoney(v, prefix);
+        if (t < 1) requestAnimationFrame(step);
+        else el.textContent = fmtMoney(to, prefix);
+      }
+      requestAnimationFrame(step);
+    };
 
-      document.querySelectorAll("[data-kpi-value]").forEach(function (el) {
-        var val = parseFloat(el.getAttribute("data-value"));
-        var currency = el.getAttribute("data-currency") || undefined;
-        var decimals = parseInt(el.getAttribute("data-decimals") || "0", 10);
-        var suffix = el.getAttribute("data-suffix") || "";
+    /* ----- PFC_CHARTS -------------------------------------------------- */
+    var PFC_CHARTS = window.PFC_CHARTS = window.PFC_CHARTS || {};
+
+    function path(points) {
+      if (!points.length) return "";
+      var d = "M " + points[0][0].toFixed(2) + " " + points[0][1].toFixed(2);
+      for (var i = 1; i < points.length; i++) {
+        d += " L " + points[i][0].toFixed(2) + " " + points[i][1].toFixed(2);
+      }
+      return d;
+    }
+
+    PFC_CHARTS.sparkline = function (svg, data) {
+      var w = 180, h = 56, pad = 2;
+      var vmin = Math.min.apply(null, data);
+      var vmax = Math.max.apply(null, data);
+      var range = vmax - vmin || 1;
+      var step = (w - pad * 2) / (data.length - 1);
+      var pts = data.map(function (v, i) {
+        return [pad + i * step, h - pad - ((v - vmin) / range) * (h - pad * 2)];
+      });
+      var line = svg.querySelector(".spark-line");
+      line.setAttribute("d", path(pts));
+
+      // stroke-dasharray draw-on
+      var len = line.getTotalLength ? line.getTotalLength() : 200;
+      line.style.strokeDasharray = len;
+      line.style.strokeDashoffset = REDUCED ? 0 : len;
+      line.style.transition = REDUCED
+        ? "none"
+        : "stroke-dashoffset 320ms cubic-bezier(0.45, 0, 0.15, 1)";
+      // trigger on next frame
+      requestAnimationFrame(function () { line.style.strokeDashoffset = 0; });
+    };
+
+    PFC_CHARTS.areaChart = function (stage, data) {
+      var svg     = stage.querySelector("[data-area-chart]");
+      var grid    = svg.querySelector("[data-grid]");
+      var axisY   = svg.querySelector("[data-axis-y]");
+      var axisX   = svg.querySelector("[data-axis-x]");
+      var line    = svg.querySelector("[data-area-line]");
+      var fill    = svg.querySelector("[data-area-fill]");
+      var hit     = svg.querySelector("[data-hit]");
+      var cross   = svg.querySelector("[data-crosshair]");
+      var dot     = svg.querySelector("[data-dot]");
+      var tooltip = stage.querySelector("[data-tooltip]");
+      var ttLabel = stage.querySelector("[data-tooltip-label]");
+      var ttValue = stage.querySelector("[data-tooltip-value]");
+
+      var W = 800, H = 400;
+      var padL = 56, padR = 16, padT = 16, padB = 36;
+      var iw = W - padL - padR;
+      var ih = H - padT - padB;
+
+      var vmin = Math.min.apply(null, data.map(function (d) { return d.value; }));
+      var vmax = Math.max.apply(null, data.map(function (d) { return d.value; }));
+      // Pad the value range so the line never touches the top edge
+      var vpad = (vmax - vmin) * 0.08;
+      vmin = Math.max(0, vmin - vpad);
+      vmax = vmax + vpad;
+      var vrange = vmax - vmin || 1;
+
+      var step = iw / (data.length - 1);
+
+      var pts = data.map(function (d, i) {
+        return [padL + i * step, padT + ih - ((d.value - vmin) / vrange) * ih];
+      });
+
+      // gridlines: 4 horizontal at quartiles
+      var gridFrag = "";
+      var yLabels = "";
+      for (var q = 0; q <= 4; q++) {
+        var y = padT + (ih / 4) * q;
+        gridFrag += '<line x1="' + padL + '" y1="' + y.toFixed(2) +
+                    '" x2="' + (W - padR) + '" y2="' + y.toFixed(2) +
+                    '" stroke="var(--ink-5)" stroke-width="1" />';
+        var val = vmax - (vrange / 4) * q;
+        yLabels += '<text x="' + (padL - 8) + '" y="' + (y + 4).toFixed(2) +
+                   '" text-anchor="end" font-family="var(--font-mono)" font-size="11" ' +
+                   'fill="var(--ink-3)" font-feature-settings="\'tnum\' 1" ' +
+                   'letter-spacing="-0.01em">' + fmtMoney(val, "$") + '</text>';
+      }
+      grid.innerHTML = gridFrag;
+      axisY.innerHTML = yLabels;
+
+      // x-axis: every 12 months
+      var xLabels = "";
+      for (var m = 0; m <= data.length - 1; m += 12) {
+        var x = padL + m * step;
+        var year = Math.round(m / 12);
+        var lbl = year === 0 ? "Today" : (year + "y");
+        xLabels += '<text x="' + x.toFixed(2) + '" y="' + (H - 12) +
+                   '" text-anchor="middle" font-family="var(--font-body)" font-size="11" ' +
+                   'fill="var(--ink-3)" letter-spacing="0.04em" text-transform="uppercase">' +
+                   lbl + '</text>';
+      }
+      axisX.innerHTML = xLabels;
+
+      // line + fill
+      var d = path(pts);
+      line.setAttribute("d", d);
+
+      var fillD = d +
+        " L " + pts[pts.length - 1][0].toFixed(2) + " " + (padT + ih) +
+        " L " + pts[0][0].toFixed(2) + " " + (padT + ih) + " Z";
+      fill.setAttribute("d", fillD);
+
+      // draw-on
+      var len = line.getTotalLength ? line.getTotalLength() : 2000;
+      line.style.strokeDasharray = len;
+      line.style.strokeDashoffset = REDUCED ? 0 : len;
+      line.style.transition = REDUCED
+        ? "none"
+        : "stroke-dashoffset 560ms cubic-bezier(0.45, 0, 0.15, 1)";
+
+      var fillOpacity = fill.getAttribute("fill-opacity");
+      fill.style.opacity = REDUCED ? 1 : 0;
+      fill.style.transition = REDUCED
+        ? "none"
+        : "opacity 560ms cubic-bezier(0.45, 0, 0.15, 1) 160ms";
+
+      function drawIn() {
+        requestAnimationFrame(function () {
+          line.style.strokeDashoffset = 0;
+          fill.style.opacity = 1;
+        });
+      }
+
+      // Hover interactions
+      function onMove(evt) {
+        var rect = svg.getBoundingClientRect();
+        var clientX = evt.touches ? evt.touches[0].clientX : evt.clientX;
+        var localX = ((clientX - rect.left) / rect.width) * W;
+        // Snap to nearest data index
+        var idx = Math.round((localX - padL) / step);
+        if (idx < 0) idx = 0;
+        if (idx > data.length - 1) idx = data.length - 1;
+        var pt = pts[idx];
+
+        cross.setAttribute("x1", pt[0]);
+        cross.setAttribute("x2", pt[0]);
+        cross.setAttribute("y1", padT);
+        cross.setAttribute("y2", padT + ih);
+        cross.classList.add("is-visible");
+
+        dot.setAttribute("cx", pt[0]);
+        dot.setAttribute("cy", pt[1]);
+        dot.classList.add("is-visible");
+
+        // Tooltip position in screen coords relative to stage
+        var stageRect = stage.getBoundingClientRect();
+        var dotScreenX = rect.left + (pt[0] / W) * rect.width;
+        var dotScreenY = rect.top  + (pt[1] / H) * rect.height;
+        tooltip.style.left = (dotScreenX - stageRect.left) + "px";
+        tooltip.style.top  = (dotScreenY - stageRect.top)  + "px";
+
+        var yr = Math.floor(data[idx].month / 12);
+        var mo = data[idx].month % 12;
+        var label = data[idx].month === 0
+          ? "Today"
+          : (yr > 0 ? yr + "y " : "") + mo + "mo";
+        ttLabel.textContent = label;
+        ttValue.textContent = fmtMoney(data[idx].value, "$");
+        tooltip.classList.add("is-visible");
+      }
+
+      function onLeave() {
+        cross.classList.remove("is-visible");
+        dot.classList.remove("is-visible");
+        tooltip.classList.remove("is-visible");
+      }
+
+      hit.addEventListener("mousemove", onMove);
+      hit.addEventListener("mouseleave", onLeave);
+      hit.addEventListener("touchstart", onMove, { passive: true });
+      hit.addEventListener("touchmove", onMove, { passive: true });
+      hit.addEventListener("touchend", onLeave);
+
+      return { drawIn: drawIn };
+    };
+
+    /* ----- Reveal observer --------------------------------------------- */
+    function setupReveal() {
+      var revealEls = document.querySelectorAll("[data-reveal]");
+      var staggers  = document.querySelectorAll("[data-reveal-stagger]");
+
+      function stagger(el) {
+        var kids = el.children;
+        for (var i = 0; i < kids.length; i++) {
+          (function (k, idx) {
+            var delay = Math.min(idx, 6) * 60;
+            setTimeout(function () { k.classList.add("is-revealed"); }, delay);
+          })(kids[i], i);
+        }
+      }
+
+      if (REDUCED) {
+        revealEls.forEach(function (el) { el.classList.add("is-revealed"); });
+        staggers.forEach(function (el) {
+          for (var i = 0; i < el.children.length; i++) {
+            el.children[i].classList.add("is-revealed");
+          }
+        });
+        return;
+      }
+
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          var el = entry.target;
+          if (el.hasAttribute("data-reveal-stagger")) {
+            stagger(el);
+          } else {
+            el.classList.add("is-revealed");
+          }
+          io.unobserve(el);
+        });
+      }, { threshold: 0.12 });
+
+      revealEls.forEach(function (el) { io.observe(el); });
+      staggers.forEach(function (el) { io.observe(el); });
+    }
+
+    /* ----- Render: sage list ------------------------------------------- */
+    function renderSage() {
+      var host = document.querySelector("[data-sage-list]");
+      if (!host) return;
+      host.innerHTML = PFC_DATA.sageInsights.map(function (s) {
+        return '<div class="sage__item">' +
+                 '<span class="sage__dot" aria-hidden="true"></span>' +
+                 '<span>' + s + '</span>' +
+               '</div>';
+      }).join("");
+    }
+
+    /* ----- Render: activity table -------------------------------------- */
+    function renderActivity() {
+      var tbody = document.querySelector("[data-activity-body]");
+      if (!tbody) return;
+      tbody.innerHTML = PFC_DATA.activity.map(function (row) {
+        var neg = row.amt < 0;
+        var amtClass = "activity__amount" + (neg ? " activity__amount--neg" : "");
+        var amtStr = (neg ? "–" : "") + fmtMoney(Math.abs(row.amt), "$");
+        // Use 2dp for the amount column
+        var abs = Math.abs(row.amt).toFixed(2);
+        var parts = abs.split(".");
+        var whole = parts[0];
+        var formatted = "";
+        for (var i = whole.length, j = 0; i > 0; i -= 3, j++) {
+          formatted = whole.slice(Math.max(0, i - 3), i) + (j > 0 ? "," + formatted : "");
+        }
+        amtStr = (neg ? "–" : "") + "$" + formatted + "." + parts[1];
+
+        return "<tr>" +
+                 "<td><span class='activity__date'>" + row.date + "</span></td>" +
+                 "<td>" + row.desc + "</td>" +
+                 "<td><span class='pfc-tag'>" + row.cat + "</span></td>" +
+                 "<td class='pfc-table__num'><span class='" + amtClass + "'>" + amtStr + "</span></td>" +
+               "</tr>";
+      }).join("");
+    }
+
+    /* ----- Set active sidebar item ------------------------------------- */
+    function markActiveNav() {
+      var page = document.body.getAttribute("data-page");
+      if (!page) return;
+      var items = document.querySelectorAll(".app-sidebar__item, .bottom-tabs__item");
+      items.forEach(function (it) {
+        if (it.getAttribute("data-page") === page) {
+          it.classList.add("is-active");
+          it.setAttribute("aria-current", "page");
+        }
+      });
+    }
+
+    /* ----- Verdict number tween (on reveal) ---------------------------- */
+    function setupVerdictTween() {
+      var el = document.querySelector("[data-tween-number]");
+      if (!el) return;
+      var to = parseFloat(el.getAttribute("data-tween-to"));
+      var prefix = el.getAttribute("data-tween-prefix") || "";
+      var fired = false;
+
+      if (REDUCED) {
+        el.textContent = fmtMoney(to, prefix);
+        return;
+      }
+
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting && !fired) {
+            fired = true;
+            PFC_MOTION.tweenNumber(el, to, { duration: 560, prefix: prefix, from: 0 });
+            io.disconnect();
+          }
+        });
+      }, { threshold: 0.3 });
+      io.observe(el);
+    }
+
+    /* ----- Boot --------------------------------------------------------- */
+    function boot() {
+      markActiveNav();
+
+      PFC.setTopbar({
+        title: "Dashboard",
+        subtitle: "Forty-two months until debt-free. The math has not changed since Tuesday.",
+        actions:
+          '<button type="button" class="pfc-button pfc-button--ghost" data-action="export">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+              '<path d="M12 4 L12 16"/><path d="M7 11 L12 16 L17 11"/><path d="M5 20 L19 20"/>' +
+            '</svg>Export</button>' +
+          '<button type="button" class="pfc-button pfc-button--ghost" data-action="edit">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+              '<path d="M4 20 L8 19 L20 7 L17 4 L5 16 Z"/><path d="M14 7 L17 10"/>' +
+            '</svg>Edit numbers</button>' +
+          '<button type="button" class="pfc-button pfc-button--primary" data-action="new-scenario">New scenario</button>'
+      });
+
+      renderSage();
+      renderActivity();
+      setupReveal();
+      setupVerdictTween();
+
+      // Sparkline — small subset of the same forecast (every 6 months)
+      var spark = document.querySelector("[data-spark]");
+      if (spark) {
+        var subset = PFC_DATA.forecast10y
+          .filter(function (_, i) { return i % 6 === 0; })
+          .map(function (d) { return d.value; });
+        PFC_CHARTS.sparkline(spark, subset);
+      }
+
+      // Area chart — draw on first viewport entry
+      var stage = document.querySelector("[data-chart-stage]");
+      if (stage) {
+        var chart = PFC_CHARTS.areaChart(stage, PFC_DATA.forecast10y);
+        var drawn = false;
         var io = new IntersectionObserver(function (entries) {
           entries.forEach(function (e) {
-            if (e.isIntersecting) {
-              io.unobserve(el);
-              M.countUp(el, val, { currency: currency, decimals: decimals, duration: 1200 });
-              if (suffix) {
-                // Append suffix once countUp settles
-                setTimeout(function () { el.textContent = el.textContent + suffix; }, 1240);
-              }
+            if (e.isIntersecting && !drawn) {
+              drawn = true;
+              chart.drawIn();
+              io.disconnect();
             }
           });
-        }, { threshold: 0.4 });
-        io.observe(el);
-      });
+        }, { threshold: 0.2 });
+        io.observe(stage);
+      }
 
-      document.querySelectorAll("[data-kpi-spark]").forEach(function (el) {
-        var key = el.getAttribute("data-kpi-spark");
-        var color = key === "debtFree" ? "var(--coral-400)" : "var(--mint-400)";
-        // Wait so spark draws after KPI lands.
-        setTimeout(function () {
-          C.sparkline(el, sparkData[key] || [], { height: 40, stroke: color, fill: true });
-        }, 600);
-      });
-
-      /* ---- Forecast area chart ---- */
-      (function buildForecast() {
-        var wrap = document.querySelector("[data-forecast-chart]");
-        if (!wrap) return;
-        var months = D.forecast.months.slice(0, 60); // 5Y default
-        // Inject a starting "now" point at front
-        var series = [{ label: "Now", value: D.netWorth.current }].concat(
-          months.map(function (m) { return { label: m.label, value: m.value }; })
-        );
-        function render(window) {
-          var slice = window === "all"
-            ? D.forecast.months
-            : D.forecast.months.slice(0, parseInt(window, 10));
-          var data = [{ label: "Now", value: D.netWorth.current }].concat(
-            slice.map(function (m) { return { label: m.label, value: m.value }; })
-          );
-          C.areaChart(wrap, data, {
-            height: 280,
-            currency: "USD",
-            ariaLabel: "Net worth forecast over time",
-          });
-        }
-        render(60);
-
-        document.querySelectorAll('.tab[data-range]').forEach(function (tab) {
-          tab.addEventListener("click", function () {
-            document.querySelectorAll('.tab[data-range]').forEach(function (t) { t.removeAttribute("aria-selected"); });
-            tab.setAttribute("aria-selected", "true");
-            render(tab.getAttribute("data-range"));
-          });
-        });
-      })();
-
-      /* ---- Sage insights ---- */
-      (function buildInsights() {
-        var wrap = document.querySelector("[data-insights]");
-        if (!wrap) return;
-        var classMap = { opportunity: "", watchout: "insight--watchout", win: "insight--win" };
-        wrap.innerHTML = D.sageInsights.map(function (ins) {
-          return ''
-            + '<article class="insight ' + (classMap[ins.kind] || "") + '">'
-              + '<span class="insight__dot" aria-hidden="true"></span>'
-              + '<div>'
-                + '<h3 class="insight__title">' + ins.title + '</h3>'
-                + '<p class="insight__body">' + ins.body + '</p>'
-                + '<a href="#" class="insight__action">' + ins.action
-                  + ' <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>'
-                + '</a>'
-              + '</div>'
-            + '</article>';
-        }).join("");
-      })();
-
-      /* ---- Goals: 4 rings ---- */
-      (function buildGoals() {
-        var wrap = document.querySelector("[data-goals]");
-        if (!wrap) return;
-        wrap.innerHTML = "";
-        D.goals.forEach(function (g) {
-          var pct = Math.round((g.current / g.target) * 100);
-          var tile = document.createElement("div");
-          tile.className = "goal-tile";
-          tile.innerHTML =
-            '<div class="goal-tile__ring" data-goal-ring></div>' +
-            '<div class="goal-tile__label">' + g.name + '</div>' +
-            '<div class="goal-tile__amounts">' + M.formatNumber(g.current, { currency: "USD" }) +
-              ' <span style="opacity:.6;">/ ' + M.formatNumber(g.target, { currency: "USD" }) + '</span></div>';
-          wrap.appendChild(tile);
-          var ringEl = tile.querySelector("[data-goal-ring]");
-          // Stagger ring builds slightly
-          setTimeout(function () {
-            C.progressRing(ringEl, pct, { size: 110, thickness: 9, color: g.color || "var(--mint-500)" });
-          }, 250);
-        });
-      })();
-
-      /* ---- Debt donut + legend + horizontal bars ---- */
-      (function buildDebt() {
-        var donutEl = document.querySelector("[data-debt-donut]");
-        var legendEl = document.querySelector("[data-debt-legend]");
-        var barsEl = document.querySelector("[data-debt-bars]");
-        if (!donutEl || !legendEl || !barsEl) return;
-
-        var colors = ["var(--coral-500)", "var(--mint-500)", "var(--lavender-500)"];
-        var total = D.debts.reduce(function (s, d) { return s + d.balance; }, 0);
-
-        var segments = D.debts.map(function (d, i) {
-          return { label: d.name, value: d.balance, color: colors[i % colors.length] };
-        });
-
-        C.donut(donutEl, segments, {
-          size: 160, thickness: 18,
-          centerValue: "$" + (Math.round(total / 100) / 10).toFixed(1) + "K",
-          centerLabel: "Total"
-        });
-
-        legendEl.innerHTML = D.debts.map(function (d, i) {
-          return ''
-            + '<div class="debt-legend__item">'
-              + '<span class="debt-legend__sw" style="background:' + colors[i % colors.length] + ';"></span>'
-              + '<span class="debt-legend__name">' + d.name + '<span style="color:var(--ink-400);font-family:var(--font-mono);font-size:var(--fs-tiny);margin-left:6px;">' + (d.apr * 100).toFixed(2) + '%</span></span>'
-              + '<span class="debt-legend__val">' + M.formatNumber(d.balance, { currency: "USD" }) + '</span>'
-            + '</div>';
-        }).join("");
-
-        // Months remaining per debt (illustrative): balance / (minPayment * 6)
-        var bars = D.debts.map(function (d) {
-          var months = Math.max(3, Math.round(d.balance / (d.minPayment * 1.6)));
-          return { label: d.name, value: months };
-        });
-        // Use bars chart but format as months — pass plain numbers; override label formatting after render.
-        C.barChart(barsEl, bars, { currency: undefined, rowHeight: 28, gap: 6 });
-        // Patch labels to show "mo" suffix
-        setTimeout(function () {
-          barsEl.querySelectorAll("span.mono").forEach(function (sp, i) {
-            sp.textContent = bars[i].value + " mo";
-          });
-        }, 50);
-      })();
-
-      /* ---- Cash flow donuts ---- */
-      (function buildCashFlow() {
-        var incEl = document.querySelector("[data-cf-income-donut]");
-        var expEl = document.querySelector("[data-cf-expense-donut]");
-        var incLeg = document.querySelector("[data-cf-income-legend]");
-        var expLeg = document.querySelector("[data-cf-expense-legend]");
-        var barsEl = document.querySelector("[data-cf-bars]");
-        if (!incEl || !expEl) return;
-
-        var incomeColors = ["var(--mint-500)", "var(--mint-400)", "var(--mint-300)"];
-        var expenseColors = ["var(--coral-500)", "var(--lavender-500)", "var(--amber-400)", "var(--mint-600)", "var(--coral-400)", "var(--lavender-400)", "var(--ink-400)", "var(--ink-500)"];
-
-        var incSeg = D.income.sources.map(function (s, i) {
-          return { label: s.label, value: s.value, color: incomeColors[i % incomeColors.length] };
-        });
-        var expSeg = D.expenses.categories.map(function (c, i) {
-          return { label: c.label, value: c.value, color: expenseColors[i % expenseColors.length] };
-        });
-
-        C.donut(incEl, incSeg, { size: 140, thickness: 16, centerValue: "$7.8K", centerLabel: "Income" });
-        C.donut(expEl, expSeg, { size: 140, thickness: 16, centerValue: "$4.2K", centerLabel: "Spent" });
-
-        incLeg.innerHTML = incSeg.map(function (s) {
-          return ''
-            + '<div class="cf-donut__leg">'
-              + '<span class="cf-donut__sw" style="background:' + s.color + ';"></span>'
-              + '<span>' + s.label + '</span>'
-              + '<span class="cf-donut__amt">' + M.formatNumber(s.value, { currency: "USD" }) + '</span>'
-            + '</div>';
-        }).join("");
-        expLeg.innerHTML = expSeg.slice(0, 4).map(function (s) {
-          return ''
-            + '<div class="cf-donut__leg">'
-              + '<span class="cf-donut__sw" style="background:' + s.color + ';"></span>'
-              + '<span>' + s.label + '</span>'
-              + '<span class="cf-donut__amt">' + M.formatNumber(s.value, { currency: "USD" }) + '</span>'
-            + '</div>';
-        }).join("");
-
-        /* 12-month paired bars */
-        var months = ["Jun","Jul","Aug","Sep","Oct","Nov","Dec","Jan","Feb","Mar","Apr","May"];
-        var seriesIncome  = [7600,7720,7800,7800,7920,8100,8500,7820,7780,7800,7860,7800];
-        var seriesExpense = [4380,4520,4280,4180,4640,4720,5180,4280,4310,4220,4180,4218];
-        var max = Math.max.apply(null, seriesIncome.concat(seriesExpense));
-
-        barsEl.innerHTML = months.map(function (mo, i) {
-          var iPct = (seriesIncome[i] / max) * 100;
-          var ePct = (seriesExpense[i] / max) * 100;
-          return ''
-            + '<div class="cf-bars__col">'
-              + '<div class="cf-bars__pair">'
-                + '<span class="cf-bars__bar cf-bars__bar--income" style="height:0%;" data-h="' + iPct + '"></span>'
-                + '<span class="cf-bars__bar cf-bars__bar--expense" style="height:0%;" data-h="' + ePct + '"></span>'
-              + '</div>'
-              + '<span class="cf-bars__mo">' + mo + '</span>'
-            + '</div>';
-        }).join("");
-
-        // Animate bar heights on next frame
-        var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-        barsEl.querySelectorAll(".cf-bars__bar").forEach(function (bar, i) {
-          var h = bar.getAttribute("data-h");
-          if (reduced) { bar.style.height = h + "%"; return; }
-          bar.style.transition = "height 800ms " + (i * 30) + "ms cubic-bezier(0.22,1,0.36,1)";
-          requestAnimationFrame(function () {
-            requestAnimationFrame(function () { bar.style.height = h + "%"; });
-          });
-        });
-      })();
-
-      /* ---- Activity feed ---- */
-      (function buildActivity() {
-        var wrap = document.querySelector("[data-activity]");
-        if (!wrap) return;
-
-        function iconFor(type) {
-          if (type === "income")   return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>';
-          if (type === "transfer") return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h13M14 5l4 4-4 4"/><path d="M20 15H7M10 19l-4-4 4-4"/></svg>';
-          return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>';
-        }
-
-        function dateLabel(iso) {
-          var d = new Date(iso);
-          var months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-          var hr = d.getHours(); var mn = d.getMinutes();
-          var amPm = hr >= 12 ? "pm" : "am"; hr = hr % 12 || 12;
-          return months[d.getMonth()] + " " + d.getDate() + " · " + hr + ":" + (mn < 10 ? "0" : "") + mn + amPm;
-        }
-
-        wrap.innerHTML = D.activity.map(function (a, i) {
-          var amt = a.amount;
-          var sign = amt >= 0 ? "+" : "−";
-          var absStr = window.PFC_MOTION.formatNumber(Math.abs(amt), { currency: "USD", decimals: 2 });
-          var cls = amt >= 0 ? "activity-row__amt--pos" : "activity-row__amt--neg";
-          return ''
-            + '<div class="activity-row" style="--i:' + i + ';">'
-              + '<span class="activity-row__icon activity-row__icon--' + a.type + '" aria-hidden="true">' + iconFor(a.type) + '</span>'
-              + '<div class="activity-row__main">'
-                + '<span class="activity-row__label">' + a.label + '</span>'
-                + '<span class="activity-row__cat">' + a.category + '</span>'
-              + '</div>'
-              + '<span class="activity-row__amt ' + cls + '">' + sign + absStr + '</span>'
-              + '<span class="activity-row__date">' + dateLabel(a.at) + '</span>'
-            + '</div>';
-        }).join("");
-      })();
-
-      /* ---- Apply magnetic + reveal to all relevant elements ---- */
-      M.revealOnScroll("[data-reveal]");
-      M.revealOnScroll("[data-reveal-stagger]", { stagger: 0, threshold: 0.1 });
-      document.querySelectorAll(".qa-tile").forEach(function (t) { M.magnetic(t, { strength: 0.12, radius: 60 }); });
-
-      /* Stub: tab interactivity for cash flow */
-      document.querySelectorAll(".cf-card .tab").forEach(function (t) {
+      // Tab interactivity (visual state only — single demo dataset)
+      var tabs = document.querySelectorAll(".chart-tab");
+      tabs.forEach(function (t) {
         t.addEventListener("click", function () {
-          t.parentElement.querySelectorAll(".tab").forEach(function (x) { x.removeAttribute("aria-selected"); });
+          tabs.forEach(function (x) {
+            x.classList.remove("is-active");
+            x.removeAttribute("aria-selected");
+          });
+          t.classList.add("is-active");
           t.setAttribute("aria-selected", "true");
         });
       });
-    });
+    }
+
+    // Wait for partials to be injected before booting (topbar slots + sidebar nav).
+    if (document.querySelector("[data-include]:not([data-included])")) {
+      document.addEventListener("pfc:partials-ready", boot, { once: true });
+    } else {
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", boot);
+      } else {
+        boot();
+      }
+    }
+  })();
   </script>
 </body>
 </html>

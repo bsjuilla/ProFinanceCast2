@@ -1,775 +1,636 @@
-<!doctype html>
-<html lang="en" data-theme="dark">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="color-scheme" content="dark">
-  <title>ProFinanceCast — Get started</title>
-  <meta name="description" content="Four quick questions. About ninety seconds. Your ten-year financial forecast.">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#F7F4ED" />
+<title>Open the forecast. ProFinanceCast.</title>
+<meta name="description" content="Four numbers. Two minutes. The next ten years of your money, laid out flat." />
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+<link rel="stylesheet" href="/css/pfc-tokens.css" />
+<link rel="stylesheet" href="/css/pfc-base.css" />
+<link rel="stylesheet" href="/css/pfc-components.css" />
+<link rel="stylesheet" href="/css/pfc-layout.css" />
+<style>
+  body { background: var(--canvas); }
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+  /* ---------- Header ---------- */
+  .ob-header {
+    position: sticky; top: 0; z-index: 100;
+    height: 64px;
+    display: grid; grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    padding: 0 var(--gutter-page);
+    background: oklch(0.975 0.008 75 / 0.92);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--ink-5);
+  }
+  .ob-header__wordmark img { height: 22px; width: auto; }
+  .ob-header__skip {
+    justify-self: end;
+    font-size: var(--type-meta); color: var(--ink-3);
+    text-transform: uppercase; letter-spacing: var(--track-meta);
+    font-weight: 500;
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+  .ob-header__skip:hover { color: var(--ink-1); }
 
-  <link rel="stylesheet" href="/css/tokens.css">
-  <link rel="stylesheet" href="/css/base.css">
-  <link rel="stylesheet" href="/css/components.css">
-  <link rel="stylesheet" href="/css/layout.css">
+  /* ---------- Step indicator ---------- */
+  .ob-steps { display: flex; align-items: center; gap: var(--space-4); }
+  .ob-steps__item {
+    display: flex; align-items: center; gap: var(--space-2);
+    color: var(--ink-3);
+    font-size: var(--type-meta);
+    text-transform: uppercase; letter-spacing: var(--track-meta);
+    font-weight: 500;
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+  .ob-steps__dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--ink-5);
+    transition: background-color var(--dur-fast) var(--ease-out),
+                transform var(--dur-fast) var(--ease-out);
+  }
+  .ob-steps__item.is-active { color: var(--ink-1); }
+  .ob-steps__item.is-active .ob-steps__dot { background: var(--accent); transform: scale(1.2); }
+  .ob-steps__item.is-done .ob-steps__dot { background: var(--accent); }
+  @media (max-width: 700px) {
+    .ob-steps__label { display: none; }
+    .ob-steps { gap: var(--space-3); }
+  }
 
-  <style>
-    /* ============ ONBOARDING — page-scoped (ob-) ============ */
+  /* ---------- Stage ---------- */
+  .ob-stage {
+    position: relative;
+    min-height: calc(100dvh - 64px);
+    width: 100%;
+  }
+  .ob-step {
+    position: absolute; inset: 0;
+    padding: var(--space-7) var(--gutter-page);
+    display: flex; align-items: center;
+    opacity: 0; transform: translateY(16px);
+    pointer-events: none;
+    transition: opacity 180ms var(--ease-in), transform 180ms var(--ease-in);
+  }
+  .ob-step.is-active {
+    opacity: 1; transform: translateY(0);
+    pointer-events: auto;
+    transition: opacity 320ms var(--ease-out), transform 320ms var(--ease-out);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ob-step { transition: opacity 1ms linear; transform: none; }
+  }
 
-    .ob-shell {
-      display: flex; flex-direction: column;
-      min-height: 100dvh;
-    }
+  .ob-step__inner {
+    width: 100%;
+    max-width: var(--page-max);
+    margin: 0 auto;
+  }
 
-    /* Top bar */
-    .ob-topbar {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      align-items: center;
-      gap: var(--space-6);
-      padding: var(--space-5) clamp(var(--space-4), 3vw, var(--space-10));
-    }
-    .ob-topbar__brand {
-      display: inline-flex; align-items: center; gap: var(--space-3);
-      font-family: var(--font-display); font-size: 1.0625rem; font-weight: 500;
-      color: var(--ink-100); letter-spacing: -0.01em;
-    }
-    .ob-topbar__mark {
-      width: 28px; height: 28px; border-radius: 8px;
-      display: grid; place-items: center;
-      background: linear-gradient(135deg, var(--mint-500), var(--lavender-500));
-      color: var(--ink-900); font-family: var(--font-display); font-weight: 600;
-    }
-    .ob-topbar__skip {
-      justify-self: end;
-      font-size: var(--fs-small); color: var(--ink-400);
-      display: inline-flex; align-items: center; gap: 6px;
-      transition: color var(--dur-fast);
-    }
-    .ob-topbar__skip:hover { color: var(--ink-200); }
+  /* ---------- Step 1: Welcome ---------- */
+  .ob-welcome {
+    display: grid; grid-template-columns: 6fr 5fr;
+    gap: var(--space-7); align-items: center;
+  }
+  @media (max-width: 900px) { .ob-welcome { grid-template-columns: 1fr; gap: var(--space-5); } }
+  .ob-welcome__eyebrow { font-size: var(--type-meta); letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-3); font-weight: 500; }
+  .ob-welcome__headline {
+    font-family: var(--font-display); font-weight: 400;
+    font-size: var(--type-display-lg); line-height: 1.04;
+    letter-spacing: -0.022em; color: var(--ink-1);
+    margin-top: var(--space-4); max-width: 18ch;
+  }
+  .ob-welcome__lede {
+    margin-top: var(--space-5); color: var(--ink-2);
+    font-size: var(--type-body-lg); line-height: var(--lead-body);
+    max-width: 42ch;
+  }
+  .ob-welcome__cta { margin-top: var(--space-6); }
+  .ob-welcome__illo img { width: 100%; height: auto; max-width: 520px; margin: 0 auto; display: block; }
 
-    /* Main stage */
-    .ob-stage {
-      flex: 1;
-      display: flex; align-items: center; justify-content: center;
-      padding: var(--space-8) clamp(var(--space-4), 3vw, var(--space-10)) var(--space-16);
-      position: relative;
-    }
-    .ob-stage__inner {
-      width: 100%;
-      max-width: 980px;
-      position: relative;
-    }
+  /* ---------- Step 2: Numbers ---------- */
+  .ob-numbers__head {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    gap: var(--space-5); margin-bottom: var(--space-6);
+  }
+  .ob-numbers__head-copy { max-width: 38ch; }
+  .ob-numbers__head h2 { font-size: var(--type-display-md); }
+  .ob-numbers__head p { margin-top: var(--space-3); color: var(--ink-3); font-size: var(--type-body-sm); }
+  .ob-numbers__illo { flex-shrink: 0; }
+  .ob-numbers__illo img { width: 160px; height: auto; opacity: 0.85; }
+  @media (max-width: 700px) { .ob-numbers__illo { display: none; } }
 
-    /* Step container — absolute-stacked so the active one fills the stage */
-    .ob-step {
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 320ms var(--ease-emphasis), transform 320ms var(--ease-emphasis);
-      pointer-events: none;
-      position: absolute; inset: 0;
-    }
-    .ob-step.is-active {
-      position: relative;
-      opacity: 1; transform: none;
-      pointer-events: auto;
-    }
-    .ob-step.is-exit {
-      opacity: 0; transform: translateY(-16px);
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .ob-step { transition: none; }
-    }
+  .ob-numbers__grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: var(--space-5);
+  }
+  @media (max-width: 700px) { .ob-numbers__grid { grid-template-columns: 1fr; gap: var(--space-4); } }
 
-    /* Common typographic primitives */
-    .ob-eyebrow {
-      display: inline-flex; align-items: center; gap: var(--space-2);
-      padding: 5px 10px; align-self: flex-start;
-      background: oklch(78% 0.175 168 / 0.08);
-      border: 1px solid oklch(78% 0.175 168 / 0.25);
-      border-radius: var(--r-full);
-      font-family: var(--font-mono); font-size: var(--fs-tiny);
-      color: var(--mint-300); letter-spacing: var(--tracking-eyebrow); text-transform: uppercase;
-    }
-    .ob-display {
-      font-family: var(--font-display); font-weight: 400;
-      font-size: clamp(2.5rem, 5.5vw + 0.5rem, 4.75rem);
-      line-height: 1; letter-spacing: -0.035em;
-      color: var(--ink-100);
-    }
-    .ob-sub {
-      font-size: 1.1875rem; line-height: 1.5;
-      color: var(--ink-300); max-width: 56ch;
-    }
-    .ob-fineprint {
-      display: inline-flex; align-items: center; gap: 6px;
-      font-size: var(--fs-tiny); color: var(--ink-400);
-    }
-    .ob-fineprint svg { color: var(--mint-400); }
+  .ob-bigfield {
+    border-top: 1px solid var(--ink-5);
+    padding-top: var(--space-4);
+  }
+  .ob-bigfield__label {
+    display: block;
+    font-size: var(--type-meta); letter-spacing: var(--track-meta);
+    text-transform: uppercase; color: var(--ink-3); font-weight: 500;
+  }
+  .ob-bigfield__row {
+    display: flex; align-items: baseline; gap: var(--space-2);
+    margin-top: var(--space-3);
+  }
+  .ob-bigfield__prefix {
+    font-family: var(--font-mono); font-weight: 500;
+    font-size: clamp(1.5rem, 2.4vw, 2rem);
+    color: var(--ink-3);
+  }
+  .ob-bigfield__input {
+    flex: 1; min-width: 0;
+    background: transparent; border: 0; outline: 0;
+    font-family: var(--font-mono); font-weight: 400;
+    font-size: clamp(1.5rem, 2.4vw, 2rem);
+    color: var(--ink-1); letter-spacing: var(--track-mono);
+    font-variant-numeric: tabular-nums;
+    border-bottom: 1px solid transparent;
+    padding-bottom: 4px;
+    transition: border-color var(--dur-fast) var(--ease-out);
+  }
+  .ob-bigfield__input:focus { border-bottom-color: var(--accent); }
+  .ob-bigfield__helper { margin-top: var(--space-2); font-size: var(--type-meta); color: var(--ink-3); }
 
-    /* Step 1 — Welcome */
-    .ob-step--welcome {
-      display: flex; flex-direction: column; gap: var(--space-6);
-      text-align: left; max-width: 760px;
-    }
-    .ob-step--welcome .ob-actions { margin-top: var(--space-6); display: flex; align-items: center; gap: var(--space-4); flex-wrap: wrap; }
+  .ob-numbers__projection {
+    margin-top: var(--space-6);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--ink-5);
+    display: flex; justify-content: space-between; align-items: center;
+    gap: var(--space-5);
+  }
+  .ob-numbers__projection-label { font-size: var(--type-meta); letter-spacing: var(--track-meta); text-transform: uppercase; color: var(--ink-3); }
+  .ob-numbers__projection-num {
+    font-family: var(--font-mono); font-weight: 400;
+    font-size: clamp(2rem, 3.5vw, 2.75rem);
+    color: var(--ink-1); letter-spacing: var(--track-mono);
+    font-variant-numeric: tabular-nums; line-height: 1;
+    margin-top: var(--space-2);
+  }
+  .ob-numbers__actions { margin-top: var(--space-6); display: flex; justify-content: flex-end; gap: var(--space-3); }
 
-    /* Step 2 — Numbers */
-    .ob-numbers { display: grid; grid-template-columns: 1fr 1.05fr; gap: clamp(var(--space-8), 5vw, var(--space-16)); align-items: start; }
-    @media (max-width: 900px) { .ob-numbers { grid-template-columns: 1fr; } }
-    .ob-numbers__left { display: flex; flex-direction: column; gap: var(--space-5); }
-    .ob-numbers__title { font-family: var(--font-display); font-size: clamp(2rem, 3vw + 0.5rem, 2.75rem); line-height: 1.05; letter-spacing: -0.03em; color: var(--ink-100); }
-    .ob-numbers__lede { color: var(--ink-300); font-size: 1.0625rem; max-width: 36ch; }
+  /* ---------- Step 3: Goals ---------- */
+  .ob-goals__head { margin-bottom: var(--space-6); }
+  .ob-goals__head h2 { font-size: var(--type-display-md); }
+  .ob-goals__head p { margin-top: var(--space-3); color: var(--ink-3); font-size: var(--type-body-sm); }
+  .ob-goals__grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-4);
+  }
+  @media (max-width: 900px) { .ob-goals__grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) { .ob-goals__grid { grid-template-columns: 1fr; } }
+  .ob-goal {
+    display: flex; flex-direction: column; gap: var(--space-2);
+    padding: var(--space-5);
+    border: 1px solid var(--ink-5);
+    border-radius: var(--radius-3);
+    background: var(--canvas-raised);
+    cursor: pointer; text-align: left;
+    transition: border-color var(--dur-fast) var(--ease-out),
+                background-color var(--dur-fast) var(--ease-out),
+                color var(--dur-fast) var(--ease-out);
+  }
+  .ob-goal__eyebrow { font-size: var(--type-meta); letter-spacing: var(--track-meta); text-transform: uppercase; color: var(--ink-3); font-weight: 500; }
+  .ob-goal__label { font-family: var(--font-display); font-weight: 400; font-size: 1.375rem; color: var(--ink-1); letter-spacing: -0.012em; }
+  .ob-goal:hover { border-color: var(--ink-4); }
+  .ob-goal.is-selected {
+    border: 2px solid var(--accent);
+    padding: calc(var(--space-5) - 1px);
+    background: var(--accent-wash);
+  }
+  .ob-goal.is-selected .ob-goal__eyebrow,
+  .ob-goal.is-selected .ob-goal__label { color: var(--accent); }
+  .ob-goals__actions { margin-top: var(--space-6); display: flex; justify-content: space-between; align-items: center; gap: var(--space-3); }
 
-    /* Live mini-display */
-    .ob-projection {
-      margin-top: var(--space-4);
-      padding: var(--space-5) var(--space-6);
-      background: oklch(24% 0.022 265 / 0.45);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border: 1px solid oklch(100% 0 0 / 0.06);
-      border-radius: var(--r-lg);
-    }
-    .ob-projection__label { font-family: var(--font-mono); font-size: var(--fs-tiny); text-transform: uppercase; letter-spacing: var(--tracking-eyebrow); color: var(--ink-400); }
-    .ob-projection__value {
-      margin-top: 4px;
-      font-family: var(--font-mono); font-variant-numeric: tabular-nums;
-      font-size: clamp(1.875rem, 3vw + 0.5rem, 2.5rem); font-weight: 500;
-      color: var(--ink-100); letter-spacing: -0.01em;
-      transition: color var(--dur-base) var(--ease-standard);
-    }
-    .ob-projection.is-updating .ob-projection__value { color: var(--mint-300); }
-    .ob-projection__sub { color: var(--ink-400); font-size: var(--fs-small); margin-top: 4px; }
-
-    /* Numbers — input grid */
-    .ob-fields { display: grid; gap: var(--space-4); }
-    .ob-field {
-      position: relative;
-      display: flex; flex-direction: column; gap: 6px;
-    }
-    .ob-field__inputwrap {
-      position: relative;
-      transition: transform var(--dur-fast) var(--ease-standard);
-    }
-    .ob-field__currency {
-      position: absolute; top: 50%; left: 16px;
-      transform: translateY(-50%);
-      font-family: var(--font-mono); font-size: 1.0625rem;
-      color: var(--ink-400);
-      pointer-events: none;
-      transition: color var(--dur-fast);
-    }
-    .ob-field__input {
-      width: 100%;
-      padding: 22px 16px 14px 32px;
-      background: oklch(24% 0.022 265 / 0.55);
-      color: var(--ink-100);
-      border: 1px solid oklch(100% 0 0 / 0.08);
-      border-radius: var(--r-md);
-      font-family: var(--font-mono); font-variant-numeric: tabular-nums;
-      font-size: 1.0625rem; letter-spacing: -0.005em;
-      transition: border-color var(--dur-fast) var(--ease-standard), background var(--dur-fast) var(--ease-standard), box-shadow var(--dur-base) var(--ease-standard), transform var(--dur-fast) var(--ease-standard);
-    }
-    .ob-field__input::placeholder { color: transparent; }
-    .ob-field__input:hover { border-color: oklch(100% 0 0 / 0.18); }
-    .ob-field__input:focus {
-      outline: none;
-      border-color: var(--mint-500);
-      background: oklch(24% 0.022 265 / 0.85);
-      box-shadow: 0 0 0 4px oklch(78% 0.175 168 / 0.15);
-      transform: scale(1.005);
-    }
-    .ob-field__input:focus ~ .ob-field__currency { color: var(--mint-400); }
-    .ob-field__label {
-      position: absolute;
-      top: 14px; left: 32px;
-      pointer-events: none;
-      font-family: var(--font-body);
-      font-size: 1rem;
-      color: var(--ink-400);
-      transition: top var(--dur-fast) var(--ease-standard), font-size var(--dur-fast) var(--ease-standard), color var(--dur-fast) var(--ease-standard), left var(--dur-fast) var(--ease-standard);
-    }
-    .ob-field__input:focus + .ob-field__label,
-    .ob-field__input:not(:placeholder-shown) + .ob-field__label {
-      top: 6px;
-      left: 32px;
-      font-family: var(--font-mono);
-      font-size: var(--fs-tiny);
-      text-transform: uppercase;
-      letter-spacing: var(--tracking-eyebrow);
-      color: var(--mint-400);
-    }
-    .ob-field__hint { font-size: var(--fs-tiny); color: var(--ink-400); padding-left: 4px; }
-
-    /* Step 3 — Goals */
-    .ob-step--goals { display: flex; flex-direction: column; gap: var(--space-8); }
-    .ob-step--goals .ob-header { display: flex; flex-direction: column; gap: var(--space-4); }
-    .ob-goals-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: var(--space-4);
-    }
-    @media (max-width: 760px) { .ob-goals-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-    @media (max-width: 480px) { .ob-goals-grid { grid-template-columns: 1fr; } }
-    .ob-goal {
-      position: relative;
-      padding: var(--space-5);
-      background: oklch(24% 0.022 265 / 0.55);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border: 1px solid oklch(100% 0 0 / 0.08);
-      border-radius: var(--r-lg);
-      cursor: pointer;
-      transition: transform var(--dur-fast) var(--ease-standard), border-color var(--dur-base) var(--ease-standard), background var(--dur-base) var(--ease-standard), box-shadow var(--dur-base) var(--ease-standard);
-      display: flex; flex-direction: column; gap: var(--space-3);
-      min-height: 152px;
-      user-select: none;
-    }
-    .ob-goal:hover { transform: translateY(-2px); border-color: oklch(100% 0 0 / 0.18); }
-    .ob-goal__check {
-      position: absolute; top: var(--space-4); right: var(--space-4);
-      width: 22px; height: 22px;
-      border-radius: 50%;
-      border: 1.5px solid var(--ink-500);
-      display: grid; place-items: center;
-      color: transparent;
-      transition: background var(--dur-base) var(--ease-standard), border-color var(--dur-base) var(--ease-standard), color var(--dur-base) var(--ease-standard);
-    }
-    .ob-goal__icon {
-      width: 40px; height: 40px; border-radius: var(--r-sm);
-      display: grid; place-items: center;
-      background: oklch(100% 0 0 / 0.04);
-      border: 1px solid oklch(100% 0 0 / 0.06);
-      color: var(--ink-200);
-      transition: background var(--dur-base), color var(--dur-base), border-color var(--dur-base);
-    }
-    .ob-goal__title { font-family: var(--font-display); font-size: 1.1875rem; color: var(--ink-100); letter-spacing: -0.015em; line-height: 1.15; }
-    .ob-goal__body { font-size: var(--fs-small); color: var(--ink-400); line-height: 1.45; }
-    .ob-goal[aria-checked="true"] {
-      border-color: var(--mint-500);
-      background: oklch(78% 0.175 168 / 0.08);
-      box-shadow: 0 0 0 1px var(--mint-500), 0 0 40px -10px var(--mint-glow);
-    }
-    .ob-goal[aria-checked="true"] .ob-goal__check {
-      background: var(--mint-500); border-color: var(--mint-500); color: var(--ink-900);
-    }
-    .ob-goal[aria-checked="true"] .ob-goal__icon {
-      background: oklch(78% 0.175 168 / 0.18); color: var(--mint-300); border-color: oklch(78% 0.175 168 / 0.25);
-    }
-
-    /* Step 4 — Ready */
-    .ob-step--ready { display: flex; flex-direction: column; gap: var(--space-8); align-items: stretch; }
-    .ob-step--ready .ob-header { text-align: center; align-items: center; display: flex; flex-direction: column; gap: var(--space-4); }
-    .ob-summary {
-      position: relative;
-      padding: clamp(var(--space-6), 3vw, var(--space-10));
-      background: oklch(24% 0.022 265 / 0.55);
-      backdrop-filter: blur(20px) saturate(140%);
-      -webkit-backdrop-filter: blur(20px) saturate(140%);
-      border: 1px solid oklch(100% 0 0 / 0.08);
-      border-radius: var(--r-xl);
-      box-shadow:
-        0 1px 0 0 oklch(100% 0 0 / 0.06) inset,
-        0 40px 80px -32px oklch(0% 0 0 / 0.65),
-        0 0 60px -24px var(--mint-glow);
-    }
-    .ob-summary__kpis {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: var(--space-6);
-      padding-bottom: var(--space-6);
-      border-bottom: 1px solid oklch(100% 0 0 / 0.06);
-      margin-bottom: var(--space-6);
-    }
-    @media (max-width: 700px) { .ob-summary__kpis { grid-template-columns: 1fr; gap: var(--space-5); } }
-    .ob-summary__kpi { display: flex; flex-direction: column; gap: var(--space-2); }
-    .ob-summary__kpi-label { font-family: var(--font-mono); font-size: var(--fs-tiny); text-transform: uppercase; letter-spacing: var(--tracking-eyebrow); color: var(--ink-400); }
-    .ob-summary__kpi-value {
-      font-family: var(--font-mono); font-variant-numeric: tabular-nums;
-      font-size: clamp(1.875rem, 3vw + 0.5rem, 2.5rem);
-      font-weight: 500; color: var(--ink-100); line-height: 1; letter-spacing: -0.01em;
-    }
-    .ob-summary__kpi-meta { font-size: var(--fs-small); color: var(--ink-400); }
-    .ob-summary__chart { height: 160px; }
-    .ob-step--ready .ob-actions {
-      display: flex; flex-direction: column; align-items: center; gap: var(--space-3); margin-top: var(--space-2);
-    }
-    .ob-step--ready .ob-actions .btn--primary { padding: 1rem 2rem; }
-
-    /* Nav row at bottom of steps */
-    .ob-nav {
-      display: flex; align-items: center; justify-content: space-between;
-      gap: var(--space-4); margin-top: var(--space-8);
-    }
-    .ob-nav__back {
-      display: inline-flex; align-items: center; gap: 6px;
-      font-size: var(--fs-small); color: var(--ink-300);
-      padding: 8px 12px; border-radius: var(--r-sm);
-      transition: color var(--dur-fast), background var(--dur-fast);
-    }
-    .ob-nav__back:hover { color: var(--ink-100); background: oklch(100% 0 0 / 0.04); }
-    .ob-nav__back[disabled] { opacity: 0; pointer-events: none; }
-    .ob-nav__count {
-      font-family: var(--font-mono); font-size: var(--fs-tiny);
-      color: var(--ink-400); letter-spacing: 0.04em;
-    }
-
-    /* Subtle entrance for the entire stage on load */
-    .ob-stage-enter {
-      animation: ob-fade-in 540ms var(--ease-emphasis) both;
-    }
-    @keyframes ob-fade-in {
-      from { opacity: 0; transform: translateY(12px); }
-      to { opacity: 1; transform: none; }
-    }
-    @media (prefers-reduced-motion: reduce) { .ob-stage-enter { animation: none; } }
-
-    /* Hide non-active steps from layout (we use absolute positioning above) */
-    .ob-step:not(.is-active) { visibility: hidden; }
-    .ob-step.is-active { visibility: visible; }
-  </style>
+  /* ---------- Step 4: Ready ---------- */
+  .ob-ready { text-align: center; max-width: 720px; margin: 0 auto; }
+  .ob-ready__headline {
+    font-family: var(--font-display); font-weight: 400;
+    font-size: var(--type-display-lg); line-height: 1.04;
+    letter-spacing: -0.022em; color: var(--ink-1);
+  }
+  .ob-ready__panel {
+    margin-top: var(--space-6);
+    padding: var(--space-6);
+    background: var(--canvas-raised);
+    border-radius: var(--radius-4);
+    box-shadow: var(--shadow-2);
+    border: 1px solid var(--ink-5);
+  }
+  .ob-ready__stats {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-5);
+    text-align: left;
+  }
+  @media (max-width: 600px) { .ob-ready__stats { grid-template-columns: 1fr; } }
+  .ob-ready__stat-label { font-size: var(--type-meta); letter-spacing: var(--track-meta); text-transform: uppercase; color: var(--ink-3); }
+  .ob-ready__stat-num {
+    font-family: var(--font-mono); font-weight: 400;
+    font-size: clamp(1.5rem, 2.4vw, 2rem);
+    color: var(--ink-1); letter-spacing: var(--track-mono);
+    font-variant-numeric: tabular-nums; margin-top: var(--space-2);
+    line-height: 1.05;
+  }
+  .ob-ready__chart { margin-top: var(--space-5); padding-top: var(--space-5); border-top: 1px solid var(--ink-5); }
+  .ob-ready__chart svg { width: 100%; height: auto; display: block; }
+  .ob-ready__chart .chart-line { fill: none; stroke: var(--accent); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+  .ob-ready__chart .chart-grid line { stroke: var(--ink-5); stroke-width: 1; }
+  .ob-ready__chart .chart-area { fill: var(--accent); opacity: 0.06; }
+  .ob-ready__cta { margin-top: var(--space-6); }
+  .ob-ready__note { margin-top: var(--space-4); color: var(--ink-3); font-size: var(--type-meta); }
+  .ob-ready__illo { margin: 0 auto var(--space-5); }
+  .ob-ready__illo img { width: 140px; height: auto; opacity: 0.9; margin: 0 auto; }
+</style>
 </head>
 <body data-page="onboarding">
 
-  <!-- Aurora background -->
-  <div class="aurora-bg" aria-hidden="true">
-    <div class="aurora-bg__blob aurora-bg__blob--1"></div>
-    <div class="aurora-bg__blob aurora-bg__blob--2"></div>
-    <div class="aurora-bg__blob aurora-bg__blob--3"></div>
-    <div class="aurora-bg__blob aurora-bg__blob--4"></div>
-    <div class="aurora-bg__grain"></div>
-    <div class="aurora-bg__vignette"></div>
-  </div>
+<a href="#stage" class="visually-hidden">Skip to content</a>
 
-  <div class="ob-shell">
+<header class="ob-header">
+  <a class="ob-header__wordmark" href="/" aria-label="ProFinanceCast home">
+    <img src="/assets/wordmark.svg" alt="ProFinanceCast" />
+  </a>
+  <nav class="ob-steps" id="ob-steps" aria-label="Onboarding progress">
+    <span class="ob-steps__item is-active" data-step="1">
+      <span class="ob-steps__dot"></span><span class="ob-steps__label">Begin</span>
+    </span>
+    <span class="ob-steps__item" data-step="2">
+      <span class="ob-steps__dot"></span><span class="ob-steps__label">Numbers</span>
+    </span>
+    <span class="ob-steps__item" data-step="3">
+      <span class="ob-steps__dot"></span><span class="ob-steps__label">Goals</span>
+    </span>
+    <span class="ob-steps__item" data-step="4">
+      <span class="ob-steps__dot"></span><span class="ob-steps__label">Open</span>
+    </span>
+  </nav>
+  <a class="ob-header__skip" href="/dashboard.html">Skip</a>
+</header>
 
-    <!-- ============ TOP BAR ============ -->
-    <header class="ob-topbar">
-      <a href="/" class="ob-topbar__brand" aria-label="ProFinanceCast home">
-        <span class="ob-topbar__mark" aria-hidden="true">P</span>
-        <span>ProFinanceCast</span>
-      </a>
-      <div data-include="/partials/onboarding-progress.html" aria-label="Progress"></div>
-      <a href="/dashboard.html" class="ob-topbar__skip">
-        Skip for now
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-      </a>
-    </header>
+<main class="ob-stage" id="stage">
 
-    <!-- ============ STAGE ============ -->
-    <main class="ob-stage ob-stage-enter" id="obStage">
-      <div class="ob-stage__inner">
-
-        <!-- Step 1: WELCOME -->
-        <section class="ob-step ob-step--welcome is-active" data-step="1" aria-labelledby="ob-welcome-title">
-          <span class="ob-eyebrow">Welcome</span>
-          <h1 class="ob-display" id="ob-welcome-title">
-            Let's see where your money lands.
-          </h1>
-          <p class="ob-sub">Four quick questions. About ninety seconds. We'll show you your ten-year forecast on the next screen.</p>
-          <div class="ob-actions">
-            <button class="btn btn--primary btn--lg" data-ob-next>
+  <!-- STEP 1 ------------------------------------------------------------- -->
+  <section class="ob-step is-active" data-step="1" aria-labelledby="ob-step1-h">
+    <div class="ob-step__inner">
+      <div class="ob-welcome">
+        <div>
+          <p class="ob-welcome__eyebrow">Step 01</p>
+          <h1 class="ob-welcome__headline" id="ob-step1-h">Four numbers. Two minutes. The next ten years of your money, laid out flat.</h1>
+          <p class="ob-welcome__lede">Type your monthly money. The forecast runs in your browser. We never see it.</p>
+          <p class="ob-welcome__cta">
+            <button type="button" class="pfc-button pfc-button--primary" data-go="2">
               Begin
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+              <span aria-hidden="true">→</span>
             </button>
-            <span class="ob-fineprint">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>
-              Your numbers stay in your browser. We can't see them.
-            </span>
-          </div>
-        </section>
-
-        <!-- Step 2: NUMBERS -->
-        <section class="ob-step ob-step--numbers" data-step="2" aria-labelledby="ob-numbers-title">
-          <div class="ob-numbers">
-            <div class="ob-numbers__left">
-              <span class="ob-eyebrow">Step 2 · Your numbers</span>
-              <h2 class="ob-numbers__title" id="ob-numbers-title">Tell us about your monthly money.</h2>
-              <p class="ob-numbers__lede">Approximate is fine. You can change anything later — every figure is editable inside the dashboard.</p>
-
-              <div class="ob-projection" id="obProjection" aria-live="polite">
-                <span class="ob-projection__label">Projected 10-year net worth</span>
-                <div class="ob-projection__value mono" id="obProjValue">$0</div>
-                <span class="ob-projection__sub">Updates live as you type</span>
-              </div>
-            </div>
-
-            <form class="ob-fields" id="obForm" autocomplete="off" novalidate>
-              <div class="ob-field">
-                <div class="ob-field__inputwrap">
-                  <input class="ob-field__input" id="obIncome" type="number" inputmode="decimal" min="0" step="100" placeholder=" " required>
-                  <label class="ob-field__label" for="obIncome">Monthly income (after tax)</label>
-                  <span class="ob-field__currency" aria-hidden="true">$</span>
-                </div>
-                <span class="ob-field__hint">Take-home, including any side income.</span>
-              </div>
-
-              <div class="ob-field">
-                <div class="ob-field__inputwrap">
-                  <input class="ob-field__input" id="obExpenses" type="number" inputmode="decimal" min="0" step="100" placeholder=" " required>
-                  <label class="ob-field__label" for="obExpenses">Monthly expenses</label>
-                  <span class="ob-field__currency" aria-hidden="true">$</span>
-                </div>
-                <span class="ob-field__hint">Rent, food, subscriptions, transit — the usual.</span>
-              </div>
-
-              <div class="ob-field">
-                <div class="ob-field__inputwrap">
-                  <input class="ob-field__input" id="obSavings" type="number" inputmode="decimal" min="0" step="50" placeholder=" " required>
-                  <label class="ob-field__label" for="obSavings">Monthly savings</label>
-                  <span class="ob-field__currency" aria-hidden="true">$</span>
-                </div>
-                <span class="ob-field__hint">What you set aside, on average.</span>
-              </div>
-
-              <div class="ob-field">
-                <div class="ob-field__inputwrap">
-                  <input class="ob-field__input" id="obDebt" type="number" inputmode="decimal" min="0" step="500" placeholder=" ">
-                  <label class="ob-field__label" for="obDebt">Total debt</label>
-                  <span class="ob-field__currency" aria-hidden="true">$</span>
-                </div>
-                <span class="ob-field__hint">Credit cards, student loans, car. Leave blank if none.</span>
-              </div>
-            </form>
-          </div>
-
-          <div class="ob-nav">
-            <button class="ob-nav__back" data-ob-back>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 5l-7 7 7 7"/></svg>
-              Back
-            </button>
-            <span class="ob-nav__count">02 / 04</span>
-            <button class="btn btn--primary" data-ob-next>
-              Continue
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-            </button>
-          </div>
-        </section>
-
-        <!-- Step 3: GOALS -->
-        <section class="ob-step ob-step--goals" data-step="3" aria-labelledby="ob-goals-title">
-          <div class="ob-header">
-            <span class="ob-eyebrow">Step 3 · Goals</span>
-            <h2 class="ob-display" id="ob-goals-title" style="font-size: clamp(2rem, 3.5vw + 0.5rem, 3rem);">Pick what you're aiming at.</h2>
-            <p class="ob-sub">Choose any number — or none. We'll tune your dashboard to surface the right metrics.</p>
-          </div>
-
-          <div class="ob-goals-grid" id="obGoals" role="group" aria-label="Financial goals">
-            <button type="button" class="ob-goal" role="checkbox" aria-checked="false" data-goal="house">
-              <span class="ob-goal__icon" aria-hidden="true">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
-              </span>
-              <span class="ob-goal__title">House down payment</span>
-              <span class="ob-goal__body">Save toward a first or next home.</span>
-              <span class="ob-goal__check" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m20 6-11 11-5-5"/></svg></span>
-            </button>
-
-            <button type="button" class="ob-goal" role="checkbox" aria-checked="false" data-goal="emergency">
-              <span class="ob-goal__icon" aria-hidden="true">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.5 9 8 11 4.5-2 8-6 8-11V5l-8-3z"/></svg>
-              </span>
-              <span class="ob-goal__title">Emergency fund</span>
-              <span class="ob-goal__body">Build three to six months of runway.</span>
-              <span class="ob-goal__check" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m20 6-11 11-5-5"/></svg></span>
-            </button>
-
-            <button type="button" class="ob-goal" role="checkbox" aria-checked="false" data-goal="debt">
-              <span class="ob-goal__icon" aria-hidden="true">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h13l-4-4M16 12l-4 4"/><path d="M21 7v10"/></svg>
-              </span>
-              <span class="ob-goal__title">Pay off debt</span>
-              <span class="ob-goal__body">Snowball, avalanche, or your own pace.</span>
-              <span class="ob-goal__check" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m20 6-11 11-5-5"/></svg></span>
-            </button>
-
-            <button type="button" class="ob-goal" role="checkbox" aria-checked="false" data-goal="vacation">
-              <span class="ob-goal__icon" aria-hidden="true">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 22h20"/><path d="M17 22V6l-7-4-7 4v16"/><path d="M10 22V12h4v10"/></svg>
-              </span>
-              <span class="ob-goal__title">Vacation fund</span>
-              <span class="ob-goal__body">A trip, a sabbatical, a slow month.</span>
-              <span class="ob-goal__check" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m20 6-11 11-5-5"/></svg></span>
-            </button>
-
-            <button type="button" class="ob-goal" role="checkbox" aria-checked="false" data-goal="retirement">
-              <span class="ob-goal__icon" aria-hidden="true">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-              </span>
-              <span class="ob-goal__title">Retirement boost</span>
-              <span class="ob-goal__body">Add to your long-term horizon.</span>
-              <span class="ob-goal__check" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m20 6-11 11-5-5"/></svg></span>
-            </button>
-
-            <button type="button" class="ob-goal" role="checkbox" aria-checked="false" data-goal="custom">
-              <span class="ob-goal__icon" aria-hidden="true">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
-              </span>
-              <span class="ob-goal__title">Something else</span>
-              <span class="ob-goal__body">Name your own goal inside the app.</span>
-              <span class="ob-goal__check" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m20 6-11 11-5-5"/></svg></span>
-            </button>
-          </div>
-
-          <div class="ob-nav">
-            <button class="ob-nav__back" data-ob-back>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 5l-7 7 7 7"/></svg>
-              Back
-            </button>
-            <span class="ob-nav__count">03 / 04</span>
-            <button class="btn btn--primary" data-ob-next>
-              Continue
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-            </button>
-          </div>
-        </section>
-
-        <!-- Step 4: READY -->
-        <section class="ob-step ob-step--ready" data-step="4" aria-labelledby="ob-ready-title">
-          <div class="ob-header">
-            <span class="ob-eyebrow">Step 4 · You're set</span>
-            <h2 class="ob-display" id="ob-ready-title">Your forecast is ready.</h2>
-            <p class="ob-sub" style="text-align:center;">Here's the headline. Inside the dashboard you'll find the full ten-year breakdown, every metric, every scenario.</p>
-          </div>
-
-          <div class="ob-summary">
-            <div class="ob-summary__kpis">
-              <div class="ob-summary__kpi">
-                <span class="ob-summary__kpi-label">10-year net worth</span>
-                <span class="ob-summary__kpi-value mono" id="obSumNw">$0</span>
-                <span class="ob-summary__kpi-meta">on current trajectory</span>
-              </div>
-              <div class="ob-summary__kpi">
-                <span class="ob-summary__kpi-label">Months to debt-free</span>
-                <span class="ob-summary__kpi-value mono" id="obSumDebt">0</span>
-                <span class="ob-summary__kpi-meta">at your pace</span>
-              </div>
-              <div class="ob-summary__kpi">
-                <span class="ob-summary__kpi-label">Financial health</span>
-                <span class="ob-summary__kpi-value mono" id="obSumHealth">—</span>
-                <span class="ob-summary__kpi-meta">across savings + debt</span>
-              </div>
-            </div>
-
-            <div class="ob-summary__chart" id="obSumChart" aria-label="10-year forecast curve"></div>
-          </div>
-
-          <div class="ob-actions">
-            <a href="/dashboard.html" class="btn btn--primary btn--lg">
-              Open my dashboard
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-            </a>
-            <span class="ob-fineprint">You can edit anything later.</span>
-          </div>
-
-          <div class="ob-nav">
-            <button class="ob-nav__back" data-ob-back>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 5l-7 7 7 7"/></svg>
-              Back
-            </button>
-            <span class="ob-nav__count">04 / 04</span>
-            <span></span>
-          </div>
-        </section>
-
+          </p>
+        </div>
+        <div class="ob-welcome__illo">
+          <img src="/assets/illustrations/onboarding-01-welcome.svg" alt="" onerror="this.style.display='none'" />
+        </div>
       </div>
-    </main>
-  </div>
+    </div>
+  </section>
 
-  <!-- ============ SCRIPTS ============ -->
-  <script src="/js/demo-data.js" defer></script>
-  <script src="/js/motion.js" defer></script>
-  <script src="/js/charts.js" defer></script>
-  <script src="/js/include.js" defer></script>
-  <script src="/js/app.js" defer></script>
+  <!-- STEP 2 ------------------------------------------------------------- -->
+  <section class="ob-step" data-step="2" aria-labelledby="ob-step2-h">
+    <div class="ob-step__inner">
+      <div class="ob-numbers__head">
+        <div class="ob-numbers__head-copy">
+          <p class="eyebrow">Step 02</p>
+          <h2 id="ob-step2-h" style="margin-top: var(--space-3);">Tell us about your monthly money.</h2>
+          <p>Round if you like. You can edit any number later.</p>
+        </div>
+        <div class="ob-numbers__illo">
+          <img src="/assets/illustrations/onboarding-02-numbers.svg" alt="" onerror="this.style.display='none'" />
+        </div>
+      </div>
 
-  <script defer>
-    document.addEventListener("pfc:partials-ready", () => {
-      const M = window.PFC_MOTION, C = window.PFC_CHARTS;
+      <form class="ob-numbers__grid" id="ob-numbers-form" autocomplete="off" onsubmit="return false;">
+        <label class="ob-bigfield">
+          <span class="ob-bigfield__label">Monthly income</span>
+          <span class="ob-bigfield__row">
+            <span class="ob-bigfield__prefix" aria-hidden="true">$</span>
+            <input class="ob-bigfield__input" type="number" id="ob-income" value="6800" min="0" step="100" />
+          </span>
+          <span class="ob-bigfield__helper">After tax</span>
+        </label>
+        <label class="ob-bigfield">
+          <span class="ob-bigfield__label">Monthly expenses</span>
+          <span class="ob-bigfield__row">
+            <span class="ob-bigfield__prefix" aria-hidden="true">$</span>
+            <input class="ob-bigfield__input" type="number" id="ob-expenses" value="4200" min="0" step="100" />
+          </span>
+          <span class="ob-bigfield__helper">Rent, food, fixed costs</span>
+        </label>
+        <label class="ob-bigfield">
+          <span class="ob-bigfield__label">Monthly savings</span>
+          <span class="ob-bigfield__row">
+            <span class="ob-bigfield__prefix" aria-hidden="true">$</span>
+            <input class="ob-bigfield__input" type="number" id="ob-savings" value="1400" min="0" step="100" />
+          </span>
+          <span class="ob-bigfield__helper">Set aside or invested</span>
+        </label>
+        <label class="ob-bigfield">
+          <span class="ob-bigfield__label">Total debt</span>
+          <span class="ob-bigfield__row">
+            <span class="ob-bigfield__prefix" aria-hidden="true">$</span>
+            <input class="ob-bigfield__input" type="number" id="ob-debt" value="38000" min="0" step="1000" />
+          </span>
+          <span class="ob-bigfield__helper">Cards, loans, total balance</span>
+        </label>
+      </form>
 
-      // ----------- State -----------
-      const TOTAL_STEPS = 4;
-      let currentStep = 1;
-      const data = { income: 0, expenses: 0, savings: 0, debt: 0, goals: new Set() };
+      <div class="ob-numbers__projection">
+        <div>
+          <p class="ob-numbers__projection-label">Projected 10-year net worth</p>
+          <p class="ob-numbers__projection-num tabular">
+            <span aria-hidden="true">$</span><span id="ob-projection">0</span>
+          </p>
+        </div>
+        <div class="ob-numbers__actions">
+          <button type="button" class="pfc-button pfc-button--ghost" data-go="1">Back</button>
+          <button type="button" class="pfc-button pfc-button--primary" data-go="3">
+            Continue
+            <span aria-hidden="true">→</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
 
-      // ----------- Progress sync -----------
-      function syncProgress() {
-        const progressEl = document.querySelector(".pfc-onboard-progress");
-        if (!progressEl) return;
-        progressEl.setAttribute("data-step", String(currentStep));
-        progressEl.querySelectorAll(".pfc-onboard-progress__step").forEach((s) => {
-          const n = Number(s.getAttribute("data-step"));
-          s.removeAttribute("data-state");
-          if (n < currentStep) s.setAttribute("data-state", "done");
-          else if (n === currentStep) s.setAttribute("data-state", "active");
-        });
-      }
-      syncProgress();
+  <!-- STEP 3 ------------------------------------------------------------- -->
+  <section class="ob-step" data-step="3" aria-labelledby="ob-step3-h">
+    <div class="ob-step__inner">
+      <div class="ob-goals__head">
+        <p class="eyebrow">Step 03</p>
+        <h2 id="ob-step3-h" style="margin-top: var(--space-3);">Pick what you're aiming at.</h2>
+        <p>Optional. You can skip and add later.</p>
+      </div>
 
-      // ----------- Step transitions -----------
-      const steps = Array.from(document.querySelectorAll(".ob-step"));
-      function goTo(n) {
-        n = Math.max(1, Math.min(TOTAL_STEPS, n));
-        if (n === currentStep) return;
-        const out = steps.find((s) => Number(s.dataset.step) === currentStep);
-        const next = steps.find((s) => Number(s.dataset.step) === n);
-        if (!next) return;
+      <div class="ob-goals__grid" id="ob-goals">
+        <button type="button" class="ob-goal" data-goal="house">
+          <span class="ob-goal__eyebrow">Goal 01</span>
+          <span class="ob-goal__label">House down payment</span>
+        </button>
+        <button type="button" class="ob-goal" data-goal="emergency">
+          <span class="ob-goal__eyebrow">Goal 02</span>
+          <span class="ob-goal__label">Emergency fund</span>
+        </button>
+        <button type="button" class="ob-goal" data-goal="debt">
+          <span class="ob-goal__eyebrow">Goal 03</span>
+          <span class="ob-goal__label">Debt-free</span>
+        </button>
+        <button type="button" class="ob-goal" data-goal="vacation">
+          <span class="ob-goal__eyebrow">Goal 04</span>
+          <span class="ob-goal__label">Vacation</span>
+        </button>
+        <button type="button" class="ob-goal" data-goal="retirement">
+          <span class="ob-goal__eyebrow">Goal 05</span>
+          <span class="ob-goal__label">Retirement boost</span>
+        </button>
+        <button type="button" class="ob-goal" data-goal="custom">
+          <span class="ob-goal__eyebrow">Goal 06</span>
+          <span class="ob-goal__label">Custom</span>
+        </button>
+      </div>
 
-        out.classList.add("is-exit");
-        out.classList.remove("is-active");
-        // Use a short timeout so the exit transition starts cleanly
-        setTimeout(() => {
-          out.classList.remove("is-exit");
-        }, 320);
+      <div class="ob-goals__actions">
+        <button type="button" class="pfc-button pfc-button--ghost" data-go="2">Back</button>
+        <button type="button" class="pfc-button pfc-button--primary" data-go="4">
+          Continue
+          <span aria-hidden="true">→</span>
+        </button>
+      </div>
+    </div>
+  </section>
 
-        next.classList.add("is-active");
-        currentStep = n;
-        syncProgress();
-        // Focus management — move focus to first heading in new step.
-        const heading = next.querySelector("h1, h2");
-        if (heading) {
-          heading.setAttribute("tabindex", "-1");
-          heading.focus({ preventScroll: true });
-        }
+  <!-- STEP 4 ------------------------------------------------------------- -->
+  <section class="ob-step" data-step="4" aria-labelledby="ob-step4-h">
+    <div class="ob-step__inner">
+      <div class="ob-ready">
+        <div class="ob-ready__illo">
+          <img src="/assets/illustrations/onboarding-04-ready.svg" alt="" onerror="this.style.display='none'" />
+        </div>
+        <h2 class="ob-ready__headline" id="ob-step4-h">Your forecast is ready.</h2>
+        <div class="ob-ready__panel">
+          <div class="ob-ready__stats">
+            <div>
+              <p class="ob-ready__stat-label">10-year net worth</p>
+              <p class="ob-ready__stat-num tabular"><span aria-hidden="true">$</span><span id="ob-stat-nw">0</span></p>
+            </div>
+            <div>
+              <p class="ob-ready__stat-label">Months to debt-free</p>
+              <p class="ob-ready__stat-num tabular"><span id="ob-stat-mo">0</span></p>
+            </div>
+            <div>
+              <p class="ob-ready__stat-label">Health score</p>
+              <p class="ob-ready__stat-num tabular"><span id="ob-stat-hs">0</span><span style="color: var(--ink-3); font-size: 0.6em; margin-left: 4px;">/100</span></p>
+            </div>
+          </div>
+          <div class="ob-ready__chart" id="ob-ready-chart" aria-hidden="true"></div>
+        </div>
+        <p class="ob-ready__cta">
+          <a class="pfc-button pfc-button--primary" href="/dashboard.html">
+            Open my dashboard
+            <span aria-hidden="true">→</span>
+          </a>
+        </p>
+        <p class="ob-ready__note">You can edit any number later.</p>
+      </div>
+    </div>
+  </section>
 
-        // Step-specific entry hooks.
-        if (n === 4) renderSummary();
-      }
+</main>
 
-      document.querySelectorAll("[data-ob-next]").forEach((b) =>
-        b.addEventListener("click", () => goTo(currentStep + 1))
-      );
-      document.querySelectorAll("[data-ob-back]").forEach((b) =>
-        b.addEventListener("click", () => goTo(currentStep - 1))
-      );
+<script>
+/* ============================================================================
+   Onboarding controller — step cross-fade + state
+   ============================================================================ */
+(function () {
+  var current = 1;
+  var TOTAL = 4;
+  var steps = document.querySelectorAll(".ob-step");
+  var indicators = document.querySelectorAll("#ob-steps .ob-steps__item");
 
-      // ----------- Step 2 — inputs + live projection -----------
-      const inputs = {
-        income: document.getElementById("obIncome"),
-        expenses: document.getElementById("obExpenses"),
-        savings: document.getElementById("obSavings"),
-        debt: document.getElementById("obDebt"),
-      };
-      const projection = document.getElementById("obProjection");
-      const projValue = document.getElementById("obProjValue");
-      let debTimer = null;
-
-      function readInputs() {
-        data.income = Number(inputs.income.value) || 0;
-        data.expenses = Number(inputs.expenses.value) || 0;
-        data.savings = Number(inputs.savings.value) || 0;
-        data.debt = Number(inputs.debt.value) || 0;
-      }
-      function projectNetWorth() {
-        // Illustrative compounding per brief:
-        // (savings * 12 * 10) + (income * 0.01 * 60), minus debt.
-        const base = data.savings * 12 * 10;
-        const growth = data.income * 0.01 * 60;
-        return Math.max(0, Math.round(base + growth - data.debt));
-      }
-      function updateProjection() {
-        readInputs();
-        const to = projectNetWorth();
-        projection.classList.add("is-updating");
-        // Soft count from current value.
-        const cur = Number(String(projValue.textContent).replace(/[^0-9.-]/g, "")) || 0;
-        M.countUp(projValue, to, { currency: "USD", from: cur, duration: 600 });
-        setTimeout(() => projection.classList.remove("is-updating"), 700);
-      }
-      Object.values(inputs).forEach((el) => {
-        el.addEventListener("input", () => {
-          clearTimeout(debTimer);
-          debTimer = setTimeout(updateProjection, 160);
-        });
-      });
-
-      // Seed with illustrative defaults so the projection card isn't $0 forever.
-      inputs.income.value = 7800;
-      inputs.expenses.value = 4210;
-      inputs.savings.value = 1840;
-      inputs.debt.value = 12400;
-      updateProjection();
-
-      // ----------- Step 3 — goal toggle -----------
-      document.querySelectorAll(".ob-goal").forEach((g) => {
-        g.addEventListener("click", () => {
-          const checked = g.getAttribute("aria-checked") === "true";
-          g.setAttribute("aria-checked", String(!checked));
-          const key = g.dataset.goal;
-          if (checked) data.goals.delete(key);
-          else data.goals.add(key);
-        });
-        g.addEventListener("keydown", (e) => {
-          if (e.key === " " || e.key === "Enter") { e.preventDefault(); g.click(); }
-        });
-      });
-
-      // ----------- Step 4 — summary -----------
-      let summaryRendered = false;
-      function renderSummary() {
-        if (summaryRendered) return;
-        summaryRendered = true;
-        readInputs();
-        const nw = projectNetWorth();
-        // Debt-free estimate: total debt / monthly savings (illustrative)
-        const months = data.savings > 0 ? Math.max(1, Math.round(data.debt / Math.max(200, data.savings * 0.6))) : 0;
-        // Health score band:
-        const ratio = data.income > 0 ? data.savings / data.income : 0;
-        const grade =
-          ratio >= 0.30 ? "A" :
-          ratio >= 0.20 ? "A−" :
-          ratio >= 0.15 ? "B+" :
-          ratio >= 0.10 ? "B"  :
-          ratio >= 0.05 ? "B−" : "C+";
-
-        M.countUp(document.getElementById("obSumNw"), nw, { currency: "USD", duration: 1500 });
-        M.countUp(document.getElementById("obSumDebt"), months, { duration: 1200 });
-        // Grade: fade-in
-        const gEl = document.getElementById("obSumHealth");
-        gEl.style.opacity = "0";
-        gEl.textContent = grade;
-        setTimeout(() => {
-          gEl.style.transition = "opacity 600ms var(--ease-standard)";
-          gEl.style.opacity = "1";
-        }, 200);
-
-        // Forecast curve
-        const chartEl = document.getElementById("obSumChart");
-        const series = [];
-        let v = (data.savings * 12) + 5000;
-        for (let i = 0; i < 40; i++) {
-          v += (data.savings * 12) / 4 + Math.sin(i / 3) * 600;
-          series.push({ label: `Q${i + 1}`, value: Math.round(v) });
-        }
-        setTimeout(() => C.areaChart(chartEl, series, { height: 160, currency: "USD", showAxis: false }), 60);
-      }
-
-      // ----------- Keyboard convenience -----------
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" && (e.target.tagName === "INPUT" || e.target.tagName === "BUTTON")) {
-          // Don't hijack textareas etc.
-          if (e.target.tagName === "INPUT" && currentStep === 2) {
-            // Move to next input or advance
-            const order = ["obIncome", "obExpenses", "obSavings", "obDebt"];
-            const idx = order.indexOf(e.target.id);
-            if (idx >= 0 && idx < order.length - 1) {
-              e.preventDefault();
-              document.getElementById(order[idx + 1]).focus();
-            } else if (idx === order.length - 1) {
-              e.preventDefault();
-              goTo(currentStep + 1);
-            }
-          }
-        }
-        if (e.key === "Escape" && currentStep > 1) {
-          goTo(currentStep - 1);
-        }
-      });
+  function go(n) {
+    n = Math.max(1, Math.min(TOTAL, +n));
+    if (n === current) return;
+    current = n;
+    steps.forEach(function (s) {
+      var isActive = +s.dataset.step === n;
+      s.classList.toggle("is-active", isActive);
     });
-  </script>
+    indicators.forEach(function (i) {
+      var sn = +i.dataset.step;
+      i.classList.toggle("is-active", sn === n);
+      i.classList.toggle("is-done", sn < n);
+    });
+    if (n === 4) renderReady();
+    // focus management: focus the step heading
+    var active = document.querySelector('.ob-step.is-active [id^="ob-step"]');
+    if (active) { active.setAttribute("tabindex", "-1"); active.focus({ preventScroll: true }); }
+  }
+
+  document.addEventListener("click", function (e) {
+    var t = e.target.closest("[data-go]");
+    if (t) { go(t.dataset.go); }
+  });
+
+  // Expose for keyboard nav
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "ArrowRight" && current < TOTAL) go(current + 1);
+    if (e.key === "ArrowLeft" && current > 1) go(current - 1);
+  });
+
+  /* ----- Forecast math (shared with index.html) ----- */
+  function generateForecast(income, expenses, savings, debt, months) {
+    months = months || 120;
+    var arr = [];
+    var monthlyReturn = Math.pow(1.06, 1 / 12) - 1;
+    var debtRate = Math.pow(1.075, 1 / 12) - 1;
+    var debtBal = debt;
+    var invested = 0;
+    for (var m = 0; m < months; m++) {
+      var payment = Math.max(0, savings);
+      if (debtBal > 0) {
+        var interest = debtBal * debtRate;
+        debtBal = debtBal + interest - Math.min(payment, debtBal + interest);
+        if (debtBal < 0) { invested += -debtBal; debtBal = 0; }
+      } else {
+        invested = invested * (1 + monthlyReturn) + payment;
+      }
+      arr.push(Math.round(invested - debtBal));
+    }
+    return arr;
+  }
+
+  function monthsToDebtFree(savings, debt) {
+    if (debt <= 0) return 0;
+    var debtRate = Math.pow(1.075, 1 / 12) - 1;
+    var bal = debt;
+    for (var m = 1; m <= 600; m++) {
+      var interest = bal * debtRate;
+      bal = bal + interest - savings;
+      if (bal <= 0) return m;
+    }
+    return 600;
+  }
+
+  function healthScore(income, expenses, savings, debt) {
+    if (income <= 0) return 0;
+    var savingsRate = savings / income;
+    var debtRatio = debt / (income * 12 + 1);
+    var score = 50 + savingsRate * 80 - debtRatio * 20;
+    return Math.max(0, Math.min(100, Math.round(score)));
+  }
+
+  /* ----- Number tween (rAF, 320ms ease-out-quart) ----- */
+  function tween(el, from, to, fmt) {
+    fmt = fmt || function (v) { return Math.round(v).toLocaleString("en-US"); };
+    if (el._raf) cancelAnimationFrame(el._raf);
+    var start = performance.now();
+    var dur = 320;
+    function ease(t) { return 1 - Math.pow(1 - t, 4); }
+    function frame(now) {
+      var t = Math.min(1, (now - start) / dur);
+      var v = from + (to - from) * ease(t);
+      el.textContent = fmt(v);
+      if (t < 1) el._raf = requestAnimationFrame(frame);
+    }
+    el._raf = requestAnimationFrame(frame);
+  }
+
+  /* ----- Step 2: live projection ----- */
+  var inps = ["ob-income", "ob-expenses", "ob-savings", "ob-debt"].map(function (id) { return document.getElementById(id); });
+  var projEl = document.getElementById("ob-projection");
+  var lastProj = 0;
+  var debounceT = null;
+  function recalcProj() {
+    if (debounceT) clearTimeout(debounceT);
+    debounceT = setTimeout(function () {
+      var inc = +inps[0].value || 0;
+      var exp = +inps[1].value || 0;
+      var sav = +inps[2].value || 0;
+      var debt = +inps[3].value || 0;
+      var monthlySave = sav > 0 ? sav : Math.max(0, inc - exp);
+      var data = generateForecast(inc, exp, monthlySave, debt, 120);
+      var final = data[data.length - 1];
+      tween(projEl, lastProj, final);
+      lastProj = final;
+    }, 200);
+  }
+  inps.forEach(function (i) { if (i) i.addEventListener("input", recalcProj); });
+  recalcProj();
+
+  /* ----- Step 4: summary ----- */
+  function drawChart(host, data) {
+    var w = 600, h = 180, padL = 40, padR = 12, padT = 8, padB = 16;
+    var min = Math.min.apply(null, data), max = Math.max.apply(null, data);
+    if (min === max) max = min + 1;
+    var n = data.length;
+    var x = function (i) { return padL + (i / (n - 1)) * (w - padL - padR); };
+    var y = function (v) { return padT + (1 - (v - min) / (max - min)) * (h - padT - padB); };
+    var d = "M " + x(0) + " " + y(data[0]);
+    for (var i = 1; i < n; i++) d += " L " + x(i) + " " + y(data[i]);
+    var area = d + " L " + x(n - 1) + " " + (h - padB) + " L " + x(0) + " " + (h - padB) + " Z";
+    var grid = "";
+    for (var g = 0; g <= 3; g++) {
+      var gy = padT + (g / 3) * (h - padT - padB);
+      grid += '<line x1="' + padL + '" x2="' + (w - padR) + '" y1="' + gy + '" y2="' + gy + '"/>';
+    }
+    host.innerHTML =
+      '<svg viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="none" role="img">' +
+        '<g class="chart-grid">' + grid + '</g>' +
+        '<path class="chart-area" d="' + area + '"/>' +
+        '<path class="chart-line" d="' + d + '"/>' +
+      '</svg>';
+    var path = host.querySelector(".chart-line");
+    if (path) {
+      var len = path.getTotalLength();
+      path.style.strokeDasharray = len;
+      path.style.strokeDashoffset = len;
+      path.getBoundingClientRect();
+      path.style.transition = "stroke-dashoffset 560ms cubic-bezier(0.45,0,0.15,1)";
+      requestAnimationFrame(function () { path.style.strokeDashoffset = "0"; });
+    }
+  }
+
+  var nwEl = document.getElementById("ob-stat-nw");
+  var moEl = document.getElementById("ob-stat-mo");
+  var hsEl = document.getElementById("ob-stat-hs");
+  var chartHost = document.getElementById("ob-ready-chart");
+
+  function renderReady() {
+    var inc = +inps[0].value || 0;
+    var exp = +inps[1].value || 0;
+    var sav = +inps[2].value || 0;
+    var debt = +inps[3].value || 0;
+    var monthlySave = sav > 0 ? sav : Math.max(0, inc - exp);
+    var data = generateForecast(inc, exp, monthlySave, debt, 120);
+    var nw = data[data.length - 1];
+    var mo = monthsToDebtFree(monthlySave, debt);
+    var hs = healthScore(inc, exp, monthlySave, debt);
+    tween(nwEl, 0, nw);
+    tween(moEl, 0, mo);
+    tween(hsEl, 0, hs);
+    drawChart(chartHost, data);
+  }
+
+  /* ----- Step 3: goal multi-select ----- */
+  document.getElementById("ob-goals").addEventListener("click", function (e) {
+    var t = e.target.closest(".ob-goal");
+    if (!t) return;
+    t.classList.toggle("is-selected");
+  });
+})();
+</script>
 
 </body>
 </html>

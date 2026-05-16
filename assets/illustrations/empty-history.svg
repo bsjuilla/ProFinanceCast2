@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 320" role="img" aria-label="A blank page on a desk with a pen and a single oxblood ink dot.">
+  <rect width="480" height="320" fill="#F7F4ED"/>
+  <g fill="none" stroke="#4D463A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- desk line -->
+    <path d="M 40 268 L 440 268"/>
+    <!-- blank page -->
+    <path d="M 130 90 L 310 90 L 310 268 L 130 268 Z"/>
+    <!-- pen resting beside -->
+    <path d="M 326 240 L 410 200"/>
+    <path d="M 326 240 L 332 248 L 414 208 L 410 200 Z"/>
+  </g>
+  <!-- oxblood ink dot on the page -->
+  <circle cx="220" cy="170" r="4" fill="#8B2E22"/>
+</svg>

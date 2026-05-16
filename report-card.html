@@ -1,640 +1,287 @@
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#F7F4ED" />
   <title>Report card — ProFinanceCast</title>
-  <meta name="description" content="Your financial health, graded across five dimensions. B+ overall." />
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
-
-  <link rel="stylesheet" href="/css/tokens.css">
-  <link rel="stylesheet" href="/css/base.css">
-  <link rel="stylesheet" href="/css/components.css">
-  <link rel="stylesheet" href="/css/layout.css">
-
+  <link rel="icon" href="/assets/favicon.svg" />
+  <link rel="stylesheet" href="/css/pfc-tokens.css" />
+  <link rel="stylesheet" href="/css/pfc-base.css" />
+  <link rel="stylesheet" href="/css/pfc-layout.css" />
+  <link rel="stylesheet" href="/css/pfc-components.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
-    /* ===========================================================
-     * Report card — page-local styles. BEM, no !important.
-     * =========================================================== */
+    .pfc-row { padding: var(--space-6) 0; border-top: 1px solid var(--ink-5); }
+    .pfc-row:first-of-type { border-top: 0; padding-top: var(--space-5); }
+    .pfc-eyebrow-row { display: flex; align-items: baseline; gap: var(--space-3); margin-bottom: var(--space-3); }
 
-    .topbar { height: auto; min-height: var(--topbar-h); padding-block: 14px; }
-    .greet { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-    .greet__eyebrow {
-      font-family: var(--font-mono); font-size: var(--fs-tiny);
-      text-transform: uppercase; letter-spacing: var(--tracking-eyebrow);
-      color: var(--ink-400);
+    /* VERDICT: editorial grade composition */
+    .grade-composition {
+      display: grid;
+      grid-template-columns: 1fr;
+      align-items: end;
+      justify-items: center;
+      padding: var(--space-6) 0 var(--space-5);
     }
-    .greet__title {
-      font-family: var(--font-display);
-      font-size: clamp(1.15rem, 0.4vw + 1rem, 1.4rem);
-      font-weight: 500; color: var(--ink-100);
-      letter-spacing: -0.015em; line-height: 1.1;
+    .grade-lockup {
+      display: flex;
+      align-items: baseline;
+      gap: var(--space-5);
     }
-    .greet__title em { font-style: italic; color: var(--amber-400); font-weight: 400; }
-
-    /* ---------- Hero grade card ---------- */
-    .grade-card {
-      position: relative;
-      padding: var(--space-12) var(--space-8);
-      text-align: center;
-      background: oklch(24% 0.022 265 / 0.55);
-      backdrop-filter: blur(20px) saturate(140%);
-      -webkit-backdrop-filter: blur(20px) saturate(140%);
-      border: 1px solid oklch(80% 0.140 75 / 0.30);
-      border-radius: var(--r-lg);
-      overflow: hidden;
-      box-shadow:
-        0 1px 0 0 oklch(100% 0 0 / 0.06) inset,
-        0 24px 56px -20px oklch(0% 0 0 / 0.55),
-        0 0 60px -20px oklch(80% 0.140 75 / 0.30);
-    }
-    .grade-card::before {
-      content: ""; position: absolute; inset: 0;
-      background:
-        radial-gradient(60% 50% at 50% 0%, oklch(80% 0.140 75 / 0.18), transparent 70%),
-        radial-gradient(40% 40% at 50% 100%, oklch(78% 0.175 168 / 0.10), transparent 70%);
-      pointer-events: none;
-    }
-    .grade-card > * { position: relative; }
-    .grade-card__eyebrow {
-      font-family: var(--font-mono); font-size: var(--fs-tiny);
-      text-transform: uppercase; letter-spacing: var(--tracking-eyebrow);
-      color: var(--amber-400);
-      margin-bottom: var(--space-4);
-    }
-    .grade-wrap {
-      position: relative;
-      display: inline-grid; place-items: center;
-      width: clamp(240px, 30vw, 320px);
-      height: clamp(240px, 30vw, 320px);
-      margin-bottom: var(--space-6);
-    }
-    .grade-wrap__ring { position: absolute; inset: 0; }
     .grade-letter {
       font-family: var(--font-display);
-      font-size: clamp(8.75rem, 14vw + 1rem, 13.75rem);
       font-weight: 400;
-      font-style: italic;
-      color: var(--ink-100);
-      letter-spacing: -0.04em;
+      font-size: clamp(8rem, 18vw, 16rem);
       line-height: 0.85;
-      background: linear-gradient(180deg, var(--ink-100) 0%, var(--amber-400) 130%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
+      letter-spacing: -0.04em;
+      color: var(--ink-1);
+      font-variation-settings: "opsz" 144;
     }
-    .grade-card__score {
+    .grade-score {
       font-family: var(--font-mono);
-      font-size: var(--fs-mono-lg); font-weight: 500;
-      color: var(--ink-100); font-variant-numeric: tabular-nums;
+      font-variant-numeric: tabular-nums;
+      font-size: clamp(1.5rem, 2.4vw, 2.2rem);
+      color: var(--ink-3);
       letter-spacing: -0.02em;
-      margin-bottom: var(--space-2);
+      transform: translateY(-0.4em);
     }
-    .grade-card__score-of {
-      color: var(--ink-400); font-weight: 400; font-size: 0.7em;
-    }
-    .grade-card__caption {
-      font-size: var(--fs-small); color: var(--ink-300);
-      max-width: 460px; margin: 0 auto; line-height: 1.5;
-    }
-    .grade-card__chips {
-      display: inline-flex; gap: var(--space-3);
+    .grade-caption {
+      text-align: center;
+      font-size: var(--type-body-lg);
+      color: var(--ink-2);
+      max-width: 56ch;
       margin-top: var(--space-5);
-      flex-wrap: wrap; justify-content: center;
-    }
-    .grade-card__chip {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 6px 12px; border-radius: var(--r-full);
-      font-family: var(--font-mono); font-size: var(--fs-tiny);
-      color: var(--mint-300);
-      background: oklch(78% 0.175 168 / 0.10);
-      border: 1px solid oklch(78% 0.175 168 / 0.28);
-    }
-    .grade-card__chip--warn {
-      color: var(--amber-400);
-      background: oklch(80% 0.140 75 / 0.10);
-      border-color: oklch(80% 0.140 75 / 0.30);
+      line-height: 1.5;
     }
 
-    /* ---------- 5 dimension cards ---------- */
-    .dim-grid {
-      display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--space-5);
+    /* Dimension bars */
+    .dim-list {
+      display: flex;
+      flex-direction: column;
     }
-    @media (max-width: 1100px) { .dim-grid { grid-template-columns: repeat(3, 1fr); } }
-    @media (max-width: 640px)  { .dim-grid { grid-template-columns: repeat(2, 1fr); } }
-
-    .dim-card {
-      padding: var(--space-6) var(--space-5);
-      background: oklch(24% 0.022 265 / 0.55);
-      backdrop-filter: blur(16px) saturate(140%);
-      -webkit-backdrop-filter: blur(16px) saturate(140%);
-      border: 1px solid oklch(100% 0 0 / 0.07);
-      border-radius: var(--r-lg);
-      display: flex; flex-direction: column; align-items: center; text-align: center;
-      gap: var(--space-3);
-      transition: transform var(--dur-base) var(--ease-standard),
-                  border-color var(--dur-base) var(--ease-standard);
-    }
-    .dim-card:hover { transform: translateY(-3px); border-color: oklch(78% 0.175 168 / 0.30); }
-    .dim-card__ring { width: 96px; height: 96px; }
-    .dim-card__label {
-      font-size: var(--fs-small); color: var(--ink-200); font-weight: 500;
-      margin-top: var(--space-2);
-    }
-    .dim-card__summary {
-      font-size: var(--fs-tiny); color: var(--ink-400); line-height: 1.4;
-      min-height: 32px;
-    }
-    .dim-card__link {
-      font-family: var(--font-mono); font-size: 10px;
-      text-transform: uppercase; letter-spacing: var(--tracking-eyebrow);
-      color: var(--mint-400);
-      display: inline-flex; align-items: center; gap: 4px;
-      transition: gap var(--dur-fast) var(--ease-standard);
-      margin-top: auto;
-    }
-    .dim-card__link:hover { gap: 8px; color: var(--mint-300); }
-
-    /* ---------- Strengths & weaknesses ---------- */
-    .sw-row {
-      display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-5);
-    }
-    @media (max-width: 900px) { .sw-row { grid-template-columns: 1fr; } }
-    .sw-card { padding: var(--space-8); }
-    .sw-card__head { margin-bottom: var(--space-6); }
-    .sw-card__title {
-      font-family: var(--font-display); font-size: var(--fs-h2); font-weight: 400;
-      color: var(--ink-100); letter-spacing: -0.02em;
-    }
-    .sw-card__title em { font-style: italic; font-weight: 400; }
-    .sw-card--strength .sw-card__title em { color: var(--mint-400); }
-    .sw-card--weakness .sw-card__title em { color: var(--coral-500); }
-
-    .sw-item {
-      display: grid; grid-template-columns: 22px 1fr auto;
-      gap: var(--space-4);
+    .dim-row {
+      display: grid;
+      grid-template-columns: 220px 80px 1fr;
+      align-items: center;
+      gap: var(--space-5);
       padding: var(--space-4) 0;
-      border-top: 1px solid oklch(100% 0 0 / 0.05);
-      align-items: flex-start;
+      border-top: 1px solid var(--ink-5);
     }
-    .sw-item:first-child { border-top: 0; padding-top: 0; }
-    .sw-item:last-child  { padding-bottom: 0; }
-    .sw-item__icon {
-      width: 22px; height: 22px;
-      display: grid; place-items: center;
-      border-radius: var(--r-full);
+    .dim-row:last-child { border-bottom: 1px solid var(--ink-5); }
+    .dim-label {
+      font-size: var(--type-label);
+      font-weight: 500;
+      letter-spacing: var(--track-meta);
+      text-transform: uppercase;
+      color: var(--ink-2);
+    }
+    .dim-score {
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+      font-size: var(--type-body);
+      color: var(--ink-1);
+      text-align: right;
+    }
+    .dim-bar {
+      position: relative;
+      height: 2px;
+      background: var(--ink-5);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .dim-bar__fill {
+      position: absolute;
+      inset: 0 auto 0 0;
+      background: var(--accent);
+      width: 0;
+      transition: width var(--dur-slow) var(--ease-data);
+    }
+    .dim-row.is-revealed .dim-bar__fill,
+    .is-revealed .dim-bar__fill { /* fallback */ }
+    @media (max-width: 720px) {
+      .dim-row { grid-template-columns: 1fr 60px; gap: var(--space-3); }
+      .dim-bar { grid-column: 1 / -1; }
+    }
+
+    /* Detail two-column dl */
+    .review-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-7);
+    }
+    @media (max-width: 768px) {
+      .review-cols { grid-template-columns: 1fr; gap: var(--space-5); }
+    }
+    .review-col__title {
+      font-family: var(--font-body);
+      font-size: var(--type-label);
+      font-weight: 500;
+      letter-spacing: var(--track-meta);
+      text-transform: uppercase;
+      color: var(--ink-3);
+      margin-bottom: var(--space-3);
+    }
+    .review-list { display: flex; flex-direction: column; }
+    .review-list__item {
+      display: flex;
+      gap: var(--space-3);
+      padding: var(--space-3) 0;
+      border-top: 1px solid var(--ink-5);
+      font-size: var(--type-body);
+      line-height: 1.5;
+      color: var(--ink-1);
+    }
+    .review-list__item:last-child { border-bottom: 1px solid var(--ink-5); }
+    .review-list__bullet {
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-weight: 500;
+      line-height: 1.5;
       flex-shrink: 0;
-      margin-top: 2px;
-    }
-    .sw-card--strength .sw-item__icon {
-      color: var(--mint-300);
-      background: oklch(78% 0.175 168 / 0.12);
-    }
-    .sw-card--weakness .sw-item__icon {
-      color: var(--coral-500);
-      background: oklch(74% 0.135 28 / 0.12);
-    }
-    .sw-item__body { font-size: var(--fs-small); color: var(--ink-200); line-height: 1.5; }
-    .sw-item__body strong { color: var(--ink-100); font-weight: 500; display: block; margin-bottom: 2px; }
-    .sw-item__action {
-      font-family: var(--font-mono); font-size: 10px;
-      text-transform: uppercase; letter-spacing: var(--tracking-eyebrow);
-      color: var(--mint-400);
-      padding: 6px 10px;
-      border: 1px solid oklch(78% 0.175 168 / 0.22);
-      border-radius: var(--r-full);
-      white-space: nowrap;
-      transition: background var(--dur-fast), color var(--dur-fast);
-    }
-    .sw-item__action:hover { background: oklch(78% 0.175 168 / 0.10); color: var(--mint-300); }
-
-    /* ---------- Trend chart card ---------- */
-    .trend-card { padding: var(--space-8); }
-    .trend-card__head {
-      display: flex; align-items: baseline; justify-content: space-between;
-      margin-bottom: var(--space-6); gap: var(--space-4); flex-wrap: wrap;
-    }
-    .trend-card__title {
-      font-family: var(--font-display); font-size: var(--fs-h2); font-weight: 400;
-      color: var(--ink-100); letter-spacing: -0.02em;
-    }
-    .trend-card__title em { font-style: italic; color: var(--mint-400); font-weight: 400; }
-    .trend-card__note { font-family: var(--font-mono); font-size: var(--fs-tiny); color: var(--ink-400); text-transform: uppercase; letter-spacing: var(--tracking-eyebrow); }
-    .trend-chart-wrap { position: relative; height: 240px; }
-
-    /* ---------- Improve card ---------- */
-    .improve-card { padding: var(--space-8); }
-    .improve-card__head { margin-bottom: var(--space-6); }
-    .improve-card__title {
-      font-family: var(--font-display); font-size: var(--fs-h2); font-weight: 400;
-      color: var(--ink-100); letter-spacing: -0.02em;
-    }
-    .improve-card__title em { font-style: italic; color: var(--mint-400); font-weight: 400; }
-    .improve-list {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-5);
-    }
-    @media (max-width: 900px) { .improve-list { grid-template-columns: 1fr; } }
-    .improve-item {
-      padding: var(--space-5);
-      background: oklch(20% 0.020 265 / 0.5);
-      border: 1px solid oklch(100% 0 0 / 0.05);
-      border-radius: var(--r-md);
-      display: flex; flex-direction: column; gap: var(--space-3);
-    }
-    .improve-item__num {
-      font-family: var(--font-mono); font-size: var(--fs-tiny);
-      color: var(--mint-400); text-transform: uppercase; letter-spacing: var(--tracking-eyebrow);
-    }
-    .improve-item__title { font-size: var(--fs-body); color: var(--ink-100); font-weight: 500; line-height: 1.3; }
-    .improve-item__body { font-size: var(--fs-small); color: var(--ink-300); line-height: 1.5; }
-    .improve-item__impact {
-      display: inline-flex; align-items: center; gap: 6px;
-      font-family: var(--font-mono); font-size: var(--fs-tiny);
-      color: var(--mint-300);
-      padding: 4px 10px;
-      background: oklch(78% 0.175 168 / 0.10);
-      border-radius: var(--r-full);
-      align-self: flex-start;
     }
 
-    .sec-header { margin-bottom: var(--space-6); }
-    .sec-title {
-      font-family: var(--font-display);
-      font-size: var(--fs-h2); font-weight: 400; color: var(--ink-100);
-      letter-spacing: -0.02em; line-height: 1.1;
+    /* Action + methodology */
+    .action-row { display: flex; justify-content: flex-end; padding-top: var(--space-5); }
+    @media (max-width: 768px) {
+      .action-row { justify-content: stretch; }
+      .action-row .pfc-button { width: 100%; }
     }
-    .sec-title em { font-style: italic; color: var(--ink-300); font-weight: 300; }
-    .sec-sub { font-size: var(--fs-small); color: var(--ink-400); margin-top: 4px; }
-
-    .foot-strip {
-      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
-      gap: var(--space-4); padding: var(--space-5) var(--space-2);
-      margin-top: var(--space-12);
-      border-top: 1px solid oklch(100% 0 0 / 0.05);
-      font-family: var(--font-mono); font-size: var(--fs-tiny); color: var(--ink-400);
-    }
-    .foot-strip__dot {
-      width: 5px; height: 5px; border-radius: var(--r-full);
-      background: var(--mint-500); box-shadow: 0 0 8px var(--mint-glow);
-      display: inline-block; margin-right: 8px;
-    }
-
-    [data-reveal-stagger] > * {
-      opacity: 0; transform: translateY(14px);
-      transition: opacity var(--dur-slow) var(--ease-standard),
-                  transform var(--dur-slow) var(--ease-standard);
-      transition-delay: calc(var(--i, 0) * 80ms);
-    }
-    [data-reveal-stagger].is-revealed > * { opacity: 1; transform: none; }
-    @media (prefers-reduced-motion: reduce) {
-      [data-reveal-stagger] > * { opacity: 1; transform: none; }
+    .methodology {
+      margin-top: var(--space-6);
+      font-size: var(--type-meta);
+      color: var(--ink-3);
+      letter-spacing: 0.02em;
     }
   </style>
 </head>
+
 <body data-page="report-card">
-
-  <div class="aurora-bg" aria-hidden="true">
-    <div class="aurora-bg__blob aurora-bg__blob--1"></div>
-    <div class="aurora-bg__blob aurora-bg__blob--2"></div>
-    <div class="aurora-bg__blob aurora-bg__blob--3"></div>
-    <div class="aurora-bg__blob aurora-bg__blob--4"></div>
-    <div class="aurora-bg__grain"></div>
-    <div class="aurora-bg__vignette"></div>
-  </div>
-
   <div class="app-shell">
     <div data-include="/partials/sidebar.html"></div>
 
-    <main class="main">
+    <div class="app-content">
       <div data-include="/partials/topbar.html"></div>
 
-      <div class="main__content">
+      <main class="app-main" role="main">
+        <div class="page-section page-section--app" data-reveal-stagger>
 
-        <!-- ============================================================
-             SECTION 1 — Hero grade card
-             ============================================================ -->
-        <section class="section" aria-labelledby="grade-heading" style="margin-bottom: var(--space-12);">
-          <article class="grade-card" data-reveal>
-            <span class="grade-card__eyebrow">Overall · 12-month rolling</span>
-            <div class="grade-wrap">
-              <div class="grade-wrap__ring" data-grade-ring></div>
-              <span class="grade-letter" id="grade-heading">B+</span>
+          <!-- Row 1: VERDICT — editorial grade letter -->
+          <section class="pfc-row" aria-labelledby="verdict-h">
+            <div class="pfc-eyebrow-row">
+              <span class="eyebrow" id="verdict-h">Quarterly grade</span>
+              <span class="eyebrow" style="color: var(--ink-4);">Q2 2026</span>
             </div>
-            <div class="grade-card__score mono">
-              <span data-score-value data-value="78">0</span><span class="grade-card__score-of"> / 100</span>
+            <div class="grade-composition">
+              <div class="grade-lockup">
+                <span class="grade-letter" aria-label="Grade B plus">B+</span>
+                <span class="grade-score mono tabular" aria-label="78 out of 100">78 / 100</span>
+              </div>
+              <p class="grade-caption">
+                Above the 78th percentile. Your savings rate carries the score. Diversification is the lever.
+              </p>
             </div>
-            <p class="grade-card__caption">Above average across savings and investing, with room to grow your emergency runway. Up 4 points in the last 90 days.</p>
-            <div class="grade-card__chips">
-              <span class="grade-card__chip">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>
-                Passing
-              </span>
-              <span class="grade-card__chip">+4 / 90d</span>
-              <span class="grade-card__chip grade-card__chip--warn">Watch · runway</span>
+          </section>
+
+          <!-- Row 2: EVIDENCE — dimension bars -->
+          <section class="pfc-row" aria-labelledby="evidence-h">
+            <div class="pfc-eyebrow-row">
+              <span class="eyebrow" id="evidence-h">Dimensions</span>
+              <span class="eyebrow" style="color: var(--ink-4);">Five components, equally weighted in display</span>
             </div>
-          </article>
-        </section>
+            <div class="dim-list" id="dimList"><!-- filled by JS --></div>
+          </section>
 
-        <!-- ============================================================
-             SECTION 2 — Five dimensions
-             ============================================================ -->
-        <section class="section" aria-labelledby="dim-heading" style="margin-bottom: var(--space-12);">
-          <header class="sec-header">
-            <h2 id="dim-heading" class="sec-title">Five dimensions, <em>graded</em></h2>
-            <p class="sec-sub">Each card weighted equally toward the overall score.</p>
-          </header>
-          <div class="dim-grid" data-reveal-stagger data-dim-grid></div>
-        </section>
-
-        <!-- ============================================================
-             SECTION 3 — Strengths & weaknesses
-             ============================================================ -->
-        <section class="section" aria-labelledby="sw-heading" style="margin-bottom: var(--space-12);">
-          <h2 id="sw-heading" class="sr-only">Strengths and areas to improve</h2>
-          <div class="sw-row">
-
-            <article class="card card--glass sw-card sw-card--strength" data-reveal>
-              <header class="sw-card__head">
-                <h3 class="sw-card__title">What's <em>working</em></h3>
-              </header>
-              <div class="sw-list">
-
-                <div class="sw-item">
-                  <span class="sw-item__icon" aria-hidden="true">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>
-                  </span>
-                  <div class="sw-item__body"><strong>Savings rate at a 12-month high</strong>21% this month, up from 16% in January.</div>
-                  <a href="#" class="sw-item__action">Lock in</a>
-                </div>
-
-                <div class="sw-item">
-                  <span class="sw-item__icon" aria-hidden="true">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>
-                  </span>
-                  <div class="sw-item__body"><strong>401(k) maxed for the year</strong>You hit the IRS cap two months early.</div>
-                  <a href="#" class="sw-item__action">Review</a>
-                </div>
-
-                <div class="sw-item">
-                  <span class="sw-item__icon" aria-hidden="true">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>
-                  </span>
-                  <div class="sw-item__body"><strong>Debt-to-income trending down</strong>From 0.34 to 0.28 in nine months.</div>
-                  <a href="#" class="sw-item__action">Keep going</a>
-                </div>
-
-                <div class="sw-item">
-                  <span class="sw-item__icon" aria-hidden="true">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>
-                  </span>
-                  <div class="sw-item__body"><strong>Spending below budget · 7 of 8 categories</strong>Only entertainment ran over, by $34.</div>
-                  <a href="#" class="sw-item__action">Adjust</a>
-                </div>
-
-              </div>
-            </article>
-
-            <article class="card card--glass sw-card sw-card--weakness" data-reveal>
-              <header class="sw-card__head">
-                <h3 class="sw-card__title">Areas to <em>improve</em></h3>
-              </header>
-              <div class="sw-list">
-
-                <div class="sw-item">
-                  <span class="sw-item__icon" aria-hidden="true">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.86L1.82 18a2 2 0 0 0 1.7 3h16.94a2 2 0 0 0 1.7-3L13.7 3.86a2 2 0 0 0-3.4 0z"/></svg>
-                  </span>
-                  <div class="sw-item__body"><strong>Emergency fund at 4.2 of 6 months</strong>You're 30% short. At current pace, full coverage in 11 months.</div>
-                  <a href="#" class="sw-item__action">Address</a>
-                </div>
-
-                <div class="sw-item">
-                  <span class="sw-item__icon" aria-hidden="true">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.86L1.82 18a2 2 0 0 0 1.7 3h16.94a2 2 0 0 0 1.7-3L13.7 3.86a2 2 0 0 0-3.4 0z"/></svg>
-                  </span>
-                  <div class="sw-item__body"><strong>Credit card at 22.49% APR</strong>Costliest debt in your stack. Avalanche method clears it nine months sooner.</div>
-                  <a href="#" class="sw-item__action">Address</a>
-                </div>
-
-                <div class="sw-item">
-                  <span class="sw-item__icon" aria-hidden="true">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.86L1.82 18a2 2 0 0 0 1.7 3h16.94a2 2 0 0 0 1.7-3L13.7 3.86a2 2 0 0 0-3.4 0z"/></svg>
-                  </span>
-                  <div class="sw-item__body"><strong>Concentration risk · 64% in tech ETFs</strong>One sector is doing most of the heavy lifting in your portfolio.</div>
-                  <a href="#" class="sw-item__action">Address</a>
-                </div>
-
-              </div>
-            </article>
-
-          </div>
-        </section>
-
-        <!-- ============================================================
-             SECTION 4 — Trend chart
-             ============================================================ -->
-        <section class="section" aria-labelledby="trend-heading" style="margin-bottom: var(--space-12);">
-          <article class="card card--glass trend-card" data-reveal>
-            <header class="trend-card__head">
-              <h2 id="trend-heading" class="trend-card__title">Score over <em>twelve months</em></h2>
-              <span class="trend-card__note">High Apr · 81 · &nbsp;&nbsp; Low Jul · 64</span>
-            </header>
-            <div class="trend-chart-wrap" data-trend-chart></div>
-          </article>
-        </section>
-
-        <!-- ============================================================
-             SECTION 5 — Improve your score
-             ============================================================ -->
-        <section class="section" aria-labelledby="imp-heading" style="margin-bottom: var(--space-8);">
-          <article class="card card--glass improve-card" data-reveal>
-            <header class="improve-card__head">
-              <h2 id="imp-heading" class="improve-card__title">Three moves to push to an <em>A−</em></h2>
-            </header>
-            <div class="improve-list">
-
-              <div class="improve-item">
-                <span class="improve-item__num">Move 01</span>
-                <h3 class="improve-item__title">Auto-transfer $300 to emergency fund</h3>
-                <p class="improve-item__body">Bi-weekly on payday. Closes the 6-month buffer gap in seven months instead of eleven.</p>
-                <span class="improve-item__impact">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>
-                  +6 points
-                </span>
-              </div>
-
-              <div class="improve-item">
-                <span class="improve-item__num">Move 02</span>
-                <h3 class="improve-item__title">Avalanche the Sapphire card first</h3>
-                <p class="improve-item__body">Redirect $260/mo from student loan minimum. Saves $1,180 in interest and clears nine months earlier.</p>
-                <span class="improve-item__impact">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>
-                  +5 points
-                </span>
-              </div>
-
-              <div class="improve-item">
-                <span class="improve-item__num">Move 03</span>
-                <h3 class="improve-item__title">Rebalance into a broad-market ETF</h3>
-                <p class="improve-item__body">Trim tech allocation from 64% to 45%. Cuts concentration risk and lifts the diversification subscore.</p>
-                <span class="improve-item__impact">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>
-                  +4 points
-                </span>
-              </div>
-
+          <!-- Row 3: DETAIL — strengths / address -->
+          <section class="pfc-row" aria-labelledby="detail-h">
+            <div class="pfc-eyebrow-row">
+              <span class="eyebrow" id="detail-h">Review</span>
+              <span class="eyebrow" style="color: var(--ink-4);">Plain reading of the numbers</span>
             </div>
-          </article>
-        </section>
+            <div class="review-cols">
+              <div class="review-col">
+                <h3 class="review-col__title">Strengths</h3>
+                <ul class="review-list">
+                  <li class="review-list__item"><span class="review-list__bullet">·</span>Savings rate of 32% is the strongest single contributor to the score.</li>
+                  <li class="review-list__item"><span class="review-list__bullet">·</span>Emergency runway covers 5.8 months at current burn, above the 4-month target.</li>
+                  <li class="review-list__item"><span class="review-list__bullet">·</span>Mortgage is the only liability and tracks one month ahead of schedule.</li>
+                  <li class="review-list__item"><span class="review-list__bullet">·</span>Spending growth ran below wage growth for the third consecutive quarter.</li>
+                </ul>
+              </div>
+              <div class="review-col">
+                <h3 class="review-col__title">Address</h3>
+                <ul class="review-list">
+                  <li class="review-list__item"><span class="review-list__bullet">·</span>84% of brokerage assets sit in a single US equity index. Diversification scores 62.</li>
+                  <li class="review-list__item"><span class="review-list__bullet">·</span>Goal "Sabbatical 2028" is funded at 41%, behind the 55% pace required.</li>
+                  <li class="review-list__item"><span class="review-list__bullet">·</span>Auto insurance premium runs 1.4x the median for your ZIP and driving profile.</li>
+                  <li class="review-list__item"><span class="review-list__bullet">·</span>No designated beneficiary on the older 401(k). Twenty-minute fix.</li>
+                </ul>
+              </div>
+            </div>
+          </section>
 
-        <div class="foot-strip">
-          <div><span class="foot-strip__dot" aria-hidden="true"></span>Score recalculated weekly. Heuristic, not a credit score.</div>
-          <div>Last graded · 3 days ago</div>
+          <!-- Row 4: ACTION -->
+          <section class="pfc-row" aria-labelledby="action-h">
+            <span class="visually-hidden" id="action-h">Lift score</span>
+            <div class="action-row">
+              <a class="pfc-button pfc-button--primary" href="/sage.html">See how to lift your score →</a>
+            </div>
+            <p class="methodology">
+              Methodology &middot; 12 dimensions, weighted by impact. Last updated Sunday.
+            </p>
+          </section>
+
         </div>
-
-      </div>
-    </main>
+      </main>
+    </div>
   </div>
 
-  <script src="/js/include.js"></script>
-  <script src="/js/motion.js"></script>
-  <script src="/js/charts.js"></script>
-  <script src="/js/demo-data.js"></script>
-  <script src="/js/app.js"></script>
+  <div data-include="/partials/bottom-tabs.html"></div>
 
+  <script src="/js/pfc-include.js"></script>
+  <script src="/js/pfc-app.js"></script>
   <script>
-    document.addEventListener("pfc:partials-ready", function () {
-      var D = window.PFC_DATA;
-      var M = window.PFC_MOTION;
-      var C = window.PFC_CHARTS;
-      if (!D || !M || !C) return;
+    window.PFC_PAGE_INIT = function () {
+      PFC.setTopbar({
+        title: "Report card",
+        subtitle: "Quarterly. The math summary the bank should send you.",
+        actions:
+          '<button class="pfc-button pfc-button--ghost" type="button">Download PDF</button>' +
+          '<button class="pfc-button pfc-button--primary" type="button">Share read-only link</button>'
+      });
 
-      M.pageTransition();
+      var list = document.getElementById("dimList");
+      list.innerHTML = PFC_DATA.dimensions.map(function (d) {
+        return (
+          '<div class="dim-row">' +
+            '<span class="dim-label">' + d.label + '</span>' +
+            '<span class="dim-score mono tabular">' + d.score + ' / 100</span>' +
+            '<div class="dim-bar"><div class="dim-bar__fill" data-target="' + d.score + '"></div></div>' +
+          '</div>'
+        );
+      }).join("");
 
-      /* ---- Topbar ---- */
-      (function injectTopbar() {
-        var crumb = document.querySelector('[data-slot="breadcrumb"]');
-        var actions = document.querySelector('.topbar__actions');
-        if (!crumb || !actions) return;
-        crumb.innerHTML =
-          '<div class="greet">' +
-            '<span class="greet__eyebrow">Overview / Report card</span>' +
-            '<span class="greet__title">Your financial health · <em>B+</em></span>' +
-          '</div>';
-
-        var shareBtn = document.createElement("button");
-        shareBtn.type = "button";
-        shareBtn.className = "btn btn--ghost btn--sm";
-        shareBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7"/><path d="M16 6l-4-4-4 4"/><path d="M12 2v14"/></svg><span>Export</span>';
-        shareBtn.addEventListener("click", function () { window.PFC && PFC.toast("PDF export coming soon", "info", { duration: 1800 }); });
-        var searchBtn = actions.querySelector(".topbar__search");
-        if (searchBtn && searchBtn.nextSibling) actions.insertBefore(shareBtn, searchBtn.nextSibling);
-        else actions.appendChild(shareBtn);
-      })();
-
-      /* ---- Hero grade ring + score countUp ---- */
-      (function buildGrade() {
-        var ringEl = document.querySelector("[data-grade-ring]");
-        if (ringEl) {
-          // Match grade-wrap clamp; use a generous default.
-          var size = ringEl.parentElement.clientWidth || 280;
-          C.progressRing(ringEl, 78, { size: size, thickness: 6, color: "var(--amber-400)", showLabel: false });
-        }
-        var scoreEl = document.querySelector("[data-score-value]");
-        if (scoreEl) {
-          var io = new IntersectionObserver(function (entries) {
-            entries.forEach(function (e) {
-              if (e.isIntersecting) { io.unobserve(scoreEl); M.countUp(scoreEl, 78, { decimals: 0, duration: 1400 }); }
-            });
-          }, { threshold: 0.4 });
-          io.observe(scoreEl);
-        }
-      })();
-
-      /* ---- Five dimension cards ---- */
-      (function buildDims() {
-        var wrap = document.querySelector("[data-dim-grid]");
-        if (!wrap) return;
-        var dims = [
-          { label: "Savings rate",      score: 82, color: "var(--mint-500)", summary: "21% this month, ahead of plan" },
-          { label: "Debt management",   score: 71, color: "var(--mint-400)", summary: "DTI down to 0.28" },
-          { label: "Goal progress",     score: 76, color: "var(--mint-300)", summary: "Three of four on pace" },
-          { label: "Diversification",   score: 64, color: "var(--coral-400)",summary: "64% concentrated in tech" },
-          { label: "Emergency runway",  score: 70, color: "var(--lavender-500)", summary: "4.2 of 6 months covered" },
-        ];
-        wrap.innerHTML = dims.map(function (d, i) {
-          return ''
-            + '<article class="dim-card" style="--i:' + i + ';">'
-              + '<div class="dim-card__ring" data-ring="' + i + '"></div>'
-              + '<div class="dim-card__label">' + d.label + '</div>'
-              + '<div class="dim-card__summary">' + d.summary + '</div>'
-              + '<a href="#" class="dim-card__link">Tap for tips '
-                + '<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>'
-              + '</a>'
-            + '</article>';
-        }).join("");
-        // Render rings after layout
-        setTimeout(function () {
-          dims.forEach(function (d, i) {
-            var el = wrap.querySelector('[data-ring="' + i + '"]');
-            if (el) C.progressRing(el, d.score, { size: 96, thickness: 8, color: d.color, showLabel: true });
+      /* Animate bar fills once on viewport entry */
+      var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var fills = document.querySelectorAll(".dim-bar__fill");
+      if (reduced || !("IntersectionObserver" in window)) {
+        fills.forEach(function (f) { f.style.width = f.getAttribute("data-target") + "%"; });
+        return;
+      }
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          var f = e.target;
+          requestAnimationFrame(function () {
+            f.style.width = f.getAttribute("data-target") + "%";
           });
-        }, 300);
-      })();
-
-      /* ---- Trend chart with high/low annotations ---- */
-      (function buildTrend() {
-        var wrap = document.querySelector("[data-trend-chart]");
-        if (!wrap) return;
-        var months = ["Jun","Jul","Aug","Sep","Oct","Nov","Dec","Jan","Feb","Mar","Apr","May"];
-        var scores = [69, 64, 67, 70, 72, 71, 73, 74, 76, 79, 81, 78];
-        var data = months.map(function (m, i) { return { label: m, value: scores[i] }; });
-        C.areaChart(wrap, data, { height: 240, currency: undefined, ariaLabel: "Health score over 12 months" });
-
-        // Add high/low markers after render
-        setTimeout(function () {
-          var svg = wrap.querySelector("svg");
-          if (!svg) return;
-          var W = svg.viewBox.baseVal.width;
-          var H = svg.viewBox.baseVal.height;
-          var PAD = { l: 12, r: 12, t: 16, b: 28 };
-          var innerW = W - PAD.l - PAD.r;
-          var innerH = H - PAD.t - PAD.b;
-          var max = Math.max.apply(null, scores);
-          var min = Math.min.apply(null, scores);
-          var range = max - min || 1;
-          var stepX = innerW / (scores.length - 1);
-          var hiIdx = scores.indexOf(max), loIdx = scores.indexOf(min);
-          var NS = "http://www.w3.org/2000/svg";
-          function mk(t, a) { var e = document.createElementNS(NS, t); Object.entries(a).forEach(function (kv) { e.setAttribute(kv[0], kv[1]); }); return e; }
-          [
-            { idx: hiIdx, label: "High · " + max, color: "var(--mint-400)" },
-            { idx: loIdx, label: "Low · " + min,  color: "var(--coral-500)" }
-          ].forEach(function (mk2) {
-            var x = PAD.l + mk2.idx * stepX;
-            var y = PAD.t + innerH - ((scores[mk2.idx] - min) / range) * innerH;
-            svg.appendChild(mk("circle", { cx: x, cy: y, r: 5, fill: mk2.color, stroke: "var(--ink-900)", "stroke-width": "2" }));
-            var t = mk("text", {
-              x: x, y: y - 12,
-              "text-anchor": "middle",
-              "font-family": "var(--font-mono)", "font-size": "10",
-              fill: mk2.color
-            });
-            t.textContent = mk2.label;
-            svg.appendChild(t);
-          });
-        }, 700);
-      })();
-
-      M.revealOnScroll("[data-reveal]");
-      M.revealOnScroll("[data-reveal-stagger]", { stagger: 0, threshold: 0.1 });
-
-      // Magnetic on call-to-action chips
-      document.querySelectorAll(".sw-item__action").forEach(function (a) { M.magnetic(a, { strength: 0.10, radius: 50 }); });
-    });
+          io.unobserve(f);
+        });
+      }, { threshold: 0.4 });
+      fills.forEach(function (f) { io.observe(f); });
+    };
   </script>
 </body>
 </html>

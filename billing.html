@@ -1,298 +1,222 @@
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#F7F4ED" />
   <title>Billing — ProFinanceCast</title>
-  <meta name="description" content="Your plan, payment method, and invoices. Honest pricing, no dark patterns.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
-  <link rel="stylesheet" href="/css/tokens.css">
-  <link rel="stylesheet" href="/css/base.css">
-  <link rel="stylesheet" href="/css/components.css">
-  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/pfc-tokens.css" />
+  <link rel="stylesheet" href="/css/pfc-base.css" />
+  <link rel="stylesheet" href="/css/pfc-layout.css" />
+  <link rel="stylesheet" href="/css/pfc-components.css" />
   <style>
-    .topbar__title { display:flex; flex-direction:column; gap:2px; min-width:0; flex:1; padding-left:var(--space-6); border-left:1px solid var(--ink-500); margin-left:var(--space-4); }
-    .topbar__title h1 { font-size:1.0625rem; font-family:var(--font-body); font-weight:500; letter-spacing:-0.01em; color:var(--ink-100); line-height:1.2; }
+    .util-main { max-width: var(--prose-max); margin: 0 auto; padding-top: var(--space-5); padding-bottom: var(--space-8); }
+    .util-section { padding: var(--space-6) 0; border-top: 1px solid var(--ink-5); }
+    .util-section:first-of-type { border-top: 0; padding-top: 0; }
+    .util-section__head { margin-bottom: var(--space-5); }
+    .util-section__title { font-family: var(--font-display); font-weight: 400; font-size: var(--type-display-sm); letter-spacing: var(--track-display); color: var(--ink-1); line-height: 1.15; }
+    .util-section__sub { color: var(--ink-3); font-size: var(--type-body-sm); margin-top: var(--space-2); }
 
-    /* Plan hero */
-    .plan-hero { padding:var(--space-10); display:grid; grid-template-columns: 1fr auto; gap:var(--space-8); align-items:center; }
-    @media (max-width:900px){ .plan-hero { grid-template-columns:1fr; } }
-    .plan-hero__left { display:flex; flex-direction:column; gap:var(--space-4); min-width:0; }
-    .plan-hero__chips { display:flex; gap:var(--space-2); flex-wrap:wrap; }
-    .plan-hero__price { font-family:var(--font-mono); font-size:clamp(3rem, 4vw + 1.5rem, 5rem); font-weight:500; color:var(--ink-100); line-height:1; letter-spacing:-0.02em; font-variant-numeric:tabular-nums; }
-    .plan-hero__price small { font-size:0.32em; color:var(--ink-400); font-weight:400; margin-left:8px; letter-spacing:0; }
-    .plan-hero__meta { font-family:var(--font-mono); font-size:var(--fs-small); color:var(--ink-400); }
-    .plan-hero__meta strong { color:var(--ink-200); font-weight:500; }
-    .plan-hero__right { display:flex; flex-direction:column; gap:var(--space-3); align-items:flex-end; }
-    @media (max-width:900px){ .plan-hero__right { align-items:flex-start; } }
-    .save-pill { display:inline-flex; align-items:center; gap:8px; padding:8px 14px; border-radius:var(--r-full); background:oklch(78% 0.175 168 / 0.10); border:1px solid oklch(78% 0.175 168 / 0.35); color:var(--mint-300); font-family:var(--font-mono); font-size:var(--fs-small); cursor:pointer; transition: background var(--dur-fast) var(--ease-standard); }
-    .save-pill:hover { background:oklch(78% 0.175 168 / 0.18); }
+    /* Current plan composition */
+    .plan-hero { display: grid; grid-template-columns: 1fr auto; gap: var(--space-5); align-items: end; }
+    @media (max-width: 700px) { .plan-hero { grid-template-columns: 1fr; align-items: start; } }
+    .plan-hero__eyebrow { font-size: var(--type-meta); letter-spacing: var(--track-meta); text-transform: uppercase; color: var(--ink-3); margin-bottom: var(--space-3); }
+    .plan-hero__name { font-family: var(--font-display); font-size: var(--type-display-lg); line-height: var(--lead-display); letter-spacing: var(--track-display); color: var(--ink-1); }
+    .plan-hero__cap { color: var(--ink-3); font-size: var(--type-body-sm); margin-top: var(--space-3); }
+    .plan-hero__actions { display: flex; flex-direction: column; gap: var(--space-2); align-items: flex-end; }
+    @media (max-width: 700px) { .plan-hero__actions { align-items: flex-start; flex-direction: row; flex-wrap: wrap; } }
 
-    /* Plan comparison */
-    .plans { display:grid; grid-template-columns:repeat(3, 1fr); gap:var(--space-5); }
-    @media (max-width:900px){ .plans { grid-template-columns:1fr; } }
-    .plan-card { padding:var(--space-6); display:flex; flex-direction:column; gap:var(--space-4); transition: border-color var(--dur-fast) var(--ease-standard), transform var(--dur-base) var(--ease-standard); position:relative; }
-    .plan-card--current { border-color:oklch(78% 0.175 168 / 0.55); }
-    .plan-card--founder { border-color:transparent; box-shadow: 0 0 0 1px var(--lavender-500), 0 0 36px -8px oklch(72% 0.115 295 / 0.5); }
-    .plan-card:hover { transform:translateY(-2px); }
-    .plan-card__head { display:flex; align-items:flex-start; justify-content:space-between; gap:var(--space-3); }
-    .plan-card__name { font-family:var(--font-display); font-size:var(--fs-h3); color:var(--ink-100); }
-    .plan-card__price { font-family:var(--font-mono); font-size:var(--fs-mono-lg); color:var(--ink-100); font-variant-numeric:tabular-nums; letter-spacing:-0.01em; }
-    .plan-card__price small { font-size:0.5em; color:var(--ink-400); }
-    .plan-card__features { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:var(--space-3); font-size:var(--fs-small); color:var(--ink-300); }
-    .plan-card__features li { display:flex; align-items:flex-start; gap:8px; line-height:1.5; }
-    .plan-card__features svg { flex-shrink:0; margin-top:3px; color:var(--mint-400); }
-    .plan-card__cta { margin-top:auto; }
-    .chip--lavender { background:oklch(72% 0.115 295 / 0.12); color:var(--lavender-400); border-color:oklch(72% 0.115 295 / 0.40); }
+    /* Tier row (editorial 3-row, NOT 3 cards) */
+    .tier-row { display: grid; grid-template-columns: auto 1fr auto; gap: var(--space-4); align-items: baseline; padding: var(--space-4) 0; border-top: 1px solid var(--ink-5); }
+    .tier-row:first-child { border-top: 0; }
+    .tier-row--current { background: linear-gradient(to right, transparent, var(--canvas-sunk) 50%, transparent); }
+    .tier-row__name { font-family: var(--font-display); font-size: var(--type-display-sm); color: var(--ink-1); letter-spacing: var(--track-display); }
+    .tier-row__features { color: var(--ink-2); font-size: var(--type-body-sm); }
+    .tier-row__features-meta { display: block; color: var(--ink-3); font-size: var(--type-meta); margin-top: var(--space-1); }
+    .tier-row__price { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: var(--type-body); color: var(--ink-1); white-space: nowrap; text-align: right; }
+    .tier-row__price small { display: block; color: var(--ink-3); font-size: var(--type-meta); margin-top: 2px; }
+    .tier-row__tag { display: inline-block; font-size: var(--type-meta); letter-spacing: var(--track-meta); text-transform: uppercase; color: var(--accent); margin-left: var(--space-3); }
 
     /* Payment method */
-    .pay-card { padding:var(--space-8); display:grid; grid-template-columns: auto 1fr auto; gap:var(--space-6); align-items:center; }
-    @media (max-width:680px){ .pay-card { grid-template-columns:1fr; text-align:center; } }
-    .pay-visual { width:88px; height:56px; border-radius:var(--r-md); background:linear-gradient(135deg, oklch(30% 0.022 265), oklch(20% 0.020 265)); border:1px solid var(--ink-500); display:flex; align-items:flex-end; padding:10px; }
-    .pay-info { display:flex; flex-direction:column; gap:4px; }
-    .pay-info__num { font-family:var(--font-mono); font-size:var(--fs-h3); color:var(--ink-100); letter-spacing:0.05em; }
-    .pay-info__meta { font-size:var(--fs-small); color:var(--ink-400); font-family:var(--font-mono); }
+    .pay-row { display: grid; grid-template-columns: 1fr auto; gap: var(--space-4); align-items: center; padding: var(--space-3) 0; }
+    .pay-row__card { font-family: var(--font-mono); color: var(--ink-1); font-size: var(--type-body-sm); }
+    .pay-row__meta { color: var(--ink-3); font-size: var(--type-meta); margin-top: 2px; }
 
-    /* Invoices */
-    .invoice-table { width:100%; border-collapse:collapse; }
-    .invoice-table th { text-align:left; font-family:var(--font-mono); font-size:var(--fs-tiny); text-transform:uppercase; letter-spacing:var(--tracking-eyebrow); color:var(--ink-400); font-weight:500; padding:var(--space-3) var(--space-4); border-bottom:1px solid oklch(100% 0 0 / 0.06); }
-    .invoice-table td { padding:var(--space-4); font-size:var(--fs-small); color:var(--ink-200); border-bottom:1px solid oklch(100% 0 0 / 0.04); transition: background var(--dur-fast) var(--ease-standard); }
-    .invoice-table tr:last-child td { border-bottom:0; }
-    .invoice-table tbody tr:hover td { background:oklch(100% 0 0 / 0.025); }
-    .invoice-table td.mono { color:var(--ink-100); }
-    .invoice-table .invoice-dl { display:inline-flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:var(--r-sm); color:var(--ink-300); transition: background var(--dur-fast) var(--ease-standard), color var(--dur-fast) var(--ease-standard); }
-    .invoice-table .invoice-dl:hover { background:oklch(78% 0.175 168 / 0.10); color:var(--mint-300); }
-    .invoice-wrap { padding:var(--space-3); overflow-x:auto; }
-
-    .footnote { font-size:var(--fs-small); color:var(--ink-400); text-align:center; max-width:60ch; margin:var(--space-6) auto 0; line-height:1.6; }
+    .refund-prose { color: var(--ink-2); font-size: var(--type-body-sm); line-height: var(--lead-body); }
+    .invoice-link { color: var(--accent); font-weight: 500; }
+    .invoice-link:hover { color: var(--accent-hover); }
+    .status-paid { color: var(--ink-3); font-size: var(--type-meta); letter-spacing: var(--track-meta); text-transform: uppercase; }
   </style>
 </head>
 <body data-page="billing">
-  <div class="aurora-bg" aria-hidden="true">
-    <div class="aurora-bg__blob aurora-bg__blob--1"></div>
-    <div class="aurora-bg__blob aurora-bg__blob--2"></div>
-    <div class="aurora-bg__blob aurora-bg__blob--3"></div>
-    <div class="aurora-bg__blob aurora-bg__blob--4"></div>
-    <div class="aurora-bg__grain"></div>
-    <div class="aurora-bg__vignette"></div>
-  </div>
-
   <div class="app-shell">
     <div data-include="/partials/sidebar.html"></div>
 
-    <main class="main">
-      <header class="topbar" data-pfc-topbar>
-        <div class="topbar__breadcrumb">
-          <span>Account</span>
-          <span class="topbar__breadcrumb-sep" aria-hidden="true">/</span>
-          <span class="topbar__breadcrumb-current">Billing</span>
+    <div class="app-content">
+      <div data-include="/partials/topbar.html"></div>
+
+      <main class="app-main">
+        <div class="util-main" data-reveal-stagger>
+
+          <!-- 1. Current plan -->
+          <section class="util-section">
+            <div class="plan-hero">
+              <div>
+                <div class="plan-hero__eyebrow">Current plan</div>
+                <div class="plan-hero__name">Pro</div>
+                <div class="plan-hero__cap"><span class="mono tabular">$9</span> per month. Billed monthly. Next charge <span class="mono tabular">May 14, 2026</span>.</div>
+              </div>
+              <div class="plan-hero__actions">
+                <a href="#" class="pfc-button pfc-button--ghost">Switch to annual &middot; save 36%</a>
+                <a href="#" class="pfc-button pfc-button--ghost">Manage plan</a>
+              </div>
+            </div>
+          </section>
+
+          <!-- 2. All plans (editorial 3-row) -->
+          <section class="util-section">
+            <header class="util-section__head">
+              <h2 class="util-section__title">All plans</h2>
+              <p class="util-section__sub">Three tiers. No upsells inside the product.</p>
+            </header>
+            <div>
+              <div class="tier-row">
+                <div class="tier-row__name">Free</div>
+                <div class="tier-row__features">One forecast, three goals, manual entry, CSV export.</div>
+                <div class="tier-row__price"><span class="mono tabular">$0</span><small>forever</small></div>
+              </div>
+              <div class="tier-row tier-row--current">
+                <div class="tier-row__name">Pro<span class="tier-row__tag">Current</span></div>
+                <div class="tier-row__features">Unlimited forecasts, unlimited goals, scenarios, debt optimizer, Sage advisor, JSON export, priority support.</div>
+                <div class="tier-row__price"><span class="mono tabular">$9</span><small>per month</small></div>
+              </div>
+              <div class="tier-row">
+                <div class="tier-row__name">Founders</div>
+                <div class="tier-row__features">Everything in Pro, forever, plus founder credit in the colophon.<span class="tier-row__features-meta"><span class="mono tabular">247</span> seats remaining.</span></div>
+                <div class="tier-row__price"><span class="mono tabular">$249</span><small>one time</small></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 3. Payment method -->
+          <section class="util-section">
+            <header class="util-section__head">
+              <h2 class="util-section__title">Payment method</h2>
+              <p class="util-section__sub">Stored by Stripe. We never see the digits.</p>
+            </header>
+            <div class="pay-row">
+              <div>
+                <div class="pay-row__card"><span class="mono tabular">&bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; 4242</span> &nbsp; Visa</div>
+                <div class="pay-row__meta">Expires <span class="mono tabular">04 / 28</span></div>
+              </div>
+              <a href="#" class="pfc-button pfc-button--ghost">Update</a>
+            </div>
+          </section>
+
+          <!-- 4. Invoice history -->
+          <section class="util-section">
+            <header class="util-section__head">
+              <h2 class="util-section__title">Invoice history</h2>
+              <p class="util-section__sub">Every charge, every refund, every receipt.</p>
+            </header>
+            <table class="pfc-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th class="pfc-table__num">Amount</th>
+                  <th>Status</th>
+                  <th>Receipt</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="mono tabular">May 14, 2026</span></td>
+                  <td class="pfc-table__num"><span class="mono tabular">$9.00</span></td>
+                  <td><span class="status-paid">Paid</span></td>
+                  <td><a href="#" class="invoice-link">Download</a></td>
+                </tr>
+                <tr>
+                  <td><span class="mono tabular">Apr 14, 2026</span></td>
+                  <td class="pfc-table__num"><span class="mono tabular">$9.00</span></td>
+                  <td><span class="status-paid">Paid</span></td>
+                  <td><a href="#" class="invoice-link">Download</a></td>
+                </tr>
+                <tr>
+                  <td><span class="mono tabular">Mar 14, 2026</span></td>
+                  <td class="pfc-table__num"><span class="mono tabular">$9.00</span></td>
+                  <td><span class="status-paid">Paid</span></td>
+                  <td><a href="#" class="invoice-link">Download</a></td>
+                </tr>
+                <tr>
+                  <td><span class="mono tabular">Feb 14, 2026</span></td>
+                  <td class="pfc-table__num"><span class="mono tabular">$9.00</span></td>
+                  <td><span class="status-paid">Paid</span></td>
+                  <td><a href="#" class="invoice-link">Download</a></td>
+                </tr>
+                <tr>
+                  <td><span class="mono tabular">Jan 14, 2026</span></td>
+                  <td class="pfc-table__num"><span class="mono tabular">$9.00</span></td>
+                  <td><span class="status-paid">Paid</span></td>
+                  <td><a href="#" class="invoice-link">Download</a></td>
+                </tr>
+                <tr>
+                  <td><span class="mono tabular">Dec 14, 2025</span></td>
+                  <td class="pfc-table__num"><span class="mono tabular">$9.00</span></td>
+                  <td><span class="status-paid">Paid</span></td>
+                  <td><a href="#" class="invoice-link">Download</a></td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <!-- 5. Refund policy -->
+          <section class="util-section">
+            <p class="refund-prose">Any paid charge is refundable within <span class="mono tabular">30</span> days. Cancel any time. The product keeps working until the end of the billing period.</p>
+          </section>
+
         </div>
-        <div class="topbar__title"><h1>Billing</h1></div>
-        <div class="topbar__actions">
-          <button type="button" class="btn btn--ghost btn--sm">Invoices</button>
-        </div>
-      </header>
+      </main>
 
-      <div class="main__content">
-
-        <!-- Plan hero -->
-        <section class="section">
-          <article class="card card--glass plan-hero" data-reveal>
-            <div class="plan-hero__left">
-              <div class="plan-hero__chips">
-                <span class="chip chip--pro">PRO</span>
-                <span class="chip chip--neutral">Monthly</span>
-              </div>
-              <div class="plan-hero__price mono"><span data-kpi="price">$9</span><small>/ month</small></div>
-              <div class="plan-hero__meta">Next billing <strong>Jun 14, 2026</strong> · Visa ending <strong>4242</strong></div>
-            </div>
-            <div class="plan-hero__right">
-              <button type="button" class="save-pill">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M5 10l7-7 7 7"/></svg>
-                Switch to annual · save 36%
-              </button>
-              <button type="button" class="btn btn--primary" data-magnetic>Manage plan</button>
-            </div>
-          </article>
-        </section>
-
-        <!-- Plan comparison -->
-        <section class="section">
-          <header class="section__header">
-            <div>
-              <span class="eyebrow">01 · Compare</span>
-              <h2 class="section__title">All three plans</h2>
-              <p class="section__lede">Pro covers most people. Founders unlocks unlimited devices and direct line to the team.</p>
-            </div>
-          </header>
-
-          <div class="plans">
-            <article class="card card--glass plan-card" data-reveal>
-              <div class="plan-card__head">
-                <div>
-                  <div class="plan-card__name">Free</div>
-                  <div class="plan-card__price">$0<small> forever</small></div>
-                </div>
-              </div>
-              <ul class="plan-card__features">
-                <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg>Local-only, one device</li>
-                <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg>3 goals, 1 scenario at a time</li>
-                <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg>Basic forecasts, 12 months</li>
-                <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg>CSV export</li>
-              </ul>
-              <div class="plan-card__cta"><button type="button" class="btn btn--ghost btn--sm" style="width:100%;">Downgrade</button></div>
-            </article>
-
-            <article class="card card--glass plan-card plan-card--current" data-reveal>
-              <div class="plan-card__head">
-                <div>
-                  <div class="plan-card__name">Pro</div>
-                  <div class="plan-card__price">$9<small>/ mo</small></div>
-                </div>
-                <span class="chip chip--positive"><span class="chip__dot"></span>Current</span>
-              </div>
-              <ul class="plan-card__features">
-                <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg>Encrypted sync, up to 3 devices</li>
-                <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg>Unlimited goals and scenarios</li>
-                <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg>10-year forecasts, milestone tracking</li>
-                <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg>Sage insights, weekly digest</li>
-                <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg>Priority email support</li>
-              </ul>
-              <div class="plan-card__cta"><button type="button" class="btn btn--ghost btn--sm" style="width:100%;" disabled>Your plan</button></div>
-            </article>
-
-            <article class="card card--glass plan-card plan-card--founder" data-reveal>
-              <div class="plan-card__head">
-                <div>
-                  <div class="plan-card__name">Founders Lifetime</div>
-                  <div class="plan-card__price">$199<small> once</small></div>
-                </div>
-                <span class="chip chip--lavender"><span class="chip__dot"></span>247 seats left</span>
-              </div>
-              <ul class="plan-card__features">
-                <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg>Everything in Pro, forever</li>
-                <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg>Unlimited devices</li>
-                <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg>Direct line to the founders</li>
-                <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg>Early access to every release</li>
-                <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg>Name in the credits</li>
-              </ul>
-              <div class="plan-card__cta"><button type="button" class="btn btn--primary btn--sm" style="width:100%;">Become a founder</button></div>
-            </article>
-          </div>
-        </section>
-
-        <!-- Payment method -->
-        <section class="section">
-          <header class="section__header">
-            <div>
-              <span class="eyebrow">02 · How you pay</span>
-              <h2 class="section__title">Payment method</h2>
-            </div>
-          </header>
-
-          <article class="card card--glass pay-card" data-reveal>
-            <div class="pay-visual" aria-hidden="true">
-              <!-- Visa wordmark in SVG, stroke 1.5 / 18px in spirit -->
-              <svg width="44" height="14" viewBox="0 0 44 14" fill="none" aria-hidden="true">
-                <path d="M14.5 1L11 13H7.5L4 1h3.5l2 8 2-8h3z" fill="var(--ink-100)"/>
-                <path d="M16 13l2.5-12h3l-2.5 12h-3z" fill="var(--ink-100)"/>
-                <path d="M28 1.3c-.6-.2-1.5-.5-2.7-.5-3 0-5.1 1.5-5.1 3.7 0 1.6 1.5 2.5 2.7 3 1.2.6 1.6 1 1.6 1.5 0 .8-1 1.2-2 1.2-1.3 0-2-.2-3.1-.7l-.4-.2-.5 2.7c.8.4 2.2.7 3.7.7 3.2 0 5.3-1.5 5.3-3.8 0-1.3-.8-2.3-2.6-3.1-1.1-.5-1.7-.8-1.7-1.4 0-.5.6-1 1.9-1 1.1 0 1.9.2 2.5.5l.3.1.5-2.7z" fill="var(--ink-100)"/>
-                <path d="M37 1h-2.5c-.8 0-1.4.2-1.7 1L28 13h3.2s.5-1.4.6-1.7h3.9l.4 1.7H39l-2-12zm-3.6 7.8c.3-.7 1.2-3.2 1.2-3.2l.4-1 .2 1.1.7 3.2h-2.5z" fill="var(--ink-100)"/>
-              </svg>
-            </div>
-            <div class="pay-info">
-              <span class="pay-info__num">•••• •••• •••• 4242</span>
-              <span class="pay-info__meta">Visa · Expires 04/28 · Billing in USD</span>
-            </div>
-            <button type="button" class="btn btn--ghost">Update payment method</button>
-          </article>
-        </section>
-
-        <!-- Invoice history -->
-        <section class="section">
-          <header class="section__header">
-            <div>
-              <span class="eyebrow">03 · Receipts</span>
-              <h2 class="section__title">Invoice history</h2>
-            </div>
-            <a href="#" class="eyebrow" style="color:var(--mint-400);">Email all to me</a>
-          </header>
-
-          <article class="card card--glass" data-reveal>
-            <div class="invoice-wrap">
-              <table class="invoice-table">
-                <thead>
-                  <tr>
-                    <th>Date</th><th>Amount</th><th>Status</th><th>Invoice</th><th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td class="mono">May 14, 2026</td>
-                    <td class="mono">$9.00</td>
-                    <td><span class="chip chip--positive"><span class="chip__dot"></span>Paid</span></td>
-                    <td class="mono">INV-2026-005</td>
-                    <td style="text-align:right;"><a class="invoice-dl" href="#" aria-label="Download invoice"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M5 21h14"/></svg></a></td>
-                  </tr>
-                  <tr>
-                    <td class="mono">Apr 14, 2026</td>
-                    <td class="mono">$9.00</td>
-                    <td><span class="chip chip--positive"><span class="chip__dot"></span>Paid</span></td>
-                    <td class="mono">INV-2026-004</td>
-                    <td style="text-align:right;"><a class="invoice-dl" href="#" aria-label="Download invoice"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M5 21h14"/></svg></a></td>
-                  </tr>
-                  <tr>
-                    <td class="mono">Mar 14, 2026</td>
-                    <td class="mono">$9.00</td>
-                    <td><span class="chip chip--positive"><span class="chip__dot"></span>Paid</span></td>
-                    <td class="mono">INV-2026-003</td>
-                    <td style="text-align:right;"><a class="invoice-dl" href="#" aria-label="Download invoice"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M5 21h14"/></svg></a></td>
-                  </tr>
-                  <tr>
-                    <td class="mono">Feb 14, 2026</td>
-                    <td class="mono">$9.00</td>
-                    <td><span class="chip chip--positive"><span class="chip__dot"></span>Paid</span></td>
-                    <td class="mono">INV-2026-002</td>
-                    <td style="text-align:right;"><a class="invoice-dl" href="#" aria-label="Download invoice"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M5 21h14"/></svg></a></td>
-                  </tr>
-                  <tr>
-                    <td class="mono">Jan 14, 2026</td>
-                    <td class="mono">$9.00</td>
-                    <td><span class="chip chip--positive"><span class="chip__dot"></span>Paid</span></td>
-                    <td class="mono">INV-2026-001</td>
-                    <td style="text-align:right;"><a class="invoice-dl" href="#" aria-label="Download invoice"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M5 21h14"/></svg></a></td>
-                  </tr>
-                  <tr>
-                    <td class="mono">Dec 14, 2025</td>
-                    <td class="mono">$9.00</td>
-                    <td><span class="chip chip--positive"><span class="chip__dot"></span>Paid</span></td>
-                    <td class="mono">INV-2025-012</td>
-                    <td style="text-align:right;"><a class="invoice-dl" href="#" aria-label="Download invoice"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M5 21h14"/></svg></a></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </article>
-
-          <p class="footnote">Any paid charge is refundable within 30 days, no questions asked. Cancel any time from this page; you keep access through the end of the billing period.</p>
-        </section>
-
-      </div>
-    </main>
+      <div data-include="/partials/bottom-tabs.html"></div>
+    </div>
   </div>
 
-  <script src="/js/demo-data.js"></script>
-  <script src="/js/include.js"></script>
-  <script src="/js/motion.js"></script>
-  <script src="/js/charts.js"></script>
-  <script src="/js/app.js"></script>
+  <script src="/js/pfc-include.js"></script>
   <script>
+    window.PFC = window.PFC || {};
+    PFC.setTopbar = function (opts) {
+      var t = document.querySelector('[data-slot="title"]');
+      var s = document.querySelector('[data-slot="subtitle"]');
+      var a = document.querySelector('[data-slot="actions"]');
+      if (t && opts.title) t.textContent = opts.title;
+      if (s && opts.subtitle) s.textContent = opts.subtitle;
+      if (a && typeof opts.actions === "string") a.innerHTML = opts.actions;
+    };
     document.addEventListener("pfc:partials-ready", function () {
-      var M = window.PFC_MOTION;
-      if (M && M.magnetic) document.querySelectorAll("[data-magnetic]").forEach(function (el) { M.magnetic(el, { strength: 0.18, radius: 70 }); });
-      if (M && M.revealOnScroll) M.revealOnScroll("[data-reveal]");
+      PFC.setTopbar({
+        title: "Billing",
+        subtitle: "Pro · $9/month · next charge May 14.",
+        actions: '<a href="#" class="pfc-button pfc-button--ghost">Download last invoice</a>'
+      });
+      var page = document.body.getAttribute("data-page");
+      document.querySelectorAll('.app-sidebar__item').forEach(function (el) {
+        if (el.getAttribute('data-page') === page) el.setAttribute('aria-current', 'page');
+      });
+      document.querySelectorAll('.bottom-tabs__item').forEach(function (el) {
+        if (el.getAttribute('data-page') === page) el.setAttribute('aria-current', 'page');
+      });
+      document.querySelectorAll('[data-reveal-stagger]').forEach(function (host) {
+        var kids = host.children;
+        for (var i = 0; i < kids.length; i++) {
+          (function (el, idx) {
+            setTimeout(function () { el.classList.add('is-revealed'); }, Math.min(idx, 5) * 60);
+          })(kids[i], i);
+        }
+      });
+      document.querySelectorAll('[data-reveal]').forEach(function (el) { el.classList.add('is-revealed'); });
     });
   </script>
 </body>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="An ascending staircase with an oxblood arrow at the top.">
+  <rect width="800" height="600" fill="#F7F4ED"/>
+  <g fill="none" stroke="#4D463A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- single continuous staircase line -->
+    <path d="
+      M 120 480
+      L 240 480
+      L 240 420
+      L 340 420
+      L 340 360
+      L 440 360
+      L 440 300
+      L 540 300
+      L 540 240
+      L 640 240
+    "/>
+  </g>
+  <!-- oxblood arrow at top, pointing up -->
+  <g stroke="#8B2E22" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <line x1="640" y1="220" x2="640" y2="140"/>
+    <polyline points="618,162 640,140 662,162"/>
+  </g>
+</svg>

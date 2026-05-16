@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 320" role="img" aria-label="A half-open book with an oxblood ribbon bookmark.">
+  <rect width="480" height="320" fill="#F7F4ED"/>
+  <g fill="none" stroke="#4D463A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- half-open book: V from spine -->
+    <path d="M 240 96 L 80 168 L 80 232 L 240 200 L 400 232 L 400 168 Z"/>
+    <!-- spine fold -->
+    <path d="M 240 96 L 240 200"/>
+    <!-- page ruled lines -->
+    <path d="M 110 188 L 220 168"/>
+    <path d="M 110 202 L 220 184"/>
+    <path d="M 260 168 L 370 188"/>
+    <path d="M 260 184 L 370 202"/>
+  </g>
+  <!-- oxblood ribbon bookmark over spine -->
+  <path d="M 232 96 L 232 244 L 240 232 L 248 244 L 248 96 Z" fill="#8B2E22" stroke="none"/>
+</svg>

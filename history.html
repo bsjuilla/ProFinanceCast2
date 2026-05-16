@@ -1,321 +1,271 @@
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>History — ProFinanceCast</title>
-  <meta name="description" content="A vertical record of what you've done. Scenarios, forecasts, goals, notes — in order.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
-  <link rel="stylesheet" href="/css/tokens.css">
-  <link rel="stylesheet" href="/css/base.css">
-  <link rel="stylesheet" href="/css/components.css">
-  <link rel="stylesheet" href="/css/layout.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#F7F4ED" />
+  <title>Activity — ProFinanceCast</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/pfc-tokens.css" />
+  <link rel="stylesheet" href="/css/pfc-base.css" />
+  <link rel="stylesheet" href="/css/pfc-layout.css" />
+  <link rel="stylesheet" href="/css/pfc-components.css" />
   <style>
-    .topbar__title { display:flex; flex-direction:column; gap:2px; min-width:0; flex:1; padding-left:var(--space-6); border-left:1px solid var(--ink-500); margin-left:var(--space-4); }
-    .topbar__title h1 { font-size:1.0625rem; font-family:var(--font-body); font-weight:500; letter-spacing:-0.01em; color:var(--ink-100); line-height:1.2; }
-    .topbar__search-inline { display:flex; align-items:center; gap:8px; padding:7px 12px; background:oklch(100% 0 0 / 0.04); border:1px solid oklch(100% 0 0 / 0.08); border-radius:var(--r-md); color:var(--ink-300); font-size:var(--fs-small); min-width:240px; }
-    .topbar__search-inline svg { width:14px; height:14px; opacity:.7; }
-    .topbar__search-inline input { background:transparent; border:0; outline:none; color:var(--ink-100); flex:1; font-size:var(--fs-small); }
-    .topbar__search-inline input::placeholder { color:var(--ink-400); }
+    .util-main { max-width: var(--app-max); margin: 0 auto; padding-top: var(--space-5); padding-bottom: var(--space-8); }
+
+    /* Search input in topbar */
+    .topbar-search { position: relative; display: inline-flex; align-items: center; }
+    .topbar-search__input { width: 240px; height: 36px; padding: 0 var(--space-4) 0 var(--space-3); padding-right: 44px; font-family: var(--font-body); font-size: var(--type-body-sm); color: var(--ink-1); background: var(--canvas-sunk); border: 1px solid var(--ink-5); border-radius: var(--radius-2); }
+    .topbar-search__input::placeholder { color: var(--ink-3); }
+    .topbar-search__input:focus { outline: none; border-color: var(--accent); background: var(--canvas-raised); }
+    .topbar-search__kbd { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); font-family: var(--font-mono); font-size: var(--type-meta); padding: 1px 6px; border: 1px solid var(--ink-4); border-radius: 4px; color: var(--ink-3); background: var(--canvas); line-height: 1; }
 
     /* Filter chips */
-    .filter-row { display:flex; gap:var(--space-2); flex-wrap:wrap; padding:var(--space-2); }
-    .filter-chip { padding:7px 14px; font-size:var(--fs-small); color:var(--ink-300); background:transparent; border:1px solid var(--ink-500); border-radius:var(--r-full); cursor:pointer; transition: background var(--dur-fast) var(--ease-standard), color var(--dur-fast) var(--ease-standard), border-color var(--dur-fast) var(--ease-standard); }
-    .filter-chip:hover { color:var(--ink-100); border-color:var(--ink-400); }
-    .filter-chip[aria-selected="true"] { background:oklch(78% 0.175 168 / 0.12); color:var(--mint-300); border-color:oklch(78% 0.175 168 / 0.35); }
+    .chips { display: flex; flex-wrap: wrap; gap: var(--space-2); padding: var(--space-4) 0 var(--space-5); }
+    .chip { padding: 6px 14px; font-size: var(--type-body-sm); color: var(--ink-2); background: transparent; border: 1px solid var(--ink-4); border-radius: 999px; cursor: pointer; transition: color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out); }
+    .chip:hover { color: var(--ink-1); border-color: var(--ink-3); }
+    .chip[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); background: var(--accent-wash); }
 
-    /* Timeline */
-    .timeline { display:flex; flex-direction:column; gap:var(--space-2); margin-top:var(--space-4); }
-    .day-header { display:flex; align-items:center; gap:var(--space-4); padding:var(--space-5) 0 var(--space-2); font-family:var(--font-mono); font-size:var(--fs-tiny); text-transform:uppercase; letter-spacing:var(--tracking-eyebrow); color:var(--mint-400); }
-    .day-header::after { content:""; flex:1; height:1px; background:linear-gradient(90deg, oklch(78% 0.175 168 / 0.30), transparent); }
+    /* Timeline table — group headers as full-width rows */
+    .group-row td { background: var(--canvas-sunk); color: var(--ink-3); font-size: var(--type-meta); letter-spacing: var(--track-meta); text-transform: uppercase; padding: var(--space-3) var(--space-4) !important; border-bottom: 1px solid var(--ink-5); }
+    .col-date { width: 140px; color: var(--ink-3); }
+    .col-amount { width: 160px; }
+    .row-action { color: var(--ink-1); font-weight: 500; }
+    .row-action__sub { display: block; color: var(--ink-3); font-size: var(--type-meta); font-weight: 400; margin-top: 2px; }
+    .col-empty { color: var(--ink-4); text-align: right; }
 
-    .event { display:grid; grid-template-columns: 92px 28px 1fr; gap:var(--space-4); align-items:flex-start; padding:var(--space-3) 0; position:relative; }
-    @media (max-width:640px){ .event { grid-template-columns: 70px 22px 1fr; gap:var(--space-3); } }
-    .event__time { font-family:var(--font-mono); font-size:var(--fs-tiny); color:var(--ink-400); padding-top:var(--space-4); text-align:right; font-variant-numeric:tabular-nums; }
-    .event__rail { position:relative; display:flex; justify-content:center; padding-top:var(--space-4); }
-    .event__rail::before { content:""; position:absolute; top:0; bottom:-100%; left:50%; width:1px; background:oklch(100% 0 0 / 0.08); transform:translateX(-50%); }
-    .event:last-child .event__rail::before { display:none; }
-    .event__dot { width:10px; height:10px; border-radius:var(--r-full); background:var(--ink-600); border:1px solid var(--ink-500); position:relative; z-index:1; flex-shrink:0; }
-    .event--milestone .event__dot { background:var(--mint-500); border-color:var(--mint-500); box-shadow:0 0 0 4px oklch(78% 0.175 168 / 0.18); }
-    .event__card { padding:var(--space-5) var(--space-6); display:flex; flex-direction:column; gap:6px; transition: border-color var(--dur-fast) var(--ease-standard), transform var(--dur-base) var(--ease-standard); }
-    .event__card:hover { transform:translateX(2px); border-color:oklch(78% 0.175 168 / 0.30); }
-    .event__head { display:flex; align-items:center; gap:var(--space-3); flex-wrap:wrap; }
-    .event__title { font-family:var(--font-display); font-size:var(--fs-h3); color:var(--ink-100); font-weight:400; line-height:1.2; letter-spacing:-0.015em; }
-    .event__title em { font-style:italic; color:var(--mint-400); font-weight:400; }
-    .event__body { font-size:var(--fs-small); color:var(--ink-300); line-height:1.55; max-width:60ch; }
-    .event__foot { display:flex; align-items:center; gap:var(--space-3); margin-top:6px; }
-    .event__link { font-family:var(--font-mono); font-size:var(--fs-tiny); text-transform:uppercase; letter-spacing:var(--tracking-eyebrow); color:var(--mint-400); display:inline-flex; align-items:center; gap:6px; transition: gap var(--dur-fast) var(--ease-standard); }
-    .event__link:hover { gap:10px; color:var(--mint-300); }
-
-    /* Stats footer */
-    .stats { display:grid; grid-template-columns:repeat(3, 1fr); gap:var(--space-5); margin-top:var(--space-10); }
-    @media (max-width:780px){ .stats { grid-template-columns:1fr; } }
-    .stat { padding:var(--space-6); display:flex; flex-direction:column; gap:6px; }
-    .stat__eyebrow { font-family:var(--font-mono); font-size:var(--fs-tiny); text-transform:uppercase; letter-spacing:var(--tracking-eyebrow); color:var(--ink-400); }
-    .stat__val { font-family:var(--font-mono); font-size:var(--fs-mono-xl); color:var(--ink-100); font-variant-numeric:tabular-nums; line-height:1; letter-spacing:-0.02em; }
-    .stat__delta { font-size:var(--fs-tiny); color:var(--mint-400); font-family:var(--font-mono); }
+    /* Stats footer dl */
+    .stats-foot { margin-top: var(--space-6); padding-top: var(--space-6); border-top: 1px solid var(--ink-5); }
+    .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; }
+    @media (max-width: 700px) { .stats-grid { grid-template-columns: 1fr; } }
+    .stats-grid > div { padding: var(--space-4); border-right: 1px solid var(--ink-5); }
+    .stats-grid > div:last-child { border-right: 0; }
+    @media (max-width: 700px) { .stats-grid > div { border-right: 0; border-bottom: 1px solid var(--ink-5); } .stats-grid > div:last-child { border-bottom: 0; } }
+    .stats-grid dt { font-size: var(--type-meta); letter-spacing: var(--track-meta); text-transform: uppercase; color: var(--ink-3); margin-bottom: var(--space-2); }
+    .stats-grid dd { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: var(--type-display-sm); font-weight: 400; color: var(--ink-1); line-height: 1.1; }
+    .stats-grid dd small { display: block; font-family: var(--font-body); font-size: var(--type-meta); color: var(--ink-3); margin-top: var(--space-2); letter-spacing: var(--track-body); }
   </style>
 </head>
 <body data-page="history">
-  <div class="aurora-bg" aria-hidden="true">
-    <div class="aurora-bg__blob aurora-bg__blob--1"></div>
-    <div class="aurora-bg__blob aurora-bg__blob--2"></div>
-    <div class="aurora-bg__blob aurora-bg__blob--3"></div>
-    <div class="aurora-bg__blob aurora-bg__blob--4"></div>
-    <div class="aurora-bg__grain"></div>
-    <div class="aurora-bg__vignette"></div>
-  </div>
-
   <div class="app-shell">
     <div data-include="/partials/sidebar.html"></div>
 
-    <main class="main">
-      <header class="topbar" data-pfc-topbar>
-        <div class="topbar__breadcrumb">
-          <span>Records</span>
-          <span class="topbar__breadcrumb-sep" aria-hidden="true">/</span>
-          <span class="topbar__breadcrumb-current">History</span>
-        </div>
-        <div class="topbar__title"><h1>What you've done</h1></div>
-        <div class="topbar__actions">
-          <label class="topbar__search-inline">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-            <input type="search" placeholder="Search the record">
-          </label>
-        </div>
-      </header>
+    <div class="app-content">
+      <div data-include="/partials/topbar.html"></div>
 
-      <div class="main__content">
+      <main class="app-main">
+        <div class="util-main" data-reveal-stagger>
 
-        <!-- Filter chips -->
-        <section class="section" data-reveal>
-          <div class="card card--glass">
-            <div class="filter-row" role="tablist" aria-label="Filter by event type">
-              <button class="filter-chip" aria-selected="true">All · 47</button>
-              <button class="filter-chip">Scenarios · 18</button>
-              <button class="filter-chip">Forecasts · 6</button>
-              <button class="filter-chip">Goals · 14</button>
-              <button class="filter-chip">Debt strategies · 5</button>
-              <button class="filter-chip">Notes · 4</button>
-            </div>
-          </div>
-        </section>
+          <!-- Filter chips -->
+          <nav class="chips" role="group" aria-label="Activity filter">
+            <button type="button" class="chip" aria-pressed="true">All</button>
+            <button type="button" class="chip" aria-pressed="false">Forecasts</button>
+            <button type="button" class="chip" aria-pressed="false">Scenarios</button>
+            <button type="button" class="chip" aria-pressed="false">Goals</button>
+            <button type="button" class="chip" aria-pressed="false">Debt strategy</button>
+            <button type="button" class="chip" aria-pressed="false">Notes</button>
+          </nav>
 
-        <!-- Timeline -->
-        <section class="section" data-reveal>
-          <div class="timeline">
+          <!-- Timeline table -->
+          <table class="pfc-table">
+            <thead>
+              <tr>
+                <th class="col-date">Date</th>
+                <th>Action</th>
+                <th>Category</th>
+                <th class="pfc-table__num col-amount">Detail</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="group-row"><td colspan="4">Today &middot; May 16, 2026</td></tr>
+              <tr>
+                <td><span class="mono tabular">10:42</span></td>
+                <td><span class="row-action">Re-ran ten-year forecast</span><span class="row-action__sub">Adjusted savings rate to 22%.</span></td>
+                <td><span class="pfc-tag">Forecast</span></td>
+                <td class="pfc-table__num"><span class="mono tabular">+$12,400</span></td>
+              </tr>
+              <tr>
+                <td><span class="mono tabular">09:08</span></td>
+                <td><span class="row-action">Added a journal entry</span><span class="row-action__sub">Steady. Two hundred and forty words.</span></td>
+                <td><span class="pfc-tag">Note</span></td>
+                <td class="col-empty">&mdash;</td>
+              </tr>
 
-            <div class="day-header">Today · May 16, 2026</div>
+              <tr class="group-row"><td colspan="4">Yesterday &middot; May 15, 2026</td></tr>
+              <tr>
+                <td><span class="mono tabular">16:21</span></td>
+                <td><span class="row-action">Marked goal complete</span><span class="row-action__sub">Emergency fund &middot; $15,000 target.</span></td>
+                <td><span class="pfc-tag">Goal</span></td>
+                <td class="pfc-table__num"><span class="mono tabular">$15,000</span></td>
+              </tr>
+              <tr>
+                <td><span class="mono tabular">14:03</span></td>
+                <td><span class="row-action">Recorded recurring outflow</span><span class="row-action__sub">Rent &middot; auto-paid.</span></td>
+                <td><span class="pfc-tag">Recurring</span></td>
+                <td class="pfc-table__num"><span class="mono tabular">&minus;$2,400</span></td>
+              </tr>
+              <tr>
+                <td><span class="mono tabular">11:50</span></td>
+                <td><span class="row-action">Ran debt optimizer</span><span class="row-action__sub">Avalanche vs snowball comparison.</span></td>
+                <td><span class="pfc-tag">Debt strategy</span></td>
+                <td class="pfc-table__num"><span class="mono tabular">42 months</span></td>
+              </tr>
 
-            <article class="event event--milestone">
-              <span class="event__time">09:42 am</span>
-              <span class="event__rail"><span class="event__dot"></span></span>
-              <div class="card card--glass event__card">
-                <div class="event__head">
-                  <h3 class="event__title">Paid off <em>Chase Sapphire</em></h3>
-                  <span class="chip chip--positive"><span class="chip__dot"></span>Milestone</span>
-                </div>
-                <p class="event__body">Final $128 minimum cleared the balance. Saved an estimated $1,180 in interest by running the avalanche method for 11 months.</p>
-                <div class="event__foot"><a href="#" class="event__link">View debt timeline <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
-              </div>
-            </article>
+              <tr class="group-row"><td colspan="4">Last week</td></tr>
+              <tr>
+                <td><span class="mono tabular">May 13</span></td>
+                <td><span class="row-action">Saved scenario</span><span class="row-action__sub">Three-month sabbatical &middot; Q3 2027.</span></td>
+                <td><span class="pfc-tag">Scenario</span></td>
+                <td class="pfc-table__num"><span class="mono tabular">&minus;$18,200</span></td>
+              </tr>
+              <tr>
+                <td><span class="mono tabular">May 12</span></td>
+                <td><span class="row-action">Cancelled subscription</span><span class="row-action__sub">Streaming service &middot; Headspace.</span></td>
+                <td><span class="pfc-tag">Recurring</span></td>
+                <td class="pfc-table__num"><span class="mono tabular">+$12.99 /mo</span></td>
+              </tr>
+              <tr>
+                <td><span class="mono tabular">May 11</span></td>
+                <td><span class="row-action">Imported CSV</span><span class="row-action__sub">142 transactions from Q1.</span></td>
+                <td><span class="pfc-tag">Import</span></td>
+                <td class="pfc-table__num"><span class="mono tabular">142 rows</span></td>
+              </tr>
+              <tr>
+                <td><span class="mono tabular">May 10</span></td>
+                <td><span class="row-action">Created new goal</span><span class="row-action__sub">House down payment &middot; $80,000 by 2029.</span></td>
+                <td><span class="pfc-tag">Goal</span></td>
+                <td class="pfc-table__num"><span class="mono tabular">$80,000</span></td>
+              </tr>
+              <tr>
+                <td><span class="mono tabular">May 09</span></td>
+                <td><span class="row-action">Added bonus income</span><span class="row-action__sub">Q1 performance payout.</span></td>
+                <td><span class="pfc-tag">Income</span></td>
+                <td class="pfc-table__num"><span class="mono tabular">+$3,200</span></td>
+              </tr>
 
-            <article class="event">
-              <span class="event__time">08:14 am</span>
-              <span class="event__rail"><span class="event__dot"></span></span>
-              <div class="card card--glass event__card">
-                <div class="event__head">
-                  <h3 class="event__title">Ran scenario "Take the raise, defer the move"</h3>
-                </div>
-                <p class="event__body">Modelled accepting the 12% raise while delaying the apartment move by six months. Net worth at 5Y rises by $14,200.</p>
-                <div class="event__foot"><a href="#" class="event__link">Open scenario <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
-              </div>
-            </article>
-
-            <div class="day-header">Yesterday · May 15</div>
-
-            <article class="event">
-              <span class="event__time">06:30 pm</span>
-              <span class="event__rail"><span class="event__dot"></span></span>
-              <div class="card card--glass event__card">
-                <div class="event__head"><h3 class="event__title">Journal entry "Paid off the credit card"</h3></div>
-                <p class="event__body">Four-minute read. Mood tagged Steady.</p>
-                <div class="event__foot"><a href="#" class="event__link">Read entry <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
-              </div>
-            </article>
-
-            <article class="event">
-              <span class="event__time">11:08 am</span>
-              <span class="event__rail"><span class="event__dot"></span></span>
-              <div class="card card--glass event__card">
-                <div class="event__head"><h3 class="event__title">Updated <em>Iceland trip</em> goal target</h3></div>
-                <p class="event__body">Raised from $4,200 to $4,800 after revising flight estimates. New monthly contribution: $240.</p>
-              </div>
-            </article>
-
-            <div class="day-header">Last week</div>
-
-            <article class="event event--milestone">
-              <span class="event__time">May 13</span>
-              <span class="event__rail"><span class="event__dot"></span></span>
-              <div class="card card--glass event__card">
-                <div class="event__head">
-                  <h3 class="event__title"><em>Iceland trip</em> goal crossed 40%</h3>
-                  <span class="chip chip--positive"><span class="chip__dot"></span>Milestone</span>
-                </div>
-                <p class="event__body">$1,920 of $4,800. On pace to finish six weeks before departure.</p>
-              </div>
-            </article>
-
-            <article class="event">
-              <span class="event__time">May 12</span>
-              <span class="event__rail"><span class="event__dot"></span></span>
-              <div class="card card--glass event__card">
-                <div class="event__head"><h3 class="event__title">Generated 5-year forecast snapshot</h3></div>
-                <p class="event__body">Net worth projected at $156K by May 2031 under current trajectory.</p>
-                <div class="event__foot"><a href="#" class="event__link">Open forecast <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
-              </div>
-            </article>
-
-            <article class="event">
-              <span class="event__time">May 11</span>
-              <span class="event__rail"><span class="event__dot"></span></span>
-              <div class="card card--glass event__card">
-                <div class="event__head"><h3 class="event__title">Switched debt strategy to <em>avalanche</em></h3></div>
-                <p class="event__body">Re-allocated $260/mo from student loan minimum to Chase Sapphire. Saves projected $1,180 in interest.</p>
-              </div>
-            </article>
-
-            <article class="event">
-              <span class="event__time">May 10</span>
-              <span class="event__rail"><span class="event__dot"></span></span>
-              <div class="card card--glass event__card">
-                <div class="event__head"><h3 class="event__title">Ran scenario "Move to Lisbon"</h3></div>
-                <p class="event__body">Modelled relocation in Q3 2027 with cost-of-living adjustment of -34%. Forecast hits FI three years earlier.</p>
-                <div class="event__foot"><a href="#" class="event__link">Open scenario <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
-              </div>
-            </article>
-
-            <div class="day-header">May 2026</div>
-
-            <article class="event">
-              <span class="event__time">May 06</span>
-              <span class="event__rail"><span class="event__dot"></span></span>
-              <div class="card card--glass event__card">
-                <div class="event__head"><h3 class="event__title">Added goal "Retirement boost"</h3></div>
-                <p class="event__body">Target $12,000 by Dec 31, 2026. Starting balance $4,380.</p>
-              </div>
-            </article>
-
-            <article class="event">
-              <span class="event__time">May 04</span>
-              <span class="event__rail"><span class="event__dot"></span></span>
-              <div class="card card--glass event__card">
-                <div class="event__head"><h3 class="event__title">Cancelled four recurring subscriptions</h3></div>
-                <p class="event__body">Notion AI, Headspace, Dropbox Plus, Setapp. Saves $46.18 per month.</p>
-              </div>
-            </article>
-
-            <article class="event event--milestone">
-              <span class="event__time">May 01</span>
-              <span class="event__rail"><span class="event__dot"></span></span>
-              <div class="card card--glass event__card">
-                <div class="event__head">
-                  <h3 class="event__title">Savings rate hit <em>21%</em> — 12-month high</h3>
-                  <span class="chip chip--positive"><span class="chip__dot"></span>Milestone</span>
-                </div>
-                <p class="event__body">Up from 16% in January. Sustained for three consecutive months now.</p>
-              </div>
-            </article>
-
-            <article class="event">
-              <span class="event__time">Apr 28</span>
-              <span class="event__rail"><span class="event__dot"></span></span>
-              <div class="card card--glass event__card">
-                <div class="event__head"><h3 class="event__title">Ran scenario "Pause retirement, sprint house"</h3></div>
-                <p class="event__body">Modelled redirecting $400/mo from 401k to down payment. Closes the gap five months sooner.</p>
-              </div>
-            </article>
-
-            <article class="event">
-              <span class="event__time">Apr 22</span>
-              <span class="event__rail"><span class="event__dot"></span></span>
-              <div class="card card--glass event__card">
-                <div class="event__head"><h3 class="event__title">Saved monthly report card · April 2026</h3></div>
-                <p class="event__body">Grade B+. Strongest dimension: investing (84). Weakest: emergency fund (68).</p>
-              </div>
-            </article>
-
-            <article class="event">
-              <span class="event__time">Apr 17</span>
-              <span class="event__rail"><span class="event__dot"></span></span>
-              <div class="card card--glass event__card">
-                <div class="event__head"><h3 class="event__title">Updated salary expectation in calculator</h3></div>
-                <p class="event__body">Raised from $86K to $96K after offer letter. Effective tax bracket shifts; take-home revised to 71%.</p>
-              </div>
-            </article>
-
-          </div>
+              <tr class="group-row"><td colspan="4">April 2026</td></tr>
+              <tr>
+                <td><span class="mono tabular">Apr 28</span></td>
+                <td><span class="row-action">Subscribed to Founders tier</span><span class="row-action__sub">One-time, lifetime.</span></td>
+                <td><span class="pfc-tag">Billing</span></td>
+                <td class="pfc-table__num"><span class="mono tabular">&minus;$249.00</span></td>
+              </tr>
+              <tr>
+                <td><span class="mono tabular">Apr 22</span></td>
+                <td><span class="row-action">Updated forecast horizon</span><span class="row-action__sub">10 years to 15 years.</span></td>
+                <td><span class="pfc-tag">Forecast</span></td>
+                <td class="col-empty">&mdash;</td>
+              </tr>
+              <tr>
+                <td><span class="mono tabular">Apr 17</span></td>
+                <td><span class="row-action">Saved scenario</span><span class="row-action__sub">Mortgage refinance at 5.8%.</span></td>
+                <td><span class="pfc-tag">Scenario</span></td>
+                <td class="pfc-table__num"><span class="mono tabular">+$240 /mo</span></td>
+              </tr>
+              <tr>
+                <td><span class="mono tabular">Apr 14</span></td>
+                <td><span class="row-action">Pro plan charged</span><span class="row-action__sub">Auto-renewal.</span></td>
+                <td><span class="pfc-tag">Billing</span></td>
+                <td class="pfc-table__num"><span class="mono tabular">&minus;$9.00</span></td>
+              </tr>
+              <tr>
+                <td><span class="mono tabular">Apr 06</span></td>
+                <td><span class="row-action">Adjusted goal target</span><span class="row-action__sub">Vacation fund &middot; raised from $3k to $4k.</span></td>
+                <td><span class="pfc-tag">Goal</span></td>
+                <td class="pfc-table__num"><span class="mono tabular">$4,000</span></td>
+              </tr>
+              <tr>
+                <td><span class="mono tabular">Apr 02</span></td>
+                <td><span class="row-action">Created account</span><span class="row-action__sub">Welcome. Four numbers entered.</span></td>
+                <td><span class="pfc-tag">Account</span></td>
+                <td class="col-empty">&mdash;</td>
+              </tr>
+            </tbody>
+          </table>
 
           <!-- Stats footer -->
-          <div class="stats">
-            <article class="card card--glass stat">
-              <span class="stat__eyebrow">Scenarios run</span>
-              <span class="stat__val mono" data-count="18">0</span>
-              <span class="stat__delta">+6 this month</span>
-            </article>
-            <article class="card card--glass stat">
-              <span class="stat__eyebrow">Forecasts saved</span>
-              <span class="stat__val mono" data-count="6">0</span>
-              <span class="stat__delta">+1 this month</span>
-            </article>
-            <article class="card card--glass stat">
-              <span class="stat__eyebrow">Goals achieved</span>
-              <span class="stat__val mono" data-count="2">0</span>
-              <span class="stat__delta">Credit card cleared today</span>
-            </article>
+          <div class="stats-foot">
+            <dl class="stats-grid">
+              <div>
+                <dt>Total entries</dt>
+                <dd><span class="mono tabular">486</span><small>since April 2.</small></dd>
+              </div>
+              <div>
+                <dt>Current streak</dt>
+                <dd><span class="mono tabular">14</span><small>days journaling in a row.</small></dd>
+              </div>
+              <div>
+                <dt>Most active month</dt>
+                <dd><span class="mono tabular">May</span><small><span class="mono tabular">112</span> actions so far.</small></dd>
+              </div>
+            </dl>
           </div>
-        </section>
 
-      </div>
-    </main>
+        </div>
+      </main>
+
+      <div data-include="/partials/bottom-tabs.html"></div>
+    </div>
   </div>
 
-  <script src="/js/demo-data.js"></script>
-  <script src="/js/include.js"></script>
-  <script src="/js/motion.js"></script>
-  <script src="/js/charts.js"></script>
-  <script src="/js/app.js"></script>
+  <script src="/js/pfc-include.js"></script>
   <script>
+    window.PFC = window.PFC || {};
+    PFC.setTopbar = function (opts) {
+      var t = document.querySelector('[data-slot="title"]');
+      var s = document.querySelector('[data-slot="subtitle"]');
+      var a = document.querySelector('[data-slot="actions"]');
+      if (t && opts.title) t.textContent = opts.title;
+      if (s && opts.subtitle) s.textContent = opts.subtitle;
+      if (a && typeof opts.actions === "string") a.innerHTML = opts.actions;
+    };
     document.addEventListener("pfc:partials-ready", function () {
-      var M = window.PFC_MOTION;
-
-      // Filter chip toggling (visual)
-      document.querySelectorAll(".filter-chip").forEach(function (c) {
-        c.addEventListener("click", function () {
-          document.querySelectorAll(".filter-chip").forEach(function (x) { x.removeAttribute("aria-selected"); });
-          c.setAttribute("aria-selected", "true");
+      PFC.setTopbar({
+        title: "Activity",
+        subtitle: "Everything you've done. Sortable, filterable, searchable.",
+        actions:
+          '<label class="topbar-search">' +
+            '<input id="hist-search" class="topbar-search__input" type="search" placeholder="Search activity" aria-label="Search activity" />' +
+            '<span class="topbar-search__kbd">/</span>' +
+          '</label>' +
+          '<a href="#" class="pfc-button pfc-button--ghost">Filter</a>' +
+          '<a href="#" class="pfc-button pfc-button--primary">Export</a>'
+      });
+      var page = document.body.getAttribute("data-page");
+      document.querySelectorAll('.app-sidebar__item').forEach(function (el) {
+        if (el.getAttribute('data-page') === page) el.setAttribute('aria-current', 'page');
+      });
+      document.querySelectorAll('.bottom-tabs__item').forEach(function (el) {
+        if (el.getAttribute('data-page') === page) el.setAttribute('aria-current', 'page');
+      });
+      document.querySelectorAll('[data-reveal-stagger]').forEach(function (host) {
+        var kids = host.children;
+        for (var i = 0; i < kids.length; i++) {
+          (function (el, idx) {
+            setTimeout(function () { el.classList.add('is-revealed'); }, Math.min(idx, 5) * 60);
+          })(kids[i], i);
+        }
+      });
+      document.querySelectorAll('[data-reveal]').forEach(function (el) { el.classList.add('is-revealed'); });
+      // Chip single-select
+      var chipsHost = document.querySelector('.chips');
+      if (chipsHost) {
+        chipsHost.addEventListener('click', function (e) {
+          var c = e.target.closest('.chip');
+          if (!c) return;
+          chipsHost.querySelectorAll('.chip').forEach(function (x) { x.setAttribute('aria-pressed', 'false'); });
+          c.setAttribute('aria-pressed', 'true');
         });
+      }
+      // "/" focuses search
+      document.addEventListener('keydown', function (e) {
+        if (e.key === '/' && document.activeElement && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+          var s = document.getElementById('hist-search');
+          if (s) { e.preventDefault(); s.focus(); }
+        }
       });
-
-      // KPI countUp
-      document.querySelectorAll("[data-count]").forEach(function (el) {
-        var val = +el.getAttribute("data-count");
-        var io = new IntersectionObserver(function (es) {
-          es.forEach(function (e) {
-            if (e.isIntersecting) {
-              io.unobserve(el);
-              if (M && M.countUp) M.countUp(el, val, { decimals: 0, duration: 1000 });
-              else el.textContent = val;
-            }
-          });
-        }, { threshold: 0.4 });
-        io.observe(el);
-      });
-
-      if (M && M.revealOnScroll) M.revealOnScroll("[data-reveal]");
     });
   </script>
 </body>

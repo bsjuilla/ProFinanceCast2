@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 320" role="img" aria-label="An empty bowl on a surface with a single oxblood seed.">
+  <rect width="480" height="320" fill="#F7F4ED"/>
+  <g fill="none" stroke="#4D463A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- surface line + bowl as one continuous-feeling path -->
+    <path d="M 60 230 L 170 230 C 180 270, 300 270, 310 230 L 420 230"/>
+    <!-- bowl rim ellipse top -->
+    <path d="M 170 230 C 180 220, 300 220, 310 230"/>
+  </g>
+  <!-- oxblood seed in bowl -->
+  <ellipse cx="240" cy="244" rx="5" ry="3.5" fill="#8B2E22"/>
+</svg>

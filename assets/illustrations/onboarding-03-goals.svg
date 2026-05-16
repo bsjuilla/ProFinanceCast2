@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="A horizon line with three peaks of increasing height.">
+  <rect width="800" height="600" fill="#F7F4ED"/>
+  <g fill="none" stroke="#4D463A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- continuous single line: horizon + three peaks -->
+    <path d="
+      M 80 440
+      L 220 440
+      L 320 360
+      L 400 440
+      L 480 280
+      L 560 440
+      L 660 200
+      L 720 440
+      L 720 440
+    "/>
+  </g>
+  <!-- oxblood crown dot on tallest peak -->
+  <circle cx="660" cy="200" r="6" fill="#8B2E22"/>
+</svg>

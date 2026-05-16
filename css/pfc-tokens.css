@@ -1,0 +1,128 @@
+/* =============================================================================
+   ProFinanceCast v4 — Atelier Paper
+   Design tokens. Single source of truth. Derived literally from MASTER-BRIEF-V4 §3.
+   Do not edit values without consulting the brief.
+   ============================================================================= */
+
+/* Fonts ---------------------------------------------------------------------
+   Söhne is the intended body face but is paid-licensed; Inter Tight is the
+   live fallback that ships with v4. Fraunces carries display at opsz 9–144,
+   single weight 400. JetBrains Mono holds all numerals.
+   --------------------------------------------------------------------------- */
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap");
+
+:root {
+  /* ------------------------------------------------------------------------
+     3.1 Color (OKLCH, sRGB hex in comments for reference only)
+     ------------------------------------------------------------------------ */
+
+  /* Canvas */
+  --canvas:           oklch(0.975 0.008 75);  /* #F7F4ED warm bone */
+  --canvas-sunk:      oklch(0.955 0.010 75);  /* #F0EBE0 recessed surfaces */
+  --canvas-raised:    oklch(0.990 0.005 75);  /* #FBF9F4 raised cards */
+
+  /* Ink scale (5 steps — text & structure) */
+  --ink-1:            oklch(0.18 0.012 60);   /* #2A251D primary text, display */
+  --ink-2:            oklch(0.32 0.010 60);   /* #4D463A secondary text */
+  --ink-3:            oklch(0.52 0.008 60);   /* #7C7466 tertiary, metadata */
+  --ink-4:            oklch(0.72 0.006 60);   /* #ADA697 hairline strong */
+  --ink-5:            oklch(0.88 0.006 70);   /* #DBD5C6 hairline default, dividers */
+
+  /* Primary accent — oxblood. The ONLY accent. */
+  --accent:           oklch(0.42 0.14 25);    /* #8B2E22 deep oxblood */
+  --accent-hover:     oklch(0.36 0.15 25);    /* darker on hover */
+  --accent-wash:      oklch(0.94 0.025 25);   /* #F3E4DE 7% wash for tags */
+  --accent-ink:       oklch(0.98 0.008 75);   /* text on accent surface */
+
+  /* Secondary accent — deep ink-blue. Hyperlinks in long-form copy ONLY. */
+  --link:             oklch(0.32 0.12 250);   /* #1F3B7A */
+
+  /* Semantic — meaning carried by glyph + position, NOT by hue alone */
+  --positive:         var(--ink-1);
+  --negative:         oklch(0.40 0.020 60);   /* #5C5648 muted graphite */
+  --warning:          oklch(0.62 0.13 70);    /* #B07A2E burnt ochre */
+  --critical:         var(--accent);
+
+  /* Modal/footer dark band */
+  --inverse-canvas:   oklch(0.20 0.015 60);   /* #322D24 dark walnut */
+  --inverse-ink:      oklch(0.92 0.010 75);   /* #E8E2D2 */
+
+  /* ------------------------------------------------------------------------
+     3.2 Typography
+     ------------------------------------------------------------------------ */
+  --font-display: "Fraunces", "Georgia", serif;
+  --font-body:    "Söhne", "Inter Tight", -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+  --font-mono:    "JetBrains Mono", "SF Mono", "Menlo", monospace;
+
+  /* Fluid type scale (clamp min, ideal-vw, max) */
+  --type-display-xl:   clamp(3.5rem,  7.5vw, 7.5rem);
+  --type-display-lg:   clamp(2.75rem, 5.5vw, 5.0rem);
+  --type-display-md:   clamp(2.0rem,  3.8vw, 3.25rem);
+  --type-display-sm:   clamp(1.5rem,  2.4vw, 2.0rem);
+  --type-body-lg:      clamp(1.125rem, 1.4vw, 1.25rem);
+  --type-body:         1.0625rem;   /* 17px locked */
+  --type-body-sm:      0.9375rem;   /* 15px */
+  --type-label:        0.8125rem;   /* 13px */
+  --type-meta:         0.75rem;     /* 12px */
+
+  /* Tracking */
+  --track-display:     -0.022em;
+  --track-body:        -0.005em;
+  --track-meta:        0.08em;
+  --track-mono:        -0.01em;
+
+  /* Leading */
+  --lead-display:      1.04;
+  --lead-body:         1.55;
+  --lead-data:         1.20;
+
+  /* ------------------------------------------------------------------------
+     3.3 Spacing scale (multiples of 4px)
+     ------------------------------------------------------------------------ */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  20px;
+  --space-5:  32px;
+  --space-6:  48px;
+  --space-7:  80px;
+  --space-8:  128px;
+
+  /* ------------------------------------------------------------------------
+     3.4 Radii
+     ------------------------------------------------------------------------ */
+  --radius-1: 4px;
+  --radius-2: 8px;
+  --radius-3: 14px;
+  --radius-4: 24px;
+
+  /* ------------------------------------------------------------------------
+     3.5 Shadows (tinted, never pure black)
+     ------------------------------------------------------------------------ */
+  --shadow-1: 0 1px 0 oklch(0.88 0.006 70 / 0.6);
+  --shadow-2: 0 8px 24px -12px oklch(0.20 0.012 60 / 0.10),
+              0 2px 6px -2px oklch(0.20 0.012 60 / 0.06);
+  --shadow-3: 0 24px 64px -20px oklch(0.20 0.012 60 / 0.18),
+              0 8px 20px -8px oklch(0.20 0.012 60 / 0.08);
+
+  /* ------------------------------------------------------------------------
+     3.6 Motion
+     ------------------------------------------------------------------------ */
+  --ease-out:     cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in:      cubic-bezier(0.64, 0, 0.78, 0);
+  --ease-data:    cubic-bezier(0.45, 0, 0.15, 1);
+
+  --dur-fast:     180ms;
+  --dur-base:     320ms;
+  --dur-slow:     560ms;
+
+  /* ------------------------------------------------------------------------
+     3.7 Layout
+     ------------------------------------------------------------------------ */
+  --page-max:        1240px;
+  --app-max:         1440px;
+  --prose-max:       68ch;
+  --sidebar-w:       240px;
+  --topbar-h:        64px;
+  --gutter-page:     clamp(24px, 5vw, 80px);
+}

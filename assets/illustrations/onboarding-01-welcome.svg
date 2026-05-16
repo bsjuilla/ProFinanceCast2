@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="An open notebook with a fountain pen.">
+  <rect width="800" height="600" fill="#F7F4ED"/>
+  <g fill="none" stroke="#4D463A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- continuous ink line: open notebook with fountain pen resting -->
+    <path d="
+      M 160 420
+      C 200 380, 280 360, 400 360
+      C 520 360, 600 380, 640 420
+      L 640 430
+      C 600 410, 520 395, 400 395
+      C 280 395, 200 410, 160 430 Z
+    "/>
+    <!-- spine fold -->
+    <path d="M 400 360 L 400 395"/>
+    <!-- left page ruled lines -->
+    <path d="M 220 380 L 380 372"/>
+    <path d="M 220 393 L 380 387"/>
+    <path d="M 220 406 L 380 402"/>
+    <!-- right page ruled lines -->
+    <path d="M 420 372 L 580 380"/>
+    <path d="M 420 387 L 580 393"/>
+    <!-- fountain pen body (single curve from cap to nib) -->
+    <path d="
+      M 300 240
+      L 520 380
+    "/>
+    <path d="
+      M 300 240
+      C 310 232, 320 232, 330 240
+      L 330 260
+      L 310 248
+      Z
+    "/>
+    <!-- pen barrel -->
+    <path d="M 320 248 L 500 372"/>
+    <!-- nib silhouette -->
+    <path d="M 510 376 L 524 384 L 520 372 Z"/>
+  </g>
+  <!-- oxblood accent: ink dot at nib tip -->
+  <circle cx="524" cy="384" r="5" fill="#8B2E22"/>
+</svg>

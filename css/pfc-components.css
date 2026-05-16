@@ -1,0 +1,473 @@
+/* =============================================================================
+   pfc-components.css — component primitives (BEM-style)
+   Depends on pfc-tokens.css + pfc-base.css. No !important.
+   ============================================================================= */
+
+/* ---------------------------------------------------------------------------
+   Buttons
+   --------------------------------------------------------------------------- */
+.pfc-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  font-family: var(--font-body);
+  font-size: var(--type-body-sm);
+  font-weight: 600;
+  letter-spacing: var(--track-body);
+  line-height: 1;
+  border-radius: var(--radius-2);
+  padding: 10px 20px;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out);
+  border: 1px solid transparent;
+  color: var(--ink-1);
+}
+
+.pfc-button:disabled,
+.pfc-button[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Primary — oxblood pill, only button with a shadow */
+.pfc-button--primary {
+  background: var(--accent);
+  color: var(--accent-ink);
+  box-shadow: var(--shadow-1);
+}
+
+.pfc-button--primary:hover {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+}
+
+.pfc-button--primary:active {
+  transform: translateY(0);
+}
+
+/* Ghost — text only with → glyph */
+.pfc-button--ghost {
+  background: transparent;
+  color: var(--ink-1);
+  padding: 10px 12px;
+}
+
+.pfc-button--ghost::after {
+  content: " →";
+  color: var(--accent);
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+.pfc-button--ghost:hover {
+  color: var(--accent);
+}
+
+.pfc-button--ghost:hover::after {
+  transform: translateX(2px);
+}
+
+/* Icon — 32×32 square */
+.pfc-button--icon {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: var(--radius-2);
+  background: transparent;
+  color: var(--ink-2);
+}
+
+.pfc-button--icon:hover {
+  background: var(--canvas-sunk);
+  color: var(--ink-1);
+}
+
+.pfc-button--icon svg {
+  width: 18px;
+  height: 18px;
+  stroke-width: 1.5;
+}
+
+/* ---------------------------------------------------------------------------
+   Field pattern (label above / input / helper below)
+   --------------------------------------------------------------------------- */
+.pfc-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.pfc-field__label {
+  font-family: var(--font-body);
+  font-size: var(--type-label);
+  font-weight: 500;
+  color: var(--ink-2);
+  letter-spacing: var(--track-body);
+}
+
+.pfc-field__helper {
+  font-size: var(--type-meta);
+  color: var(--ink-3);
+  line-height: 1.45;
+}
+
+.pfc-field__error {
+  font-size: var(--type-meta);
+  color: var(--accent);
+  line-height: 1.45;
+}
+
+/* Inputs / selects / textareas — shared base */
+.pfc-input,
+.pfc-select,
+.pfc-textarea {
+  display: block;
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: var(--type-body);
+  color: var(--ink-1);
+  background: var(--canvas-raised);
+  border: 1px solid var(--ink-4);
+  border-radius: var(--radius-2);
+  padding: 10px 14px;
+  line-height: 1.4;
+  transition:
+    border-color var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out);
+}
+
+.pfc-input::placeholder,
+.pfc-textarea::placeholder {
+  color: var(--ink-3);
+}
+
+.pfc-input:hover,
+.pfc-select:hover,
+.pfc-textarea:hover {
+  border-color: var(--ink-3);
+}
+
+.pfc-input:focus,
+.pfc-select:focus,
+.pfc-textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.pfc-textarea {
+  min-height: 96px;
+  resize: vertical;
+  line-height: var(--lead-body);
+}
+
+.pfc-select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--ink-3) 50%),
+    linear-gradient(135deg, var(--ink-3) 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) 50%,
+    calc(100% - 13px) 50%;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  padding-right: 36px;
+}
+
+/* Slider — minimal track + oxblood thumb */
+.pfc-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 2px;
+  background: var(--ink-5);
+  border-radius: 999px;
+  outline: none;
+  cursor: pointer;
+}
+
+.pfc-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--canvas);
+  box-shadow: var(--shadow-1);
+  cursor: grab;
+}
+
+.pfc-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--canvas);
+  box-shadow: var(--shadow-1);
+  cursor: grab;
+}
+
+/* ---------------------------------------------------------------------------
+   Toggle (iOS-style, 40×22, hairline border)
+   --------------------------------------------------------------------------- */
+.pfc-toggle {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.pfc-toggle input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.pfc-toggle__track {
+  position: absolute;
+  inset: 0;
+  background: var(--canvas-sunk);
+  border: 1px solid var(--ink-4);
+  border-radius: 999px;
+  transition: background-color var(--dur-fast) var(--ease-out),
+              border-color var(--dur-fast) var(--ease-out);
+}
+
+.pfc-toggle__thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  background: var(--canvas-raised);
+  border-radius: 50%;
+  box-shadow: var(--shadow-1);
+  transition: transform var(--dur-fast) var(--ease-out),
+              background-color var(--dur-fast) var(--ease-out);
+}
+
+.pfc-toggle input:checked ~ .pfc-toggle__track {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.pfc-toggle input:checked ~ .pfc-toggle__thumb {
+  transform: translateX(18px);
+  background: var(--accent-ink);
+}
+
+/* ---------------------------------------------------------------------------
+   Pill — small label, accent wash bg
+   --------------------------------------------------------------------------- */
+.pfc-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  background: var(--accent-wash);
+  color: var(--accent);
+  font-family: var(--font-body);
+  font-size: var(--type-meta);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: var(--radius-1);
+  line-height: 1.3;
+}
+
+/* ---------------------------------------------------------------------------
+   Kbd (component-level <kbd>)
+   --------------------------------------------------------------------------- */
+.pfc-kbd {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: var(--type-meta);
+  background: var(--canvas-raised);
+  border: 1px solid var(--ink-4);
+  border-radius: var(--radius-1);
+  padding: 2px 6px;
+  color: var(--ink-2);
+  line-height: 1;
+}
+
+/* ---------------------------------------------------------------------------
+   Tag — neutral
+   --------------------------------------------------------------------------- */
+.pfc-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  background: var(--canvas-sunk);
+  color: var(--ink-2);
+  font-family: var(--font-body);
+  font-size: var(--type-meta);
+  font-weight: 500;
+  padding: 3px 8px;
+  border-radius: var(--radius-1);
+  line-height: 1.3;
+}
+
+/* ---------------------------------------------------------------------------
+   Panel — the only approved card
+   --------------------------------------------------------------------------- */
+.pfc-panel {
+  background: var(--canvas-raised);
+  border-radius: var(--radius-3);
+  box-shadow: var(--shadow-1);
+  padding: var(--space-5);
+}
+
+/* ---------------------------------------------------------------------------
+   Divider
+   --------------------------------------------------------------------------- */
+.pfc-divider {
+  border: 0;
+  border-top: 1px solid var(--ink-5);
+  width: 100%;
+  height: 0;
+}
+
+/* ---------------------------------------------------------------------------
+   Definition list with hairline rules
+   --------------------------------------------------------------------------- */
+.pfc-dl {
+  display: flex;
+  flex-direction: column;
+}
+
+.pfc-dl > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-4);
+  border-top: 1px solid var(--ink-5);
+  padding: var(--space-3) 0;
+}
+
+.pfc-dl > div:last-child {
+  border-bottom: 1px solid var(--ink-5);
+}
+
+.pfc-dl dt {
+  color: var(--ink-3);
+  font-size: var(--type-body-sm);
+}
+
+.pfc-dl dd {
+  color: var(--ink-1);
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--type-body-sm);
+  text-align: right;
+}
+
+/* ---------------------------------------------------------------------------
+   Table — clean editorial, sticky header, no zebra, hairlines only
+   --------------------------------------------------------------------------- */
+.pfc-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--type-body-sm);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+  color: var(--ink-1);
+}
+
+.pfc-table thead th {
+  position: sticky;
+  top: 0;
+  background: var(--canvas-sunk);
+  text-align: left;
+  font-family: var(--font-body);
+  font-size: var(--type-meta);
+  font-weight: 500;
+  letter-spacing: var(--track-meta);
+  text-transform: uppercase;
+  color: var(--ink-3);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--ink-5);
+  z-index: 1;
+}
+
+.pfc-table tbody td {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--ink-5);
+  vertical-align: baseline;
+}
+
+.pfc-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.pfc-table td.pfc-table__num,
+.pfc-table th.pfc-table__num {
+  text-align: right;
+  font-family: var(--font-mono);
+}
+
+/* ---------------------------------------------------------------------------
+   Tooltip — tiny popover
+   --------------------------------------------------------------------------- */
+.pfc-tooltip {
+  display: inline-block;
+  background: var(--inverse-canvas);
+  color: var(--inverse-ink);
+  font-family: var(--font-body);
+  font-size: var(--type-meta);
+  padding: 6px 10px;
+  border-radius: var(--radius-1);
+  line-height: 1.3;
+  box-shadow: var(--shadow-2);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------------------
+   Modal — overlay + sheet
+   --------------------------------------------------------------------------- */
+.pfc-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-5);
+}
+
+.pfc-modal__scrim {
+  position: absolute;
+  inset: 0;
+  background: oklch(0.20 0.015 60 / 0.6);
+  animation: pfc-fade-in var(--dur-fast) var(--ease-out);
+}
+
+.pfc-modal__sheet {
+  position: relative;
+  background: var(--canvas-raised);
+  border-radius: var(--radius-4);
+  box-shadow: var(--shadow-3);
+  max-width: 560px;
+  width: 100%;
+  padding: var(--space-6);
+  animation: pfc-modal-in var(--dur-base) var(--ease-out);
+}
+
+@keyframes pfc-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes pfc-modal-in {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

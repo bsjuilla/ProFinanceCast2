@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 320" role="img" aria-label="Two diverging paths from a fork with an oxblood circle.">
+  <rect width="480" height="320" fill="#F7F4ED"/>
+  <g fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- common stem -->
+    <path d="M 240 270 L 240 180" stroke="#4D463A"/>
+    <!-- left branch (solid) -->
+    <path d="M 240 180 C 200 140, 140 110, 80 80" stroke="#4D463A"/>
+    <!-- right branch (dashed) -->
+    <path d="M 240 180 C 280 140, 340 110, 400 80" stroke="#4D463A" stroke-dasharray="6 6"/>
+  </g>
+  <!-- oxblood circle at fork -->
+  <circle cx="240" cy="180" r="7" fill="#8B2E22"/>
+</svg>

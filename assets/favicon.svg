@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="PFC">
+  <title>ProFinanceCast</title>
+  <rect x="0" y="0" width="64" height="64" rx="10" ry="10" fill="#F7F4ED"/>
+  <style>
+    .fv {
+      font-family: "Fraunces", Georgia, serif;
+      font-weight: 400;
+      font-size: 50px;
+      font-variation-settings: "opsz" 144, "SOFT" 50, "WONK" 0;
+      letter-spacing: -0.03em;
+      fill: #2A251D;
+    }
+  </style>
+  <text x="32" y="50" class="fv" text-anchor="middle">P&#xB7;</text>
+</svg>

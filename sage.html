@@ -1,576 +1,311 @@
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#F7F4ED" />
   <title>Sage — ProFinanceCast</title>
-  <meta name="description" content="Ask anything about your money. Sage uses your numbers, never the internet." />
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
-
-  <link rel="stylesheet" href="/css/tokens.css">
-  <link rel="stylesheet" href="/css/base.css">
-  <link rel="stylesheet" href="/css/components.css">
-  <link rel="stylesheet" href="/css/layout.css">
-
+  <link rel="icon" href="/assets/favicon.svg" />
+  <link rel="stylesheet" href="/css/pfc-tokens.css" />
+  <link rel="stylesheet" href="/css/pfc-base.css" />
+  <link rel="stylesheet" href="/css/pfc-layout.css" />
+  <link rel="stylesheet" href="/css/pfc-components.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,ital,wght@9..144,0,400;9..144,1,400&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
-    /* ===========================================================
-     * Sage — page-local styles. BEM, no !important.
-     * Calm, premium, editorial. No chatbot tropes.
-     * =========================================================== */
-
-    .topbar { height: auto; min-height: var(--topbar-h); padding-block: 14px; }
-    .greet { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-    .greet__eyebrow {
-      font-family: var(--font-mono); font-size: var(--fs-tiny);
-      text-transform: uppercase; letter-spacing: var(--tracking-eyebrow);
-      color: var(--ink-400);
+    .sage-grid {
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      gap: var(--space-7);
+      padding-top: var(--space-5);
     }
-    .greet__title {
+    @media (max-width: 1024px) {
+      .sage-grid { grid-template-columns: 1fr; gap: var(--space-6); }
+    }
+
+    /* LEFT — editorial Q&A */
+    .sage-left { min-width: 0; display: flex; flex-direction: column; gap: var(--space-6); }
+    .sage-headline {
       font-family: var(--font-display);
-      font-size: clamp(1.15rem, 0.4vw + 1rem, 1.4rem);
-      font-weight: 500; color: var(--ink-100);
-      letter-spacing: -0.015em; line-height: 1.1;
+      font-weight: 400;
+      font-size: var(--type-display-lg);
+      line-height: 1.04;
+      letter-spacing: var(--track-display);
+      color: var(--ink-1);
+      text-align: center;
+      padding: var(--space-5) 0 var(--space-3);
     }
-
-    /* ---------- Greeting hero ---------- */
-    .greet-hero {
-      padding-block: var(--space-12) var(--space-10);
-      max-width: 900px;
-    }
-    .greet-hero__eyebrow {
-      font-family: var(--font-mono); font-size: var(--fs-tiny);
-      text-transform: uppercase; letter-spacing: var(--tracking-eyebrow);
-      color: var(--mint-400); display: inline-flex; align-items: center; gap: 8px;
-      margin-bottom: var(--space-5);
-    }
-    .greet-hero__eyebrow .sage-pulse {
-      width: 8px; height: 8px; border-radius: var(--r-full);
-      background: var(--mint-500);
-      box-shadow: 0 0 0 3px oklch(78% 0.175 168 / 0.18);
-      position: relative;
-    }
-    .greet-hero__eyebrow .sage-pulse::after {
-      content: ""; position: absolute; inset: -3px;
-      border-radius: var(--r-full); border: 1.5px solid var(--mint-500);
-      animation: sage-pulse 2.4s var(--ease-standard) infinite;
-      pointer-events: none;
-    }
-    @keyframes sage-pulse {
-      0%   { opacity: 0.8; transform: scale(1); }
-      100% { opacity: 0;   transform: scale(2.4); }
-    }
-    @media (prefers-reduced-motion: reduce) { .sage-pulse::after { animation: none; } }
-
-    .greet-hero__title {
+    .sage-headline em {
       font-family: var(--font-display);
-      font-size: var(--fs-display-lg);
-      font-weight: 300;
-      line-height: 1.02;
-      letter-spacing: -0.035em;
-      color: var(--ink-100);
-      margin-bottom: var(--space-5);
-    }
-    .greet-hero__title em {
-      font-style: italic; font-weight: 400;
-      color: var(--mint-400);
-    }
-    .greet-hero__sub {
-      font-size: 1.0625rem;
-      color: var(--ink-300);
-      line-height: 1.6;
-      max-width: 580px;
-    }
-
-    /* ---------- Ask textarea ---------- */
-    .ask {
-      padding: var(--space-6);
-      background: oklch(24% 0.022 265 / 0.55);
-      backdrop-filter: blur(20px) saturate(140%);
-      -webkit-backdrop-filter: blur(20px) saturate(140%);
-      border: 1px solid oklch(100% 0 0 / 0.08);
-      border-radius: var(--r-lg);
-      box-shadow:
-        0 1px 0 0 oklch(100% 0 0 / 0.06) inset,
-        0 16px 40px -20px oklch(0% 0 0 / 0.55);
-      transition: border-color var(--dur-base) var(--ease-standard),
-                  box-shadow var(--dur-base) var(--ease-standard);
-    }
-    .ask:focus-within {
-      border-color: oklch(78% 0.175 168 / 0.50);
-      box-shadow:
-        0 1px 0 0 oklch(100% 0 0 / 0.08) inset,
-        0 16px 40px -20px oklch(0% 0 0 / 0.55),
-        0 0 0 1px var(--mint-500),
-        0 0 32px -8px var(--mint-glow);
-    }
-    .ask__row {
-      display: grid; grid-template-columns: 1fr auto;
-      gap: var(--space-4); align-items: flex-end;
-    }
-    .ask__textarea {
-      width: 100%;
-      min-height: 60px;
-      resize: vertical;
-      background: transparent;
-      border: 0;
-      outline: none;
-      color: var(--ink-100);
-      font-family: var(--font-display);
-      font-size: clamp(1.125rem, 0.6vw + 1rem, 1.375rem);
-      font-weight: 300;
-      letter-spacing: -0.015em;
-      line-height: 1.5;
-      padding: var(--space-2) var(--space-3) 0;
-    }
-    .ask__textarea::placeholder { color: var(--ink-400); font-style: italic; }
-    .ask__send {
-      padding: 0.875rem 1.5rem;
-      font-family: var(--font-body);
-      font-size: var(--fs-body);
-      font-weight: 600;
-      color: var(--ink-900);
-      background: var(--mint-500);
-      border: 1px solid var(--mint-500);
-      border-radius: var(--r-md);
-      cursor: pointer;
-      transition: background var(--dur-fast), box-shadow var(--dur-base);
-      display: inline-flex; align-items: center; gap: 8px;
-      white-space: nowrap;
-    }
-    .ask__send:hover { background: var(--mint-400); box-shadow: var(--shadow-aurora); }
-
-    .ask-chips {
-      display: flex; flex-wrap: wrap; gap: var(--space-2);
-      margin-top: var(--space-5);
-    }
-    .ask-chip {
-      padding: 8px 14px;
-      background: transparent;
-      border: 1px solid var(--ink-500);
-      border-radius: var(--r-full);
-      color: var(--ink-300);
-      font-size: var(--fs-small);
-      cursor: pointer;
-      transition: all var(--dur-fast) var(--ease-standard);
-      font-family: var(--font-body);
-    }
-    .ask-chip:hover {
-      color: var(--mint-300);
-      border-color: oklch(78% 0.175 168 / 0.40);
-      background: oklch(78% 0.175 168 / 0.06);
-    }
-
-    /* ---------- Recent conversations ---------- */
-    .recent-list { display: flex; flex-direction: column; gap: var(--space-4); }
-    .recent {
-      padding: var(--space-6) var(--space-8);
-      background: oklch(24% 0.022 265 / 0.50);
-      backdrop-filter: blur(16px) saturate(140%);
-      -webkit-backdrop-filter: blur(16px) saturate(140%);
-      border: 1px solid oklch(100% 0 0 / 0.06);
-      border-radius: var(--r-lg);
-      transition: border-color var(--dur-base), transform var(--dur-base);
-      cursor: pointer;
-    }
-    .recent:hover {
-      border-color: oklch(78% 0.175 168 / 0.30);
-      transform: translateY(-2px);
-    }
-    .recent__q {
-      font-family: var(--font-display);
-      font-size: var(--fs-h3);
       font-style: italic;
       font-weight: 400;
-      color: var(--ink-100);
-      line-height: 1.3;
-      letter-spacing: -0.015em;
-      margin-bottom: var(--space-3);
+      color: var(--accent);
     }
-    .recent__a {
-      font-size: var(--fs-body);
-      color: var(--ink-300);
-      line-height: 1.6;
-      margin-bottom: var(--space-4);
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-    .recent__foot {
-      display: flex; align-items: center; justify-content: space-between;
-      gap: var(--space-4);
-    }
-    .recent__when {
-      font-family: var(--font-mono); font-size: var(--fs-tiny);
-      color: var(--ink-400); text-transform: uppercase; letter-spacing: var(--tracking-eyebrow);
-    }
-    .recent__cta {
-      font-family: var(--font-mono); font-size: var(--fs-tiny);
-      text-transform: uppercase; letter-spacing: var(--tracking-eyebrow);
-      color: var(--mint-400);
-      display: inline-flex; align-items: center; gap: 6px;
-      transition: gap var(--dur-fast);
-    }
-    .recent__cta:hover { gap: 10px; color: var(--mint-300); }
 
-    /* ---------- Sage's read ---------- */
-    .read-card { padding: var(--space-8); }
-    .read-card__head { margin-bottom: var(--space-8); }
-    .read-card__title {
-      font-family: var(--font-display); font-size: var(--fs-h2); font-weight: 400;
-      color: var(--ink-100); letter-spacing: -0.02em;
+    .sage-composer { display: flex; flex-direction: column; gap: var(--space-3); }
+    .sage-input {
+      font-family: var(--font-body);
+      font-size: var(--type-body-lg);
+      line-height: 1.5;
+      min-height: 96px;
+      padding: var(--space-4);
+      background: var(--canvas-raised);
+      border: 1px solid var(--ink-4);
+      border-radius: var(--radius-3);
+      color: var(--ink-1);
+      resize: vertical;
+      width: 100%;
+      transition: border-color var(--dur-fast) var(--ease-out);
     }
-    .read-card__title em { font-style: italic; color: var(--mint-400); font-weight: 400; }
-    .read-card__sub { font-size: var(--fs-small); color: var(--ink-400); margin-top: 6px; }
+    .sage-input:focus { outline: none; border-color: var(--accent); }
+    .sage-input::placeholder { color: var(--ink-3); }
+    .sage-composer__actions { display: flex; justify-content: flex-end; }
 
-    .read-stack { display: flex; flex-direction: column; }
-    .read-item {
-      display: grid; grid-template-columns: 14px 1fr;
-      gap: var(--space-5);
-      padding: var(--space-6) 0;
-      border-top: 1px solid oklch(100% 0 0 / 0.05);
+    /* Suggested pills */
+    .sage-prompts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
     }
-    .read-item:first-child { border-top: 0; padding-top: 0; }
-    .read-item:last-child  { padding-bottom: 0; }
-    .read-item__dot {
-      width: 10px; height: 10px; border-radius: var(--r-full);
-      background: var(--mint-500);
-      margin-top: 8px;
-      box-shadow: 0 0 0 3px oklch(78% 0.175 168 / 0.18);
-      position: relative;
+    .sage-prompt {
+      font-family: var(--font-body);
+      font-size: var(--type-body-sm);
+      font-weight: 500;
+      color: var(--accent);
+      background: var(--accent-wash);
+      border: none;
+      padding: 8px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: background-color var(--dur-fast) var(--ease-out);
     }
-    .read-item__dot::after {
-      content: ""; position: absolute; inset: -3px;
-      border-radius: var(--r-full); border: 1.5px solid var(--mint-500);
-      animation: sage-pulse 2.4s var(--ease-standard) infinite;
-      pointer-events: none;
-    }
-    .read-item--watchout .read-item__dot { background: var(--amber-400); box-shadow: 0 0 0 3px oklch(80% 0.140 75 / 0.18); }
-    .read-item--watchout .read-item__dot::after { border-color: var(--amber-400); }
-    .read-item--win .read-item__dot { background: var(--lavender-500); box-shadow: 0 0 0 3px oklch(72% 0.115 295 / 0.18); }
-    .read-item--win .read-item__dot::after { border-color: var(--lavender-500); }
+    .sage-prompt:hover { background: oklch(0.91 0.040 25); }
 
-    .read-item__headline {
+    /* Past conversations — editorial */
+    .sage-history {
+      display: flex; flex-direction: column;
+      border-top: 1px solid var(--ink-5);
+    }
+    .sage-history__item {
+      padding: var(--space-5) 0;
+      border-bottom: 1px solid var(--ink-5);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+    .sage-history__q {
       font-family: var(--font-display);
-      font-size: var(--fs-h3);
+      font-style: italic;
       font-weight: 400;
-      color: var(--ink-100);
-      letter-spacing: -0.015em;
-      line-height: 1.25;
-      margin-bottom: var(--space-3);
+      font-size: var(--type-display-sm);
+      line-height: 1.2;
+      letter-spacing: var(--track-display);
+      color: var(--ink-1);
     }
-    .read-item__body {
-      font-size: var(--fs-body);
-      color: var(--ink-300);
-      line-height: 1.6;
-      margin-bottom: var(--space-3);
+    .sage-history__a {
+      font-family: var(--font-body);
+      font-size: var(--type-body);
+      line-height: var(--lead-body);
+      color: var(--ink-2);
       max-width: 64ch;
     }
-    .read-item__link {
-      font-family: var(--font-mono); font-size: var(--fs-tiny);
-      text-transform: uppercase; letter-spacing: var(--tracking-eyebrow);
-      color: var(--mint-400);
-      display: inline-flex; align-items: center; gap: 6px;
-      transition: gap var(--dur-fast);
+    .sage-history__continue {
+      font-size: var(--type-body-sm);
+      color: var(--ink-1);
+      align-self: flex-start;
+      transition: color var(--dur-fast) var(--ease-out);
     }
-    .read-item__link:hover { gap: 10px; color: var(--mint-300); }
-
-    /* ---------- Capabilities strip ---------- */
-    .caps {
-      padding: var(--space-5) var(--space-6);
-      border-top: 1px solid oklch(100% 0 0 / 0.05);
-      font-family: var(--font-mono); font-size: var(--fs-tiny);
-      color: var(--ink-400);
-      text-align: center;
-      line-height: 2;
+    .sage-history__continue::after {
+      content: " →";
+      color: var(--accent);
+      transition: transform var(--dur-fast) var(--ease-out);
+      display: inline-block;
     }
-    .caps__lead { color: var(--ink-300); margin-right: 4px; }
-    .caps__item { color: var(--ink-300); }
-    .caps__sep { color: var(--ink-500); margin: 0 var(--space-3); }
+    .sage-history__continue:hover { color: var(--accent); }
+    .sage-history__continue:hover::after { transform: translateX(2px); }
 
-    .sec-header { margin-bottom: var(--space-6); display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-4); }
-    .sec-title {
+    /* RIGHT — observations panel (the only proper card) */
+    .sage-right {
+      align-self: start;
+      position: sticky;
+      top: calc(var(--topbar-h) + var(--space-5));
+    }
+    @media (max-width: 1024px) { .sage-right { position: static; } }
+
+    .sage-panel__title {
       font-family: var(--font-display);
-      font-size: var(--fs-h2); font-weight: 400; color: var(--ink-100);
-      letter-spacing: -0.02em; line-height: 1.1;
+      font-weight: 400;
+      font-size: var(--type-display-sm);
+      line-height: 1.15;
+      letter-spacing: var(--track-display);
+      color: var(--ink-1);
+      margin-bottom: var(--space-5);
     }
-    .sec-title em { font-style: italic; color: var(--ink-300); font-weight: 300; }
-    .sec-link {
-      font-family: var(--font-mono); font-size: var(--fs-tiny);
-      text-transform: uppercase; letter-spacing: var(--tracking-eyebrow);
-      color: var(--mint-400);
+    .sage-observations { display: flex; flex-direction: column; gap: var(--space-4); }
+    .sage-observation {
+      display: grid;
+      grid-template-columns: 12px 1fr;
+      column-gap: var(--space-3);
+      row-gap: var(--space-2);
+      padding-top: var(--space-4);
+      border-top: 1px solid var(--ink-5);
+    }
+    .sage-observation:first-child { padding-top: 0; border-top: 0; }
+    .sage-observation__dot {
+      width: 6px; height: 6px;
+      background: var(--accent);
+      margin-top: 9px;
+      align-self: start;
+    }
+    .sage-observation__text {
+      font-size: var(--type-body);
+      line-height: 1.5;
+      color: var(--ink-1);
+    }
+    .sage-observation__more {
+      grid-column: 2;
+      font-size: var(--type-meta);
+      color: var(--ink-3);
+      transition: color var(--dur-fast) var(--ease-out);
+    }
+    .sage-observation__more::after {
+      content: " →"; color: var(--accent);
+      transition: transform var(--dur-fast) var(--ease-out);
+      display: inline-block;
+    }
+    .sage-observation__more:hover { color: var(--accent); }
+    .sage-observation__more:hover::after { transform: translateX(2px); }
+
+    .sage-panel__footer {
+      margin-top: var(--space-5);
+      padding-top: var(--space-4);
+      border-top: 1px solid var(--ink-5);
+      font-size: var(--type-meta);
+      color: var(--ink-3);
     }
 
-    .foot-strip {
-      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
-      gap: var(--space-4); padding: var(--space-5) var(--space-2);
-      margin-top: var(--space-12);
-      border-top: 1px solid oklch(100% 0 0 / 0.05);
-      font-family: var(--font-mono); font-size: var(--fs-tiny); color: var(--ink-400);
+    /* Capabilities strip */
+    .sage-capabilities {
+      margin-top: var(--space-7);
+      padding: var(--space-4) 0;
+      border-top: 1px solid var(--ink-5);
+      font-size: var(--type-body-sm);
+      color: var(--ink-3);
+      line-height: 1.5;
+      text-align: center;
     }
-    .foot-strip__dot {
-      width: 5px; height: 5px; border-radius: var(--r-full);
-      background: var(--mint-500); box-shadow: 0 0 8px var(--mint-glow);
-      display: inline-block; margin-right: 8px;
-    }
+    .sage-capabilities strong { color: var(--ink-2); font-weight: 500; }
   </style>
 </head>
+
 <body data-page="sage">
-
-  <div class="aurora-bg" aria-hidden="true">
-    <div class="aurora-bg__blob aurora-bg__blob--1"></div>
-    <div class="aurora-bg__blob aurora-bg__blob--2"></div>
-    <div class="aurora-bg__blob aurora-bg__blob--3"></div>
-    <div class="aurora-bg__blob aurora-bg__blob--4"></div>
-    <div class="aurora-bg__grain"></div>
-    <div class="aurora-bg__vignette"></div>
-  </div>
-
   <div class="app-shell">
     <div data-include="/partials/sidebar.html"></div>
 
-    <main class="main">
+    <div class="app-content">
       <div data-include="/partials/topbar.html"></div>
 
-      <div class="main__content">
+      <main class="app-main" role="main">
+        <div class="page-section page-section--app" data-reveal-stagger>
 
-        <!-- ============================================================
-             SECTION 1 — Greeting hero
-             ============================================================ -->
-        <section class="section" aria-labelledby="greet-heading">
-          <div class="greet-hero" data-reveal>
-            <span class="greet-hero__eyebrow">
-              <span class="sage-pulse" aria-hidden="true"></span>
-              Sage · listening
-            </span>
-            <h1 id="greet-heading" class="greet-hero__title">What's on your <em>mind</em>, Alex?</h1>
-            <p class="greet-hero__sub">Ask anything about your money. Sage uses your numbers — never the internet. Forecasts, transactions, goals, what-ifs.</p>
-          </div>
-        </section>
+          <div class="sage-grid">
 
-        <!-- ============================================================
-             SECTION 2 — Ask textarea
-             ============================================================ -->
-        <section class="section" aria-labelledby="ask-heading" style="margin-bottom: var(--space-12);">
-          <h2 id="ask-heading" class="sr-only">Ask Sage</h2>
-          <div class="ask" data-reveal>
-            <div class="ask__row">
-              <textarea class="ask__textarea" placeholder="Try: 'When can I afford a house in NYC?'" rows="2" aria-label="Ask Sage anything"></textarea>
-              <button class="ask__send" type="button" data-ask-send>
-                Ask
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-              </button>
-            </div>
-            <div class="ask-chips" aria-label="Suggested prompts">
-              <button class="ask-chip" type="button">When can I afford a house?</button>
-              <button class="ask-chip" type="button">What's draining my budget?</button>
-              <button class="ask-chip" type="button">Am I saving enough?</button>
-              <button class="ask-chip" type="button">Should I pay off the card or invest?</button>
-              <button class="ask-chip" type="button">Summarize last month</button>
-              <button class="ask-chip" type="button">Stress-test my buffer</button>
-            </div>
-          </div>
-        </section>
+            <!-- LEFT 60% — editorial Q&A -->
+            <section class="sage-left" aria-label="Ask Sage">
+              <h2 class="sage-headline">What&rsquo;s on your <em>mind</em>?</h2>
 
-        <!-- ============================================================
-             SECTION 3 — Recent conversations
-             ============================================================ -->
-        <section class="section" aria-labelledby="recent-heading" style="margin-bottom: var(--space-12);">
-          <header class="sec-header">
-            <h2 id="recent-heading" class="sec-title">Recent <em>threads</em></h2>
-            <a href="#" class="sec-link">All conversations</a>
-          </header>
-          <div class="recent-list">
+              <form class="sage-composer" id="sageForm" onsubmit="event.preventDefault();">
+                <label class="visually-hidden" for="sageInput">Ask Sage a question</label>
+                <textarea
+                  class="sage-input"
+                  id="sageInput"
+                  placeholder="When can I afford a house in NYC?"
+                  rows="3"
+                ></textarea>
+                <div class="sage-composer__actions">
+                  <button class="pfc-button pfc-button--primary" type="submit">Ask Sage</button>
+                </div>
+              </form>
 
-            <article class="recent" data-reveal>
-              <div class="recent__q">When can I afford a house in NYC?</div>
-              <p class="recent__a">At your current savings rate of 21%, you'll reach a $65,000 down payment in 32 months — March 2029. A 20% raise pulls that to 24 months. I've drafted a "House at year 3" scenario you can tweak.</p>
-              <div class="recent__foot">
-                <span class="recent__when">2 days ago · 4 messages</span>
-                <a href="#" class="recent__cta">Continue
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-                </a>
+              <div class="sage-prompts" role="list" aria-label="Suggested prompts">
+                <button class="sage-prompt" type="button" role="listitem">Can I retire at 55?</button>
+                <button class="sage-prompt" type="button" role="listitem">Should I pay off the credit card first?</button>
+                <button class="sage-prompt" type="button" role="listitem">Is my savings rate good?</button>
+                <button class="sage-prompt" type="button" role="listitem">When will I hit $100K?</button>
+                <button class="sage-prompt" type="button" role="listitem">Stress-test my emergency fund</button>
               </div>
-            </article>
 
-            <article class="recent" data-reveal>
-              <div class="recent__q">Why did spending jump in April?</div>
-              <p class="recent__a">Three things: a $640 Iceland deposit, $312 in extra dining, and your Apple One family upgrade. Two of three were planned. The dining spike came from four weekends with the Brooklyn group.</p>
-              <div class="recent__foot">
-                <span class="recent__when">5 days ago · 2 messages</span>
-                <a href="#" class="recent__cta">Continue
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-                </a>
+              <div class="sage-history" id="sageHistory" aria-label="Past conversations">
+                <!-- filled by JS -->
               </div>
-            </article>
+            </section>
 
-            <article class="recent" data-reveal>
-              <div class="recent__q">Should I pay off the Sapphire or invest instead?</div>
-              <p class="recent__a">Pay it off. At 22.49% APR, the card is costing you more than any reasonable expected return. Avalanche the $4,280 balance first — it clears in nine months and saves $1,180 in interest.</p>
-              <div class="recent__foot">
-                <span class="recent__when">1 week ago · 6 messages</span>
-                <a href="#" class="recent__cta">Continue
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-                </a>
+            <!-- RIGHT 40% — observations panel -->
+            <aside class="sage-right">
+              <div class="pfc-panel" aria-labelledby="obs-h">
+                <h2 class="sage-panel__title" id="obs-h">Sage&rsquo;s quiet observations</h2>
+                <div class="sage-observations" id="sageObs"><!-- filled by JS --></div>
+                <p class="sage-panel__footer">Updated Sunday. Math, not opinion.</p>
               </div>
-            </article>
-
-            <article class="recent" data-reveal>
-              <div class="recent__q">If I quit at 40, what does the next twenty years look like?</div>
-              <p class="recent__a">Tight but workable. Your numbers cover 14 years of current expenses without new income, assuming a 7.2% return and 2.8% inflation. Cutting housing or moving cities adds five years of runway.</p>
-              <div class="recent__foot">
-                <span class="recent__when">2 weeks ago · 9 messages</span>
-                <a href="#" class="recent__cta">Continue
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-                </a>
-              </div>
-            </article>
-
-            <article class="recent" data-reveal>
-              <div class="recent__q">Am I overpaying on subscriptions?</div>
-              <p class="recent__a">A little. Seven active services totaling $187/mo. Three overlap (Spotify Family, Apple One, YouTube Premium all include music). A 12-minute audit frees up about $46 each month.</p>
-              <div class="recent__foot">
-                <span class="recent__when">3 weeks ago · 3 messages</span>
-                <a href="#" class="recent__cta">Continue
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-                </a>
-              </div>
-            </article>
+            </aside>
 
           </div>
-        </section>
 
-        <!-- ============================================================
-             SECTION 4 — Sage's read on you
-             ============================================================ -->
-        <section class="section" aria-labelledby="read-heading" style="margin-bottom: var(--space-12);">
-          <article class="card card--glass read-card" data-reveal>
-            <header class="read-card__head">
-              <h2 id="read-heading" class="read-card__title">Sage's <em>read on you</em></h2>
-              <p class="read-card__sub">Calm, infrequent observations. Updated when your numbers move enough to matter.</p>
-            </header>
-            <div class="read-stack" data-sage-read></div>
-          </article>
-        </section>
+          <p class="sage-capabilities">
+            <strong>Sage can:</strong> forecast scenarios &middot; explain transactions &middot; summarize your month &middot; plan toward a goal &middot; stress-test your buffer.
+          </p>
 
-        <!-- ============================================================
-             SECTION 5 — Capabilities strip
-             ============================================================ -->
-        <div class="caps" data-reveal>
-          <span class="caps__lead">Sage can:</span>
-          <span class="caps__item">forecast scenarios</span>
-          <span class="caps__sep">·</span>
-          <span class="caps__item">explain transactions</span>
-          <span class="caps__sep">·</span>
-          <span class="caps__item">summarize the month</span>
-          <span class="caps__sep">·</span>
-          <span class="caps__item">plan toward a goal</span>
-          <span class="caps__sep">·</span>
-          <span class="caps__item">stress-test your buffer</span>
         </div>
-
-        <div class="foot-strip">
-          <div><span class="foot-strip__dot" aria-hidden="true"></span>Sage runs against your local data. Your questions and her answers never leave the device.</div>
-          <div>Model v2.4 · trained on financial reasoning</div>
-        </div>
-
-      </div>
-    </main>
+      </main>
+    </div>
   </div>
 
-  <script src="/js/include.js"></script>
-  <script src="/js/motion.js"></script>
-  <script src="/js/charts.js"></script>
-  <script src="/js/demo-data.js"></script>
-  <script src="/js/app.js"></script>
+  <div data-include="/partials/bottom-tabs.html"></div>
 
+  <script src="/js/pfc-include.js"></script>
+  <script src="/js/pfc-app.js"></script>
   <script>
-    document.addEventListener("pfc:partials-ready", function () {
-      var D = window.PFC_DATA;
-      var M = window.PFC_MOTION;
-      if (!D || !M) return;
-
-      M.pageTransition();
-
-      /* ---- Topbar ---- */
-      (function injectTopbar() {
-        var crumb = document.querySelector('[data-slot="breadcrumb"]');
-        var actions = document.querySelector('.topbar__actions');
-        if (!crumb || !actions) return;
-        crumb.innerHTML =
-          '<div class="greet">' +
-            '<span class="greet__eyebrow">Sage / Insights</span>' +
-            '<span class="greet__title">Sage</span>' +
-          '</div>';
-
-        var newBtn = document.createElement("button");
-        newBtn.type = "button";
-        newBtn.className = "btn btn--ghost btn--sm";
-        newBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg><span>New conversation</span>';
-        newBtn.addEventListener("click", function () {
-          var ta = document.querySelector(".ask__textarea");
-          if (ta) { ta.value = ""; ta.focus(); }
-        });
-        var searchBtn = actions.querySelector(".topbar__search");
-        if (searchBtn && searchBtn.nextSibling) actions.insertBefore(newBtn, searchBtn.nextSibling);
-        else actions.appendChild(newBtn);
-      })();
-
-      /* ---- Sage's read on you (use PFC_DATA.sageInsights + add 1 calm one) ---- */
-      (function buildRead() {
-        var wrap = document.querySelector("[data-sage-read]");
-        if (!wrap) return;
-        var classMap = { opportunity: "", watchout: "read-item--watchout", win: "read-item--win" };
-        var items = (D.sageInsights || []).slice();
-        // Add a fourth, calmly observational insight
-        items.push({
-          kind: "opportunity",
-          title: "Your spending rhythm has stabilized",
-          body: "Four months in a row your monthly expenses landed within $180 of the median. That kind of consistency makes every forecast more reliable.",
-          action: "See the trend"
-        });
-        wrap.innerHTML = items.map(function (ins) {
-          return ''
-            + '<article class="read-item ' + (classMap[ins.kind] || "") + '">'
-              + '<span class="read-item__dot" aria-hidden="true"></span>'
-              + '<div>'
-                + '<h3 class="read-item__headline">' + ins.title + '</h3>'
-                + '<p class="read-item__body">' + ins.body + '</p>'
-                + '<a href="#" class="read-item__link">Tell me more'
-                  + ' <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>'
-                + '</a>'
-              + '</div>'
-            + '</article>';
-        }).join("");
-      })();
-
-      /* ---- Chip clicks populate textarea ---- */
-      document.querySelectorAll(".ask-chip").forEach(function (chip) {
-        chip.addEventListener("click", function () {
-          var ta = document.querySelector(".ask__textarea");
-          if (!ta) return;
-          ta.value = chip.textContent.trim();
-          ta.focus();
-        });
+    window.PFC_PAGE_INIT = function () {
+      PFC.setTopbar({
+        title: "Sage",
+        subtitle: "Ask Sage anything about your money. Sage uses your numbers, not the internet.",
+        actions: '<button class="pfc-button pfc-button--ghost" type="button">New conversation</button>'
       });
 
-      /* ---- Ask button — demo only, shows calm toast ---- */
-      var sendBtn = document.querySelector("[data-ask-send]");
-      if (sendBtn) {
-        M.magnetic(sendBtn, { strength: 0.18, radius: 70 });
-        sendBtn.addEventListener("click", function () {
-          var ta = document.querySelector(".ask__textarea");
-          var q = ta && ta.value.trim();
-          if (!q) { ta && ta.focus(); return; }
-          if (window.PFC && PFC.toast) PFC.toast("Sage is reading your numbers...", "info", { duration: 1800 });
-        });
-      }
+      /* Past conversation snippets */
+      var hist = document.getElementById("sageHistory");
+      hist.innerHTML = PFC_DATA.sageConversations.map(function (c) {
+        return (
+          '<article class="sage-history__item">' +
+            '<p class="sage-history__q">' + c.q + '</p>' +
+            '<p class="sage-history__a">' + c.a + '</p>' +
+            '<a class="sage-history__continue" href="#">Continue</a>' +
+          '</article>'
+        );
+      }).join("");
 
-      M.revealOnScroll("[data-reveal]");
-    });
+      /* Observations */
+      var obs = document.getElementById("sageObs");
+      obs.innerHTML = PFC_DATA.sageInsights.map(function (i) {
+        return (
+          '<div class="sage-observation">' +
+            '<span class="sage-observation__dot" aria-hidden="true"></span>' +
+            '<p class="sage-observation__text">' + i.text + '</p>' +
+            '<a class="sage-observation__more" href="#">Tell me more</a>' +
+          '</div>'
+        );
+      }).join("");
+
+      /* Prompt pills fill the composer */
+      var input = document.getElementById("sageInput");
+      document.querySelectorAll(".sage-prompt").forEach(function (p) {
+        p.addEventListener("click", function () {
+          input.value = p.textContent.trim();
+          input.focus();
+        });
+      });
+    };
   </script>
 </body>
 </html>

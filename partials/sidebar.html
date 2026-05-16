@@ -1,89 +1,79 @@
-<aside class="sidebar" data-pfc-sidebar>
-  <a href="/index.html" class="sidebar__brand" aria-label="ProFinanceCast home">
-    <span class="sidebar__brand-mark" aria-hidden="true">P</span>
-    <span class="sidebar__brand-name">ProFinance<span style="color:var(--mint-400);">Cast</span></span>
+<aside class="app-sidebar" role="navigation" aria-label="Primary">
+  <a href="/index.html" class="app-sidebar__wordmark" aria-label="ProFinanceCast home">
+    <span>P</span>ro<span>F</span>inance<span>C</span>ast
   </a>
 
-  <nav class="sidebar__nav" aria-label="Primary">
-    <div class="sidebar__group">
-      <div class="sidebar__group-title">Overview</div>
-      <a href="/dashboard.html" class="sidebar__link" data-nav="dashboard">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
-        <span>Dashboard</span>
-      </a>
-      <a href="/net-worth.html" class="sidebar__link" data-nav="net-worth">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18l5-6 4 3 7-9"/><path d="M14 6h5v5"/></svg>
-        <span>Net Worth</span>
-      </a>
-      <a href="/report-card.html" class="sidebar__link" data-nav="report-card">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l2.4 5.6L20 9l-4.4 3.8L17 19l-5-3-5 3 1.4-6.2L4 9l5.6-1.4z"/></svg>
-        <span>Report Card</span>
-      </a>
-    </div>
+  <div class="app-sidebar__section" data-section="plan">
+    <div class="app-sidebar__section-label">Plan</div>
+    <a href="/dashboard.html" class="app-sidebar__item" data-page="dashboard">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      <span>Dashboard</span>
+    </a>
+    <a href="/net-worth.html" class="app-sidebar__item" data-page="net-worth">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17 L9 11 L13 15 L21 7"/><path d="M15 7 L21 7 L21 13"/></svg>
+      <span>Net Worth</span>
+    </a>
+    <a href="/goals.html" class="app-sidebar__item" data-page="goals">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg>
+      <span>Goals</span>
+    </a>
+    <a href="/cash-forecast.html" class="app-sidebar__item" data-page="cash-forecast">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12 C 6 4, 10 20, 14 12 S 19 6, 21 12"/><path d="M3 19 L21 19"/></svg>
+      <span>Cash Forecast</span>
+    </a>
+    <a href="/scenarios.html" class="app-sidebar__item" data-page="scenarios">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5 L4 19 L20 19"/><path d="M7 15 L11 10 L14 13 L20 6"/></svg>
+      <span>Scenarios</span>
+    </a>
+  </div>
 
-    <div class="sidebar__group">
-      <div class="sidebar__group-title">Tools</div>
-      <a href="/debt-optimizer.html" class="sidebar__link" data-nav="debt-optimizer">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v20M5 7l14 10M19 7L5 17"/></svg>
-        <span>Debt Optimizer</span>
-      </a>
-      <a href="/salary-calculator.html" class="sidebar__link" data-nav="salary-calculator">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 11h8M8 15h5"/></svg>
-        <span>Salary Calculator</span>
-      </a>
-      <a href="/cash-forecast.html" class="sidebar__link" data-nav="cash-forecast">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17c3-2 5-2 7 0s5 4 11-3"/><path d="M14 4h7v7"/></svg>
-        <span>Cash Forecast</span>
-      </a>
-      <a href="/scenarios.html" class="sidebar__link" data-nav="scenarios">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7" cy="7" r="3"/><circle cx="17" cy="17" r="3"/><path d="M10 7h7v10"/></svg>
-        <span>Scenarios</span>
-      </a>
-    </div>
+  <div class="app-sidebar__section" data-section="tools">
+    <div class="app-sidebar__section-label">Tools</div>
+    <a href="/debt-optimizer.html" class="app-sidebar__item" data-page="debt-optimizer">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 18 L10 12 L14 16 L20 8"/><path d="M20 14 L20 8 L14 8"/></svg>
+      <span>Debt Optimizer</span>
+    </a>
+    <a href="/salary-calculator.html" class="app-sidebar__item" data-page="salary-calculator">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7 L16 7"/><path d="M8 12 L10 12"/><path d="M12 12 L14 12"/><path d="M8 16 L10 16"/><path d="M12 16 L14 16"/></svg>
+      <span>Salary Calculator</span>
+    </a>
+    <a href="/sage.html" class="app-sidebar__item" data-page="sage">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 C 7 3, 4 7, 4 12 C 4 16, 7 20, 12 20 C 14 20, 15 19, 16 18 L 20 20 L 18 16 C 19 15, 20 13, 20 12 C 20 7, 17 3, 12 3 Z"/></svg>
+      <span>Sage</span>
+    </a>
+  </div>
 
-    <div class="sidebar__group">
-      <div class="sidebar__group-title">Planning</div>
-      <a href="/goals.html" class="sidebar__link" data-nav="goals">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg>
-        <span>Goals</span>
-      </a>
-      <a href="/sage-ai.html" class="sidebar__link" data-nav="sage-ai">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2 5 5 2-5 2-2 5-2-5-5-2 5-2z"/></svg>
-        <span>Sage AI</span>
-      </a>
-      <a href="/journal.html" class="sidebar__link" data-nav="journal">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M9 8h6M9 12h6"/></svg>
-        <span>Journal</span>
-      </a>
-    </div>
+  <div class="app-sidebar__section" data-section="account">
+    <div class="app-sidebar__section-label">Account</div>
+    <a href="/journal.html" class="app-sidebar__item" data-page="journal">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4 L5 20 L19 20 L19 8 L15 4 Z"/><path d="M15 4 L15 8 L19 8"/><path d="M8 13 L16 13"/><path d="M8 16 L13 16"/></svg>
+      <span>Journal</span>
+    </a>
+    <a href="/history.html" class="app-sidebar__item" data-page="history">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7 L12 12 L15 14"/></svg>
+      <span>History</span>
+    </a>
+    <a href="/recurring.html" class="app-sidebar__item" data-page="recurring">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12 C 4 7, 8 4, 12 4 C 15 4, 18 6, 19 9"/><path d="M19 5 L19 9 L15 9"/><path d="M20 12 C 20 17, 16 20, 12 20 C 9 20, 6 18, 5 15"/><path d="M5 19 L5 15 L9 15"/></svg>
+      <span>Recurring</span>
+    </a>
+    <a href="/settings.html" class="app-sidebar__item" data-page="settings">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19 12 C 19 12.5, 18.9 13, 18.8 13.4 L 20.5 14.7 L 19 17.3 L 17 16.5 C 16.3 17.1, 15.5 17.5, 14.6 17.8 L 14.3 20 L 9.7 20 L 9.4 17.8 C 8.5 17.5, 7.7 17.1, 7 16.5 L 5 17.3 L 3.5 14.7 L 5.2 13.4 C 5.1 13, 5 12.5, 5 12 C 5 11.5, 5.1 11, 5.2 10.6 L 3.5 9.3 L 5 6.7 L 7 7.5 C 7.7 6.9, 8.5 6.5, 9.4 6.2 L 9.7 4 L 14.3 4 L 14.6 6.2 C 15.5 6.5, 16.3 6.9, 17 7.5 L 19 6.7 L 20.5 9.3 L 18.8 10.6 C 18.9 11, 19 11.5, 19 12 Z"/></svg>
+      <span>Settings</span>
+    </a>
+    <a href="/billing.html" class="app-sidebar__item" data-page="billing">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10 L21 10"/><path d="M7 15 L11 15"/></svg>
+      <span>Billing</span>
+    </a>
+  </div>
 
-    <div class="sidebar__group">
-      <div class="sidebar__group-title">Account</div>
-      <a href="/history.html" class="sidebar__link" data-nav="history">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/><path d="M12 7v5l3 2"/></svg>
-        <span>History</span>
-      </a>
-      <a href="/recurring.html" class="sidebar__link" data-nav="recurring">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 0 1 14-5.3L20 9"/><path d="M20 4v5h-5"/><path d="M20 12a8 8 0 0 1-14 5.3L4 15"/><path d="M4 20v-5h5"/></svg>
-        <span>Recurring</span>
-      </a>
-      <a href="/settings.html" class="sidebar__link" data-nav="settings">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 0 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 0 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 0 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 0 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
-        <span>Settings</span>
-      </a>
-      <a href="/billing.html" class="sidebar__link" data-nav="billing">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="6" width="20" height="13" rx="2"/><path d="M2 11h20M6 16h4"/></svg>
-        <span>Billing</span>
-      </a>
-    </div>
-  </nav>
+  <div class="app-sidebar__spacer"></div>
 
-  <div class="sidebar__footer">
-    <div class="sidebar__avatar" aria-hidden="true">AM</div>
-    <div style="min-width:0;flex:1;">
-      <div class="sidebar__user-name">Alex Morgan</div>
-      <div class="sidebar__user-meta">Pro plan</div>
+  <div class="app-sidebar__user">
+    <div class="app-sidebar__avatar" aria-hidden="true">A</div>
+    <div class="app-sidebar__user-meta">
+      <div class="app-sidebar__user-name">Alex Morgan</div>
+      <div class="app-sidebar__user-plan">Pro &middot; 247 days left</div>
     </div>
-    <span class="chip chip--pro">PRO</span>
   </div>
 </aside>
